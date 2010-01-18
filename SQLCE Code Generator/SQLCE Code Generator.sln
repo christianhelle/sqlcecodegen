@@ -1,0 +1,79 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGenConsole", "CodeGenConsole\CodeGenConsole.csproj", "{B8C5C5C7-8481-417D-AD70-C3C118A2F0DD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGenCore", "CodeGenCore\CodeGenCore.csproj", "{CE1B35D2-02CC-4195-A4E6-07FDE2915E99}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGenCore.UnitTest", "CodeGenCore.UnitTest\CodeGenCore.UnitTest.csproj", "{C7FFB52B-D5AF-41C5-9D80-DC9DB75BA0C3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DE0B3A05-8970-48F5-9E1D-8C4D24D55E4A}"
+	ProjectSection(SolutionItems) = preProject
+		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
+		SQLCE Code Generator.vsmdi = SQLCE Code Generator.vsmdi
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGenCustomTool", "CodeGenCustomTool\CodeGenCustomTool.csproj", "{DDFEFB32-623E-49EE-9627-A19B77E29FCA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Depdendencies", "Depdendencies", "{8E05C125-6658-4A6C-A4EC-848EA7C24CB1}"
+	ProjectSection(SolutionItems) = preProject
+		Depdendencies\Microsoft.VisualStudio.BaseCodeGeneratorWithSite.dll = Depdendencies\Microsoft.VisualStudio.BaseCodeGeneratorWithSite.dll
+	EndProjectSection
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "CodeGenInstaller", "CodeGenInstaller\CodeGenInstaller.vdproj", "{CFABF11F-5630-47E0-9E38-565C606E4039}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 6
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = https://tfs02.codeplex.com/
+		SccProjectUniqueName0 = CodeGenConsole\\CodeGenConsole.csproj
+		SccProjectName0 = CodeGenConsole
+		SccLocalPath0 = CodeGenConsole
+		SccProjectUniqueName1 = CodeGenCore\\CodeGenCore.csproj
+		SccProjectName1 = CodeGenCore
+		SccLocalPath1 = CodeGenCore
+		SccProjectUniqueName2 = CodeGenCustomTool\\CodeGenCustomTool.csproj
+		SccProjectName2 = CodeGenCustomTool
+		SccLocalPath2 = CodeGenCustomTool
+		SccProjectUniqueName3 = CodeGenInstaller\\CodeGenInstaller.vdproj
+		SccProjectName3 = CodeGenInstaller
+		SccLocalPath3 = CodeGenInstaller
+		SccLocalPath4 = .
+		SccProjectUniqueName5 = CodeGenCore.UnitTest\\CodeGenCore.UnitTest.csproj
+		SccProjectName5 = CodeGenCore.UnitTest
+		SccLocalPath5 = CodeGenCore.UnitTest
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = SQLCE Code Generator.vsmdi
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B8C5C5C7-8481-417D-AD70-C3C118A2F0DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8C5C5C7-8481-417D-AD70-C3C118A2F0DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8C5C5C7-8481-417D-AD70-C3C118A2F0DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8C5C5C7-8481-417D-AD70-C3C118A2F0DD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE1B35D2-02CC-4195-A4E6-07FDE2915E99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE1B35D2-02CC-4195-A4E6-07FDE2915E99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE1B35D2-02CC-4195-A4E6-07FDE2915E99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE1B35D2-02CC-4195-A4E6-07FDE2915E99}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7FFB52B-D5AF-41C5-9D80-DC9DB75BA0C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7FFB52B-D5AF-41C5-9D80-DC9DB75BA0C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7FFB52B-D5AF-41C5-9D80-DC9DB75BA0C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7FFB52B-D5AF-41C5-9D80-DC9DB75BA0C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDFEFB32-623E-49EE-9627-A19B77E29FCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDFEFB32-623E-49EE-9627-A19B77E29FCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDFEFB32-623E-49EE-9627-A19B77E29FCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDFEFB32-623E-49EE-9627-A19B77E29FCA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFABF11F-5630-47E0-9E38-565C606E4039}.Debug|Any CPU.ActiveCfg = Debug
+		{CFABF11F-5630-47E0-9E38-565C606E4039}.Debug|Any CPU.Build.0 = Debug
+		{CFABF11F-5630-47E0-9E38-565C606E4039}.Release|Any CPU.ActiveCfg = Release
+		{CFABF11F-5630-47E0-9E38-565C606E4039}.Release|Any CPU.Build.0 = Release
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
