@@ -10,7 +10,7 @@ namespace CodeGenCore
 
         public override void GenerateEntities()
         {
-            code.AppendLine("namespace " + Database.Namespace);
+            code.AppendLine("\nnamespace " + Database.Namespace);
             code.AppendLine("{");
 
             GenerateEntityBase();
@@ -23,7 +23,7 @@ namespace CodeGenCore
 
         public override void GenerateDataAccessLayer()
         {
-            code.AppendLine("namespace " + Database.Namespace);
+            code.AppendLine("\nnamespace " + Database.Namespace);
             code.AppendLine("{");
 
             foreach (var table in Database.Tables)
