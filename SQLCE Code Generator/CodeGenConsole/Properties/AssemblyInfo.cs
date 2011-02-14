@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("CodeGenConsole")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
+[assembly: AssemblyCompany("Christian Resma Helle")]
 [assembly: AssemblyProduct("CodeGenConsole")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2009")]
+[assembly: AssemblyCopyright("Copyright © Christian Resma Helle 2009")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
