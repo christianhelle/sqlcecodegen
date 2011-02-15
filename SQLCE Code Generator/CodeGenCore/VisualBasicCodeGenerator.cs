@@ -1,6 +1,6 @@
 using System;
 
-namespace CodeGenCore
+namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
     public class VisualBasicCodeGenerator : CodeGenerator
     {

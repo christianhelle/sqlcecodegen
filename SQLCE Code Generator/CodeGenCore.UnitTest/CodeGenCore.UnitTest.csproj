@@ -7,7 +7,7 @@
     <ProjectGuid>{C7FFB52B-D5AF-41C5-9D80-DC9DB75BA0C3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CodeGenCore.UnitTest</RootNamespace>
+    <RootNamespace>ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest</RootNamespace>
     <AssemblyName>CodeGenCore.UnitTest</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

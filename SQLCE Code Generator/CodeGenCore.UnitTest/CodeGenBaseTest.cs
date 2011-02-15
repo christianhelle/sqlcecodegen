@@ -1,7 +1,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 
-namespace CodeGenCore.UnitTest
+namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
 {
     [TestClass]
     [DeploymentItem("app.config")]

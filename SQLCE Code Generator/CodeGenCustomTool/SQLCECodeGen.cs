@@ -1,9 +1,10 @@
 ﻿using System;
-using Microsoft.CustomTool;
-using System.Runtime.InteropServices;
-using CodeGenCore;
-using System.Text;
+using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
+using ChristianHelle.DatabaseTools.SqlCe.CodeGenCore;
+using Microsoft.CustomTool;
 
 namespace CodeGenCustomTool
 {
@@ -13,7 +14,7 @@ namespace CodeGenCustomTool
     {
         protected override byte[] GenerateCode(string inputFileName, string inputFileContent)
         {
-            string generatedNamespace = FileNameSpace + new FileInfo(inputFileContent).Name;
+            string generatedNamespace = FileNameSpace + new FileInfo(inputFileName).Name;
             string connectionString = "Data Source=" + inputFileName;
             Database database = new Database(generatedNamespace, connectionString);
             CodeGeneratorFactory factory = new CodeGeneratorFactory(database);

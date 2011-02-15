@@ -8,7 +8,7 @@
     <ProjectGuid>{CE1B35D2-02CC-4195-A4E6-07FDE2915E99}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CodeGenCore</RootNamespace>
+    <RootNamespace>ChristianHelle.DatabaseTools.SqlCe.CodeGenCore</RootNamespace>
     <AssemblyName>CodeGenCore</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

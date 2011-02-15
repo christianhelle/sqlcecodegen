@@ -8,7 +8,7 @@
     <ProjectGuid>{B8C5C5C7-8481-417D-AD70-C3C118A2F0DD}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CodeGenConsole</RootNamespace>
+    <RootNamespace>ChristianHelle.DatabaseTools.SqlCe.CodeGenConsole</RootNamespace>
     <AssemblyName>CodeGenConsole</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -79,6 +79,7 @@
     <Content Include="TestDatabase.sdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Generator>SQLCECodeGenerator</Generator>
+      <LastGenOutput>TestDatabase.cs</LastGenOutput>
     </Content>
   </ItemGroup>
   <ItemGroup>

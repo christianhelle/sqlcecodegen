@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlServerCe;
-using CodeGenConsole;
 
-namespace CodeGenCore
+namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
     public class Database
     {
