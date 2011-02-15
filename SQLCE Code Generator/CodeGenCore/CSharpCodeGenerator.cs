@@ -1,5 +1,5 @@
 using System.Text;
-namespace CodeGenCore
+namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
     public class CSharpCodeGenerator : CodeGenerator
     {

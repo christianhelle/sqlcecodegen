@@ -1,7 +1,7 @@
-using CodeGenConsole.Properties;
+using ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest.Properties;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace CodeGenCore.UnitTest
+namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
 {
     [TestClass]
     public class CodeGeneratorFactoryTest : CodeGenBaseTest

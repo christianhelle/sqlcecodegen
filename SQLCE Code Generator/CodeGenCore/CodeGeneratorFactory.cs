@@ -1,4 +1,4 @@
-namespace CodeGenCore
+namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
     public class CodeGeneratorFactory
     {

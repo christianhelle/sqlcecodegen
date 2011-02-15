@@ -2,7 +2,7 @@
 using System.IO;
 using System.Globalization;
 
-namespace CodeGenCore
+namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
     public abstract class CodeGenerator
     {

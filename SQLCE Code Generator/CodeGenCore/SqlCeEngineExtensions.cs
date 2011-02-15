@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data.SqlServerCe;
 
-namespace CodeGenConsole
+namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
     public static class SqlCeEngineExtensions
     {

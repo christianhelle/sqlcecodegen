@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.SqlServerCe;
 using System.Diagnostics;
-using System.Text;
-using CodeGenConsole.Properties;
 using System.Windows.Forms;
-using CodeGenCore;
+using ChristianHelle.DatabaseTools.SqlCe.CodeGenConsole.Properties;
+using ChristianHelle.DatabaseTools.SqlCe.CodeGenCore;
 
-namespace CodeGenConsole
+namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenConsole
 {
     class Program
     {
@@ -36,6 +32,7 @@ namespace CodeGenConsole
             CodeGeneratorFactory factory = new CodeGeneratorFactory(database);
             CodeGenerator codeGenerator = factory.Create();
 
+            codeGenerator.WriteHeaderInformation();
             codeGenerator.GenerateEntities();
             codeGenerator.GenerateDataAccessLayer();
 
