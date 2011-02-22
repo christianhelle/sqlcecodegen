@@ -22,11 +22,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Depdendencies", "Depdendenc
 EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "CodeGenInstaller", "CodeGenInstaller\CodeGenInstaller.vdproj", "{CFABF11F-5630-47E0-9E38-565C606E4039}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGenGUI", "CodeGenGUI\CodeGenGUI.csproj", "{0788ECDE-7366-4484-9EE5-FF944CE316C5}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 6
+		SccNumberOfProjects = 7
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/TFS02
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs02
 		SccLocalPath0 = .
 		SccProjectUniqueName1 = CodeGenConsole\\CodeGenConsole.csproj
 		SccProjectName1 = CodeGenConsole
@@ -43,6 +45,9 @@ Global
 		SccProjectUniqueName5 = CodeGenCore.UnitTest\\CodeGenCore.UnitTest.csproj
 		SccProjectName5 = CodeGenCore.UnitTest
 		SccLocalPath5 = CodeGenCore.UnitTest
+		SccProjectUniqueName6 = CodeGenGUI\\CodeGenGUI.csproj
+		SccProjectName6 = CodeGenGUI
+		SccLocalPath6 = CodeGenGUI
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = SQLCE Code Generator.vsmdi
@@ -71,6 +76,10 @@ Global
 		{CFABF11F-5630-47E0-9E38-565C606E4039}.Debug|Any CPU.ActiveCfg = Debug
 		{CFABF11F-5630-47E0-9E38-565C606E4039}.Release|Any CPU.ActiveCfg = Release
 		{CFABF11F-5630-47E0-9E38-565C606E4039}.Release|Any CPU.Build.0 = Release
+		{0788ECDE-7366-4484-9EE5-FF944CE316C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0788ECDE-7366-4484-9EE5-FF944CE316C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0788ECDE-7366-4484-9EE5-FF944CE316C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0788ECDE-7366-4484-9EE5-FF944CE316C5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
