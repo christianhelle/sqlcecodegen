@@ -58,9 +58,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="CodeGenInstaller.cs">
-      <SubType>Component</SubType>
-    </None>
     <Compile Include="SQLCECodeGen.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

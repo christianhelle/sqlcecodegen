@@ -105,9 +105,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\tusing (var command = EntityBase.Connection.CreateCommand())");
             code.AppendLine("\t\t\t{");
             code.AppendLine("\t\t\t\tcommand.CommandText = \"SELECT * FROM " + table.TableName + "\";");
-            code.AppendLine("\t\t\t\tusing (var reader = command.ExecuteReader())");
+            code.AppendLine("\t\t\t\tusing (var stream = command.ExecuteReader())");
             code.AppendLine("\t\t\t\t{");
-            code.AppendLine("\t\t\t\t\twhile (reader.Read())");
+            code.AppendLine("\t\t\t\t\twhile (stream.Read())");
             code.AppendLine("\t\t\t\t\t{");
             code.AppendLine("\t\t\t\t\t\tvar item = new " + table.TableName + "();");
             GetReaderValues(table);
@@ -136,9 +136,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\tusing (var command = EntityBase.Connection.CreateCommand())");
             code.AppendLine("\t\t\t{");
             code.AppendLine("\t\t\t\tcommand.CommandText = string.Format(\"SELECT TOP({0}) * FROM " + table.TableName + "\", count);");
-            code.AppendLine("\t\t\t\tusing (var reader = command.ExecuteReader())");
+            code.AppendLine("\t\t\t\tusing (var stream = command.ExecuteReader())");
             code.AppendLine("\t\t\t\t{");
-            code.AppendLine("\t\t\t\t\twhile (reader.Read())");
+            code.AppendLine("\t\t\t\t\twhile (stream.Read())");
             code.AppendLine("\t\t\t\t\t{");
             code.AppendLine("\t\t\t\t\t\tvar item = new " + table.TableName + "();");
             GetReaderValues(table);
@@ -287,9 +287,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             foreach (var column in table.Columns)
             {
                 if (column.Value.IsValueType)
-                    code.AppendLine("\t\t\t\t\t\titem." + column.Key + " = (" + column.Value + "?) (reader[\"" + column.Key + "\"] is System.DBNull ? null : reader[\"" + column.Key + "\"]);");
+                    code.AppendLine("\t\t\t\t\t\titem." + column.Key + " = (" + column.Value + "?) (stream[\"" + column.Key + "\"] is System.DBNull ? null : stream[\"" + column.Key + "\"]);");
                 else
-                    code.AppendLine("\t\t\t\t\t\titem." + column.Key + " = reader[\"" + column.Key + "\"] as " + column.Value + ";");
+                    code.AppendLine("\t\t\t\t\t\titem." + column.Key + " = stream[\"" + column.Key + "\"] as " + column.Value + ";");
             }
         }
 

@@ -17,6 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGenCustomTool", "CodeGe
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Depdendencies", "Depdendencies", "{8E05C125-6658-4A6C-A4EC-848EA7C24CB1}"
 	ProjectSection(SolutionItems) = preProject
+		Depdendencies\ICSharpCode.TextEditor.dll = Depdendencies\ICSharpCode.TextEditor.dll
 		Depdendencies\Microsoft.VisualStudio.BaseCodeGeneratorWithSite.dll = Depdendencies\Microsoft.VisualStudio.BaseCodeGeneratorWithSite.dll
 	EndProjectSection
 EndProject
