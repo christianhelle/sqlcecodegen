@@ -14,7 +14,7 @@ namespace CodeGenCustomTool
     {
         protected override byte[] GenerateCode(string inputFileName, string inputFileContent)
         {
-            string generatedNamespace = FileNameSpace + new FileInfo(inputFileName).Name;
+            string generatedNamespace = FileNameSpace + "." + new FileInfo(inputFileName).Name;
             string connectionString = "Data Source=" + inputFileName;
             Database database = new Database(generatedNamespace, connectionString);
             CodeGeneratorFactory factory = new CodeGeneratorFactory(database);

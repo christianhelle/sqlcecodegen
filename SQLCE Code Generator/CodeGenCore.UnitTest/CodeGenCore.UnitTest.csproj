@@ -53,6 +53,7 @@
   <ItemGroup>
     <Compile Include="CodeGenBaseTest.cs" />
     <Compile Include="CodeGeneratorFactoryTest.cs" />
+    <Compile Include="CodeGenFileSerializerTest.cs" />
     <Compile Include="CodeGenTest.cs" />
     <Compile Include="OutputClass.cs" />
     <Compile Include="OutputClassTest.cs" />
