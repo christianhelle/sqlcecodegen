@@ -106,7 +106,8 @@ namespace CodeGenGUI
                 CodeGenFile file = codeGen.LoadFile(dialog.FileName);
                 rtbGeneratedCode.Text = file.GeneratedCode;
 
-                string generatedNamespace = GetType().Namespace + new FileInfo(file.DataSource).Name;
+                FileInfo fi = new FileInfo(file.DataSource);
+                string generatedNamespace = GetType().Namespace + "." + fi.Name.Replace(fi.Extension, string.Empty);
                 string connectionString = "Data Source=" + file.DataSource;
                 Database database = new Database(generatedNamespace, connectionString);
                 PopulateTables(database.Tables);
