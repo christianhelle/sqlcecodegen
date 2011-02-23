@@ -11,8 +11,8 @@ namespace CodeGenGUI
     [Serializable]
     public class CodeGenFile
     {
-        public string GeneratedCode { get; set; }
         public string DataSource { get; set; }
+        public string GeneratedCode { get; set; }
     }
 
     public class CodeGenFileSerializer

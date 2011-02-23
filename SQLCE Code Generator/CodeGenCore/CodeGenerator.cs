@@ -12,6 +12,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             Database = database;
             code = new StringBuilder();
+            code.AppendLine();
         }
 
         public Database Database { get; set; }
