@@ -56,7 +56,10 @@
     <Compile Include="CodeGeneratorFactory.cs" />
     <Compile Include="CodeGenFile.cs" />
     <Compile Include="CSharpCodeGenerator.cs" />
+    <Compile Include="CSharpDataAccessLayerGenerator.cs" />
+    <Compile Include="DataAccessLayerGenerator.cs" />
     <Compile Include="Database.cs" />
+    <Compile Include="IDataAccessLayerGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlCeEngineExtensions.cs" />
     <Compile Include="VisualBasicCodeGenerator.cs" />
