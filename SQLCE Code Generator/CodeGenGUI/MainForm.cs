@@ -159,5 +159,37 @@ namespace CodeGenGUI
             using (var about = new AboutBox())
                 about.ShowDialog();
         }
+
+        #region Clipboard Handling
+        private void undoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            rtbGeneratedCode.Undo();
+        }
+
+        private void redoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            rtbGeneratedCode.Redo();
+        }
+
+        private void cutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            rtbGeneratedCode.ActiveTextAreaControl.TextArea.ClipboardHandler.Cut(sender, e);
+        }
+
+        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            rtbGeneratedCode.ActiveTextAreaControl.TextArea.ClipboardHandler.Copy(sender, e);
+        }
+
+        private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            rtbGeneratedCode.ActiveTextAreaControl.TextArea.ClipboardHandler.Paste(sender, e);
+        }
+
+        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            rtbGeneratedCode.ActiveTextAreaControl.TextArea.ClipboardHandler.SelectAll(sender, e);
+        } 
+        #endregion
     }
 }
