@@ -4,6 +4,7 @@ using System.IO;
 using System.Windows.Forms;
 using ChristianHelle.DatabaseTools.SqlCe.CodeGenCore;
 using ICSharpCode.TextEditor.Document;
+using System.Drawing;
 
 namespace CodeGenGUI
 {
@@ -65,22 +66,31 @@ namespace CodeGenGUI
         private void PopulateTables(List<Table> list)
         {
             var rootNode = new TreeNode("Database Tables");
-            rootNode.Expand();
+            //rootNode.NodeFont = new Font(treeView.Font, FontStyle.Bold);
+            //rootNode.Expand();
 
             foreach (var item in list)
             {
                 var node = new TreeNode(item.TableName);
+                node.NodeFont = new Font(treeView.Font, FontStyle.Bold);
                 rootNode.Nodes.Add(node);
 
                 var columns = new TreeNode("Columns");
                 node.Nodes.Add(columns);
 
                 foreach (var column in item.Columns)
-                    columns.Nodes.Add(string.Format("{0} ({1})", column.Key, column.Value));
+                {
+                    columns.Nodes.Add(column.Key);
+                    //columns.Nodes.Add(string.Format("{0} - {1}({2})", column.Key, column.Value.ManagedType, column.Value.MaxLength));
+                }
             }
 
             treeView.Nodes.Clear();
             treeView.Nodes.Add(rootNode);
+            treeView.ExpandAll();
+            treeView.SelectedNode = rootNode;
+
+            Refresh();
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -190,7 +200,7 @@ namespace CodeGenGUI
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
             rtbGeneratedCode.ActiveTextAreaControl.TextArea.ClipboardHandler.SelectAll(sender, e);
-        } 
+        }
         #endregion
     }
 }
