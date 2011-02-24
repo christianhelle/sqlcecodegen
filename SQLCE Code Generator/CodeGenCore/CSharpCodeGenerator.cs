@@ -60,7 +60,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             foreach (var column in table.Columns)
             {
-                if (column.Value.IsValueType)
+                if (column.Value.ManagedType.IsValueType)
                     code.AppendLine("\t\tpublic " + column.Value + "? " + column.Key + " { get; set; }");
                 else
                     code.AppendLine("\t\tpublic " + column.Value + " " + column.Key + " { get; set; }");
