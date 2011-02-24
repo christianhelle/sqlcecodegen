@@ -82,7 +82,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             {
                 if (column.Key == table.PrimaryKeyColumnName)
                     continue;
-                if (column.Value.IsValueType)
+                if (column.Value.ManagedType.IsValueType)
                     code.Append(column.Value + "? " + column.Key + ", ");
                 else
                     code.Append(column.Value + " " + column.Key + ", ");
@@ -138,7 +138,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     code.AppendLine("\t\t\t\tvar value = command.ExecuteScalar();");
                     code.AppendLine();
                     code.Append("\t\t\t\titem." + column.Key + " = value as " + column.Value);
-                    if (column.Value.IsValueType)
+                    if (column.Value.ManagedType.IsValueType)
                         code.Append("?;");
                     else
                         code.Append(";");
@@ -160,7 +160,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.Append("\t\tpublic static " + table.TableName + " Create(");
             foreach (var column in table.Columns)
             {
-                if (column.Value.IsValueType)
+                if (column.Value.ManagedType.IsValueType)
                     code.Append(column.Value + "? " + column.Key + ", ");
                 else
                     code.Append(column.Value + " " + column.Key + ", ");

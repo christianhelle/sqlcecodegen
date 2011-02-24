@@ -43,9 +43,15 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 var currentTable = new Table();
                 currentTable.TableName = table.Key;
 
-                var columns = new Dictionary<string, Type>(table.Value.Columns.Count);
+                var columns = new Dictionary<string, Column>(table.Value.Columns.Count);
                 foreach (DataColumn column in table.Value.Columns)
-                    columns.Add(column.ColumnName, column.DataType);
+                    columns.Add(column.ColumnName,
+                        new Column
+                        {
+                            Name = column.ColumnName,
+                            ManagedType = column.DataType,
+                            MaxLength = column.MaxLength
+                        });
                 currentTable.Columns = columns;
 
                 using (var conn = new SqlCeConnection(connectionString))
@@ -73,11 +79,17 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 {
                     connection.Open();
                     command.CommandText = @"SELECT * FROM " + table;
-                    using (var reader = command.ExecuteReader())
+                    //using (var reader = command.ExecuteReader())
+                    //{
+                    //    var schema = new DataTable(table);
+                    //    for (var i = 0; i < reader.FieldCount; i++)
+                    //        schema.Columns.Add(reader.GetName(i), reader.GetFieldType(i));
+                    //    tableList.Add(table, schema);
+                    //}
+                    using (var adapter = new SqlCeDataAdapter(command))
                     {
                         var schema = new DataTable(table);
-                        for (var i = 0; i < reader.FieldCount; i++)
-                            schema.Columns.Add(reader.GetName(i), reader.GetFieldType(i));
+                        adapter.Fill(schema);
                         tableList.Add(table, schema);
                     }
                 }
@@ -89,7 +101,24 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
     public class Table
     {
         public string TableName { get; set; }
-        public Dictionary<string, Type> Columns { get; set; }
+        public Dictionary<string, Column> Columns { get; set; }
         public string PrimaryKeyColumnName { get; set; }
+
+        public override string ToString()
+        {
+            return TableName;
+        }
+    }
+
+    public class Column
+    {
+        public string Name { get; set; }
+        public int MaxLength { get; set; }
+        public Type ManagedType { get; set; }
+        
+        public override string ToString()
+        {
+            return ManagedType.ToString();
+        }
     }
 }

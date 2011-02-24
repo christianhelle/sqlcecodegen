@@ -18,7 +18,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             foreach (var column in table.Columns)
             {
-                if (column.Value.IsValueType)
+                if (column.Value.ManagedType.IsValueType)
                     code.AppendLine("\t\t\t\t\t\titem." + column.Key + " = (" + column.Value + "?) (stream[\"" + column.Key + "\"] is System.DBNull ? null : stream[\"" + column.Key + "\"]);");
                 else
                     code.AppendLine("\t\t\t\t\t\titem." + column.Key + " = stream[\"" + column.Key + "\"] as " + column.Value + ";");
