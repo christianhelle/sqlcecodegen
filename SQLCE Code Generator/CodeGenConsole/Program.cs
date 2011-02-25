@@ -23,11 +23,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenConsole
                 baseNamespace = args[1];
             }
 
-            Database database;
+            SqlCeDatabase database;
             if (string.IsNullOrEmpty(connectionString) && string.IsNullOrEmpty(baseNamespace))
-                database = new Database(typeof(Program).Namespace, Settings.Default.TestDatabaseConnectionString);
+                database = new SqlCeDatabase(typeof(Program).Namespace, Settings.Default.TestDatabaseConnectionString);
             else
-                database = new Database(baseNamespace, connectionString);
+                database = new SqlCeDatabase(baseNamespace, connectionString);
 
             CodeGeneratorFactory factory = new CodeGeneratorFactory(database);
             CodeGenerator codeGenerator = factory.Create();

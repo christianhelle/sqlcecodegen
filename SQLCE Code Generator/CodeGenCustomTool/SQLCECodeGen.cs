@@ -16,7 +16,7 @@ namespace CodeGenCustomTool
         {
             string generatedNamespace = FileNameSpace + "." + new FileInfo(inputFileName).Name;
             string connectionString = "Data Source=" + inputFileName;
-            Database database = new Database(generatedNamespace, connectionString);
+            SqlCeDatabase database = new SqlCeDatabase(generatedNamespace, connectionString);
             CodeGeneratorFactory factory = new CodeGeneratorFactory(database);
             CodeGenerator codeGenerator = factory.Create();
 

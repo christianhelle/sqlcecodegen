@@ -3,7 +3,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
     public class CSharpCodeGenerator : CodeGenerator
     {
-        public CSharpCodeGenerator(Database tableDetails)
+        public CSharpCodeGenerator(SqlCeDatabase tableDetails)
             : base(tableDetails)
         {
         }
@@ -33,14 +33,14 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\tpublic partial class " + table.TableName);
                 code.AppendLine("\t{");
 
-                var generator = new CSharpDataAccessLayerGenerator(code);
-                generator.GenerateSelectAll(table);
-                generator.GenerateSelectTop(table);
-                generator.GenerateCreateIgnoringPrimaryKey(table);
-                generator.GenerateCreateUsingAllColumns(table);
-                generator.GenerateDelete(table);
-                generator.GenerateDeleteAll(table);
-                generator.GenerateSaveChanges(table);
+                var generator = new CSharpDataAccessLayerGenerator(code, table);
+                generator.GenerateSelectAll();
+                generator.GenerateSelectTop();
+                generator.GenerateCreateIgnoringPrimaryKey();
+                generator.GenerateCreateUsingAllColumns();
+                generator.GenerateDelete();
+                generator.GenerateDeleteAll();
+                generator.GenerateSaveChanges();
 
                 code.AppendLine("\t}");
                 code.AppendLine("\t#endregion");

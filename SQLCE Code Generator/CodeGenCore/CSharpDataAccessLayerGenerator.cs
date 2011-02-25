@@ -7,12 +7,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
     public class CSharpDataAccessLayerGenerator : DataAccessLayerGenerator
     {
-        public CSharpDataAccessLayerGenerator(StringBuilder code)
-            : base(code)
+        public CSharpDataAccessLayerGenerator(StringBuilder code, Table table)
+            : base(code, table)
         {
         }
 
-        public override void GenerateSelectAll(Table table)
+        public override void GenerateSelectAll()
         {
             code.AppendLine("\t\t#region SELECT *");
             code.AppendLine("\t\tpublic static System.Collections.Generic.List<" + table.TableName + "> ToList()");
@@ -43,7 +43,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine();
         }
 
-        public override void GenerateSelectTop(Table table)
+        public override void GenerateSelectTop()
         {
             code.AppendLine("\t\t#region SELECT TOP()");
             code.AppendLine("\t\tpublic static System.Collections.Generic.List<" + table.TableName + "> ToList(int count)");
@@ -74,7 +74,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine();
         }
 
-        public override void GenerateCreateIgnoringPrimaryKey(Table table)
+        public override void GenerateCreateIgnoringPrimaryKey()
         {
             code.AppendLine("\t\t#region INSERT");
             code.Append("\t\tpublic static " + table.TableName + " Create(");
@@ -154,7 +154,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine();
         }
 
-        public override void GenerateCreateUsingAllColumns(Table table)
+        public override void GenerateCreateUsingAllColumns()
         {
             code.AppendLine("\t\t#region INSERT");
             code.Append("\t\tpublic static " + table.TableName + " Create(");
@@ -198,7 +198,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine();
         }
 
-        public override void GenerateDelete(Table table)
+        public override void GenerateDelete()
         {
             code.AppendLine("\t\t#region DELETE");
             code.AppendLine("\t\tpublic void Delete()");
@@ -229,7 +229,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine();
         }
 
-        public override void GenerateDeleteAll(Table table)
+        public override void GenerateDeleteAll()
         {
             code.AppendLine("\t\t#region Purge");
             code.AppendLine("\t\tpublic static void Purge()");
@@ -245,7 +245,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine();
         }
 
-        public override void GenerateSaveChanges(Table table)
+        public override void GenerateSaveChanges()
         {
             code.AppendLine("\t\t#region UPDATE");
             code.AppendLine("\t\tpublic void SaveChanges()");
