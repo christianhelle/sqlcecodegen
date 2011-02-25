@@ -8,14 +8,14 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
     {
         protected readonly StringBuilder code;
 
-        protected CodeGenerator(Database database)
+        protected CodeGenerator(SqlCeDatabase database)
         {
             Database = database;
             code = new StringBuilder();
             code.AppendLine();
         }
 
-        public Database Database { get; set; }
+        public SqlCeDatabase Database { get; set; }
         public abstract void GenerateEntities();
         public abstract void GenerateDataAccessLayer();
 

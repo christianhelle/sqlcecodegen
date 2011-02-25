@@ -11,7 +11,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
             var connectionString = Settings.Default.TestDatabaseConnectionString;
-            var target = new Database(defaultNamespace, connectionString);
+            var target = new SqlCeDatabase(defaultNamespace, connectionString);
 
             Assert.AreEqual(defaultNamespace, target.Namespace);
         }
@@ -21,7 +21,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
             var connectionString = Settings.Default.TestDatabaseConnectionString;
-            var database = new Database(defaultNamespace, connectionString);
+            var database = new SqlCeDatabase(defaultNamespace, connectionString);
             var factory = new CodeGeneratorFactory(database);
             var codeGenerator = factory.Create();
             codeGenerator.GenerateEntities();
@@ -35,7 +35,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
             var connectionString = Settings.Default.TestDatabaseConnectionString;
-            var database = new Database(defaultNamespace, connectionString);
+            var database = new SqlCeDatabase(defaultNamespace, connectionString);
             var factory = new CodeGeneratorFactory(database);
             var codeGenerator = factory.Create();
             codeGenerator.GenerateDataAccessLayer();

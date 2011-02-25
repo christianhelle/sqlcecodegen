@@ -4,7 +4,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
     public class VisualBasicCodeGenerator : CodeGenerator
     {
-        public VisualBasicCodeGenerator(Database database)
+        public VisualBasicCodeGenerator(SqlCeDatabase database)
             : base(database)
         {
         }

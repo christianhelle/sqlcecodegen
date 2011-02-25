@@ -5,13 +5,15 @@ using System.Text;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
-    public abstract class DataAccessLayerGenerator : IDataAccessLayerGenerator
+    public abstract class DataAccessLayerGenerator
     {
         protected StringBuilder code;
+        protected Table table;
 
-        protected DataAccessLayerGenerator(StringBuilder code)
+        protected DataAccessLayerGenerator(StringBuilder code, Table table)
         {
             this.code = code;
+            this.table = table;
         }
 
         protected void GetReaderValues(Table table)
@@ -25,12 +27,17 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             }
         }
 
-        public abstract void GenerateSelectAll(Table table);
-        public abstract void GenerateSelectTop(Table table);
-        public abstract void GenerateCreateIgnoringPrimaryKey(Table table);
-        public abstract void GenerateCreateUsingAllColumns(Table table);
-        public abstract void GenerateDelete(Table table);
-        public abstract void GenerateDeleteAll(Table table);
-        public abstract void GenerateSaveChanges(Table table);
+        public string GetCode()
+        {
+            return code.ToString();
+        }
+
+        public abstract void GenerateSelectAll();
+        public abstract void GenerateSelectTop();
+        public abstract void GenerateCreateIgnoringPrimaryKey();
+        public abstract void GenerateCreateUsingAllColumns();
+        public abstract void GenerateDelete();
+        public abstract void GenerateDeleteAll();
+        public abstract void GenerateSaveChanges();
     }
 }

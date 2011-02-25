@@ -49,7 +49,7 @@ namespace CodeGenGUI
             FileInfo fi = new FileInfo(inputFileName);
             string generatedNamespace = GetType().Namespace + "." + fi.Name.Replace(fi.Extension, string.Empty);
             string connectionString = "Data Source=" + inputFileName;
-            Database database = new Database(generatedNamespace, connectionString);
+            SqlCeDatabase database = new SqlCeDatabase(generatedNamespace, connectionString);
             PopulateTables(database.Tables);
 
             CodeGeneratorFactory factory = new CodeGeneratorFactory(database);
@@ -119,7 +119,7 @@ namespace CodeGenGUI
                 FileInfo fi = new FileInfo(file.DataSource);
                 string generatedNamespace = GetType().Namespace + "." + fi.Name.Replace(fi.Extension, string.Empty);
                 string connectionString = "Data Source=" + file.DataSource;
-                Database database = new Database(generatedNamespace, connectionString);
+                SqlCeDatabase database = new SqlCeDatabase(generatedNamespace, connectionString);
                 PopulateTables(database.Tables);
             }
         }

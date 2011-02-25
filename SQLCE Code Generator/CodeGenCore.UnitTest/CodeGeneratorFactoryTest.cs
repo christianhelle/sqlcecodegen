@@ -11,7 +11,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
             var connectionString = Settings.Default.TestDatabaseConnectionString;
-            var database = new Database(defaultNamespace, connectionString);
+            var database = new SqlCeDatabase(defaultNamespace, connectionString);
             var factory = new CodeGeneratorFactory(database);
             var codeGenerator = factory.Create();
 
@@ -25,7 +25,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
             var connectionString = Settings.Default.TestDatabaseConnectionString;
-            var database = new Database(defaultNamespace, connectionString);
+            var database = new SqlCeDatabase(defaultNamespace, connectionString);
             var codeGenerator = CodeGeneratorFactory.Create(database);
 
             Assert.IsNotNull(codeGenerator);
@@ -38,7 +38,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
             var connectionString = Settings.Default.TestDatabaseConnectionString;
-            var database = new Database(defaultNamespace, connectionString);
+            var database = new SqlCeDatabase(defaultNamespace, connectionString);
             var factory = new CodeGeneratorFactory(database);
             var codeGenerator = factory.Create("VB");
 
@@ -52,7 +52,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
             var connectionString = Settings.Default.TestDatabaseConnectionString;
-            var database = new Database(defaultNamespace, connectionString);
+            var database = new SqlCeDatabase(defaultNamespace, connectionString);
             var codeGenerator = CodeGeneratorFactory.Create(database, "VB");
 
             Assert.IsNotNull(codeGenerator);
@@ -65,7 +65,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
             var connectionString = Settings.Default.TestDatabaseConnectionString;
-            var database = new Database(defaultNamespace, connectionString);
+            var database = new SqlCeDatabase(defaultNamespace, connectionString);
             var factory = new CodeGeneratorFactory(database);
             var codeGenerator = factory.Create("CSharp");
 
@@ -79,7 +79,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
             var connectionString = Settings.Default.TestDatabaseConnectionString;
-            var database = new Database(defaultNamespace, connectionString);
+            var database = new SqlCeDatabase(defaultNamespace, connectionString);
             var codeGenerator = CodeGeneratorFactory.Create(database, "CSharp");
 
             Assert.IsNotNull(codeGenerator);

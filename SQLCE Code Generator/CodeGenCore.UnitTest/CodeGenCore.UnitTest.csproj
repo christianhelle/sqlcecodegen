@@ -55,6 +55,7 @@
     <Compile Include="CodeGeneratorFactoryTest.cs" />
     <Compile Include="CodeGenFileSerializerTest.cs" />
     <Compile Include="CodeGenTest.cs" />
+    <Compile Include="DatabaseTest.cs" />
     <Compile Include="OutputClass.cs" />
     <Compile Include="OutputClassTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
