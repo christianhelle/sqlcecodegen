@@ -23,75 +23,72 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         private void AnalyzeDatabase(string connectionString)
         {
-            // Read schema information
             var engine = new SqlCeEngine(connectionString);
             var tables = engine.GetTables();
             if (tables == null) return;
 
-            // Retrieve table information
             var tableList = GetTableInformation(connectionString, tables);
-
-            // Analyze table information (columns and data type)
             AnalyzeTables(tableList, connectionString);
         }
 
-        private void AnalyzeTables(ICollection<KeyValuePair<string, DataTable>> tableList, string connectionString)
+        private void AnalyzeTables(Dictionary<string, Table> tableList, string connectionString)
         {
-            Tables = new List<Table>(tableList.Count);
-            foreach (var table in tableList)
-            {
-                var currentTable = new Table();
-                currentTable.TableName = table.Key;
-
-                var columns = new Dictionary<string, Column>(table.Value.Columns.Count);
-                foreach (DataColumn column in table.Value.Columns)
-                    columns.Add(column.ColumnName,
-                        new Column
-                        {
-                            Name = column.ColumnName,
-                            ManagedType = column.DataType,
-                            MaxLength = column.MaxLength
-                        });
-                currentTable.Columns = columns;
-
+            Tables = new List<Table>(tableList.Values);
+            foreach (var table in Tables)
+            {                
                 using (var conn = new SqlCeConnection(connectionString))
                 using (var cmd = conn.CreateCommand())
                 {
                     conn.Open();
                     cmd.CommandText = @"SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.INDEXES WHERE TABLE_NAME=@Name AND PRIMARY_KEY=1";
-                    cmd.Parameters.AddWithValue("@Name", table.Key);
+                    cmd.Parameters.AddWithValue("@Name", table.TableName);
                     var primaryKeyColumnName = cmd.ExecuteScalar();
                     if (primaryKeyColumnName != null)
-                        currentTable.PrimaryKeyColumnName = primaryKeyColumnName.ToString();
+                        table.PrimaryKeyColumnName = primaryKeyColumnName.ToString();
                 }
-
-                Tables.Add(currentTable);
             }
         }
 
-        private static Dictionary<string, DataTable> GetTableInformation(string connectionString, ICollection<string> tables)
+        private static Dictionary<string, Table> GetTableInformation(string connectionString, ICollection<string> tables)
         {
-            var tableList = new Dictionary<string, DataTable>(tables.Count);
+            var tableList = new Dictionary<string, Table>(tables.Count);
             foreach (var table in tables)
             {
+                var schema = new DataTable(table);
+
                 using (var connection = new SqlCeConnection(connectionString))
                 using (var command = connection.CreateCommand())
                 {
                     connection.Open();
-                    command.CommandText = @"SELECT * FROM " + table;
-                    //using (var reader = command.ExecuteReader())
-                    //{
-                    //    var schema = new DataTable(table);
-                    //    for (var i = 0; i < reader.FieldCount; i++)
-                    //        schema.Columns.Add(reader.GetName(i), reader.GetFieldType(i));
-                    //    tableList.Add(table, schema);
-                    //}
+
+                    command.CommandText = "SELECT COLUMN_NAME, CHARACTER_MAXIMUM_LENGTH, IS_NULLABLE, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='" + table + "'";
                     using (var adapter = new SqlCeDataAdapter(command))
-                    {
-                        var schema = new DataTable(table);
                         adapter.Fill(schema);
-                        tableList.Add(table, schema);
+
+                    var columnDescriptions = new DataTable();
+                    command.CommandText = @"SELECT * FROM " + table;
+                    using (var adapter = new SqlCeDataAdapter(command))
+                        adapter.Fill(columnDescriptions);
+
+                    var item = new Table
+                    {
+                        TableName = table,
+                        Columns = new Dictionary<string, Column>(schema.Rows.Count)
+                    };
+
+                    foreach (DataRow row in schema.Rows)
+                    {
+                        var name = row.Field<string>("COLUMN_NAME");
+                        item.Columns.Add(name, new Column
+                        {
+                            Name = name,
+                            DatabaseType = row.Field<string>("DATA_TYPE"),
+                            MaxLength = row.Field<int?>("CHARACTER_MAXIMUM_LENGTH"),
+                            ManagedType = columnDescriptions.Columns[name].DataType
+                        });
                     }
+
+                    tableList.Add(table, item);
                 }
             }
             return tableList;
@@ -113,9 +110,10 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
     public class Column
     {
         public string Name { get; set; }
-        public int MaxLength { get; set; }
+        public int? MaxLength { get; set; }
         public Type ManagedType { get; set; }
-        
+        public string DatabaseType { get; set; }
+
         public override string ToString()
         {
             return ManagedType.ToString();

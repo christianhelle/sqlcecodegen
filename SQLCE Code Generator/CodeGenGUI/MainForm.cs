@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using ChristianHelle.DatabaseTools.SqlCe.CodeGenCore;
 using ICSharpCode.TextEditor.Document;
-using System.Drawing;
 
 namespace CodeGenGUI
 {
@@ -66,28 +66,31 @@ namespace CodeGenGUI
         private void PopulateTables(List<Table> list)
         {
             var rootNode = new TreeNode("Database Tables");
-            //rootNode.NodeFont = new Font(treeView.Font, FontStyle.Bold);
-            //rootNode.Expand();
+            rootNode.Expand();
 
             foreach (var item in list)
             {
                 var node = new TreeNode(item.TableName);
                 node.NodeFont = new Font(treeView.Font, FontStyle.Bold);
+                node.Expand();
                 rootNode.Nodes.Add(node);
 
                 var columns = new TreeNode("Columns");
+                columns.Expand();
                 node.Nodes.Add(columns);
 
                 foreach (var column in item.Columns)
                 {
-                    columns.Nodes.Add(column.Key);
-                    //columns.Nodes.Add(string.Format("{0} - {1}({2})", column.Key, column.Value.ManagedType, column.Value.MaxLength));
+                    var columnNode = new TreeNode(column.Key);
+                    columnNode.Nodes.Add("Database Type - " + column.Value.DatabaseType);
+                    columnNode.Nodes.Add("Managed Type - " + column.Value.ManagedType);
+                    columnNode.Nodes.Add("Max Length - " + column.Value.MaxLength);
+                    columns.Nodes.Add(columnNode);
                 }
             }
 
             treeView.Nodes.Clear();
             treeView.Nodes.Add(rootNode);
-            treeView.ExpandAll();
             treeView.SelectedNode = rootNode;
 
             Refresh();
