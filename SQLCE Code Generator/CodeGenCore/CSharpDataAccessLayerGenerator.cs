@@ -21,9 +21,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\tusing (var command = EntityBase.Connection.CreateCommand())");
             code.AppendLine("\t\t\t{");
             code.AppendLine("\t\t\t\tcommand.CommandText = \"SELECT * FROM " + table.TableName + "\";");
-            code.AppendLine("\t\t\t\tusing (var stream = command.ExecuteReader())");
+            code.AppendLine("\t\t\t\tusing (var reader = command.ExecuteReader())");
             code.AppendLine("\t\t\t\t{");
-            code.AppendLine("\t\t\t\t\twhile (stream.Read())");
+            code.AppendLine("\t\t\t\t\twhile (reader.Read())");
             code.AppendLine("\t\t\t\t\t{");
             code.AppendLine("\t\t\t\t\t\tvar item = new " + table.TableName + "();");
             GetReaderValues(table);
@@ -52,9 +52,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\tusing (var command = EntityBase.Connection.CreateCommand())");
             code.AppendLine("\t\t\t{");
             code.AppendLine("\t\t\t\tcommand.CommandText = string.Format(\"SELECT TOP({0}) * FROM " + table.TableName + "\", count);");
-            code.AppendLine("\t\t\t\tusing (var stream = command.ExecuteReader())");
+            code.AppendLine("\t\t\t\tusing (var reader = command.ExecuteReader())");
             code.AppendLine("\t\t\t\t{");
-            code.AppendLine("\t\t\t\t\twhile (stream.Read())");
+            code.AppendLine("\t\t\t\t\twhile (reader.Read())");
             code.AppendLine("\t\t\t\t\t{");
             code.AppendLine("\t\t\t\t\t\tvar item = new " + table.TableName + "();");
             GetReaderValues(table);

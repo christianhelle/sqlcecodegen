@@ -17,6 +17,20 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         }
 
         [TestMethod]
+        public void WriteHeaderInformationTest()
+        {
+            var defaultNamespace = typeof(CodeGenTest).Namespace;
+            var connectionString = Settings.Default.TestDatabaseConnectionString;
+            var database = new SqlCeDatabase(defaultNamespace, connectionString);
+            var factory = new CodeGeneratorFactory(database);
+            var codeGenerator = factory.Create();
+            codeGenerator.WriteHeaderInformation();
+
+            Assert.IsNotNull(codeGenerator.GetCode());
+            Assert.IsFalse(string.IsNullOrEmpty(codeGenerator.GetCode()));
+        }
+
+        [TestMethod]
         public void GenerateEntitiesTest()
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;

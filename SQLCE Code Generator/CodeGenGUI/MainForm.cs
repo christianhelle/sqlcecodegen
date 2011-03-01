@@ -5,6 +5,7 @@ using System.IO;
 using System.Windows.Forms;
 using ChristianHelle.DatabaseTools.SqlCe.CodeGenCore;
 using ICSharpCode.TextEditor.Document;
+using System.Diagnostics;
 
 namespace CodeGenGUI
 {
@@ -205,5 +206,49 @@ namespace CodeGenGUI
             rtbGeneratedCode.ActiveTextAreaControl.TextArea.ClipboardHandler.SelectAll(sender, e);
         }
         #endregion
+
+        private void compileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            CompileCSharp20();
+        }
+
+        private void CompileCSharp20()
+        {
+            rtbOutput.ResetText();
+
+            CreateOutputCSharpFile();
+
+            var csc = Environment.ExpandEnvironmentVariables(@"%SystemRoot%\Microsoft.Net\Framework\v3.5\csc.exe");
+            var args = string.Format(@"/target:library /reference:""{0}\System.Data.SqlServerCe.dll"" ""{0}\Output.cs""", Environment.CurrentDirectory);
+
+            WriteToOutputWindow("Compiling using C# 3.0");
+            WriteToOutputWindow(string.Format("{0} {1}", csc, args));
+
+            var psi = new ProcessStartInfo(csc, args);
+            psi.RedirectStandardOutput = true;
+            psi.CreateNoWindow = true;
+            psi.UseShellExecute = false;
+
+            var process = Process.Start(psi);
+            string output = process.StandardOutput.ReadToEnd();
+            process.WaitForExit();
+
+            WriteToOutputWindow(output);
+        }
+
+        private void CreateOutputCSharpFile()
+        {
+            using (var stream = File.CreateText("Output.cs"))
+                stream.Write(rtbGeneratedCode.Text);
+        }
+
+        void WriteToOutputWindow(string text)
+        {
+            rtbOutput.Text += "\n" + text;
+            rtbOutput.SelectionStart = rtbOutput.TextLength;
+            rtbOutput.ScrollToCaret();
+
+            Trace.WriteLine(text);
+        }
     }
 }
