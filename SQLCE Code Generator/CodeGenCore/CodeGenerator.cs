@@ -33,5 +33,10 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("*/");
             code.AppendLine();
         }
+
+        public void ClearCode()
+        {
+            code.Remove(0, code.Length - 1);
+        }
     }
 }

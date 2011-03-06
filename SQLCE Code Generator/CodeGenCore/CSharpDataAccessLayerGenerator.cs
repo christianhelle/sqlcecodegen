@@ -18,7 +18,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\tpublic static System.Collections.Generic.List<" + table.TableName + "> ToList()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tvar list = new System.Collections.Generic.List<" + table.TableName + ">();");
-            code.AppendLine("\t\t\tusing (var command = EntityBase.Connection.CreateCommand())");
+            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
             code.AppendLine("\t\t\t{");
             code.AppendLine("\t\t\t\tcommand.CommandText = \"SELECT * FROM " + table.TableName + "\";");
             code.AppendLine("\t\t\t\tusing (var reader = command.ExecuteReader())");
@@ -43,13 +43,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine();
         }
 
-        public override void GenerateSelectTop()
+        public override void GenerateSelectWithTop()
         {
             code.AppendLine("\t\t#region SELECT TOP()");
             code.AppendLine("\t\tpublic static System.Collections.Generic.List<" + table.TableName + "> ToList(int count)");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tvar list = new System.Collections.Generic.List<" + table.TableName + ">();");
-            code.AppendLine("\t\t\tusing (var command = EntityBase.Connection.CreateCommand())");
+            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
             code.AppendLine("\t\t\t{");
             code.AppendLine("\t\t\t\tcommand.CommandText = string.Format(\"SELECT TOP({0}) * FROM " + table.TableName + "\", count);");
             code.AppendLine("\t\t\t\tusing (var reader = command.ExecuteReader())");
@@ -74,6 +74,66 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine();
         }
 
+        public override void GenerateSelectBy()
+        {
+            foreach (var column in table.Columns)
+            {
+                code.AppendLine("\t\t#region SELECT .... WHERE " + column.Value.Name + "=?");
+                code.AppendFormat("\n\t\tpublic static System.Collections.Generic.List<{0}> SelectBy{2}({1} {2})", table.TableName, column.Value.ManagedType, column.Value.Name);
+                code.AppendLine("\t\t{");
+                code.AppendLine("\t\t\tvar list = new System.Collections.Generic.List<" + table.TableName + ">();");
+                code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
+                code.AppendLine("\t\t\t{");
+                code.AppendFormat("\t\t\t\tcommand.CommandText = \"SELECT * FROM {0} WHERE {1}=@{1}\";", table.TableName, column.Value.Name);
+                code.AppendFormat("\n\t\t\t\tcommand.Parameters.AddWithValue(\"@{0}\", {0});", column.Value.Name);
+                code.AppendLine();
+                code.AppendLine("\n\t\t\t\tusing (var reader = command.ExecuteReader())");
+                code.AppendLine("\t\t\t\t{");
+                code.AppendLine("\t\t\t\t\twhile (reader.Read())");
+                code.AppendLine("\t\t\t\t\t{");
+                code.AppendLine("\t\t\t\t\t\tvar item = new " + table.TableName + "();");
+                GetReaderValues(table);
+                code.AppendLine("\t\t\t\t\t\tlist.Add(item);");
+                code.AppendLine("\t\t\t\t\t}");
+                code.AppendLine("\t\t\t\t}");
+                code.AppendLine("\t\t\t}");
+                code.AppendLine("\t\t\treturn list.Count > 0 ? list : null;");
+                code.AppendLine("\t\t}");
+                code.AppendLine("\t\t#endregion");
+                code.AppendLine();
+            }
+        }
+
+        public override void GenerateSelectByWithTop()
+        {
+            foreach (var column in table.Columns)
+            {
+                code.AppendLine("\t\t#region SELECT TOP(?).... WHERE " + column.Value.Name + "=?");
+                code.AppendFormat("\n\t\tpublic static System.Collections.Generic.List<{0}> SelectBy{2}({1} {2}, int count)", table.TableName, column.Value.ManagedType, column.Value.Name);
+                code.AppendLine("\t\t{");
+                code.AppendLine("\t\t\tvar list = new System.Collections.Generic.List<" + table.TableName + ">();");
+                code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
+                code.AppendLine("\t\t\t{");
+                code.AppendFormat("\t\t\t\tcommand.CommandText = \"SELECT TOP(\" + count + \") * FROM {0} WHERE {1}=@{1}\";", table.TableName, column.Value.Name);
+                code.AppendFormat("\n\t\t\t\tcommand.Parameters.AddWithValue(\"@{0}\", {0});", column.Value.Name);
+                code.AppendLine();
+                code.AppendLine("\n\t\t\t\tusing (var reader = command.ExecuteReader())");
+                code.AppendLine("\t\t\t\t{");
+                code.AppendLine("\t\t\t\t\twhile (reader.Read())");
+                code.AppendLine("\t\t\t\t\t{");
+                code.AppendLine("\t\t\t\t\t\tvar item = new " + table.TableName + "();");
+                GetReaderValues(table);
+                code.AppendLine("\t\t\t\t\t\tlist.Add(item);");
+                code.AppendLine("\t\t\t\t\t}");
+                code.AppendLine("\t\t\t\t}");
+                code.AppendLine("\t\t\t}");
+                code.AppendLine("\t\t\treturn list.Count > 0 ? list : null;");
+                code.AppendLine("\t\t}");
+                code.AppendLine("\t\t#endregion");
+                code.AppendLine();
+            }
+        }
+
         public override void GenerateCreateIgnoringPrimaryKey()
         {
             code.AppendLine("\t\t#region INSERT");
@@ -90,7 +150,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.Remove(code.Length - 2, 2);
             code.Append(")\n");
             code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tusing (var command = EntityBase.Connection.CreateCommand())");
+            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
             code.AppendLine("\t\t\t{");
 
             var query = new StringBuilder();
@@ -168,7 +228,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.Remove(code.Length - 2, 2);
             code.Append(")\n");
             code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tusing (var command = EntityBase.Connection.CreateCommand())");
+            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
             code.AppendLine("\t\t\t{");
 
             var query = new StringBuilder();
@@ -203,7 +263,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t#region DELETE");
             code.AppendLine("\t\tpublic void Delete()");
             code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tusing (var command = EntityBase.Connection.CreateCommand())");
+            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
             code.AppendLine("\t\t\t{");
 
             var query = new StringBuilder();
@@ -229,12 +289,31 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine();
         }
 
+        public override void GenerateDeleteBy()
+        {
+            foreach (var column in table.Columns)
+            {
+                code.AppendLine("\t\t#region DELETE BY " + column.Value.Name);
+                code.AppendFormat("\n\t\tpublic static int DeleteBy{1}({0}{2} {1})", column.Value.ManagedType, column.Value.Name, column.Value.ManagedType.IsValueType ? "?" : string.Empty);
+                code.AppendLine("\t\t{");
+                code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
+                code.AppendLine("\t\t\t{");
+                code.AppendFormat("\n\t\t\t\tcommand.CommandText = \"DELETE FROM {0} WHERE {1}=@{1}\";", table.TableName, column.Value.Name);
+                code.AppendFormat("\n\t\t\t\tcommand.Parameters.AddWithValue(\"@{0}\", {0} != null ? (object){0} : System.DBNull.Value);", column.Value.Name);
+                code.AppendLine("\n\t\t\t\treturn command.ExecuteNonQuery();");
+                code.AppendLine("\t\t\t}");
+                code.AppendLine("\t\t}");
+                code.AppendLine("\t\t#endregion");
+                code.AppendLine();
+            }
+        }
+
         public override void GenerateDeleteAll()
         {
             code.AppendLine("\t\t#region Purge");
             code.AppendLine("\t\tpublic static void Purge()");
             code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tusing (var command = EntityBase.Connection.CreateCommand())");
+            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
             code.AppendLine("\t\t\t{");
             code.AppendLine("\t\t\t\tcommand.CommandText = \"DELETE FROM " + table.TableName + "\";");
             code.AppendLine("\t\t\t\tcommand.ExecuteNonQuery();");
@@ -250,7 +329,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t#region UPDATE");
             code.AppendLine("\t\tpublic void SaveChanges()");
             code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tusing (var command = EntityBase.Connection.CreateCommand())");
+            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
             code.AppendLine("\t\t\t{");
 
             var query = new StringBuilder();
