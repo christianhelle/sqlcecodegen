@@ -61,10 +61,16 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer = new System.Windows.Forms.SplitContainer();
             this.treeView = new System.Windows.Forms.TreeView();
-            this.rtbGeneratedCode = new ICSharpCode.TextEditor.TextEditorControl();
-            this.tabControl = new System.Windows.Forms.TabControl();
+            this.tabGeneratedCode = new System.Windows.Forms.TabControl();
+            this.tabPageEntities = new System.Windows.Forms.TabPage();
+            this.rtbGeneratedCodeEntities = new ICSharpCode.TextEditor.TextEditorControl();
+            this.tabPageDataAccess = new System.Windows.Forms.TabPage();
+            this.rtbGeneratedCodeDataAccess = new ICSharpCode.TextEditor.TextEditorControl();
+            this.tabOutput = new System.Windows.Forms.TabControl();
             this.tabPageOutput = new System.Windows.Forms.TabPage();
             this.rtbOutput = new System.Windows.Forms.RichTextBox();
+            this.tabPageCompilerOutput = new System.Windows.Forms.TabPage();
+            this.rtbCompilerOutput = new System.Windows.Forms.RichTextBox();
             this.menuStrip.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -72,8 +78,12 @@
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.Panel2.SuspendLayout();
             this.splitContainer.SuspendLayout();
-            this.tabControl.SuspendLayout();
+            this.tabGeneratedCode.SuspendLayout();
+            this.tabPageEntities.SuspendLayout();
+            this.tabPageDataAccess.SuspendLayout();
+            this.tabOutput.SuspendLayout();
             this.tabPageOutput.SuspendLayout();
+            this.tabPageCompilerOutput.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip
@@ -111,7 +121,7 @@
             this.newToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
             this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.newToolStripMenuItem.Text = "&New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
             // 
@@ -121,14 +131,14 @@
             this.openToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.openToolStripMenuItem.Text = "&Open";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // toolStripSeparator
             // 
             this.toolStripSeparator.Name = "toolStripSeparator";
-            this.toolStripSeparator.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator.Size = new System.Drawing.Size(143, 6);
             // 
             // saveToolStripMenuItem
             // 
@@ -136,31 +146,31 @@
             this.saveToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.saveToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.saveToolStripMenuItem.Text = "&Save";
             this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
-            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.saveAsToolStripMenuItem.Text = "Save &As";
             this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
             // 
             // toolStripSeparator1
             // 
             this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator1.Size = new System.Drawing.Size(143, 6);
             // 
             // toolStripSeparator2
             // 
             this.toolStripSeparator2.Name = "toolStripSeparator2";
-            this.toolStripSeparator2.Size = new System.Drawing.Size(149, 6);
+            this.toolStripSeparator2.Size = new System.Drawing.Size(143, 6);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -253,8 +263,9 @@
             // compileToolStripMenuItem
             // 
             this.compileToolStripMenuItem.Name = "compileToolStripMenuItem";
-            this.compileToolStripMenuItem.Size = new System.Drawing.Size(137, 22);
-            this.compileToolStripMenuItem.Text = "Compile C#";
+            this.compileToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F6;
+            this.compileToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.compileToolStripMenuItem.Text = "Compile";
             this.compileToolStripMenuItem.Click += new System.EventHandler(this.compileToolStripMenuItem_Click);
             // 
             // toolsToolStripMenuItem
@@ -270,13 +281,13 @@
             // customizeToolStripMenuItem
             // 
             this.customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-            this.customizeToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
+            this.customizeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.customizeToolStripMenuItem.Text = "&Customize";
             // 
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.optionsToolStripMenuItem.Text = "&Options";
             // 
             // helpToolStripMenuItem
@@ -321,7 +332,7 @@
             // 
             // splitContainer1.Panel2
             // 
-            this.splitContainer1.Panel2.Controls.Add(this.tabControl);
+            this.splitContainer1.Panel2.Controls.Add(this.tabOutput);
             this.splitContainer1.Size = new System.Drawing.Size(784, 516);
             this.splitContainer1.SplitterDistance = 401;
             this.splitContainer1.TabIndex = 0;
@@ -338,7 +349,7 @@
             // 
             // splitContainer.Panel2
             // 
-            this.splitContainer.Panel2.Controls.Add(this.rtbGeneratedCode);
+            this.splitContainer.Panel2.Controls.Add(this.tabGeneratedCode);
             this.splitContainer.Size = new System.Drawing.Size(784, 401);
             this.splitContainer.SplitterDistance = 202;
             this.splitContainer.TabIndex = 3;
@@ -355,27 +366,73 @@
             this.treeView.Size = new System.Drawing.Size(202, 401);
             this.treeView.TabIndex = 0;
             // 
-            // rtbGeneratedCode
+            // tabGeneratedCode
             // 
-            this.rtbGeneratedCode.AllowDrop = true;
-            this.rtbGeneratedCode.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rtbGeneratedCode.IsReadOnly = false;
-            this.rtbGeneratedCode.Location = new System.Drawing.Point(0, 0);
-            this.rtbGeneratedCode.Name = "rtbGeneratedCode";
-            this.rtbGeneratedCode.ShowVRuler = false;
-            this.rtbGeneratedCode.Size = new System.Drawing.Size(578, 401);
-            this.rtbGeneratedCode.TabIndex = 1;
+            this.tabGeneratedCode.Controls.Add(this.tabPageEntities);
+            this.tabGeneratedCode.Controls.Add(this.tabPageDataAccess);
+            this.tabGeneratedCode.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabGeneratedCode.Location = new System.Drawing.Point(0, 0);
+            this.tabGeneratedCode.Name = "tabGeneratedCode";
+            this.tabGeneratedCode.SelectedIndex = 0;
+            this.tabGeneratedCode.Size = new System.Drawing.Size(578, 401);
+            this.tabGeneratedCode.TabIndex = 0;
+            this.tabGeneratedCode.SelectedIndexChanged += new System.EventHandler(this.tabGeneratedCode_SelectedIndexChanged);
             // 
-            // tabControl
+            // tabPageEntities
             // 
-            this.tabControl.Controls.Add(this.tabPageOutput);
-            this.tabControl.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabControl.HotTrack = true;
-            this.tabControl.Location = new System.Drawing.Point(0, 0);
-            this.tabControl.Name = "tabControl";
-            this.tabControl.SelectedIndex = 0;
-            this.tabControl.Size = new System.Drawing.Size(784, 111);
-            this.tabControl.TabIndex = 0;
+            this.tabPageEntities.Controls.Add(this.rtbGeneratedCodeEntities);
+            this.tabPageEntities.Location = new System.Drawing.Point(4, 22);
+            this.tabPageEntities.Name = "tabPageEntities";
+            this.tabPageEntities.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageEntities.Size = new System.Drawing.Size(570, 375);
+            this.tabPageEntities.TabIndex = 0;
+            this.tabPageEntities.Text = "Entities";
+            this.tabPageEntities.UseVisualStyleBackColor = true;
+            // 
+            // rtbGeneratedCodeEntities
+            // 
+            this.rtbGeneratedCodeEntities.AllowDrop = true;
+            this.rtbGeneratedCodeEntities.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.rtbGeneratedCodeEntities.IsReadOnly = false;
+            this.rtbGeneratedCodeEntities.Location = new System.Drawing.Point(3, 3);
+            this.rtbGeneratedCodeEntities.Name = "rtbGeneratedCodeEntities";
+            this.rtbGeneratedCodeEntities.ShowVRuler = false;
+            this.rtbGeneratedCodeEntities.Size = new System.Drawing.Size(564, 369);
+            this.rtbGeneratedCodeEntities.TabIndex = 2;
+            // 
+            // tabPageDataAccess
+            // 
+            this.tabPageDataAccess.Controls.Add(this.rtbGeneratedCodeDataAccess);
+            this.tabPageDataAccess.Location = new System.Drawing.Point(4, 22);
+            this.tabPageDataAccess.Name = "tabPageDataAccess";
+            this.tabPageDataAccess.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageDataAccess.Size = new System.Drawing.Size(570, 375);
+            this.tabPageDataAccess.TabIndex = 1;
+            this.tabPageDataAccess.Text = "Data Access Code";
+            this.tabPageDataAccess.UseVisualStyleBackColor = true;
+            // 
+            // rtbGeneratedCodeDataAccess
+            // 
+            this.rtbGeneratedCodeDataAccess.AllowDrop = true;
+            this.rtbGeneratedCodeDataAccess.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.rtbGeneratedCodeDataAccess.IsReadOnly = false;
+            this.rtbGeneratedCodeDataAccess.Location = new System.Drawing.Point(3, 3);
+            this.rtbGeneratedCodeDataAccess.Name = "rtbGeneratedCodeDataAccess";
+            this.rtbGeneratedCodeDataAccess.ShowVRuler = false;
+            this.rtbGeneratedCodeDataAccess.Size = new System.Drawing.Size(564, 369);
+            this.rtbGeneratedCodeDataAccess.TabIndex = 3;
+            // 
+            // tabOutput
+            // 
+            this.tabOutput.Controls.Add(this.tabPageOutput);
+            this.tabOutput.Controls.Add(this.tabPageCompilerOutput);
+            this.tabOutput.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tabOutput.HotTrack = true;
+            this.tabOutput.Location = new System.Drawing.Point(0, 0);
+            this.tabOutput.Name = "tabOutput";
+            this.tabOutput.SelectedIndex = 0;
+            this.tabOutput.Size = new System.Drawing.Size(784, 111);
+            this.tabOutput.TabIndex = 0;
             // 
             // tabPageOutput
             // 
@@ -396,6 +453,26 @@
             this.rtbOutput.Size = new System.Drawing.Size(770, 79);
             this.rtbOutput.TabIndex = 0;
             this.rtbOutput.Text = "";
+            // 
+            // tabPageCompilerOutput
+            // 
+            this.tabPageCompilerOutput.Controls.Add(this.rtbCompilerOutput);
+            this.tabPageCompilerOutput.Location = new System.Drawing.Point(4, 22);
+            this.tabPageCompilerOutput.Name = "tabPageCompilerOutput";
+            this.tabPageCompilerOutput.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageCompilerOutput.Size = new System.Drawing.Size(776, 85);
+            this.tabPageCompilerOutput.TabIndex = 1;
+            this.tabPageCompilerOutput.Text = "Compiler Output";
+            this.tabPageCompilerOutput.UseVisualStyleBackColor = true;
+            // 
+            // rtbCompilerOutput
+            // 
+            this.rtbCompilerOutput.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.rtbCompilerOutput.Location = new System.Drawing.Point(3, 3);
+            this.rtbCompilerOutput.Name = "rtbCompilerOutput";
+            this.rtbCompilerOutput.Size = new System.Drawing.Size(770, 79);
+            this.rtbCompilerOutput.TabIndex = 1;
+            this.rtbCompilerOutput.Text = "";
             // 
             // MainForm
             // 
@@ -418,8 +495,12 @@
             this.splitContainer.Panel1.ResumeLayout(false);
             this.splitContainer.Panel2.ResumeLayout(false);
             this.splitContainer.ResumeLayout(false);
-            this.tabControl.ResumeLayout(false);
+            this.tabGeneratedCode.ResumeLayout(false);
+            this.tabPageEntities.ResumeLayout(false);
+            this.tabPageDataAccess.ResumeLayout(false);
+            this.tabOutput.ResumeLayout(false);
             this.tabPageOutput.ResumeLayout(false);
+            this.tabPageCompilerOutput.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -458,10 +539,16 @@
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer splitContainer;
         private System.Windows.Forms.TreeView treeView;
-        private ICSharpCode.TextEditor.TextEditorControl rtbGeneratedCode;
-        private System.Windows.Forms.TabControl tabControl;
+        private System.Windows.Forms.TabControl tabOutput;
         private System.Windows.Forms.TabPage tabPageOutput;
         private System.Windows.Forms.RichTextBox rtbOutput;
+        private System.Windows.Forms.TabControl tabGeneratedCode;
+        private System.Windows.Forms.TabPage tabPageEntities;
+        private ICSharpCode.TextEditor.TextEditorControl rtbGeneratedCodeEntities;
+        private System.Windows.Forms.TabPage tabPageDataAccess;
+        private ICSharpCode.TextEditor.TextEditorControl rtbGeneratedCodeDataAccess;
+        private System.Windows.Forms.TabPage tabPageCompilerOutput;
+        private System.Windows.Forms.RichTextBox rtbCompilerOutput;
 
     }
 }
