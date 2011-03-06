@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
 using ChristianHelle.DatabaseTools.SqlCe.CodeGenCore;
 using ICSharpCode.TextEditor.Document;
-using System.Diagnostics;
 
 namespace CodeGenGUI
 {
@@ -17,7 +17,8 @@ namespace CodeGenGUI
         {
             InitializeComponent();
 
-            rtbGeneratedCode.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy("C#");
+            rtbGeneratedCodeEntities.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy("C#");
+            rtbGeneratedCodeDataAccess.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy("C#");
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -39,29 +40,57 @@ namespace CodeGenGUI
                 if (dialog.ShowDialog() == DialogResult.Cancel)
                     return;
 
+                var fi = new FileInfo(dialog.FileName);
+                fi.Attributes = FileAttributes.Normal;
+
                 dataSource = dialog.FileName;
-                string generatedCode = GenerateCode(dataSource);
-                rtbGeneratedCode.Text = generatedCode;
+                var sw = Stopwatch.StartNew();
+
+                var codeGenerator = CreateCodeGenerator(dataSource);
+                rtbGeneratedCodeEntities.Text = GenerateEntitiesCode(codeGenerator);
+                rtbGeneratedCodeDataAccess.Text = GenerateDataAccessCode(codeGenerator);
+
+                WriteToOutputWindow("\nExecuted in " + sw.Elapsed);
             }
         }
 
-        private string GenerateCode(string inputFileName)
+        private string GenerateEntitiesCode(CodeGenerator codeGenerator)
         {
-            FileInfo fi = new FileInfo(inputFileName);
-            string generatedNamespace = GetType().Namespace + "." + fi.Name.Replace(fi.Extension, string.Empty);
-            string connectionString = "Data Source=" + inputFileName;
-            SqlCeDatabase database = new SqlCeDatabase(generatedNamespace, connectionString);
-            PopulateTables(database.Tables);
-
-            CodeGeneratorFactory factory = new CodeGeneratorFactory(database);
-            CodeGenerator codeGenerator = factory.Create();
-
+            WriteToOutputWindow("Generating Entities Code");
+            codeGenerator.ClearCode();
             codeGenerator.WriteHeaderInformation();
             codeGenerator.GenerateEntities();
+
+            var generatedCode = codeGenerator.GetCode();
+            return generatedCode;
+        }
+
+        private string GenerateDataAccessCode(CodeGenerator codeGenerator)
+        {
+            WriteToOutputWindow("Generating Data Access Code");
+            codeGenerator.ClearCode();
+            codeGenerator.WriteHeaderInformation();
             codeGenerator.GenerateDataAccessLayer();
 
-            string generatedCode = codeGenerator.GetCode();
+            var generatedCode = codeGenerator.GetCode();
             return generatedCode;
+        }
+
+        private CodeGenerator CreateCodeGenerator(string inputFileName)
+        {
+            var fi = new FileInfo(inputFileName);
+            var generatedNamespace = "ChristianHelle.DatabaseTools.SqlCe." + fi.Name.Replace(fi.Extension, string.Empty);
+            var connectionString = "Data Source=" + inputFileName;
+
+            WriteToOutputWindow("Analyzing Database...");
+            var database = new SqlCeDatabase(generatedNamespace, connectionString);
+
+            WriteToOutputWindow(string.Format("Found {0} tables", database.Tables.Count));
+            PopulateTables(database.Tables);
+
+            var factory = new CodeGeneratorFactory(database);
+            var codeGenerator = factory.Create();
+            return codeGenerator;
         }
 
         private void PopulateTables(List<Table> list)
@@ -118,7 +147,7 @@ namespace CodeGenGUI
 
                 var codeGen = new CodeGenFileSerializer();
                 CodeGenFile file = codeGen.LoadFile(dialog.FileName);
-                rtbGeneratedCode.Text = file.GeneratedCode;
+                rtbGeneratedCodeEntities.Text = file.GeneratedCode;
 
                 FileInfo fi = new FileInfo(file.DataSource);
                 string generatedNamespace = GetType().Namespace + "." + fi.Name.Replace(fi.Extension, string.Empty);
@@ -144,7 +173,7 @@ namespace CodeGenGUI
 
                 var codeGen = new CodeGenFile
                 {
-                    GeneratedCode = rtbGeneratedCode.Text,
+                    GeneratedCode = rtbGeneratedCodeEntities.Text,
                     DataSource = dataSource
                 };
                 var serializer = new CodeGenFileSerializer();
@@ -176,53 +205,88 @@ namespace CodeGenGUI
         }
 
         #region Clipboard Handling
+
+        int currentCodeViewTab = 0;
+
+        private void tabGeneratedCode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            currentCodeViewTab = tabGeneratedCode.SelectedIndex;
+        }
+
         private void undoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            rtbGeneratedCode.Undo();
+            if (currentCodeViewTab == 1)
+                rtbGeneratedCodeDataAccess.Undo();
+
+            if (currentCodeViewTab == 0)
+                rtbGeneratedCodeEntities.Undo();
         }
 
         private void redoToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            rtbGeneratedCode.Redo();
+            if (currentCodeViewTab == 1)
+                rtbGeneratedCodeDataAccess.Redo();
+
+            if (currentCodeViewTab == 0)
+                rtbGeneratedCodeEntities.Redo();
         }
 
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            rtbGeneratedCode.ActiveTextAreaControl.TextArea.ClipboardHandler.Cut(sender, e);
+            if (currentCodeViewTab == 1)
+                rtbGeneratedCodeDataAccess.ActiveTextAreaControl.TextArea.ClipboardHandler.Cut(sender, e);
+
+            if (currentCodeViewTab == 0)
+                rtbGeneratedCodeEntities.ActiveTextAreaControl.TextArea.ClipboardHandler.Cut(sender, e);
         }
 
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            rtbGeneratedCode.ActiveTextAreaControl.TextArea.ClipboardHandler.Copy(sender, e);
+            if (currentCodeViewTab == 1)
+                rtbGeneratedCodeDataAccess.ActiveTextAreaControl.TextArea.ClipboardHandler.Copy(sender, e);
+
+            if (currentCodeViewTab == 0)
+                rtbGeneratedCodeEntities.ActiveTextAreaControl.TextArea.ClipboardHandler.Copy(sender, e);
         }
 
         private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            rtbGeneratedCode.ActiveTextAreaControl.TextArea.ClipboardHandler.Paste(sender, e);
+            if (currentCodeViewTab == 1)
+                rtbGeneratedCodeDataAccess.ActiveTextAreaControl.TextArea.ClipboardHandler.Paste(sender, e);
+
+            if (currentCodeViewTab == 0)
+                rtbGeneratedCodeEntities.ActiveTextAreaControl.TextArea.ClipboardHandler.Paste(sender, e);
         }
 
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            rtbGeneratedCode.ActiveTextAreaControl.TextArea.ClipboardHandler.SelectAll(sender, e);
+            if (currentCodeViewTab == 1)
+                rtbGeneratedCodeDataAccess.ActiveTextAreaControl.TextArea.ClipboardHandler.SelectAll(sender, e);
+
+            if (currentCodeViewTab == 0)
+                rtbGeneratedCodeEntities.ActiveTextAreaControl.TextArea.ClipboardHandler.SelectAll(sender, e);
         }
         #endregion
 
         private void compileToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            CompileCSharp20();
+            tabOutput.SelectedTab = tabPageCompilerOutput;
+            CompileCSharp30();
         }
 
-        private void CompileCSharp20()
+        private void CompileCSharp30()
         {
-            rtbOutput.ResetText();
+            var sw = Stopwatch.StartNew();
+
+            rtbCompilerOutput.ResetText();
 
             CreateOutputCSharpFile();
 
             var csc = Environment.ExpandEnvironmentVariables(@"%SystemRoot%\Microsoft.Net\Framework\v3.5\csc.exe");
             var args = string.Format(@"/target:library /reference:""{0}\System.Data.SqlServerCe.dll"" ""{0}\Output.cs""", Environment.CurrentDirectory);
 
-            WriteToOutputWindow("Compiling using C# 3.0");
-            WriteToOutputWindow(string.Format("{0} {1}", csc, args));
+            WriteToCompilerOutputWindow("Compiling using C# 3.0");
+            WriteToCompilerOutputWindow(string.Format("\n{0} {1}", csc, args));
 
             var psi = new ProcessStartInfo(csc, args);
             psi.RedirectStandardOutput = true;
@@ -233,13 +297,18 @@ namespace CodeGenGUI
             string output = process.StandardOutput.ReadToEnd();
             process.WaitForExit();
 
-            WriteToOutputWindow(output);
+            WriteToCompilerOutputWindow(output);
+            WriteToCompilerOutputWindow("Executed in " + sw.Elapsed);
         }
 
         private void CreateOutputCSharpFile()
         {
             using (var stream = File.CreateText("Output.cs"))
-                stream.Write(rtbGeneratedCode.Text);
+            {
+                stream.Write(rtbGeneratedCodeEntities.Text);
+                stream.WriteLine();
+                stream.Write(rtbGeneratedCodeDataAccess.Text);
+            }
         }
 
         void WriteToOutputWindow(string text)
@@ -247,6 +316,15 @@ namespace CodeGenGUI
             rtbOutput.Text += "\n" + text;
             rtbOutput.SelectionStart = rtbOutput.TextLength;
             rtbOutput.ScrollToCaret();
+
+            Trace.WriteLine(text);
+        }
+
+        void WriteToCompilerOutputWindow(string text)
+        {
+            rtbCompilerOutput.Text += "\n" + text;
+            rtbCompilerOutput.SelectionStart = rtbCompilerOutput.TextLength;
+            rtbCompilerOutput.ScrollToCaret();
 
             Trace.WriteLine(text);
         }
