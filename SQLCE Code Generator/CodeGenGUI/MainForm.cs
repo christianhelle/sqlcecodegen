@@ -147,7 +147,8 @@ namespace CodeGenGUI
 
                 var codeGen = new CodeGenFileSerializer();
                 CodeGenFile file = codeGen.LoadFile(dialog.FileName);
-                rtbGeneratedCodeEntities.Text = file.GeneratedCode;
+                rtbGeneratedCodeEntities.Text = file.GeneratedCode.Entities;
+                rtbGeneratedCodeDataAccess.Text = file.GeneratedCode.DataAccessCode;
 
                 FileInfo fi = new FileInfo(file.DataSource);
                 string generatedNamespace = GetType().Namespace + "." + fi.Name.Replace(fi.Extension, string.Empty);
@@ -173,7 +174,11 @@ namespace CodeGenGUI
 
                 var codeGen = new CodeGenFile
                 {
-                    GeneratedCode = rtbGeneratedCodeEntities.Text,
+                    GeneratedCode = new GeneratedCode
+                    {
+                        Entities = rtbGeneratedCodeEntities.Text,
+                        DataAccessCode = rtbGeneratedCodeDataAccess.Text
+                    },
                     DataSource = dataSource
                 };
                 var serializer = new CodeGenFileSerializer();

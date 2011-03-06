@@ -12,7 +12,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             var actual = new CodeGenFile
             {
                 DataSource = Guid.NewGuid().ToString(),
-                GeneratedCode = Guid.NewGuid().ToString()
+                GeneratedCode = new GeneratedCode
+                {
+                    Entities = Guid.NewGuid().ToString(),
+                    DataAccessCode = Guid.NewGuid().ToString()
+                }
             };
             var target = new CodeGenFileSerializer();
             target.SaveFile(actual, "test.xml");
