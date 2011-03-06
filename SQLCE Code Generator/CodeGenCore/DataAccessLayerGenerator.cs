@@ -33,10 +33,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         }
 
         public abstract void GenerateSelectAll();
-        public abstract void GenerateSelectTop();
+        public abstract void GenerateSelectBy();
+        public abstract void GenerateSelectWithTop();
+        public abstract void GenerateSelectByWithTop();
         public abstract void GenerateCreateIgnoringPrimaryKey();
         public abstract void GenerateCreateUsingAllColumns();
         public abstract void GenerateDelete();
+        public abstract void GenerateDeleteBy();
         public abstract void GenerateDeleteAll();
         public abstract void GenerateSaveChanges();
     }

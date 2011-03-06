@@ -1,4 +1,5 @@
 using System.Text;
+
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
     public class CSharpCodeGenerator : CodeGenerator
@@ -35,10 +36,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
                 var generator = new CSharpDataAccessLayerGenerator(code, table);
                 generator.GenerateSelectAll();
-                generator.GenerateSelectTop();
+                generator.GenerateSelectWithTop();
+                generator.GenerateSelectBy();
+                generator.GenerateSelectByWithTop();
                 generator.GenerateCreateIgnoringPrimaryKey();
                 generator.GenerateCreateUsingAllColumns();
                 generator.GenerateDelete();
+                generator.GenerateDeleteBy();
                 generator.GenerateDeleteAll();
                 generator.GenerateSaveChanges();
 
@@ -61,9 +65,33 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             foreach (var column in table.Columns)
             {
                 if (column.Value.ManagedType.IsValueType)
-                    code.AppendLine("\t\tpublic " + column.Value + "? " + column.Key + " { get; set; }");
+                {
+                    code.AppendLine("\t\tprivate " + column.Value.ManagedType + "? _" + column.Value.Name + ";");
+                    code.AppendLine("\t\tpublic " + column.Value.ManagedType + "? " + column.Value.Name);
+                }
                 else
-                    code.AppendLine("\t\tpublic " + column.Value + " " + column.Key + " { get; set; }");
+                {
+                    code.AppendLine("\t\tprivate " + column.Value.ManagedType + " _" + column.Value.Name + ";");
+                    code.AppendLine("\t\tpublic " + column.Value.ManagedType + " " + column.Value.Name);
+                }
+
+                code.AppendLine("\t\t{");
+                code.AppendLine("\t\t\t get { return _" + column.Value.Name + "; }");
+                code.AppendLine("\t\t\t set");
+                code.AppendLine("\t\t\t{");
+                code.AppendLine("\t\t\t\t_" + column.Value.Name + " = value;");
+
+                if (column.Value.MaxLength > 0)
+                {
+                    if (column.Value.ManagedType.Equals(typeof(string)))
+                    {
+                        code.AppendLine("\t\t\t\tif (_" + column.Value.Name + ".Length > " + column.Value.MaxLength + ")");
+                        code.AppendLine("\t\t\t\t\tthrow new System.ArgumentOutOfRangeException(\"Max length is " + column.Value.MaxLength + "\");");
+                    }
+                }
+
+                code.AppendLine("\t\t\t}");
+                code.AppendLine("\t\t}");
             }
             code.AppendLine("\t}");
 
@@ -74,7 +102,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         private void GenerateEntityBase()
         {
             code.AppendLine("\t#region EntityBase");
-            code.AppendLine("\tpublic abstract class EntityBase");
+            code.AppendLine("\tpublic static class EntityBase");
             code.AppendLine("\t{");
             code.AppendLine("\t\tpublic static System.String ConnectionString { get; set; }");
             code.AppendLine();
@@ -89,6 +117,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\t\t\tconnectionInstance.Open();");
             code.AppendLine("\t\t\t\treturn connectionInstance;");
             code.AppendLine("\t\t\t}");
+            code.AppendLine("\t\t}");
+            code.AppendLine();
+            code.AppendLine("\t\tpublic static System.Data.SqlServerCe.SqlCeCommand CreateCommand()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\treturn Connection.CreateCommand();");
             code.AppendLine("\t\t}");
             code.AppendLine("\t}");
             code.AppendLine("\t#endregion");
