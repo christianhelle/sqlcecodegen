@@ -17,6 +17,7 @@ namespace CodeGenGUI
     {
         public string Entities { get; set; }
         public string DataAccessCode { get; set; }
+        public string UnitTests { get; set; }
     }
 
     public class CodeGenFileSerializer
