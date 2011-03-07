@@ -330,7 +330,7 @@ namespace CodeGenGUI
             var sw = Stopwatch.StartNew();
 
             var csc = Environment.ExpandEnvironmentVariables(@"%SystemRoot%\Microsoft.Net\Framework\v3.5\csc.exe");
-            var args = string.Format(@"/target:library /reference:""{0}\System.Data.SqlServerCe.dll"" ""{0}\Output.cs""", Environment.CurrentDirectory);
+            var args = string.Format(@"/target:library /optimize /out:DataAccess.dll /reference:""{0}\System.Data.SqlServerCe.dll"" ""{0}\*.cs""", Environment.CurrentDirectory);
 
             WriteToCompilerOutputWindow("Compiling using C# 3.0");
             WriteToCompilerOutputWindow(string.Format("\n{0} {1}", csc, args));
@@ -346,15 +346,22 @@ namespace CodeGenGUI
 
             WriteToCompilerOutputWindow(output);
             WriteToCompilerOutputWindow("Executed in " + sw.Elapsed);
+
+            File.Delete(string.Format("{0}\\Entities.cs", Environment.CurrentDirectory));
+            File.Delete(string.Format("{0}\\DataAccess.cs", Environment.CurrentDirectory));
         }
 
         private void CreateOutputCSharpFile()
         {
-            using (var stream = File.CreateText("Output.cs"))
+            using (var stream = File.CreateText("Entities.cs"))
             {
                 stream.Write(rtbGeneratedCodeEntities.Text);
                 stream.WriteLine();
+            }
+            using (var stream = File.CreateText("DataAccess.cs"))
+            {
                 stream.Write(rtbGeneratedCodeDataAccess.Text);
+                stream.WriteLine();
             }
         }
 
