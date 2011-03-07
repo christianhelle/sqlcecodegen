@@ -6,19 +6,55 @@ using System.IO;
 using System.Windows.Forms;
 using ChristianHelle.DatabaseTools.SqlCe.CodeGenCore;
 using ICSharpCode.TextEditor.Document;
+using System.Threading;
 
 namespace CodeGenGUI
 {
     public partial class MainForm : Form
     {
         private string dataSource;
+        private bool launchedWithArgument;
 
-        public MainForm()
+        public MainForm(string[] args)
         {
             InitializeComponent();
 
             rtbGeneratedCodeEntities.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy("C#");
             rtbGeneratedCodeDataAccess.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy("C#");
+
+            if (args != null && args.Length == 1)
+            {
+                launchedWithArgument = true;
+
+                var ext = Path.GetExtension(args[0]).ToLower();
+                if (ext == ".sdf")
+                {
+                    Text += " - Untitled";
+
+                    var sw = Stopwatch.StartNew();
+
+                    var codeGenerator = CreateCodeGenerator(dataSource);
+                    rtbGeneratedCodeEntities.Text = GenerateEntitiesCode(codeGenerator);
+                    rtbGeneratedCodeDataAccess.Text = GenerateDataAccessCode(codeGenerator);
+
+                    WriteToOutputWindow("\nExecuted in " + sw.Elapsed);
+                }
+                else if (ext == ".codegen")
+                {
+                    Text += " - " + Path.GetFileNameWithoutExtension(args[0]);
+
+                    var codeGen = new CodeGenFileSerializer();
+                    var file = codeGen.LoadFile(args[0]);
+                    rtbGeneratedCodeEntities.Text = file.GeneratedCode.Entities;
+                    rtbGeneratedCodeDataAccess.Text = file.GeneratedCode.DataAccessCode;
+
+                    var fi = new FileInfo(file.DataSource);
+                    string generatedNamespace = GetType().Namespace + "." + fi.Name.Replace(fi.Extension, string.Empty);
+                    string connectionString = "Data Source=" + file.DataSource;
+                    SqlCeDatabase database = new SqlCeDatabase(generatedNamespace, connectionString);
+                    PopulateTables(database.Tables);
+                }
+            }
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -51,6 +87,8 @@ namespace CodeGenGUI
                 rtbGeneratedCodeDataAccess.Text = GenerateDataAccessCode(codeGenerator);
 
                 WriteToOutputWindow("\nExecuted in " + sw.Elapsed);
+
+                Text += " - Untitled";
             }
         }
 
@@ -128,7 +166,8 @@ namespace CodeGenGUI
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            SafeOperation((Action)delegate { NewFile(); });
+            if (!launchedWithArgument)
+                SafeOperation((Action)delegate { NewFile(); });
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
@@ -155,6 +194,8 @@ namespace CodeGenGUI
                 string connectionString = "Data Source=" + file.DataSource;
                 SqlCeDatabase database = new SqlCeDatabase(generatedNamespace, connectionString);
                 PopulateTables(database.Tables);
+
+                Text += " - " + Path.GetFileNameWithoutExtension(dialog.FileName);
             }
         }
 
@@ -183,6 +224,8 @@ namespace CodeGenGUI
                 };
                 var serializer = new CodeGenFileSerializer();
                 serializer.SaveFile(codeGen, dialog.FileName);
+
+                Text += " - " + Path.GetFileNameWithoutExtension(dialog.FileName);
             }
         }
 
@@ -281,11 +324,10 @@ namespace CodeGenGUI
 
         private void CompileCSharp30()
         {
-            var sw = Stopwatch.StartNew();
-
             rtbCompilerOutput.ResetText();
-
             CreateOutputCSharpFile();
+
+            var sw = Stopwatch.StartNew();
 
             var csc = Environment.ExpandEnvironmentVariables(@"%SystemRoot%\Microsoft.Net\Framework\v3.5\csc.exe");
             var args = string.Format(@"/target:library /reference:""{0}\System.Data.SqlServerCe.dll"" ""{0}\Output.cs""", Environment.CurrentDirectory);
@@ -321,6 +363,7 @@ namespace CodeGenGUI
             rtbOutput.Text += "\n" + text;
             rtbOutput.SelectionStart = rtbOutput.TextLength;
             rtbOutput.ScrollToCaret();
+            rtbOutput.Update();
 
             Trace.WriteLine(text);
         }
@@ -330,8 +373,57 @@ namespace CodeGenGUI
             rtbCompilerOutput.Text += "\n" + text;
             rtbCompilerOutput.SelectionStart = rtbCompilerOutput.TextLength;
             rtbCompilerOutput.ScrollToCaret();
+            rtbCompilerOutput.Update();
 
             Trace.WriteLine(text);
+        }
+
+        private void MainForm_DragEnter(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                e.Effect = DragDropEffects.Copy;
+            }
+            else
+            {
+                e.Effect = DragDropEffects.None;
+            }
+        }
+
+        private void MainForm_DragDrop(object sender, DragEventArgs e)
+        {
+            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            {
+                string[] filePaths = (string[])(e.Data.GetData(DataFormats.FileDrop));
+                var ext = Path.GetExtension(filePaths[0]).ToLower();
+                if (ext == ".sdf")
+                {
+                    Text += " - Untitled";
+
+                    var sw = Stopwatch.StartNew();
+
+                    var codeGenerator = CreateCodeGenerator(dataSource);
+                    rtbGeneratedCodeEntities.Text = GenerateEntitiesCode(codeGenerator);
+                    rtbGeneratedCodeDataAccess.Text = GenerateDataAccessCode(codeGenerator);
+
+                    WriteToOutputWindow("\nExecuted in " + sw.Elapsed);
+                }
+                else if (ext == ".codegen")
+                {
+                    Text += " - " + Path.GetFileNameWithoutExtension(filePaths[0]);
+
+                    var codeGen = new CodeGenFileSerializer();
+                    var file = codeGen.LoadFile(filePaths[0]);
+                    rtbGeneratedCodeEntities.Text = file.GeneratedCode.Entities;
+                    rtbGeneratedCodeDataAccess.Text = file.GeneratedCode.DataAccessCode;
+
+                    var fi = new FileInfo(file.DataSource);
+                    string generatedNamespace = GetType().Namespace + "." + fi.Name.Replace(fi.Extension, string.Empty);
+                    string connectionString = "Data Source=" + file.DataSource;
+                    SqlCeDatabase database = new SqlCeDatabase(generatedNamespace, connectionString);
+                    PopulateTables(database.Tables);
+                }
+            }
         }
     }
 }
