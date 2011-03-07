@@ -18,5 +18,15 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             throw new NotImplementedException();
         }
+
+        public override void GenerateEntities(EntityGeneratorOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void GenerateDataAccessLayer(DataAccessLayerGeneratorOptions options)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

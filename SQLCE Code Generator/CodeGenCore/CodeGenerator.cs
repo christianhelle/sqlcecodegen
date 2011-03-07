@@ -17,7 +17,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         public SqlCeDatabase Database { get; set; }
         public abstract void GenerateEntities();
+        public abstract void GenerateEntities(EntityGeneratorOptions options);
         public abstract void GenerateDataAccessLayer();
+        public abstract void GenerateDataAccessLayer(DataAccessLayerGeneratorOptions options);
 
         public string GetCode()
         {
