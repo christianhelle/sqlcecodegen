@@ -150,6 +150,19 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.Remove(code.Length - 2, 2);
             code.Append(")\n");
             code.AppendLine("\t\t{");
+
+            foreach (var column in table.Columns)
+            {
+                if (column.Key == table.PrimaryKeyColumnName)
+                    continue;
+                if (column.Value.ManagedType.Equals(typeof(string)))
+                {
+                    code.AppendLine("\t\t\tif (" + column.Value.Name + ".Length > " + column.Value.MaxLength + ")");
+                    code.AppendLine("\t\t\t\tthrow new System.ArgumentException(\"Max length for " + column.Value.Name + " is " + column.Value.MaxLength + "\");");
+                }
+            }
+            code.AppendLine();
+
             code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
             code.AppendLine("\t\t\t{");
 
@@ -295,7 +308,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             {
                 code.AppendLine("\t\t#region DELETE BY " + column.Value.Name);
                 code.AppendFormat("\n\t\tpublic static int DeleteBy{1}({0}{2} {1})", column.Value.ManagedType, column.Value.Name, column.Value.ManagedType.IsValueType ? "?" : string.Empty);
-                code.AppendLine("\t\t{");
+                code.AppendLine("\n\t\t{");
                 code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
                 code.AppendLine("\t\t\t{");
                 code.AppendFormat("\n\t\t\t\tcommand.CommandText = \"DELETE FROM {0} WHERE {1}=@{1}\";", table.TableName, column.Value.Name);
