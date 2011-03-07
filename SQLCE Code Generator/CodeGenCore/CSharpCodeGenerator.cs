@@ -11,6 +11,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         public override void GenerateEntities()
         {
+            GenerateEntities(new EntityGeneratorOptions());
+        }
+
+        public override void GenerateEntities(EntityGeneratorOptions options)
+        {
             code.AppendLine("\nnamespace " + Database.Namespace);
             code.AppendLine("{");
 
@@ -24,6 +29,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         public override void GenerateDataAccessLayer()
         {
+            GenerateDataAccessLayer(new DataAccessLayerGeneratorOptions());
+        }
+
+        public override void GenerateDataAccessLayer(DataAccessLayerGeneratorOptions options)
+        {
             code.AppendLine("\nnamespace " + Database.Namespace);
             code.AppendLine("{");
 
@@ -35,16 +45,26 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\t{");
 
                 var generator = new CSharpDataAccessLayerGenerator(code, table);
-                generator.GenerateSelectAll();
-                generator.GenerateSelectWithTop();
-                generator.GenerateSelectBy();
-                generator.GenerateSelectByWithTop();
-                generator.GenerateCreateIgnoringPrimaryKey();
-                generator.GenerateCreateUsingAllColumns();
-                generator.GenerateDelete();
-                generator.GenerateDeleteBy();
-                generator.GenerateDeleteAll();
-                generator.GenerateSaveChanges();
+                if (options.GenerateSelectAll)
+                    generator.GenerateSelectAll();
+                if (options.GenerateSelectAllWithTop)
+                    generator.GenerateSelectWithTop();
+                if (options.GenerateSelectBy)
+                    generator.GenerateSelectBy();
+                if (options.GenerateSelectByWithTop)
+                    generator.GenerateSelectByWithTop();
+                if (options.GenerateCreateIgnoringPrimaryKey)
+                    generator.GenerateCreateIgnoringPrimaryKey();
+                if (options.GenerateCreateUsingAllColumns)
+                    generator.GenerateCreateUsingAllColumns();
+                if (options.GenerateDelete)
+                    generator.GenerateDelete();
+                if (options.GenerateDeleteBy)
+                    generator.GenerateDeleteBy();
+                if (options.GenerateDeleteAll)
+                    generator.GenerateDeleteAll();
+                if (options.GenerateSaveChanges)
+                    generator.GenerateSaveChanges();
 
                 code.AppendLine("\t}");
                 code.AppendLine("\t#endregion");

@@ -56,6 +56,7 @@
   <ItemGroup>
     <Compile Include="CodeGenerator.cs" />
     <Compile Include="CodeGeneratorFactory.cs" />
+    <Compile Include="CodeGeneratorOptions.cs" />
     <Compile Include="CodeGenFile.cs" />
     <Compile Include="CSharpCodeGenerator.cs" />
     <Compile Include="CSharpDataAccessLayerGenerator.cs" />
