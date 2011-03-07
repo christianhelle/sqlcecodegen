@@ -106,7 +106,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     if (column.Value.ManagedType.Equals(typeof(string)))
                     {
                         code.AppendLine("\t\t\t\tif (_" + column.Value.Name + ".Length > " + column.Value.MaxLength + ")");
-                        code.AppendLine("\t\t\t\t\tthrow new System.ArgumentOutOfRangeException(\"Max length is " + column.Value.MaxLength + "\");");
+                        code.AppendLine("\t\t\t\t\tthrow new System.ArgumentException(\"Max length for " + column.Value.Name + " is " + column.Value.MaxLength + "\");");
                     }
                 }
 
