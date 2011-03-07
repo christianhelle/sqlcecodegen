@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Xml.Serialization;
-using System.Xml;
 using System.IO;
+using System.IO.Compression;
+using System.Xml.Serialization;
 
 namespace CodeGenGUI
 {
@@ -26,16 +23,24 @@ namespace CodeGenGUI
     {
         public CodeGenFile LoadFile(string filename)
         {
-            var serializer = new XmlSerializer(typeof(CodeGenFile));
-            using (var stream = new StreamReader(filename))
+            var serializer = GetSerializer();
+            using (var file = new FileStream(filename, FileMode.Open))
+            using (var stream = new DeflateStream(file, CompressionMode.Decompress))
                 return serializer.Deserialize(stream) as CodeGenFile;
         }
 
         public void SaveFile(CodeGenFile codeGenFile, string filename)
         {
-            var serializer = new XmlSerializer(typeof(CodeGenFile));
-            using (var stream = new StreamWriter(filename))
+            var serializer = GetSerializer();
+            using (var file = new FileStream(filename, FileMode.Create))
+            using (var stream = new DeflateStream(file, CompressionMode.Compress))
                 serializer.Serialize(stream, codeGenFile);
+        }
+
+        private static XmlSerializer GetSerializer()
+        {
+            var serializer = new XmlSerializer(typeof(CodeGenFile));
+            return serializer;
         }
     }
 }
