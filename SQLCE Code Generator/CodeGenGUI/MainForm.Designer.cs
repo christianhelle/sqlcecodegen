@@ -48,8 +48,8 @@
             this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.codeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.buildToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.compileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.customizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -65,13 +65,16 @@
             this.rtbGeneratedCodeEntities = new ICSharpCode.TextEditor.TextEditorControl();
             this.tabPageDataAccess = new System.Windows.Forms.TabPage();
             this.rtbGeneratedCodeDataAccess = new ICSharpCode.TextEditor.TextEditorControl();
+            this.tabPageUnitTests = new System.Windows.Forms.TabPage();
+            this.rtbGeneratedCodeUnitTests = new ICSharpCode.TextEditor.TextEditorControl();
             this.tabOutput = new System.Windows.Forms.TabControl();
             this.tabPageOutput = new System.Windows.Forms.TabPage();
             this.rtbOutput = new System.Windows.Forms.RichTextBox();
             this.tabPageCompilerOutput = new System.Windows.Forms.TabPage();
             this.rtbCompilerOutput = new System.Windows.Forms.RichTextBox();
-            this.tabPageUnitTests = new System.Windows.Forms.TabPage();
-            this.rtbGeneratedCodeUnitTests = new ICSharpCode.TextEditor.TextEditorControl();
+            this.tabPageTestResults = new System.Windows.Forms.TabPage();
+            this.runUnitTestsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.rtbUnitTestOutput = new System.Windows.Forms.RichTextBox();
             this.menuStrip.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -82,10 +85,11 @@
             this.tabGeneratedCode.SuspendLayout();
             this.tabPageEntities.SuspendLayout();
             this.tabPageDataAccess.SuspendLayout();
+            this.tabPageUnitTests.SuspendLayout();
             this.tabOutput.SuspendLayout();
             this.tabPageOutput.SuspendLayout();
             this.tabPageCompilerOutput.SuspendLayout();
-            this.tabPageUnitTests.SuspendLayout();
+            this.tabPageTestResults.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip
@@ -93,7 +97,7 @@
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.editToolStripMenuItem,
-            this.buildToolStripMenuItem,
+            this.codeToolStripMenuItem,
             this.toolsToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
@@ -248,21 +252,22 @@
             this.selectAllToolStripMenuItem.Text = "Select &All";
             this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
             // 
+            // codeToolStripMenuItem
+            // 
+            this.codeToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.buildToolStripMenuItem,
+            this.runUnitTestsToolStripMenuItem});
+            this.codeToolStripMenuItem.Name = "codeToolStripMenuItem";
+            this.codeToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
+            this.codeToolStripMenuItem.Text = "Code";
+            // 
             // buildToolStripMenuItem
             // 
-            this.buildToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.compileToolStripMenuItem});
             this.buildToolStripMenuItem.Name = "buildToolStripMenuItem";
-            this.buildToolStripMenuItem.Size = new System.Drawing.Size(46, 20);
+            this.buildToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F6;
+            this.buildToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.buildToolStripMenuItem.Text = "Build";
-            // 
-            // compileToolStripMenuItem
-            // 
-            this.compileToolStripMenuItem.Name = "compileToolStripMenuItem";
-            this.compileToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F6;
-            this.compileToolStripMenuItem.Size = new System.Drawing.Size(138, 22);
-            this.compileToolStripMenuItem.Text = "Compile";
-            this.compileToolStripMenuItem.Click += new System.EventHandler(this.compileToolStripMenuItem_Click);
+            this.buildToolStripMenuItem.Click += new System.EventHandler(this.compileToolStripMenuItem_Click);
             // 
             // toolsToolStripMenuItem
             // 
@@ -277,13 +282,13 @@
             // customizeToolStripMenuItem
             // 
             this.customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-            this.customizeToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
+            this.customizeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.customizeToolStripMenuItem.Text = "&Customize";
             // 
             // optionsToolStripMenuItem
             // 
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.optionsToolStripMenuItem.Text = "&Options";
             // 
             // helpToolStripMenuItem
@@ -419,10 +424,33 @@
             this.rtbGeneratedCodeDataAccess.Size = new System.Drawing.Size(564, 369);
             this.rtbGeneratedCodeDataAccess.TabIndex = 3;
             // 
+            // tabPageUnitTests
+            // 
+            this.tabPageUnitTests.Controls.Add(this.rtbGeneratedCodeUnitTests);
+            this.tabPageUnitTests.Location = new System.Drawing.Point(4, 22);
+            this.tabPageUnitTests.Name = "tabPageUnitTests";
+            this.tabPageUnitTests.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageUnitTests.Size = new System.Drawing.Size(570, 375);
+            this.tabPageUnitTests.TabIndex = 2;
+            this.tabPageUnitTests.Text = "Unit Tests";
+            this.tabPageUnitTests.UseVisualStyleBackColor = true;
+            // 
+            // rtbGeneratedCodeUnitTests
+            // 
+            this.rtbGeneratedCodeUnitTests.AllowDrop = true;
+            this.rtbGeneratedCodeUnitTests.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.rtbGeneratedCodeUnitTests.IsReadOnly = false;
+            this.rtbGeneratedCodeUnitTests.Location = new System.Drawing.Point(3, 3);
+            this.rtbGeneratedCodeUnitTests.Name = "rtbGeneratedCodeUnitTests";
+            this.rtbGeneratedCodeUnitTests.ShowVRuler = false;
+            this.rtbGeneratedCodeUnitTests.Size = new System.Drawing.Size(564, 369);
+            this.rtbGeneratedCodeUnitTests.TabIndex = 3;
+            // 
             // tabOutput
             // 
             this.tabOutput.Controls.Add(this.tabPageOutput);
             this.tabOutput.Controls.Add(this.tabPageCompilerOutput);
+            this.tabOutput.Controls.Add(this.tabPageTestResults);
             this.tabOutput.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabOutput.HotTrack = true;
             this.tabOutput.Location = new System.Drawing.Point(0, 0);
@@ -471,27 +499,33 @@
             this.rtbCompilerOutput.TabIndex = 1;
             this.rtbCompilerOutput.Text = "";
             // 
-            // tabPageUnitTests
+            // tabPageTestResults
             // 
-            this.tabPageUnitTests.Controls.Add(this.rtbGeneratedCodeUnitTests);
-            this.tabPageUnitTests.Location = new System.Drawing.Point(4, 22);
-            this.tabPageUnitTests.Name = "tabPageUnitTests";
-            this.tabPageUnitTests.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageUnitTests.Size = new System.Drawing.Size(570, 375);
-            this.tabPageUnitTests.TabIndex = 2;
-            this.tabPageUnitTests.Text = "Unit Tests";
-            this.tabPageUnitTests.UseVisualStyleBackColor = true;
+            this.tabPageTestResults.Controls.Add(this.rtbUnitTestOutput);
+            this.tabPageTestResults.Location = new System.Drawing.Point(4, 22);
+            this.tabPageTestResults.Name = "tabPageTestResults";
+            this.tabPageTestResults.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageTestResults.Size = new System.Drawing.Size(776, 85);
+            this.tabPageTestResults.TabIndex = 2;
+            this.tabPageTestResults.Text = "Test Results";
+            this.tabPageTestResults.UseVisualStyleBackColor = true;
             // 
-            // rtbGeneratedCodeUnitTests
+            // runUnitTestsToolStripMenuItem
             // 
-            this.rtbGeneratedCodeUnitTests.AllowDrop = true;
-            this.rtbGeneratedCodeUnitTests.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rtbGeneratedCodeUnitTests.IsReadOnly = false;
-            this.rtbGeneratedCodeUnitTests.Location = new System.Drawing.Point(3, 3);
-            this.rtbGeneratedCodeUnitTests.Name = "rtbGeneratedCodeUnitTests";
-            this.rtbGeneratedCodeUnitTests.ShowVRuler = false;
-            this.rtbGeneratedCodeUnitTests.Size = new System.Drawing.Size(564, 369);
-            this.rtbGeneratedCodeUnitTests.TabIndex = 3;
+            this.runUnitTestsToolStripMenuItem.Name = "runUnitTestsToolStripMenuItem";
+            this.runUnitTestsToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
+            this.runUnitTestsToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
+            this.runUnitTestsToolStripMenuItem.Text = "Run Unit Tests";
+            this.runUnitTestsToolStripMenuItem.Click += new System.EventHandler(this.runUnitTestsToolStripMenuItem_Click);
+            // 
+            // rtbUnitTestOutput
+            // 
+            this.rtbUnitTestOutput.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.rtbUnitTestOutput.Location = new System.Drawing.Point(3, 3);
+            this.rtbUnitTestOutput.Name = "rtbUnitTestOutput";
+            this.rtbUnitTestOutput.Size = new System.Drawing.Size(770, 79);
+            this.rtbUnitTestOutput.TabIndex = 0;
+            this.rtbUnitTestOutput.Text = "";
             // 
             // MainForm
             // 
@@ -520,10 +554,11 @@
             this.tabGeneratedCode.ResumeLayout(false);
             this.tabPageEntities.ResumeLayout(false);
             this.tabPageDataAccess.ResumeLayout(false);
+            this.tabPageUnitTests.ResumeLayout(false);
             this.tabOutput.ResumeLayout(false);
             this.tabPageOutput.ResumeLayout(false);
             this.tabPageCompilerOutput.ResumeLayout(false);
-            this.tabPageUnitTests.ResumeLayout(false);
+            this.tabPageTestResults.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -556,8 +591,8 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator5;
         private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
         private System.Windows.Forms.StatusStrip statusStrip;
+        private System.Windows.Forms.ToolStripMenuItem codeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem buildToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem compileToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer splitContainer;
         private System.Windows.Forms.TreeView treeView;
@@ -573,6 +608,9 @@
         private System.Windows.Forms.RichTextBox rtbCompilerOutput;
         private System.Windows.Forms.TabPage tabPageUnitTests;
         private ICSharpCode.TextEditor.TextEditorControl rtbGeneratedCodeUnitTests;
+        private System.Windows.Forms.TabPage tabPageTestResults;
+        private System.Windows.Forms.ToolStripMenuItem runUnitTestsToolStripMenuItem;
+        private System.Windows.Forms.RichTextBox rtbUnitTestOutput;
 
     }
 }

@@ -291,6 +291,9 @@ namespace CodeGenGUI
 
             if (currentCodeViewTab == 0)
                 rtbGeneratedCodeEntities.Undo();
+
+            if (currentCodeViewTab == 2)
+                rtbGeneratedCodeUnitTests.Undo();
         }
 
         private void redoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -300,6 +303,9 @@ namespace CodeGenGUI
 
             if (currentCodeViewTab == 0)
                 rtbGeneratedCodeEntities.Redo();
+
+            if (currentCodeViewTab == 2)
+                rtbGeneratedCodeUnitTests.Redo();
         }
 
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -309,6 +315,9 @@ namespace CodeGenGUI
 
             if (currentCodeViewTab == 0)
                 rtbGeneratedCodeEntities.ActiveTextAreaControl.TextArea.ClipboardHandler.Cut(sender, e);
+
+            if (currentCodeViewTab == 2)
+                rtbGeneratedCodeUnitTests.ActiveTextAreaControl.TextArea.ClipboardHandler.Cut(sender, e);
         }
 
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
@@ -318,6 +327,9 @@ namespace CodeGenGUI
 
             if (currentCodeViewTab == 0)
                 rtbGeneratedCodeEntities.ActiveTextAreaControl.TextArea.ClipboardHandler.Copy(sender, e);
+
+            if (currentCodeViewTab == 2)
+                rtbGeneratedCodeUnitTests.ActiveTextAreaControl.TextArea.ClipboardHandler.Copy(sender, e);
         }
 
         private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
@@ -327,6 +339,9 @@ namespace CodeGenGUI
 
             if (currentCodeViewTab == 0)
                 rtbGeneratedCodeEntities.ActiveTextAreaControl.TextArea.ClipboardHandler.Paste(sender, e);
+
+            if (currentCodeViewTab == 2)
+                rtbGeneratedCodeUnitTests.ActiveTextAreaControl.TextArea.ClipboardHandler.Paste(sender, e);
         }
 
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
@@ -336,6 +351,9 @@ namespace CodeGenGUI
 
             if (currentCodeViewTab == 0)
                 rtbGeneratedCodeEntities.ActiveTextAreaControl.TextArea.ClipboardHandler.SelectAll(sender, e);
+
+            if (currentCodeViewTab == 2)
+                rtbGeneratedCodeUnitTests.ActiveTextAreaControl.TextArea.ClipboardHandler.SelectAll(sender, e);
         }
         #endregion
 
@@ -414,6 +432,16 @@ namespace CodeGenGUI
             Trace.WriteLine(text);
         }
 
+        void WriteToTestResultsWindow(string text)
+        {
+            rtbUnitTestOutput.Text += "\n" + text;
+            rtbUnitTestOutput.SelectionStart = rtbUnitTestOutput.TextLength;
+            rtbUnitTestOutput.ScrollToCaret();
+            rtbUnitTestOutput.Update();
+
+            Trace.WriteLine(text);
+        }
+
         private void MainForm_DragEnter(object sender, DragEventArgs e)
         {
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
@@ -462,6 +490,57 @@ namespace CodeGenGUI
                     PopulateTables(database.Tables);
                 }
             }
+        }
+
+        private void runUnitTestsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (testsRunning)
+                return;
+
+            tabOutput.SelectedTab = tabPageCompilerOutput;
+            CompileCSharp30();
+
+            tabOutput.SelectedTab = tabPageTestResults;
+            rtbUnitTestOutput.ResetText();
+            rtbUnitTestOutput.Update();
+
+            RunUnitTests();
+        }
+
+        private static volatile bool testsRunning;
+        private void RunUnitTests()
+        {
+            ThreadPool.QueueUserWorkItem((state) =>
+            {
+                try
+                {
+                    testsRunning = true;
+
+                    var sw = Stopwatch.StartNew();
+
+                    var mstest = Environment.ExpandEnvironmentVariables(@"%VS90COMNTOOLS%\..\IDE\mstest.exe");
+                    var args = string.Format(@"/noresults /testcontainer:""{0}\DataAccess.dll""", Environment.CurrentDirectory);
+
+                    var psi = new ProcessStartInfo(mstest, args);
+                    psi.RedirectStandardOutput = true;
+                    psi.CreateNoWindow = true;
+                    psi.UseShellExecute = false;
+
+                    var process = Process.Start(psi);
+                    string output = process.StandardOutput.ReadToEnd();
+                    process.WaitForExit();
+
+                    Invoke((Action)delegate
+                    {
+                        WriteToTestResultsWindow(output);
+                        WriteToTestResultsWindow("\nExecuted in " + sw.Elapsed);
+                    });
+                }
+                finally
+                {
+                    testsRunning = false;
+                }
+            });
         }
     }
 }
