@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
+﻿namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
     public class DataAccessLayerGeneratorOptions
     {
         public bool ThrowExceptions { get; set; }
         public bool DebuggerOutput { get; set; }
         public bool PerformanceMeasurementOutput { get; set; }
+        public bool GenerateXmlDocumentation { get; set; }
 
         public bool GenerateSelectAll { get; set; }
         public bool GenerateSelectAllWithTop { get; set; }
@@ -27,6 +23,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             ThrowExceptions = false;
             DebuggerOutput = false;
             PerformanceMeasurementOutput = false;
+            GenerateXmlDocumentation = false;
 
             GenerateSelectAll = true;
             GenerateSelectAllWithTop = true;

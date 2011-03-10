@@ -37,7 +37,7 @@ namespace CodeGenGUI
 
                     GenerateCode();
 
-                    WriteToOutputWindow("\nExecuted in " + sw.Elapsed);
+                    WriteToOutputWindow(Environment.NewLine + "Executed in " + sw.Elapsed);
                 }
                 else if (ext == ".codegen")
                 {
@@ -89,7 +89,7 @@ namespace CodeGenGUI
 
                 GenerateCode();
 
-                WriteToOutputWindow("\nExecuted in " + sw.Elapsed);
+                WriteToOutputWindow(Environment.NewLine + "Executed in " + sw.Elapsed);
 
                 Text = "SQL CE Code Generator - Untitled";
             }
@@ -97,6 +97,7 @@ namespace CodeGenGUI
 
         private void GenerateCode()
         {
+            rtbOutput.ResetText();
             var codeGenerator = CreateCodeGenerator(dataSource);
             rtbGeneratedCodeEntities.Text = GenerateEntitiesCode(codeGenerator);
             rtbGeneratedCodeDataAccess.Text = GenerateDataAccessCode(codeGenerator);
@@ -374,7 +375,7 @@ namespace CodeGenGUI
             var args = string.Format(@"/target:library /optimize /out:DataAccess.dll /reference:""{0}\System.Data.SqlServerCe.dll"" /reference:""{0}\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll"" ""{0}\*.cs""", Environment.CurrentDirectory);
 
             WriteToCompilerOutputWindow("Compiling using C# 3.0");
-            WriteToCompilerOutputWindow(string.Format("\nExecuting {0} {1}\n", csc, args));
+            WriteToCompilerOutputWindow(string.Format(Environment.NewLine + "Executing {0} {1}" + Environment.NewLine, csc, args));
 
             var psi = new ProcessStartInfo(csc, args);
             psi.RedirectStandardOutput = true;
@@ -414,7 +415,7 @@ namespace CodeGenGUI
 
         void WriteToOutputWindow(string text)
         {
-            rtbOutput.Text += "\n" + text;
+            rtbOutput.Text += Environment.NewLine + text;
             rtbOutput.SelectionStart = rtbOutput.TextLength;
             rtbOutput.ScrollToCaret();
             rtbOutput.Update();
@@ -424,7 +425,7 @@ namespace CodeGenGUI
 
         void WriteToCompilerOutputWindow(string text)
         {
-            rtbCompilerOutput.Text += "\n" + text;
+            rtbCompilerOutput.Text += Environment.NewLine + text;
             rtbCompilerOutput.SelectionStart = rtbCompilerOutput.TextLength;
             rtbCompilerOutput.ScrollToCaret();
             rtbCompilerOutput.Update();
@@ -434,7 +435,7 @@ namespace CodeGenGUI
 
         void WriteToTestResultsWindow(string text)
         {
-            rtbUnitTestOutput.Text += "\n" + text;
+            rtbUnitTestOutput.Text += Environment.NewLine + text;
             rtbUnitTestOutput.SelectionStart = rtbUnitTestOutput.TextLength;
             rtbUnitTestOutput.ScrollToCaret();
             rtbUnitTestOutput.Update();
@@ -465,13 +466,8 @@ namespace CodeGenGUI
                     Text = "SQL CE Code Generator - Untitled";
 
                     var sw = Stopwatch.StartNew();
-
-                    var codeGenerator = CreateCodeGenerator(dataSource);
-                    rtbGeneratedCodeEntities.Text = GenerateEntitiesCode(codeGenerator);
-                    rtbGeneratedCodeDataAccess.Text = GenerateDataAccessCode(codeGenerator);
-                    rtbGeneratedCodeUnitTests.Text = GenerateUnitTestsCode(codeGenerator);
-
-                    WriteToOutputWindow("\nExecuted in " + sw.Elapsed);
+                    GenerateCode();
+                    WriteToOutputWindow(Environment.NewLine + "Executed in " + sw.Elapsed);
                 }
                 else if (ext == ".codegen")
                 {
@@ -533,7 +529,7 @@ namespace CodeGenGUI
                     Invoke((Action)delegate
                     {
                         WriteToTestResultsWindow(output);
-                        WriteToTestResultsWindow("\nExecuted in " + sw.Elapsed);
+                        WriteToTestResultsWindow(Environment.NewLine + "Executed in " + sw.Elapsed);
                     });
                 }
                 finally
@@ -541,6 +537,21 @@ namespace CodeGenGUI
                     testsRunning = false;
                 }
             });
+        }
+
+        private void regenerateCodeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var sw = Stopwatch.StartNew();
+
+            treeView.Nodes.Clear();
+            treeView.Update();
+            rtbGeneratedCodeEntities.ResetText();
+            rtbGeneratedCodeDataAccess.ResetText();
+            rtbGeneratedCodeUnitTests.ResetText();
+            tabGeneratedCode.Refresh();
+
+            GenerateCode();
+            WriteToOutputWindow(Environment.NewLine + "Executed in " + sw.Elapsed);
         }
     }
 }
