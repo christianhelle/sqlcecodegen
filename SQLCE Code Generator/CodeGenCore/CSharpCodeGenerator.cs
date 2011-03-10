@@ -1,5 +1,3 @@
-using System.Text;
-
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
     public class CSharpCodeGenerator : CodeGenerator
@@ -37,34 +35,54 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\nnamespace " + Database.Namespace);
             code.AppendLine("{");
 
+            code.AppendLine("\t#region Repository Interface");
+            code.AppendLine("\tpublic interface IRepository<T>");
+            code.AppendLine("\t{");
+            code.AppendLine("\t\tSystem.Collections.Generic.List<T> ToList();");
+            code.AppendLine("\t\tSystem.Collections.Generic.List<T> ToList(int count);");
+            code.AppendLine("\t\tT[] ToArray();");
+            code.AppendLine("\t\tT[] ToArray(int count);");
+            code.AppendLine("\t\tvoid Create(T item);");
+            code.AppendLine("\t\tvoid Create(System.Collections.Generic.IEnumerable<T> items);");
+            code.AppendLine("\t\tvoid Update(T item);");
+            code.AppendLine("\t\tvoid Delete(T item);");
+            code.AppendLine("\t\tvoid Purge();");
+            code.AppendLine("\t}");
+            code.AppendLine("\t#endregion");
+            code.AppendLine();
+
             foreach (var table in Database.Tables)
             {
-                code.AppendLine("\t#region " + table.TableName);
+                code.AppendLine("\t#region " + table.TableName + " Repository");
 
-                code.AppendLine("\tpublic partial class " + table.TableName);
+                code.AppendLine("\tpublic interface I" + table.TableName + "Repository : IRepository<" + table.TableName + ">");
+                code.AppendLine("\t{");
+                foreach (var column in table.Columns)
+                {
+                    code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1} {2});", table.TableName, column.Value.ManagedType, column.Value.Name);
+                    code.AppendLine();
+                    code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1} {2}, int count);", table.TableName, column.Value.ManagedType, column.Value.Name);
+                    code.AppendLine();
+                }
+                code.AppendLine("\t}");
+                code.AppendLine();
+
+                code.AppendLine("\tpublic partial class " + table.TableName + "Repository : I" + table.TableName + "Repository");
                 code.AppendLine("\t{");
 
-                var generator = new CSharpDataAccessLayerGenerator(code, table);
-                if (options.GenerateSelectAll)
-                    generator.GenerateSelectAll();
-                if (options.GenerateSelectAllWithTop)
-                    generator.GenerateSelectWithTop();
-                if (options.GenerateSelectBy)
-                    generator.GenerateSelectBy();
-                if (options.GenerateSelectByWithTop)
-                    generator.GenerateSelectByWithTop();
-                if (options.GenerateCreateIgnoringPrimaryKey)
-                    generator.GenerateCreateIgnoringPrimaryKey();
-                if (options.GenerateCreateUsingAllColumns)
-                    generator.GenerateCreateUsingAllColumns();
-                if (options.GenerateDelete)
-                    generator.GenerateDelete();
-                if (options.GenerateDeleteBy)
-                    generator.GenerateDeleteBy();
-                if (options.GenerateDeleteAll)
-                    generator.GenerateDeleteAll();
-                if (options.GenerateSaveChanges)
-                    generator.GenerateSaveChanges();
+                DataAccessLayerGenerator generator = new CSharpDataAccessLayerGenerator(code, table);
+                generator.GenerateSelectAll();
+                generator.GenerateSelectWithTop();
+                generator.GenerateSelectBy();
+                generator.GenerateSelectByWithTop();
+                generator.GenerateCreate();
+                generator.GenerateCreateIgnoringPrimaryKey();
+                generator.GenerateCreateUsingAllColumns();
+                generator.GeneratePopulate();
+                generator.GenerateDelete();
+                generator.GenerateDeleteBy();
+                generator.GenerateDeleteAll();
+                generator.GenerateSaveChanges();
 
                 code.AppendLine("\t}");
                 code.AppendLine("\t#endregion");
@@ -75,6 +93,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         }
 
         #region Generate Entities
+
         private void GenerateEntity(Table table, EntityGeneratorOptions options)
         {
             code.AppendLine("\t#region " + table.TableName);
@@ -139,6 +158,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t#endregion");
             code.AppendLine();
         }
+
         #endregion
     }
 }

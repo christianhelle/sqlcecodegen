@@ -1,4 +1,6 @@
-﻿namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
+﻿using System;
+
+namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
     public class DataAccessLayerGeneratorOptions
     {
@@ -11,8 +13,10 @@
         public bool GenerateSelectAllWithTop { get; set; }
         public bool GenerateSelectBy { get; set; }
         public bool GenerateSelectByWithTop { get; set; }
+        public bool GenerateCreate { get; set; }
         public bool GenerateCreateIgnoringPrimaryKey { get; set; }
         public bool GenerateCreateUsingAllColumns { get; set; }
+        public bool GeneratePopulate { get; set; }
         public bool GenerateDelete { get; set; }
         public bool GenerateDeleteBy { get; set; }
         public bool GenerateDeleteAll { get; set; }
@@ -29,8 +33,10 @@
             GenerateSelectAllWithTop = true;
             GenerateSelectBy = true;
             GenerateSelectByWithTop = true;
+            GenerateCreate = true;
             GenerateCreateIgnoringPrimaryKey = true;
             GenerateCreateUsingAllColumns = true;
+            GeneratePopulate = true;
             GenerateDelete = true;
             GenerateDeleteBy = true;
             GenerateDeleteAll = true;
