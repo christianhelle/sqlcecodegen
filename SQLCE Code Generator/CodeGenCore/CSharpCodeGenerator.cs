@@ -19,10 +19,10 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\nnamespace " + Database.Namespace);
             code.AppendLine("{");
 
-            GenerateEntityBase();
+            GenerateEntityBase(options);
 
             foreach (var table in Database.Tables)
-                GenerateEntity(table);
+                GenerateEntity(table, options);
 
             code.AppendLine("}");
         }
@@ -75,7 +75,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         }
 
         #region Generate Entities
-        private void GenerateEntity(Table table)
+        private void GenerateEntity(Table table, EntityGeneratorOptions options)
         {
             code.AppendLine("\t#region " + table.TableName);
 
@@ -84,30 +84,22 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             foreach (var column in table.Columns)
             {
-                if (column.Value.ManagedType.IsValueType)
-                {
-                    code.AppendLine("\t\tprivate " + column.Value.ManagedType + "? _" + column.Value.Name + ";");
-                    code.AppendLine("\t\tpublic " + column.Value.ManagedType + "? " + column.Value.Name);
-                }
-                else
-                {
-                    code.AppendLine("\t\tprivate " + column.Value.ManagedType + " _" + column.Value.Name + ";");
-                    code.AppendLine("\t\tpublic " + column.Value.ManagedType + " " + column.Value.Name);
-                }
+                code.AppendLine("\t\tprivate " + column.Value.ManagedType + (column.Value.ManagedType.IsValueType ? "? _" : " _") + column.Value.Name + ";");
 
+                if (column.Value.MaxLength > 0 && column.Value.ManagedType.Equals(typeof(string)))
+                    code.AppendLine("\t\tpublic const int " + column.Value.Name + "_MAX_LENGTH = " + column.Value.MaxLength + ";");
+
+                code.AppendLine("\t\tpublic " + column.Value.ManagedType + (column.Value.ManagedType.IsValueType ? "? " : " ") + column.Value.Name);
                 code.AppendLine("\t\t{");
                 code.AppendLine("\t\t\t get { return _" + column.Value.Name + "; }");
                 code.AppendLine("\t\t\t set");
                 code.AppendLine("\t\t\t{");
                 code.AppendLine("\t\t\t\t_" + column.Value.Name + " = value;");
 
-                if (column.Value.MaxLength > 0)
+                if (column.Value.MaxLength > 0 && column.Value.ManagedType.Equals(typeof(string)))
                 {
-                    if (column.Value.ManagedType.Equals(typeof(string)))
-                    {
-                        code.AppendLine("\t\t\t\tif (_" + column.Value.Name + ".Length > " + column.Value.MaxLength + ")");
-                        code.AppendLine("\t\t\t\t\tthrow new System.ArgumentException(\"Max length for " + column.Value.Name + " is " + column.Value.MaxLength + "\");");
-                    }
+                    code.AppendLine("\t\t\t\tif (_" + column.Value.Name + ".Length > " + column.Value.Name + "_MAX_LENGTH)");
+                    code.AppendLine("\t\t\t\t\tthrow new System.ArgumentException(\"Max length for " + column.Value.Name + " is " + column.Value.MaxLength + "\");");
                 }
 
                 code.AppendLine("\t\t\t}");
@@ -119,7 +111,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine();
         }
 
-        private void GenerateEntityBase()
+        private void GenerateEntityBase(EntityGeneratorOptions options)
         {
             code.AppendLine("\t#region EntityBase");
             code.AppendLine("\tpublic static class EntityBase");
