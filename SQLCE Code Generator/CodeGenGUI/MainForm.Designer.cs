@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Database Tables");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Database Tables");
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -67,14 +67,14 @@
             this.rtbGeneratedCodeEntities = new ICSharpCode.TextEditor.TextEditorControl();
             this.tabPageDataAccess = new System.Windows.Forms.TabPage();
             this.rtbGeneratedCodeDataAccess = new ICSharpCode.TextEditor.TextEditorControl();
-            this.tabPageUnitTests = new System.Windows.Forms.TabPage();
+            this.tabPageEntityUnitTests = new System.Windows.Forms.TabPage();
             this.rtbGeneratedCodeUnitTests = new ICSharpCode.TextEditor.TextEditorControl();
             this.tabOutput = new System.Windows.Forms.TabControl();
             this.tabPageOutput = new System.Windows.Forms.TabPage();
-            this.tabPageCompilerOutput = new System.Windows.Forms.TabPage();
-            this.tabPageTestResults = new System.Windows.Forms.TabPage();
             this.rtbOutput = new System.Windows.Forms.TextBox();
+            this.tabPageCompilerOutput = new System.Windows.Forms.TabPage();
             this.rtbCompilerOutput = new System.Windows.Forms.TextBox();
+            this.tabPageTestResults = new System.Windows.Forms.TabPage();
             this.rtbUnitTestOutput = new System.Windows.Forms.TextBox();
             this.menuStrip.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -86,7 +86,7 @@
             this.tabGeneratedCode.SuspendLayout();
             this.tabPageEntities.SuspendLayout();
             this.tabPageDataAccess.SuspendLayout();
-            this.tabPageUnitTests.SuspendLayout();
+            this.tabPageEntityUnitTests.SuspendLayout();
             this.tabOutput.SuspendLayout();
             this.tabPageOutput.SuspendLayout();
             this.tabPageCompilerOutput.SuspendLayout();
@@ -377,10 +377,10 @@
             this.treeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView.Location = new System.Drawing.Point(0, 0);
             this.treeView.Name = "treeView";
-            treeNode3.Name = "nodeTables";
-            treeNode3.Text = "Database Tables";
+            treeNode1.Name = "nodeTables";
+            treeNode1.Text = "Database Tables";
             this.treeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode3});
+            treeNode1});
             this.treeView.Size = new System.Drawing.Size(202, 401);
             this.treeView.TabIndex = 0;
             // 
@@ -388,7 +388,7 @@
             // 
             this.tabGeneratedCode.Controls.Add(this.tabPageEntities);
             this.tabGeneratedCode.Controls.Add(this.tabPageDataAccess);
-            this.tabGeneratedCode.Controls.Add(this.tabPageUnitTests);
+            this.tabGeneratedCode.Controls.Add(this.tabPageEntityUnitTests);
             this.tabGeneratedCode.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabGeneratedCode.Location = new System.Drawing.Point(0, 0);
             this.tabGeneratedCode.Name = "tabGeneratedCode";
@@ -441,16 +441,16 @@
             this.rtbGeneratedCodeDataAccess.Size = new System.Drawing.Size(564, 369);
             this.rtbGeneratedCodeDataAccess.TabIndex = 3;
             // 
-            // tabPageUnitTests
+            // tabPageEntityUnitTests
             // 
-            this.tabPageUnitTests.Controls.Add(this.rtbGeneratedCodeUnitTests);
-            this.tabPageUnitTests.Location = new System.Drawing.Point(4, 22);
-            this.tabPageUnitTests.Name = "tabPageUnitTests";
-            this.tabPageUnitTests.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageUnitTests.Size = new System.Drawing.Size(570, 375);
-            this.tabPageUnitTests.TabIndex = 2;
-            this.tabPageUnitTests.Text = "Unit Tests";
-            this.tabPageUnitTests.UseVisualStyleBackColor = true;
+            this.tabPageEntityUnitTests.Controls.Add(this.rtbGeneratedCodeUnitTests);
+            this.tabPageEntityUnitTests.Location = new System.Drawing.Point(4, 22);
+            this.tabPageEntityUnitTests.Name = "tabPageEntityUnitTests";
+            this.tabPageEntityUnitTests.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageEntityUnitTests.Size = new System.Drawing.Size(570, 375);
+            this.tabPageEntityUnitTests.TabIndex = 2;
+            this.tabPageEntityUnitTests.Text = "Entity Unit Tests";
+            this.tabPageEntityUnitTests.UseVisualStyleBackColor = true;
             // 
             // rtbGeneratedCodeUnitTests
             // 
@@ -487,28 +487,6 @@
             this.tabPageOutput.Text = "Output";
             this.tabPageOutput.UseVisualStyleBackColor = true;
             // 
-            // tabPageCompilerOutput
-            // 
-            this.tabPageCompilerOutput.Controls.Add(this.rtbCompilerOutput);
-            this.tabPageCompilerOutput.Location = new System.Drawing.Point(4, 22);
-            this.tabPageCompilerOutput.Name = "tabPageCompilerOutput";
-            this.tabPageCompilerOutput.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCompilerOutput.Size = new System.Drawing.Size(776, 85);
-            this.tabPageCompilerOutput.TabIndex = 1;
-            this.tabPageCompilerOutput.Text = "Compiler Output";
-            this.tabPageCompilerOutput.UseVisualStyleBackColor = true;
-            // 
-            // tabPageTestResults
-            // 
-            this.tabPageTestResults.Controls.Add(this.rtbUnitTestOutput);
-            this.tabPageTestResults.Location = new System.Drawing.Point(4, 22);
-            this.tabPageTestResults.Name = "tabPageTestResults";
-            this.tabPageTestResults.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageTestResults.Size = new System.Drawing.Size(776, 85);
-            this.tabPageTestResults.TabIndex = 2;
-            this.tabPageTestResults.Text = "Test Results";
-            this.tabPageTestResults.UseVisualStyleBackColor = true;
-            // 
             // rtbOutput
             // 
             this.rtbOutput.AcceptsReturn = true;
@@ -522,6 +500,17 @@
             this.rtbOutput.Size = new System.Drawing.Size(770, 79);
             this.rtbOutput.TabIndex = 0;
             // 
+            // tabPageCompilerOutput
+            // 
+            this.tabPageCompilerOutput.Controls.Add(this.rtbCompilerOutput);
+            this.tabPageCompilerOutput.Location = new System.Drawing.Point(4, 22);
+            this.tabPageCompilerOutput.Name = "tabPageCompilerOutput";
+            this.tabPageCompilerOutput.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageCompilerOutput.Size = new System.Drawing.Size(776, 85);
+            this.tabPageCompilerOutput.TabIndex = 1;
+            this.tabPageCompilerOutput.Text = "Compiler Output";
+            this.tabPageCompilerOutput.UseVisualStyleBackColor = true;
+            // 
             // rtbCompilerOutput
             // 
             this.rtbCompilerOutput.AcceptsReturn = true;
@@ -534,6 +523,17 @@
             this.rtbCompilerOutput.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.rtbCompilerOutput.Size = new System.Drawing.Size(770, 79);
             this.rtbCompilerOutput.TabIndex = 0;
+            // 
+            // tabPageTestResults
+            // 
+            this.tabPageTestResults.Controls.Add(this.rtbUnitTestOutput);
+            this.tabPageTestResults.Location = new System.Drawing.Point(4, 22);
+            this.tabPageTestResults.Name = "tabPageTestResults";
+            this.tabPageTestResults.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageTestResults.Size = new System.Drawing.Size(776, 85);
+            this.tabPageTestResults.TabIndex = 2;
+            this.tabPageTestResults.Text = "Test Results";
+            this.tabPageTestResults.UseVisualStyleBackColor = true;
             // 
             // rtbUnitTestOutput
             // 
@@ -575,7 +575,7 @@
             this.tabGeneratedCode.ResumeLayout(false);
             this.tabPageEntities.ResumeLayout(false);
             this.tabPageDataAccess.ResumeLayout(false);
-            this.tabPageUnitTests.ResumeLayout(false);
+            this.tabPageEntityUnitTests.ResumeLayout(false);
             this.tabOutput.ResumeLayout(false);
             this.tabPageOutput.ResumeLayout(false);
             this.tabPageOutput.PerformLayout();
@@ -628,7 +628,7 @@
         private System.Windows.Forms.TabPage tabPageDataAccess;
         private ICSharpCode.TextEditor.TextEditorControl rtbGeneratedCodeDataAccess;
         private System.Windows.Forms.TabPage tabPageCompilerOutput;
-        private System.Windows.Forms.TabPage tabPageUnitTests;
+        private System.Windows.Forms.TabPage tabPageEntityUnitTests;
         private ICSharpCode.TextEditor.TextEditorControl rtbGeneratedCodeUnitTests;
         private System.Windows.Forms.TabPage tabPageTestResults;
         private System.Windows.Forms.ToolStripMenuItem runUnitTestsToolStripMenuItem;
