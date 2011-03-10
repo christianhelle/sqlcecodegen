@@ -42,5 +42,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public abstract void GenerateDeleteBy();
         public abstract void GenerateDeleteAll();
         public abstract void GenerateSaveChanges();
+        public abstract void GeneratePopulate();
+        public abstract void GenerateCreate();
     }
 }
