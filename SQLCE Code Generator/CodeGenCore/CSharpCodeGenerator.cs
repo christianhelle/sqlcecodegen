@@ -7,6 +7,35 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
         }
 
+        private void GenerateEntityBase()
+        {
+            code.AppendLine("\t#region EntityBase");
+            code.AppendLine("\tpublic static class EntityBase");
+            code.AppendLine("\t{");
+            code.AppendLine("\t\tpublic static System.String ConnectionString { get; set; }");
+            code.AppendLine();
+            code.AppendLine("\t\tprivate static System.Data.SqlServerCe.SqlCeConnection connectionInstance = null;");
+            code.AppendLine("\t\tpublic static System.Data.SqlServerCe.SqlCeConnection Connection");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tget");
+            code.AppendLine("\t\t\t{");
+            code.AppendLine("\t\t\t\tif (connectionInstance == null)");
+            code.AppendLine("\t\t\t\t\tconnectionInstance = new System.Data.SqlServerCe.SqlCeConnection(ConnectionString);");
+            code.AppendLine("\t\t\t\tif (connectionInstance.State != System.Data.ConnectionState.Open)");
+            code.AppendLine("\t\t\t\t\tconnectionInstance.Open();");
+            code.AppendLine("\t\t\t\treturn connectionInstance;");
+            code.AppendLine("\t\t\t}");
+            code.AppendLine("\t\t}");
+            code.AppendLine();
+            code.AppendLine("\t\tpublic static System.Data.SqlServerCe.SqlCeCommand CreateCommand()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\treturn Connection.CreateCommand();");
+            code.AppendLine("\t\t}");
+            code.AppendLine("\t}");
+            code.AppendLine("\t#endregion");
+            code.AppendLine();
+        }
+
         public override void GenerateEntities()
         {
             GenerateEntities(new EntityGeneratorOptions());
@@ -16,8 +45,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             code.AppendLine("\nnamespace " + Database.Namespace);
             code.AppendLine("{");
-
-            GenerateEntityBase(options);
 
             foreach (var table in Database.Tables)
                 GenerateEntity(table, options);
@@ -35,21 +62,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\nnamespace " + Database.Namespace);
             code.AppendLine("{");
 
-            code.AppendLine("\t#region Repository Interface");
-            code.AppendLine("\tpublic interface IRepository<T>");
-            code.AppendLine("\t{");
-            code.AppendLine("\t\tSystem.Collections.Generic.List<T> ToList();");
-            code.AppendLine("\t\tSystem.Collections.Generic.List<T> ToList(int count);");
-            code.AppendLine("\t\tT[] ToArray();");
-            code.AppendLine("\t\tT[] ToArray(int count);");
-            code.AppendLine("\t\tvoid Create(T item);");
-            code.AppendLine("\t\tvoid Create(System.Collections.Generic.IEnumerable<T> items);");
-            code.AppendLine("\t\tvoid Update(T item);");
-            code.AppendLine("\t\tvoid Delete(T item);");
-            code.AppendLine("\t\tvoid Purge();");
-            code.AppendLine("\t}");
-            code.AppendLine("\t#endregion");
-            code.AppendLine();
+            GenerateEntityBase();
+            GenerateIRepository();
 
             foreach (var table in Database.Tables)
             {
@@ -59,10 +73,20 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\t{");
                 foreach (var column in table.Columns)
                 {
-                    code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1} {2});", table.TableName, column.Value.ManagedType, column.Value.Name);
-                    code.AppendLine();
-                    code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1} {2}, int count);", table.TableName, column.Value.ManagedType, column.Value.Name);
-                    code.AppendLine();
+                    if (column.Value.ManagedType.IsValueType)
+                    {
+                        code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1}? {2});", table.TableName, column.Value.ManagedType, column.Value.Name);
+                        code.AppendLine();
+                        code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1}? {2}, int count);", table.TableName, column.Value.ManagedType, column.Value.Name);
+                        code.AppendLine();
+                    }
+                    else
+                    {
+                        code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1} {2});", table.TableName, column.Value.ManagedType, column.Value.Name);
+                        code.AppendLine();
+                        code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1} {2}, int count);", table.TableName, column.Value.ManagedType, column.Value.Name);
+                        code.AppendLine();
+                    }
                 }
                 code.AppendLine("\t}");
                 code.AppendLine();
@@ -90,6 +114,25 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             }
 
             code.AppendLine("}");
+        }
+
+        private void GenerateIRepository()
+        {
+            code.AppendLine("\t#region Repository Interface");
+            code.AppendLine("\tpublic interface IRepository<T>");
+            code.AppendLine("\t{");
+            code.AppendLine("\t\tSystem.Collections.Generic.List<T> ToList();");
+            code.AppendLine("\t\tSystem.Collections.Generic.List<T> ToList(int count);");
+            code.AppendLine("\t\tT[] ToArray();");
+            code.AppendLine("\t\tT[] ToArray(int count);");
+            code.AppendLine("\t\tvoid Create(T item);");
+            code.AppendLine("\t\tvoid Create(System.Collections.Generic.IEnumerable<T> items);");
+            code.AppendLine("\t\tvoid Update(T item);");
+            code.AppendLine("\t\tvoid Delete(T item);");
+            code.AppendLine("\t\tvoid Purge();");
+            code.AppendLine("\t}");
+            code.AppendLine("\t#endregion");
+            code.AppendLine();
         }
 
         #region Generate Entities
@@ -126,35 +169,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             }
             code.AppendLine("\t}");
 
-            code.AppendLine("\t#endregion");
-            code.AppendLine();
-        }
-
-        private void GenerateEntityBase(EntityGeneratorOptions options)
-        {
-            code.AppendLine("\t#region EntityBase");
-            code.AppendLine("\tpublic static class EntityBase");
-            code.AppendLine("\t{");
-            code.AppendLine("\t\tpublic static System.String ConnectionString { get; set; }");
-            code.AppendLine();
-            code.AppendLine("\t\tprivate static System.Data.SqlServerCe.SqlCeConnection connectionInstance = null;");
-            code.AppendLine("\t\tpublic static System.Data.SqlServerCe.SqlCeConnection Connection");
-            code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tget");
-            code.AppendLine("\t\t\t{");
-            code.AppendLine("\t\t\t\tif (connectionInstance == null)");
-            code.AppendLine("\t\t\t\t\tconnectionInstance = new System.Data.SqlServerCe.SqlCeConnection(ConnectionString);");
-            code.AppendLine("\t\t\t\tif (connectionInstance.State != System.Data.ConnectionState.Open)");
-            code.AppendLine("\t\t\t\t\tconnectionInstance.Open();");
-            code.AppendLine("\t\t\t\treturn connectionInstance;");
-            code.AppendLine("\t\t\t}");
-            code.AppendLine("\t\t}");
-            code.AppendLine();
-            code.AppendLine("\t\tpublic static System.Data.SqlServerCe.SqlCeCommand CreateCommand()");
-            code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\treturn Connection.CreateCommand();");
-            code.AppendLine("\t\t}");
-            code.AppendLine("\t}");
             code.AppendLine("\t#endregion");
             code.AppendLine();
         }

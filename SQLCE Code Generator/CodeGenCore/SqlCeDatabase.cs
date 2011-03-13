@@ -15,11 +15,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public SqlCeDatabase(string defaultNamespace, string connectionString)
         {
             Namespace = defaultNamespace;
+            ConnectionString = connectionString;
             AnalyzeDatabase(connectionString);
         }
 
         public string Namespace { get; set; }
         public List<Table> Tables { get; set; }
+        public string ConnectionString { get; private set; }
 
         private void AnalyzeDatabase(string connectionString)
         {
@@ -28,14 +30,14 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             if (tables == null) return;
 
             var tableList = GetTableInformation(connectionString, tables);
-            AnalyzeTables(tableList, connectionString);
+            FetchPrimaryKeys(tableList, connectionString);
         }
 
-        private void AnalyzeTables(Dictionary<string, Table> tableList, string connectionString)
+        private void FetchPrimaryKeys(Dictionary<string, Table> tableList, string connectionString)
         {
             Tables = new List<Table>(tableList.Values);
             foreach (var table in Tables)
-            {                
+            {
                 using (var conn = new SqlCeConnection(connectionString))
                 using (var cmd = conn.CreateCommand())
                 {
@@ -44,7 +46,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     cmd.Parameters.AddWithValue("@Name", table.TableName);
                     var primaryKeyColumnName = cmd.ExecuteScalar();
                     if (primaryKeyColumnName != null)
+                    {
                         table.PrimaryKeyColumnName = primaryKeyColumnName.ToString();
+                        if (table.Columns.ContainsKey(table.PrimaryKeyColumnName))
+                            table.Columns[table.PrimaryKeyColumnName].IsPrimaryKey = true;
+                    }
                 }
             }
         }
@@ -61,7 +67,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 {
                     connection.Open();
 
-                    command.CommandText = "SELECT COLUMN_NAME, CHARACTER_MAXIMUM_LENGTH, IS_NULLABLE, DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='" + table + "'";
+                    command.CommandText = "SELECT COLUMN_NAME, CHARACTER_MAXIMUM_LENGTH, IS_NULLABLE, DATA_TYPE, AUTOINC_INCREMENT FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='" + table + "'";
                     using (var adapter = new SqlCeDataAdapter(command))
                         adapter.Fill(schema);
 
@@ -84,7 +90,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                             Name = name,
                             DatabaseType = row.Field<string>("DATA_TYPE"),
                             MaxLength = row.Field<int?>("CHARACTER_MAXIMUM_LENGTH"),
-                            ManagedType = columnDescriptions.Columns[name].DataType
+                            ManagedType = columnDescriptions.Columns[name].DataType,
+                            AllowsNull = (string.Compare(row.Field<string>("IS_NULLABLE"), "YES", true) == 0),
+                            AutoIncrement = row["AUTOINC_INCREMENT"] != DBNull.Value
                         });
                     }
 
@@ -113,6 +121,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public int? MaxLength { get; set; }
         public Type ManagedType { get; set; }
         public string DatabaseType { get; set; }
+        public bool AllowsNull { get; set; }
+        public bool IsPrimaryKey { get; set; }
+        public bool AutoIncrement { get; set; }
 
         public override string ToString()
         {

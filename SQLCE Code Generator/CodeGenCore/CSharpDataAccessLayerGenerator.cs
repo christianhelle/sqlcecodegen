@@ -9,6 +9,17 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
         }
 
+        private void GetReaderValues(Table table)
+        {
+            foreach (var column in table.Columns)
+            {
+                if (column.Value.ManagedType.IsValueType)
+                    code.AppendLine("\t\t\t\t\t\titem." + column.Key + " = (" + column.Value + "?) (reader[\"" + column.Key + "\"] is System.DBNull ? null : reader[\"" + column.Key + "\"]);");
+                else
+                    code.AppendLine("\t\t\t\t\t\titem." + column.Key + " = reader[\"" + column.Key + "\"] as " + column.Value + ";");
+            }
+        }
+
         public override void GenerateSelectAll()
         {
             code.AppendLine("\t\t#region SELECT *");
@@ -76,7 +87,10 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             foreach (var column in table.Columns)
             {
                 code.AppendLine("\t\t#region SELECT .... WHERE " + column.Value.Name + "=?");
-                code.AppendFormat("\n\t\tpublic System.Collections.Generic.List<{0}> SelectBy{2}({1} {2})", table.TableName, column.Value.ManagedType, column.Value.Name);
+                if (column.Value.ManagedType.IsValueType)
+                    code.AppendFormat("\n\t\tpublic System.Collections.Generic.List<{0}> SelectBy{2}({1}? {2})", table.TableName, column.Value.ManagedType, column.Value.Name);
+                else
+                    code.AppendFormat("\n\t\tpublic System.Collections.Generic.List<{0}> SelectBy{2}({1} {2})", table.TableName, column.Value.ManagedType, column.Value.Name);
                 code.AppendLine();
                 code.AppendLine("\t\t{");
                 code.AppendLine("\t\t\tvar list = new System.Collections.Generic.List<" + table.TableName + ">();");
@@ -107,7 +121,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             foreach (var column in table.Columns)
             {
                 code.AppendLine("\t\t#region SELECT TOP(?).... WHERE " + column.Value.Name + "=?");
-                code.AppendFormat("\n\t\tpublic System.Collections.Generic.List<{0}> SelectBy{2}({1} {2}, int count)", table.TableName, column.Value.ManagedType, column.Value.Name);
+                if (column.Value.ManagedType.IsValueType)
+                    code.AppendFormat("\n\t\tpublic System.Collections.Generic.List<{0}> SelectBy{2}({1}? {2}, int count)", table.TableName, column.Value.ManagedType, column.Value.Name);
+                else
+                    code.AppendFormat("\n\t\tpublic System.Collections.Generic.List<{0}> SelectBy{2}({1} {2}, int count)", table.TableName, column.Value.ManagedType, column.Value.Name);
+                code.AppendLine();
                 code.AppendLine("\t\t{");
                 code.AppendLine("\t\t\tvar list = new System.Collections.Generic.List<" + table.TableName + ">();");
                 code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
@@ -137,9 +155,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t#region INSERT " + table.TableName);
             code.AppendLine("\t\tpublic void Create(" + table.TableName + " item)");
             code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tCreate(");
+            code.Append("\t\t\tCreate(");
             foreach (var column in table.Columns)
+            {
+                if (column.Value.IsPrimaryKey)
+                    continue;
                 code.Append("item." + column.Value.Name + ", ");
+            }
             code.Remove(code.Length - 2, 2);
             code.Append(");");
             code.AppendLine();
@@ -151,7 +173,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public override void GenerateCreateIgnoringPrimaryKey()
         {
             code.AppendLine("\t\t#region INSERT Ignoring Primary Key");
-            code.AppendLine("\t\tpublic void Create(");
+            code.Append("\t\tpublic void Create(");
             foreach (var column in table.Columns)
             {
                 if (column.Key == table.PrimaryKeyColumnName)
@@ -217,7 +239,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public override void GenerateCreateUsingAllColumns()
         {
             code.AppendLine("\t\t#region INSERT " + table.TableName + " by fields");
-            code.AppendLine("\t\tpublic " + table.TableName + " Create(");
+            code.Append("\t\tpublic " + table.TableName + " Create(");
             foreach (var column in table.Columns)
             {
                 if (column.Value.ManagedType.IsValueType)
@@ -264,7 +286,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\tpublic void Create(System.Collections.Generic.IEnumerable<" + table.TableName + "> items)");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tforeach (var item in items)");
-            code.AppendLine("\t\t\t\tCreate(");
+            code.Append("\t\t\t\tCreate(");
             foreach (var column in table.Columns)
                 code.Append("item." + column.Value.Name + ", ");
             code.Remove(code.Length - 2, 2);

@@ -68,7 +68,7 @@
             this.tabPageDataAccess = new System.Windows.Forms.TabPage();
             this.rtbGeneratedCodeDataAccess = new ICSharpCode.TextEditor.TextEditorControl();
             this.tabPageEntityUnitTests = new System.Windows.Forms.TabPage();
-            this.rtbGeneratedCodeUnitTests = new ICSharpCode.TextEditor.TextEditorControl();
+            this.rtbGeneratedCodeEntityUnitTests = new ICSharpCode.TextEditor.TextEditorControl();
             this.tabOutput = new System.Windows.Forms.TabControl();
             this.tabPageOutput = new System.Windows.Forms.TabPage();
             this.rtbOutput = new System.Windows.Forms.TextBox();
@@ -76,6 +76,8 @@
             this.rtbCompilerOutput = new System.Windows.Forms.TextBox();
             this.tabPageTestResults = new System.Windows.Forms.TabPage();
             this.rtbUnitTestOutput = new System.Windows.Forms.TextBox();
+            this.tabPageDataAccessUnitTests = new System.Windows.Forms.TabPage();
+            this.rtbGeneratedCodeDataAccessUnitTests = new ICSharpCode.TextEditor.TextEditorControl();
             this.menuStrip.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -91,6 +93,7 @@
             this.tabPageOutput.SuspendLayout();
             this.tabPageCompilerOutput.SuspendLayout();
             this.tabPageTestResults.SuspendLayout();
+            this.tabPageDataAccessUnitTests.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip
@@ -389,6 +392,7 @@
             this.tabGeneratedCode.Controls.Add(this.tabPageEntities);
             this.tabGeneratedCode.Controls.Add(this.tabPageDataAccess);
             this.tabGeneratedCode.Controls.Add(this.tabPageEntityUnitTests);
+            this.tabGeneratedCode.Controls.Add(this.tabPageDataAccessUnitTests);
             this.tabGeneratedCode.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tabGeneratedCode.Location = new System.Drawing.Point(0, 0);
             this.tabGeneratedCode.Name = "tabGeneratedCode";
@@ -443,7 +447,7 @@
             // 
             // tabPageEntityUnitTests
             // 
-            this.tabPageEntityUnitTests.Controls.Add(this.rtbGeneratedCodeUnitTests);
+            this.tabPageEntityUnitTests.Controls.Add(this.rtbGeneratedCodeEntityUnitTests);
             this.tabPageEntityUnitTests.Location = new System.Drawing.Point(4, 22);
             this.tabPageEntityUnitTests.Name = "tabPageEntityUnitTests";
             this.tabPageEntityUnitTests.Padding = new System.Windows.Forms.Padding(3);
@@ -452,16 +456,16 @@
             this.tabPageEntityUnitTests.Text = "Entity Unit Tests";
             this.tabPageEntityUnitTests.UseVisualStyleBackColor = true;
             // 
-            // rtbGeneratedCodeUnitTests
+            // rtbGeneratedCodeEntityUnitTests
             // 
-            this.rtbGeneratedCodeUnitTests.AllowDrop = true;
-            this.rtbGeneratedCodeUnitTests.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rtbGeneratedCodeUnitTests.IsReadOnly = false;
-            this.rtbGeneratedCodeUnitTests.Location = new System.Drawing.Point(3, 3);
-            this.rtbGeneratedCodeUnitTests.Name = "rtbGeneratedCodeUnitTests";
-            this.rtbGeneratedCodeUnitTests.ShowVRuler = false;
-            this.rtbGeneratedCodeUnitTests.Size = new System.Drawing.Size(564, 369);
-            this.rtbGeneratedCodeUnitTests.TabIndex = 3;
+            this.rtbGeneratedCodeEntityUnitTests.AllowDrop = true;
+            this.rtbGeneratedCodeEntityUnitTests.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.rtbGeneratedCodeEntityUnitTests.IsReadOnly = false;
+            this.rtbGeneratedCodeEntityUnitTests.Location = new System.Drawing.Point(3, 3);
+            this.rtbGeneratedCodeEntityUnitTests.Name = "rtbGeneratedCodeEntityUnitTests";
+            this.rtbGeneratedCodeEntityUnitTests.ShowVRuler = false;
+            this.rtbGeneratedCodeEntityUnitTests.Size = new System.Drawing.Size(564, 369);
+            this.rtbGeneratedCodeEntityUnitTests.TabIndex = 3;
             // 
             // tabOutput
             // 
@@ -548,6 +552,28 @@
             this.rtbUnitTestOutput.Size = new System.Drawing.Size(770, 79);
             this.rtbUnitTestOutput.TabIndex = 0;
             // 
+            // tabPageDataAccessUnitTests
+            // 
+            this.tabPageDataAccessUnitTests.Controls.Add(this.rtbGeneratedCodeDataAccessUnitTests);
+            this.tabPageDataAccessUnitTests.Location = new System.Drawing.Point(4, 22);
+            this.tabPageDataAccessUnitTests.Name = "tabPageDataAccessUnitTests";
+            this.tabPageDataAccessUnitTests.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageDataAccessUnitTests.Size = new System.Drawing.Size(570, 375);
+            this.tabPageDataAccessUnitTests.TabIndex = 3;
+            this.tabPageDataAccessUnitTests.Text = "Data Access Unit Tests";
+            this.tabPageDataAccessUnitTests.UseVisualStyleBackColor = true;
+            // 
+            // rtbGeneratedCodeDataAccessUnitTests
+            // 
+            this.rtbGeneratedCodeDataAccessUnitTests.AllowDrop = true;
+            this.rtbGeneratedCodeDataAccessUnitTests.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.rtbGeneratedCodeDataAccessUnitTests.IsReadOnly = false;
+            this.rtbGeneratedCodeDataAccessUnitTests.Location = new System.Drawing.Point(3, 3);
+            this.rtbGeneratedCodeDataAccessUnitTests.Name = "rtbGeneratedCodeDataAccessUnitTests";
+            this.rtbGeneratedCodeDataAccessUnitTests.ShowVRuler = false;
+            this.rtbGeneratedCodeDataAccessUnitTests.Size = new System.Drawing.Size(564, 369);
+            this.rtbGeneratedCodeDataAccessUnitTests.TabIndex = 4;
+            // 
             // MainForm
             // 
             this.AllowDrop = true;
@@ -583,6 +609,7 @@
             this.tabPageCompilerOutput.PerformLayout();
             this.tabPageTestResults.ResumeLayout(false);
             this.tabPageTestResults.PerformLayout();
+            this.tabPageDataAccessUnitTests.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -629,13 +656,15 @@
         private ICSharpCode.TextEditor.TextEditorControl rtbGeneratedCodeDataAccess;
         private System.Windows.Forms.TabPage tabPageCompilerOutput;
         private System.Windows.Forms.TabPage tabPageEntityUnitTests;
-        private ICSharpCode.TextEditor.TextEditorControl rtbGeneratedCodeUnitTests;
+        private ICSharpCode.TextEditor.TextEditorControl rtbGeneratedCodeEntityUnitTests;
         private System.Windows.Forms.TabPage tabPageTestResults;
         private System.Windows.Forms.ToolStripMenuItem runUnitTestsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem regenerateCodeToolStripMenuItem;
         private System.Windows.Forms.TextBox rtbOutput;
         private System.Windows.Forms.TextBox rtbCompilerOutput;
         private System.Windows.Forms.TextBox rtbUnitTestOutput;
+        private System.Windows.Forms.TabPage tabPageDataAccessUnitTests;
+        private ICSharpCode.TextEditor.TextEditorControl rtbGeneratedCodeDataAccessUnitTests;
 
     }
 }
