@@ -1,5 +1,4 @@
-﻿using CodeGenGUI;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
 {
@@ -10,14 +9,16 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         public void SaveFileTest()
         {
             var actual = new CodeGenFile
-            {
-                DataSource = Guid.NewGuid().ToString(),
-                GeneratedCode = new GeneratedCode
-                {
-                    Entities = Guid.NewGuid().ToString(),
-                    DataAccessCode = Guid.NewGuid().ToString()
-                }
-            };
+                             {
+                                 DataSource = Guid.NewGuid().ToString(),
+                                 GeneratedCode = new GeneratedCode
+                                                     {
+                                                         Entities = Guid.NewGuid().ToString(),
+                                                         DataAccessCode = Guid.NewGuid().ToString(),
+                                                         EntityUnitTests = Guid.NewGuid().ToString(),
+                                                         DataAccessUnitTests = Guid.NewGuid().ToString()
+                                                     }
+                             };
             var target = new CodeGenFileSerializer();
             target.SaveFile(actual, "test.xml");
         }

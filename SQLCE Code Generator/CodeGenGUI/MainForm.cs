@@ -21,7 +21,8 @@ namespace CodeGenGUI
 
             rtbGeneratedCodeEntities.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy("C#");
             rtbGeneratedCodeDataAccess.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy("C#");
-            rtbGeneratedCodeUnitTests.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy("C#");
+            rtbGeneratedCodeEntityUnitTests.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy("C#");
+            rtbGeneratedCodeDataAccessUnitTests.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy("C#");
 
             if (args != null && args.Length == 1)
             {
@@ -69,7 +70,7 @@ namespace CodeGenGUI
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SafeOperation((Action)delegate { NewFile(); });
+            SafeOperation(NewFile);
         }
 
         private void NewFile()
@@ -101,12 +102,23 @@ namespace CodeGenGUI
             var codeGenerator = CreateCodeGenerator(dataSource);
             rtbGeneratedCodeEntities.Text = GenerateEntitiesCode(codeGenerator);
             rtbGeneratedCodeDataAccess.Text = GenerateDataAccessCode(codeGenerator);
-            rtbGeneratedCodeUnitTests.Text = GenerateUnitTestsCode(codeGenerator); ;
+            rtbGeneratedCodeEntityUnitTests.Text = GenerateEntityUnitTestsCode(codeGenerator);
+            rtbGeneratedCodeDataAccessUnitTests.Text = GenerateDataAccessUnitTestsCode(codeGenerator);
         }
 
-        private string GenerateUnitTestsCode(CodeGenerator codeGenerator)
+        private string GenerateDataAccessUnitTestsCode(CodeGenerator codeGenerator)
         {
-            WriteToOutputWindow("Generating Unit Tests Code");
+            WriteToOutputWindow("Generating Data Access Unit Tests Code");
+            var unitTestGenerator = new UnitTestCodeGenerator(codeGenerator.Database);
+            unitTestGenerator.WriteHeaderInformation();
+            unitTestGenerator.GenerateDataAccessLayer();
+            var code = unitTestGenerator.GetCode();
+            return code;
+        }
+
+        private string GenerateEntityUnitTestsCode(CodeGenerator codeGenerator)
+        {
+            WriteToOutputWindow("Generating Entity Unit Tests Code");
             var unitTestGenerator = new UnitTestCodeGenerator(codeGenerator.Database);
             unitTestGenerator.WriteHeaderInformation();
             unitTestGenerator.GenerateEntities();
@@ -120,7 +132,6 @@ namespace CodeGenGUI
             codeGenerator.ClearCode();
             codeGenerator.WriteHeaderInformation();
             codeGenerator.GenerateEntities();
-
             var generatedCode = codeGenerator.GetCode();
             return generatedCode;
         }
@@ -131,7 +142,6 @@ namespace CodeGenGUI
             codeGenerator.ClearCode();
             codeGenerator.WriteHeaderInformation();
             codeGenerator.GenerateDataAccessLayer();
-
             var generatedCode = codeGenerator.GetCode();
             return generatedCode;
         }
@@ -210,7 +220,8 @@ namespace CodeGenGUI
                 CodeGenFile file = codeGen.LoadFile(dialog.FileName);
                 rtbGeneratedCodeEntities.Text = file.GeneratedCode.Entities;
                 rtbGeneratedCodeDataAccess.Text = file.GeneratedCode.DataAccessCode;
-                rtbGeneratedCodeUnitTests.Text = file.GeneratedCode.UnitTests;
+                rtbGeneratedCodeEntityUnitTests.Text = file.GeneratedCode.EntityUnitTests;
+                rtbGeneratedCodeDataAccessUnitTests.Text = file.GeneratedCode.DataAccessUnitTests;
 
                 FileInfo fi = new FileInfo(file.DataSource);
                 string generatedNamespace = GetType().Namespace + "." + fi.Name.Replace(fi.Extension, string.Empty);
@@ -242,7 +253,8 @@ namespace CodeGenGUI
                     {
                         Entities = rtbGeneratedCodeEntities.Text,
                         DataAccessCode = rtbGeneratedCodeDataAccess.Text,
-                        UnitTests = rtbGeneratedCodeUnitTests.Text
+                        EntityUnitTests = rtbGeneratedCodeEntityUnitTests.Text,
+                        DataAccessUnitTests = rtbGeneratedCodeDataAccessUnitTests.Text
                     },
                     DataSource = dataSource
                 };
@@ -294,7 +306,7 @@ namespace CodeGenGUI
                 rtbGeneratedCodeEntities.Undo();
 
             if (currentCodeViewTab == 2)
-                rtbGeneratedCodeUnitTests.Undo();
+                rtbGeneratedCodeEntityUnitTests.Undo();
         }
 
         private void redoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -306,7 +318,7 @@ namespace CodeGenGUI
                 rtbGeneratedCodeEntities.Redo();
 
             if (currentCodeViewTab == 2)
-                rtbGeneratedCodeUnitTests.Redo();
+                rtbGeneratedCodeEntityUnitTests.Redo();
         }
 
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -318,7 +330,7 @@ namespace CodeGenGUI
                 rtbGeneratedCodeEntities.ActiveTextAreaControl.TextArea.ClipboardHandler.Cut(sender, e);
 
             if (currentCodeViewTab == 2)
-                rtbGeneratedCodeUnitTests.ActiveTextAreaControl.TextArea.ClipboardHandler.Cut(sender, e);
+                rtbGeneratedCodeEntityUnitTests.ActiveTextAreaControl.TextArea.ClipboardHandler.Cut(sender, e);
         }
 
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
@@ -330,7 +342,7 @@ namespace CodeGenGUI
                 rtbGeneratedCodeEntities.ActiveTextAreaControl.TextArea.ClipboardHandler.Copy(sender, e);
 
             if (currentCodeViewTab == 2)
-                rtbGeneratedCodeUnitTests.ActiveTextAreaControl.TextArea.ClipboardHandler.Copy(sender, e);
+                rtbGeneratedCodeEntityUnitTests.ActiveTextAreaControl.TextArea.ClipboardHandler.Copy(sender, e);
         }
 
         private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
@@ -342,7 +354,7 @@ namespace CodeGenGUI
                 rtbGeneratedCodeEntities.ActiveTextAreaControl.TextArea.ClipboardHandler.Paste(sender, e);
 
             if (currentCodeViewTab == 2)
-                rtbGeneratedCodeUnitTests.ActiveTextAreaControl.TextArea.ClipboardHandler.Paste(sender, e);
+                rtbGeneratedCodeEntityUnitTests.ActiveTextAreaControl.TextArea.ClipboardHandler.Paste(sender, e);
         }
 
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
@@ -354,7 +366,7 @@ namespace CodeGenGUI
                 rtbGeneratedCodeEntities.ActiveTextAreaControl.TextArea.ClipboardHandler.SelectAll(sender, e);
 
             if (currentCodeViewTab == 2)
-                rtbGeneratedCodeUnitTests.ActiveTextAreaControl.TextArea.ClipboardHandler.SelectAll(sender, e);
+                rtbGeneratedCodeEntityUnitTests.ActiveTextAreaControl.TextArea.ClipboardHandler.SelectAll(sender, e);
         }
         #endregion
 
@@ -383,7 +395,7 @@ namespace CodeGenGUI
             psi.UseShellExecute = false;
 
             var process = Process.Start(psi);
-            string output = process.StandardOutput.ReadToEnd();
+            var output = process.StandardOutput.ReadToEnd();
             process.WaitForExit();
 
             WriteToCompilerOutputWindow(output);
@@ -391,7 +403,8 @@ namespace CodeGenGUI
 
             File.Delete(string.Format("{0}\\Entities.cs", Environment.CurrentDirectory));
             File.Delete(string.Format("{0}\\DataAccess.cs", Environment.CurrentDirectory));
-            File.Delete(string.Format("{0}\\UnitTests.cs", Environment.CurrentDirectory));
+            File.Delete(string.Format("{0}\\EntityUnitTests.cs", Environment.CurrentDirectory));
+            File.Delete(string.Format("{0}\\DataAccessUnitTests.cs", Environment.CurrentDirectory));
         }
 
         private void CreateOutputCSharpFile()
@@ -406,9 +419,14 @@ namespace CodeGenGUI
                 stream.Write(rtbGeneratedCodeDataAccess.Text);
                 stream.WriteLine();
             }
-            using (var stream = File.CreateText("UnitTests.cs"))
+            using (var stream = File.CreateText("EntityUnitTests.cs"))
             {
-                stream.Write(rtbGeneratedCodeUnitTests.Text);
+                stream.Write(rtbGeneratedCodeEntityUnitTests.Text);
+                stream.WriteLine();
+            }
+            using (var stream = File.CreateText("DataAccessUnitTests.cs"))
+            {
+                stream.Write(rtbGeneratedCodeDataAccessUnitTests.Text);
                 stream.WriteLine();
             }
         }
@@ -477,7 +495,8 @@ namespace CodeGenGUI
                     var file = codeGen.LoadFile(filePaths[0]);
                     rtbGeneratedCodeEntities.Text = file.GeneratedCode.Entities;
                     rtbGeneratedCodeDataAccess.Text = file.GeneratedCode.DataAccessCode;
-                    rtbGeneratedCodeUnitTests.Text = file.GeneratedCode.UnitTests;
+                    rtbGeneratedCodeEntityUnitTests.Text = file.GeneratedCode.EntityUnitTests;
+                    rtbGeneratedCodeDataAccessUnitTests.Text = file.GeneratedCode.DataAccessUnitTests;
 
                     var fi = new FileInfo(file.DataSource);
                     string generatedNamespace = GetType().Namespace + "." + fi.Name.Replace(fi.Extension, string.Empty);
@@ -512,10 +531,13 @@ namespace CodeGenGUI
                 {
                     testsRunning = true;
 
+                    var fi = new FileInfo(dataSource);
+                    fi.Attributes = FileAttributes.Normal;
+
                     var sw = Stopwatch.StartNew();
 
                     var mstest = Environment.ExpandEnvironmentVariables(@"%VS90COMNTOOLS%\..\IDE\mstest.exe");
-                    var args = string.Format(@"/noresults /testcontainer:""{0}\DataAccess.dll""", Environment.CurrentDirectory);
+                    var args = string.Format(@"/testcontainer:""{0}\DataAccess.dll""", Environment.CurrentDirectory);
 
                     var psi = new ProcessStartInfo(mstest, args);
                     psi.RedirectStandardOutput = true;
@@ -547,7 +569,7 @@ namespace CodeGenGUI
             treeView.Update();
             rtbGeneratedCodeEntities.ResetText();
             rtbGeneratedCodeDataAccess.ResetText();
-            rtbGeneratedCodeUnitTests.ResetText();
+            rtbGeneratedCodeEntityUnitTests.ResetText();
             tabGeneratedCode.Refresh();
 
             GenerateCode();

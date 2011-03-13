@@ -3,7 +3,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Xml.Serialization;
 
-namespace CodeGenGUI
+namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
     [Serializable]
     public class CodeGenFile
@@ -17,7 +17,8 @@ namespace CodeGenGUI
     {
         public string Entities { get; set; }
         public string DataAccessCode { get; set; }
-        public string UnitTests { get; set; }
+        public string EntityUnitTests { get; set; }
+        public string DataAccessUnitTests { get; set; }
     }
 
     public class CodeGenFileSerializer

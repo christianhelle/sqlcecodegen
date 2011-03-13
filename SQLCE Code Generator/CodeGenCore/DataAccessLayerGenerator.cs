@@ -16,17 +16,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             this.table = table;
         }
 
-        protected void GetReaderValues(Table table)
-        {
-            foreach (var column in table.Columns)
-            {
-                if (column.Value.ManagedType.IsValueType)
-                    code.AppendLine("\t\t\t\t\t\titem." + column.Key + " = (" + column.Value + "?) (reader[\"" + column.Key + "\"] is System.DBNull ? null : reader[\"" + column.Key + "\"]);");
-                else
-                    code.AppendLine("\t\t\t\t\t\titem." + column.Key + " = reader[\"" + column.Key + "\"] as " + column.Value + ";");
-            }
-        }
-
         public string GetCode()
         {
             return code.ToString();

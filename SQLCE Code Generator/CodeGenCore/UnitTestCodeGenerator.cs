@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Text;
 using System.Diagnostics;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
@@ -43,6 +41,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine();
             }
 
+            GenerateRandomGenerator();
+            code.AppendLine("}");
+        }
+
+        private void GenerateRandomGenerator()
+        {
             code.AppendLine(@"
     internal static class RandomGenerator
     {
@@ -67,7 +71,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             }
         }
     }");
-            code.AppendLine("}");
         }
 
         private void GeneratePropertyTest(Table table, KeyValuePair<string, Column> column)
@@ -139,12 +142,247 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         public override void GenerateDataAccessLayer()
         {
-            throw new NotImplementedException();
+            GenerateDataAccessLayer(new DataAccessLayerGeneratorOptions());
         }
 
         public override void GenerateDataAccessLayer(DataAccessLayerGeneratorOptions options)
         {
-            throw new NotImplementedException();
+            Trace.WriteLine("Generating Data Access Tests");
+
+            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("{");
+
+            code.AppendLine("\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]");
+            code.AppendLine("\tpublic class DataAccessTestBase");
+            code.AppendLine("\t{");
+            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestInitialize]");
+            code.AppendLine("\t\tpublic void Initialize()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tEntityBase.ConnectionString = @\"" + Database.ConnectionString + "\";");
+            code.AppendLine("\t\t}");
+            code.AppendLine();
+            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\tpublic void CreateCommandTest()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.IsNotNull(EntityBase.CreateCommand());");
+            code.AppendLine("\t\t}");
+            code.AppendLine();
+            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\tpublic void ConnectionCanOpenTest()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tvar expected = System.Data.ConnectionState.Open;");
+            code.AppendLine("\t\t\tvar actual = EntityBase.Connection.State;");
+            code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(expected, actual);");
+            code.AppendLine("\t\t}");
+            code.AppendLine("\t}");
+            code.AppendLine();
+
+            foreach (var table in Database.Tables)
+            {
+                code.AppendLine("\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]");
+                code.AppendLine("\tpublic class " + table.TableName + "DataAccessTest : DataAccessTestBase");
+                code.AppendLine("\t{");
+
+                GenerateCreateTest(table);
+                GenerateCreateWithParametersTest(table);
+                GenerateSelectAllTest(table);
+                GenerateSelectAllWithTopTest(table);
+                GenerateSelectByTest(table);
+                GenerateSelectByWithTopTest(table);
+                GenerateDelete(table);
+                GenerateDeleteBy(table);
+                GenerateDeleteAll(table);
+                GenerateSaveChanges(table);
+                GeneratePopulate(table);
+
+                code.AppendLine("\t}");
+                code.AppendLine();
+            }
+
+            code.AppendLine("}");
+            code.AppendLine();
+        }
+
+        private void GeneratePopulate(Table table)
+        {
+
+        }
+
+        private void GenerateSaveChanges(Table table)
+        {
+
+        }
+
+        private void GenerateDeleteAll(Table table)
+        {
+
+        }
+
+        private void GenerateDeleteBy(Table table)
+        {
+
+        }
+
+        private void GenerateDelete(Table table)
+        {
+
+        }
+
+        private void GenerateSelectByWithTopTest(Table table)
+        {
+            foreach (var column in table.Columns)
+            {
+                Trace.WriteLine("Generating SelectBy" + column.Value.Name + "WithTopTest()");
+
+                code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+                code.AppendLine("\t\tpublic void SelectBy" + column.Value.Name + "WithTopTest()");
+                code.AppendLine("\t\t{");
+                code.AppendLine("\t\t\tCreateTest();");
+                code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
+                code.AppendLine("\t\t\tvar record = target.ToList(1)[0];");
+                code.AppendLine("\t\t\tvar actual = target.SelectBy" + column.Value.Name + "(record." + column.Value.Name + ", 10);");
+                code.AppendLine();
+                code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.IsNotNull(actual);");
+                code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.CollectionAssert.AllItemsAreNotNull(actual);");
+                code.AppendLine("\t\t}");
+                code.AppendLine();
+            }
+        }
+
+        private void GenerateSelectByTest(Table table)
+        {
+            foreach (var column in table.Columns)
+            {
+                Trace.WriteLine("Generating SelectBy" + column.Value.Name + "Test()");
+
+                code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+                code.AppendLine("\t\tpublic void SelectBy" + column.Value.Name + "Test()");
+                code.AppendLine("\t\t{");
+                code.AppendLine("\t\t\tCreateTest();");
+                code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
+                code.AppendLine("\t\t\tvar record = target.ToList(1)[0];");
+                code.AppendLine("\t\t\tvar actual = target.SelectBy" + column.Value.Name + "(record." + column.Value.Name + ");");
+                code.AppendLine();
+                code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.IsNotNull(actual);");
+                code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.CollectionAssert.AllItemsAreNotNull(actual);");
+                code.AppendLine("\t\t}");
+                code.AppendLine();
+            }
+        }
+
+        private void GenerateSelectAllWithTopTest(Table table)
+        {
+            Trace.WriteLine("Generating ToListWithTopTest()");
+
+            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\tpublic void ToListWithTopTest()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
+            code.AppendLine("\t\t\tvar actual = target.ToList(10);");
+            code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.IsNotNull(actual);");
+            code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.CollectionAssert.AllItemsAreNotNull(actual);");
+            code.AppendLine("\t\t}");
+            code.AppendLine();
+
+            Trace.WriteLine("Generating ToArrayWithTopTest()");
+
+            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\tpublic void ToArrayWithTopTest()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
+            code.AppendLine("\t\t\tvar actual = target.ToArray(10);");
+            code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.IsNotNull(actual);");
+            code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.CollectionAssert.AllItemsAreNotNull(actual);");
+            code.AppendLine("\t\t}");
+            code.AppendLine();
+        }
+
+        private void GenerateSelectAllTest(Table table)
+        {
+            Trace.WriteLine("Generating ToListTest()");
+
+            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\tpublic void ToListTest()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
+            code.AppendLine("\t\t\tvar actual = target.ToList();");
+            code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.IsNotNull(actual);");
+            code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.CollectionAssert.AllItemsAreNotNull(actual);");
+            code.AppendLine("\t\t}");
+            code.AppendLine();
+
+            Trace.WriteLine("Generating ToArrayTest()");
+
+            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\tpublic void ToArrayTest()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
+            code.AppendLine("\t\t\tvar actual = target.ToArray();");
+            code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.IsNotNull(actual);");
+            code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.CollectionAssert.AllItemsAreNotNull(actual);");
+            code.AppendLine("\t\t}");
+            code.AppendLine();
+        }
+
+        private void GenerateCreateWithParametersTest(Table table)
+        {
+            Trace.WriteLine("Generating CreateWithParametersTest()");
+
+            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\tpublic void CreateWithParametersTest()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
+            code.Append("\t\t\ttarget.Create(");
+
+            foreach (var column in table.Columns)
+            {
+                if (table.PrimaryKeyColumnName == column.Value.Name)
+                    continue;
+                code.Append(
+                    column.Value.ManagedType.Equals(typeof(string))
+                       ? "RandomGenerator.GenerateString(" + column.Value.MaxLength + ")"
+                       : "new " + (column.Value.ManagedType.IsArray ? column.Value.ManagedType.ToString().Replace("[]", "[1]") : column.Value.ManagedType + "()"));
+                code.Append(", ");
+            }
+
+            code.Remove(code.Length - 2, 2);
+            code.Append(");");
+            code.AppendLine();
+
+            code.AppendLine("\t\t}");
+            code.AppendLine();
+        }
+
+        private void GenerateCreateTest(Table table)
+        {
+            Trace.WriteLine("Generating CreateTest()");
+
+            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\tpublic void CreateTest()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
+            code.AppendLine("\t\t\tvar actual = new " + table.TableName);
+            code.AppendLine("\t\t\t{");
+
+            foreach (var column in table.Columns)
+            {
+                if (table.PrimaryKeyColumnName == column.Value.Name)
+                    continue;
+                code.AppendFormat("\t\t\t\t{0} = {1},",
+                                  column.Value.Name,
+                                  column.Value.ManagedType.Equals(typeof(string))
+                                      ? "RandomGenerator.GenerateString(" + column.Value.MaxLength + ")"
+                                      : "new " +
+                                        (column.Value.ManagedType.IsArray
+                                             ? column.Value.ManagedType.ToString().Replace("[]", "[1]")
+                                             : column.Value.ManagedType + "()"));
+                code.AppendLine();
+            }
+            code.Remove(code.Length - 3, 2);
+            code.AppendLine("\t\t\t};");
+            code.AppendLine("\t\t\ttarget.Create(actual);");
+            code.AppendLine("\t\t}");
+            code.AppendLine();
         }
     }
 }
