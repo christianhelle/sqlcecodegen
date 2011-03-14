@@ -313,7 +313,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\tforeach (var item in items)");
             code.Append("\t\t\t\tCreate(");
             foreach (var column in table.Columns)
+            {
+                if (column.Value.IsPrimaryKey && column.Value.AutoIncrement)
+                    continue;
                 code.Append("item." + column.Value.Name + ", ");
+            }
             code.Remove(code.Length - 2, 2);
             code.Append(");");
             code.AppendLine();
