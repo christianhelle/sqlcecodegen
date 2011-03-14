@@ -212,7 +212,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     continue;
                 if (!column.Value.ManagedType.Equals(typeof(string)))
                     continue;
-                code.AppendLine("\t\t\tif (" + column.Value.Name + " != null && + " + column.Value.Name + ".Length > " + column.Value.MaxLength + ")");
+                code.AppendLine("\t\t\tif (" + column.Value.Name + " != null && " + column.Value.Name + ".Length > " + column.Value.MaxLength + ")");
                 code.AppendLine("\t\t\t\tthrow new System.ArgumentException(\"Max length for " + column.Value.Name + " is " + column.Value.MaxLength + "\");");
             }
             code.AppendLine();
@@ -275,7 +275,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     continue;
                 if (!column.Value.ManagedType.Equals(typeof(string)))
                     continue;
-                code.AppendLine("\t\t\tif (" + column.Value.Name + " != null && + " + column.Value.Name + ".Length > " + column.Value.MaxLength + ")");
+                code.AppendLine("\t\t\tif (" + column.Value.Name + " != null && " + column.Value.Name + ".Length > " + column.Value.MaxLength + ")");
                 code.AppendLine("\t\t\t\tthrow new System.ArgumentException(\"Max length for " + column.Value.Name + " is " + column.Value.MaxLength + "\");");
             }
             code.AppendLine();
