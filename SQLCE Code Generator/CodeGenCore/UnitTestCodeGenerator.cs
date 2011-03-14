@@ -94,6 +94,18 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(value, target." + column.Value.Name + ");");
             code.AppendLine("\t\t}");
             code.AppendLine();
+
+            Trace.WriteLine("Generating " + column.Value.Name + "NullTest()");
+
+            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\tpublic void " + column.Value.Name + "NullTest()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tvar target = new " + table.TableName + "();");
+            code.AppendLine("\t\t\ttarget." + column.Value.Name + " = null;");
+            code.AppendLine();
+            code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(null, target." + column.Value.Name + ");");
+            code.AppendLine("\t\t}");
+            code.AppendLine();
         }
 
         private void GenerateStringMaxLengthTest(Table table, KeyValuePair<string, Column> column)
@@ -205,17 +217,64 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         private void GeneratePopulate(Table table)
         {
+            Trace.WriteLine("Generating PopulateTest()");
 
+            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\tpublic void PopulateTest()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tPurgeTest();");
+            code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
+            code.AppendLine("\t\t\tvar actual = new System.Collections.Generic.List<" + table.TableName + ">();");
+            code.AppendLine("\t\t\tfor (int i = 0; i < 10; i++)");
+            code.AppendLine("\t\t\t\tactual.Add(new " + table.TableName);
+            code.AppendLine("\t\t\t\t{");
+
+            foreach (var column in table.Columns)
+            {
+                if (table.PrimaryKeyColumnName == column.Value.Name && column.Value.AutoIncrement)
+                    continue;
+                if (column.Value.IsForeignKey)
+                    continue;
+                code.AppendFormat("\t\t\t\t\t{0} = {1},",
+                                  column.Value.Name,
+                                  column.Value.ManagedType.Equals(typeof(string))
+                                      ? "RandomGenerator.GenerateString(" + column.Value.MaxLength + ")"
+                                      : RandomGenerator.GenerateValue(column.Value.DatabaseType));
+                code.AppendLine();
+            }
+            code.Remove(code.Length - 3, 2);
+            code.AppendLine("\t\t\t\t});");
+            code.AppendLine("\t\t\ttarget.Create(actual);");
+            code.AppendLine("\t\t}");
+            code.AppendLine();
         }
 
         private void GenerateSaveChanges(Table table)
         {
-
+            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\tpublic void UpdateTest()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
+            code.AppendLine("\t\t\ttarget.Purge();");
+            code.AppendLine("\t\t\tCreateTest();");
+            code.AppendLine("\t\t\tvar actual = target.ToList();");
+            code.AppendLine("\t\t\tvar item = actual[0];");
+            code.AppendLine("\t\t\ttarget.Update(item);");
+            code.AppendLine("\t\t}");
+            code.AppendLine();
         }
 
         private void GenerateDeleteAll(Table table)
         {
-
+            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\tpublic void PurgeTest()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
+            code.AppendLine("\t\t\ttarget.Purge();");
+            code.AppendLine("\t\t\tvar actual = target.ToList();");
+            code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.IsNull(actual);");
+            code.AppendLine("\t\t}");
+            code.AppendLine();
         }
 
         private void GenerateDeleteBy(Table table)
@@ -243,7 +302,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
                 code.AppendLine("\t\tpublic void SelectBy" + column.Value.Name + "WithTopTest()");
                 code.AppendLine("\t\t{");
-                //code.AppendLine("\t\t\tCreateTest();");
+                code.AppendLine("\t\t\tPurgeTest();");
+                code.AppendLine("\t\t\tCreateTest();");
                 code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
                 code.AppendLine("\t\t\tvar record = target.ToList(1)[0];");
                 code.AppendLine("\t\t\tvar actual = target.SelectBy" + column.Value.Name + "(record." + column.Value.Name + ", 10);");
@@ -270,7 +330,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
                 code.AppendLine("\t\tpublic void SelectBy" + column.Value.Name + "Test()");
                 code.AppendLine("\t\t{");
-                //code.AppendLine("\t\t\tCreateTest();");
+                code.AppendLine("\t\t\tPurgeTest();");
+                code.AppendLine("\t\t\tCreateTest();");
                 code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
                 code.AppendLine("\t\t\tvar record = target.ToList(1)[0];");
                 code.AppendLine("\t\t\tvar actual = target.SelectBy" + column.Value.Name + "(record." + column.Value.Name + ");");
@@ -289,6 +350,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
             code.AppendLine("\t\tpublic void ToListWithTopTest()");
             code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tCreateTest();");
             code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
             code.AppendLine("\t\t\tvar actual = target.ToList(10);");
             code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.IsNotNull(actual);");
@@ -301,6 +363,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
             code.AppendLine("\t\tpublic void ToArrayWithTopTest()");
             code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tCreateTest();");
             code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
             code.AppendLine("\t\t\tvar actual = target.ToArray(10);");
             code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.IsNotNull(actual);");
@@ -316,6 +379,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
             code.AppendLine("\t\tpublic void ToListTest()");
             code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tCreateTest();");
             code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
             code.AppendLine("\t\t\tvar actual = target.ToList();");
             code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.IsNotNull(actual);");
@@ -328,6 +392,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
             code.AppendLine("\t\tpublic void ToArrayTest()");
             code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tCreateTest();");
             code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
             code.AppendLine("\t\t\tvar actual = target.ToArray();");
             code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.IsNotNull(actual);");
