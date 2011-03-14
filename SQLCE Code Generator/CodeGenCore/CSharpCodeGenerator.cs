@@ -73,6 +73,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\t{");
                 foreach (var column in table.Columns)
                 {
+                    if (string.Compare(column.Value.DatabaseType, "ntext", true) == 0 || string.Compare(column.Value.DatabaseType, "image", true) == 0)
+                        continue;
+
                     if (column.Value.ManagedType.IsValueType)
                     {
                         code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1}? {2});", table.TableName, column.Value.ManagedType, column.Value.Name);
@@ -160,7 +163,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
                 if (column.Value.MaxLength > 0 && column.Value.ManagedType.Equals(typeof(string)))
                 {
-                    code.AppendLine("\t\t\t\tif (_" + column.Value.Name + ".Length > " + column.Value.Name + "_MAX_LENGTH)");
+                    code.AppendLine("\t\t\t\tif (_" + column.Value.Name + " != null && " + column.Value.Name + ".Length > " + column.Value.Name + "_MAX_LENGTH)");
                     code.AppendLine("\t\t\t\t\tthrow new System.ArgumentException(\"Max length for " + column.Value.Name + " is " + column.Value.MaxLength + "\");");
                 }
 

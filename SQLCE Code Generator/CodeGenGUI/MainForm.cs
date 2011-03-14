@@ -82,6 +82,8 @@ namespace CodeGenGUI
                 if (dialog.ShowDialog() == DialogResult.Cancel)
                     return;
 
+                ClearAllControls();
+
                 var fi = new FileInfo(dialog.FileName);
                 fi.Attributes = FileAttributes.Normal;
 
@@ -94,6 +96,22 @@ namespace CodeGenGUI
 
                 Text = "SQL CE Code Generator - Untitled";
             }
+        }
+
+        private void ClearAllControls()
+        {
+            rtbUnitTestOutput.ResetText();
+            rtbOutput.ResetText();
+            rtbGeneratedCodeEntityUnitTests.ResetText();
+            rtbGeneratedCodeEntities.ResetText();
+            rtbGeneratedCodeDataAccessUnitTests.ResetText();
+            rtbGeneratedCodeDataAccess.ResetText();
+            rtbCompilerOutput.ResetText();
+            treeView.Nodes.Clear();
+
+            tabOutput.SelectedTab = tabPageOutput;
+
+            Refresh();
         }
 
         private void GenerateCode()
@@ -182,9 +200,14 @@ namespace CodeGenGUI
                 foreach (var column in item.Columns)
                 {
                     var columnNode = new TreeNode(column.Key);
+                    if (column.Value.IsPrimaryKey)
+                        columnNode.Nodes.Add("Primary Key");
+                    if (column.Value.IsForeignKey)
+                        columnNode.Nodes.Add("Foreign Key");
                     columnNode.Nodes.Add("Database Type - " + column.Value.DatabaseType);
                     columnNode.Nodes.Add("Managed Type - " + column.Value.ManagedType);
                     columnNode.Nodes.Add("Max Length - " + column.Value.MaxLength);
+                    columnNode.Nodes.Add("Allows Null - " + column.Value.AllowsNull);
                     columns.Nodes.Add(columnNode);
                 }
             }
@@ -199,12 +222,12 @@ namespace CodeGenGUI
         private void MainForm_Load(object sender, EventArgs e)
         {
             if (!launchedWithArgument)
-                SafeOperation((Action)delegate { NewFile(); });
+                SafeOperation(NewFile);
         }
 
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SafeOperation((Action)delegate { OpenFile(); });
+            SafeOperation(OpenFile);
         }
 
         private void OpenFile()
@@ -307,6 +330,9 @@ namespace CodeGenGUI
 
             if (currentCodeViewTab == 2)
                 rtbGeneratedCodeEntityUnitTests.Undo();
+
+            if (currentCodeViewTab == 3)
+                rtbGeneratedCodeDataAccessUnitTests.Undo();
         }
 
         private void redoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -319,6 +345,9 @@ namespace CodeGenGUI
 
             if (currentCodeViewTab == 2)
                 rtbGeneratedCodeEntityUnitTests.Redo();
+
+            if (currentCodeViewTab == 3)
+                rtbGeneratedCodeDataAccessUnitTests.Redo();
         }
 
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -331,6 +360,9 @@ namespace CodeGenGUI
 
             if (currentCodeViewTab == 2)
                 rtbGeneratedCodeEntityUnitTests.ActiveTextAreaControl.TextArea.ClipboardHandler.Cut(sender, e);
+
+            if (currentCodeViewTab == 3)
+                rtbGeneratedCodeDataAccessUnitTests.ActiveTextAreaControl.TextArea.ClipboardHandler.Cut(sender, e);
         }
 
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
@@ -343,6 +375,9 @@ namespace CodeGenGUI
 
             if (currentCodeViewTab == 2)
                 rtbGeneratedCodeEntityUnitTests.ActiveTextAreaControl.TextArea.ClipboardHandler.Copy(sender, e);
+
+            if (currentCodeViewTab == 3)
+                rtbGeneratedCodeDataAccessUnitTests.ActiveTextAreaControl.TextArea.ClipboardHandler.Copy(sender, e);
         }
 
         private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
@@ -355,6 +390,9 @@ namespace CodeGenGUI
 
             if (currentCodeViewTab == 2)
                 rtbGeneratedCodeEntityUnitTests.ActiveTextAreaControl.TextArea.ClipboardHandler.Paste(sender, e);
+
+            if (currentCodeViewTab == 3)
+                rtbGeneratedCodeDataAccessUnitTests.ActiveTextAreaControl.TextArea.ClipboardHandler.Paste(sender, e);
         }
 
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
@@ -367,6 +405,9 @@ namespace CodeGenGUI
 
             if (currentCodeViewTab == 2)
                 rtbGeneratedCodeEntityUnitTests.ActiveTextAreaControl.TextArea.ClipboardHandler.SelectAll(sender, e);
+
+            if (currentCodeViewTab == 3)
+                rtbGeneratedCodeDataAccessUnitTests.ActiveTextAreaControl.TextArea.ClipboardHandler.SelectAll(sender, e);
         }
         #endregion
 

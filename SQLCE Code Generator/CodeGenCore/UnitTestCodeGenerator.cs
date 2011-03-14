@@ -232,12 +232,18 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             foreach (var column in table.Columns)
             {
+                if (string.Compare(column.Value.DatabaseType, "ntext", true) == 0 || string.Compare(column.Value.DatabaseType, "image", true) == 0)
+                    continue;
+
+                if (column.Value.IsForeignKey)
+                    continue;
+
                 Trace.WriteLine("Generating SelectBy" + column.Value.Name + "WithTopTest()");
 
                 code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
                 code.AppendLine("\t\tpublic void SelectBy" + column.Value.Name + "WithTopTest()");
                 code.AppendLine("\t\t{");
-                code.AppendLine("\t\t\tCreateTest();");
+                //code.AppendLine("\t\t\tCreateTest();");
                 code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
                 code.AppendLine("\t\t\tvar record = target.ToList(1)[0];");
                 code.AppendLine("\t\t\tvar actual = target.SelectBy" + column.Value.Name + "(record." + column.Value.Name + ", 10);");
@@ -253,12 +259,18 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             foreach (var column in table.Columns)
             {
+                if (string.Compare(column.Value.DatabaseType, "ntext", true) == 0 || string.Compare(column.Value.DatabaseType, "image", true) == 0)
+                    continue;
+
+                if (column.Value.IsForeignKey)
+                    continue;
+
                 Trace.WriteLine("Generating SelectBy" + column.Value.Name + "Test()");
 
                 code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
                 code.AppendLine("\t\tpublic void SelectBy" + column.Value.Name + "Test()");
                 code.AppendLine("\t\t{");
-                code.AppendLine("\t\t\tCreateTest();");
+                //code.AppendLine("\t\t\tCreateTest();");
                 code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
                 code.AppendLine("\t\t\tvar record = target.ToList(1)[0];");
                 code.AppendLine("\t\t\tvar actual = target.SelectBy" + column.Value.Name + "(record." + column.Value.Name + ");");
@@ -336,12 +348,15 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             foreach (var column in table.Columns)
             {
-                if (table.PrimaryKeyColumnName == column.Value.Name)
+                if (table.PrimaryKeyColumnName == column.Value.Name && column.Value.AutoIncrement)
                     continue;
-                code.Append(
-                    column.Value.ManagedType.Equals(typeof(string))
-                       ? "RandomGenerator.GenerateString(" + column.Value.MaxLength + ")"
-                       : "new " + (column.Value.ManagedType.IsArray ? column.Value.ManagedType.ToString().Replace("[]", "[1]") : column.Value.ManagedType + "()"));
+                if (column.Value.IsForeignKey)
+                    code.Append("null");
+                else
+                    code.Append(
+                        column.Value.ManagedType.Equals(typeof(string))
+                           ? "RandomGenerator.GenerateString(" + column.Value.MaxLength + ")"
+                           : RandomGenerator.GenerateValue(column.Value.DatabaseType));
                 code.Append(", ");
             }
 
@@ -366,16 +381,15 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             foreach (var column in table.Columns)
             {
-                if (table.PrimaryKeyColumnName == column.Value.Name)
+                if (table.PrimaryKeyColumnName == column.Value.Name && column.Value.AutoIncrement)
+                    continue;
+                if (column.Value.IsForeignKey)
                     continue;
                 code.AppendFormat("\t\t\t\t{0} = {1},",
                                   column.Value.Name,
                                   column.Value.ManagedType.Equals(typeof(string))
                                       ? "RandomGenerator.GenerateString(" + column.Value.MaxLength + ")"
-                                      : "new " +
-                                        (column.Value.ManagedType.IsArray
-                                             ? column.Value.ManagedType.ToString().Replace("[]", "[1]")
-                                             : column.Value.ManagedType + "()"));
+                                      : RandomGenerator.GenerateValue(column.Value.DatabaseType));
                 code.AppendLine();
             }
             code.Remove(code.Length - 3, 2);
@@ -383,6 +397,56 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\ttarget.Create(actual);");
             code.AppendLine("\t\t}");
             code.AppendLine();
+        }
+    }
+
+    public static class RandomGenerator
+    {
+        public static object GenerateValue(string databaseType)
+        {
+            switch (databaseType.ToLower())
+            {
+                case "tinyint":
+                    return "new System.Byte()";
+
+                case "smallint":
+                    return "(short)new System.Random().Next(1, 1000)";
+
+                case "bigint":
+                    return "(long)new System.Random().Next(1, 1000)";
+
+                case "int":
+                    return "new System.Random().Next(1, 1000)";
+
+                case "binary":
+                case "varbinary":
+                case "image":
+                case "rowversion":
+                    return "new System.Byte[] { (System.Byte)new System.Random().Next(0, 255), (System.Byte)new System.Random().Next(0, 255) }";
+
+                case "bit":
+                    return "System.Convert.ToBoolean(new System.Random().Next(0, 1))";
+
+                case "datetime":
+                    return "System.DateTime.Now";
+
+                case "float":
+                case "real":
+                    return "System.Convert.ToSingle(new System.Random().Next(1,1000))";
+
+                case "double":
+                    return "new System.Random().NextDouble()";
+
+                case "money":
+                case "numeric":
+                    return "System.Convert.ToDecimal(new System.Random().Next(1,1000))";
+
+                case "uniqueidentifier":
+                    return "System.Guid.NewGuid()";
+
+                default:
+                    return null;
+            }
         }
     }
 }
