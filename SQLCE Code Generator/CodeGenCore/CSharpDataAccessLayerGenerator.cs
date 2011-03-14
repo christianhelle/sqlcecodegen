@@ -336,14 +336,34 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             var query = new StringBuilder();
             query.Append("\"DELETE FROM " + table.TableName + " WHERE ");
+
+            var hasPrimaryKey = false;
             foreach (var column in table.Columns)
-                query.Append(column.Key + " = @" + column.Key + " AND ");
-            query.Remove(query.Length - 5, 5);
+            {
+                if (!column.Value.IsPrimaryKey) continue;
+                hasPrimaryKey = true;
+                query.Append(column.Key + " = @" + column.Key);
+                break;
+            }
+            if (!hasPrimaryKey)
+            {
+                foreach (var column in table.Columns)
+                    query.Append(column.Key + " = @" + column.Key + " AND ");
+                query.Remove(query.Length - 5, 5);
+            }
             query.Append("\";");
 
             code.AppendLine("\t\t\t\tcommand.CommandText = " + query);
             foreach (var column in table.Columns)
-                code.AppendLine("\t\t\t\tcommand.Parameters.AddWithValue(\"@" + column.Key + "\", item." + column.Key + " != null ? (object)item." + column.Key + " : System.DBNull.Value);");
+            {
+                if (!hasPrimaryKey)
+                    code.AppendLine("\t\t\t\tcommand.Parameters.AddWithValue(\"@" + column.Key + "\", item." + column.Key + " != null ? (object)item." + column.Key + " : System.DBNull.Value);");
+                else if (column.Value.IsPrimaryKey)
+                {
+                    code.AppendLine("\t\t\t\tcommand.Parameters.AddWithValue(\"@" + column.Key + "\", item." + column.Key + " != null ? (object)item." + column.Key + " : System.DBNull.Value);");
+                    break;
+                }
+            }
 
             code.AppendLine("\t\t\t\tcommand.ExecuteNonQuery();");
             code.AppendLine("\t\t\t}");
@@ -356,6 +376,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             foreach (var column in table.Columns)
             {
+                if (string.Compare(column.Value.DatabaseType, "ntext", true) == 0 || string.Compare(column.Value.DatabaseType, "image", true) == 0)
+                    continue;
+
                 code.AppendLine("\t\t#region DELETE BY " + column.Value.Name);
                 code.AppendFormat("\n\t\tpublic int DeleteBy{1}({0}{2} {1})", column.Value.ManagedType, column.Value.Name, column.Value.ManagedType.IsValueType ? "?" : string.Empty);
                 code.AppendLine("\n\t\t{");

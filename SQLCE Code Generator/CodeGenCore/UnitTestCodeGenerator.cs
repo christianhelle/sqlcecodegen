@@ -279,12 +279,66 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         private void GenerateDeleteBy(Table table)
         {
+            foreach (var column in table.Columns)
+            {
+                if (string.Compare(column.Value.DatabaseType, "ntext", true) == 0 || string.Compare(column.Value.DatabaseType, "image", true) == 0)
+                    continue;
 
+                code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+                code.AppendLine("\t\tpublic void DeleteBy" + column.Value.Name + "Test()");
+                code.AppendLine("\t\t{");
+                code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
+                code.AppendLine("\t\t\tvar actual = new " + table.TableName);
+                code.AppendLine("\t\t\t{");
+                foreach (var col in table.Columns)
+                {
+                    if (table.PrimaryKeyColumnName == col.Value.Name && col.Value.AutoIncrement)
+                        continue;
+                    if (col.Value.IsForeignKey)
+                        continue;
+                    code.AppendFormat("\t\t\t\t{0} = {1},",
+                                      col.Value.Name,
+                                      col.Value.ManagedType.Equals(typeof(string))
+                                          ? "RandomGenerator.GenerateString(" + col.Value.MaxLength + ")"
+                                          : RandomGenerator.GenerateValue(col.Value.DatabaseType));
+                    code.AppendLine();
+                }
+                code.Remove(code.Length - 3, 2);
+                code.AppendLine("\t\t\t};");
+                code.AppendLine("\t\t\ttarget.Create(actual);");
+                code.AppendLine("\t\t\ttarget.DeleteBy" + column.Value.Name + "(actual." + column.Value.Name + ");");
+                code.AppendLine("\t\t}");
+                code.AppendLine();
+            }
         }
 
         private void GenerateDelete(Table table)
         {
-
+            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\tpublic void DeleteTest()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
+            code.AppendLine("\t\t\tvar actual = new " + table.TableName);
+            code.AppendLine("\t\t\t{");
+            foreach (var column in table.Columns)
+            {
+                if (table.PrimaryKeyColumnName == column.Value.Name && column.Value.AutoIncrement)
+                    continue;
+                if (column.Value.IsForeignKey)
+                    continue;
+                code.AppendFormat("\t\t\t\t{0} = {1},",
+                                  column.Value.Name,
+                                  column.Value.ManagedType.Equals(typeof(string))
+                                      ? "RandomGenerator.GenerateString(" + column.Value.MaxLength + ")"
+                                      : RandomGenerator.GenerateValue(column.Value.DatabaseType));
+                code.AppendLine();
+            }
+            code.Remove(code.Length - 3, 2);
+            code.AppendLine("\t\t\t};");
+            code.AppendLine("\t\t\ttarget.Create(actual);");
+            code.AppendLine("\t\t\ttarget.Delete(actual);");
+            code.AppendLine("\t\t}");
+            code.AppendLine();
         }
 
         private void GenerateSelectByWithTopTest(Table table)
