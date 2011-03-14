@@ -51,6 +51,28 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                         if (table.Columns.ContainsKey(table.PrimaryKeyColumnName))
                             table.Columns[table.PrimaryKeyColumnName].IsPrimaryKey = true;
                     }
+
+                    var constraints = new List<string>();
+                    cmd.CommandText = @"SELECT CONSTRAINT_NAME from INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE TABLE_NAME=@Name AND CONSTRAINT_TYPE='FOREIGN KEY'";
+                    using (var reader = cmd.ExecuteReader())
+                        while (reader.Read())
+                            constraints.Add(reader[0].ToString());
+
+                    foreach (var constraint in constraints)
+                    {
+                        cmd.CommandText = @"SELECT COLUMN_NAME from INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE CONSTRAINT_NAME=@Name";
+                        cmd.Parameters["@Name"].Value = constraint;
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                var key = reader.GetString(0);
+                                if (table.Columns.ContainsKey(key))
+                                    table.Columns[key].IsForeignKey = true;
+                            }
+                        }
+
+                    }
                 }
             }
         }
@@ -124,6 +146,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public bool AllowsNull { get; set; }
         public bool IsPrimaryKey { get; set; }
         public bool AutoIncrement { get; set; }
+        public bool IsForeignKey { get; set; }
 
         public override string ToString()
         {
