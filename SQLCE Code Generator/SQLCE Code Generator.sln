@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGenConsole", "CodeGenConsole\CodeGenConsole.csproj", "{B8C5C5C7-8481-417D-AD70-C3C118A2F0DD}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGenCore", "CodeGenCore\CodeGenCore.csproj", "{CE1B35D2-02CC-4195-A4E6-07FDE2915E99}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGenCore.UnitTest", "CodeGenCore.UnitTest\CodeGenCore.UnitTest.csproj", "{C7FFB52B-D5AF-41C5-9D80-DC9DB75BA0C3}"
@@ -27,28 +25,25 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGenGUI", "CodeGenGUI\Co
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 7
+		SccNumberOfProjects = 6
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs02
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/TFS02
 		SccLocalPath0 = .
-		SccProjectUniqueName1 = CodeGenConsole\\CodeGenConsole.csproj
-		SccProjectName1 = CodeGenConsole
-		SccLocalPath1 = CodeGenConsole
-		SccProjectUniqueName2 = CodeGenCore\\CodeGenCore.csproj
-		SccProjectName2 = CodeGenCore
-		SccLocalPath2 = CodeGenCore
-		SccProjectUniqueName3 = CodeGenCustomTool\\CodeGenCustomTool.csproj
-		SccProjectName3 = CodeGenCustomTool
-		SccLocalPath3 = CodeGenCustomTool
-		SccProjectUniqueName4 = CodeGenInstaller\\CodeGenInstaller.vdproj
-		SccProjectName4 = CodeGenInstaller
-		SccLocalPath4 = CodeGenInstaller
-		SccProjectUniqueName5 = CodeGenCore.UnitTest\\CodeGenCore.UnitTest.csproj
-		SccProjectName5 = CodeGenCore.UnitTest
-		SccLocalPath5 = CodeGenCore.UnitTest
-		SccProjectUniqueName6 = CodeGenGUI\\CodeGenGUI.csproj
-		SccProjectName6 = CodeGenGUI
-		SccLocalPath6 = CodeGenGUI
+		SccProjectUniqueName1 = CodeGenCore\\CodeGenCore.csproj
+		SccProjectName1 = CodeGenCore
+		SccLocalPath1 = CodeGenCore
+		SccProjectUniqueName2 = CodeGenCustomTool\\CodeGenCustomTool.csproj
+		SccProjectName2 = CodeGenCustomTool
+		SccLocalPath2 = CodeGenCustomTool
+		SccProjectUniqueName3 = CodeGenInstaller\\CodeGenInstaller.vdproj
+		SccProjectName3 = CodeGenInstaller
+		SccLocalPath3 = CodeGenInstaller
+		SccProjectUniqueName4 = CodeGenCore.UnitTest\\CodeGenCore.UnitTest.csproj
+		SccProjectName4 = CodeGenCore.UnitTest
+		SccLocalPath4 = CodeGenCore.UnitTest
+		SccProjectUniqueName5 = CodeGenGUI\\CodeGenGUI.csproj
+		SccProjectName5 = CodeGenGUI
+		SccLocalPath5 = CodeGenGUI
 	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = SQLCE Code Generator.vsmdi
@@ -58,10 +53,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{B8C5C5C7-8481-417D-AD70-C3C118A2F0DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B8C5C5C7-8481-417D-AD70-C3C118A2F0DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B8C5C5C7-8481-417D-AD70-C3C118A2F0DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B8C5C5C7-8481-417D-AD70-C3C118A2F0DD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CE1B35D2-02CC-4195-A4E6-07FDE2915E99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CE1B35D2-02CC-4195-A4E6-07FDE2915E99}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE1B35D2-02CC-4195-A4E6-07FDE2915E99}.Release|Any CPU.ActiveCfg = Release|Any CPU
