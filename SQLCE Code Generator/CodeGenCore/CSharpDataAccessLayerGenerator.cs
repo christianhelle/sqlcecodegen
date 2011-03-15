@@ -14,9 +14,10 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             foreach (var column in table.Columns)
             {
                 if (column.Value.ManagedType.IsValueType)
-                    code.AppendLine("\t\t\t\t\t\titem." + column.Key + " = (" + column.Value + "?) (reader[\"" + column.Key + "\"] == System.DBNull.Value ? null : reader[\"" + column.Key + "\"]);");
+                    code.AppendLine("\t\t\t\t\t\titem." + column.Key + " = (" + column.Value.ManagedType + ") (reader.IsDBNull(" + (column.Value.Ordinal - 1) + ") ? null : reader[\"" + column.Key + "\"]);");
                 else
-                    code.AppendLine("\t\t\t\t\t\titem." + column.Key + " = reader[\"" + column.Key + "\"] as " + column.Value + ";");
+                    code.AppendLine("\t\t\t\t\t\titem." + column.Key + " = (reader.IsDBNull(" + (column.Value.Ordinal - 1) + ") ? null : reader[\"" + column.Key + "\"] as " + column.Value.ManagedType + ");");
+                    //code.AppendLine("\t\t\t\t\t\titem." + column.Key + " = reader[\"" + column.Key + "\"] as " + column.Value.ManagedType + ";");
             }
         }
 
