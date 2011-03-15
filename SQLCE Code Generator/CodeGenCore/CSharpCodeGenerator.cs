@@ -69,7 +69,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             {
                 code.AppendLine("\t#region " + table.TableName + " Repository");
 
-                code.AppendLine("\tpublic interface I" + table.TableName + "Repository : IRepository<" + table.TableName + ">");
+                code.AppendLine("\tpublic partial interface I" + table.TableName + "Repository : IRepository<" + table.TableName + ">");
                 code.AppendLine("\t{");
                 foreach (var column in table.Columns)
                 {
@@ -122,7 +122,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         private void GenerateIRepository()
         {
             code.AppendLine("\t#region Repository Interface");
-            code.AppendLine("\tpublic interface IRepository<T>");
+            code.AppendLine("\tpublic partial interface IRepository<T>");
             code.AppendLine("\t{");
             code.AppendLine("\t\tSystem.Collections.Generic.List<T> ToList();");
             code.AppendLine("\t\tSystem.Collections.Generic.List<T> ToList(int count);");
