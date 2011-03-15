@@ -566,6 +566,8 @@ namespace CodeGenGUI
         private static volatile bool testsRunning;
         private void RunUnitTests()
         {
+            WriteToTestResultsWindow("Executing tests...");
+
             ThreadPool.QueueUserWorkItem((state) =>
             {
                 try
@@ -591,6 +593,7 @@ namespace CodeGenGUI
 
                     Invoke((Action)delegate
                     {
+                        rtbUnitTestOutput.ResetText();
                         WriteToTestResultsWindow(output);
                         WriteToTestResultsWindow(Environment.NewLine + "Executed in " + sw.Elapsed);
                     });
