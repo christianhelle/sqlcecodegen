@@ -255,8 +255,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\tpublic void UpdateTest()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
-            code.AppendLine("\t\t\ttarget.Purge();");
-            code.AppendLine("\t\t\tCreateTest();");
             code.AppendLine("\t\t\tvar actual = target.ToList();");
             code.AppendLine("\t\t\tvar item = actual[0];");
             code.AppendLine("\t\t\ttarget.Update(item);");
@@ -287,6 +285,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
                 code.AppendLine("\t\tpublic void DeleteBy" + column.Value.Name + "Test()");
                 code.AppendLine("\t\t{");
+                code.AppendLine("\t\t\tPurgeTest();");
                 code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
                 code.AppendLine("\t\t\tvar actual = new " + table.TableName);
                 code.AppendLine("\t\t\t{");
@@ -317,6 +316,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
             code.AppendLine("\t\tpublic void DeleteTest()");
             code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tPurgeTest();");
             code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
             code.AppendLine("\t\t\tvar actual = new " + table.TableName);
             code.AppendLine("\t\t\t{");
@@ -356,7 +356,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
                 code.AppendLine("\t\tpublic void SelectBy" + column.Value.Name + "WithTopTest()");
                 code.AppendLine("\t\t{");
-                code.AppendLine("\t\t\tPurgeTest();");
                 code.AppendLine("\t\t\tCreateTest();");
                 code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
                 code.AppendLine("\t\t\tvar record = target.ToList(1)[0];");
@@ -384,7 +383,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
                 code.AppendLine("\t\tpublic void SelectBy" + column.Value.Name + "Test()");
                 code.AppendLine("\t\t{");
-                code.AppendLine("\t\t\tPurgeTest();");
                 code.AppendLine("\t\t\tCreateTest();");
                 code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
                 code.AppendLine("\t\t\tvar record = target.ToList(1)[0];");
@@ -462,6 +460,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
             code.AppendLine("\t\tpublic void CreateWithParametersTest()");
             code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tPurgeTest();");
             code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
             code.Append("\t\t\ttarget.Create(");
 
@@ -494,6 +493,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
             code.AppendLine("\t\tpublic void CreateTest()");
             code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tPurgeTest();");
             code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
             code.AppendLine("\t\t\tvar actual = new " + table.TableName);
             code.AppendLine("\t\t\t{");

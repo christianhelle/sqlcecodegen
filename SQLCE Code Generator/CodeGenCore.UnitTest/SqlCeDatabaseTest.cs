@@ -33,5 +33,60 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             SqlCeDatabase target = new SqlCeDatabase(defaultNamespace, connectionString);
             Assert.AreEqual(defaultNamespace, target.Namespace);
         }
+
+        [TestMethod]
+        public void TableNameNotNullTest()
+        {
+            SqlCeDatabase target = new SqlCeDatabase(connectionString);         
+            foreach (var table in target.Tables)
+                Assert.IsFalse(string.IsNullOrEmpty(table.TableName));
+        }
+
+        [TestMethod]
+        public void ColumnsNotNullTest()
+        {
+            SqlCeDatabase target = new SqlCeDatabase(connectionString);
+            foreach (var table in target.Tables)
+            {
+                Assert.IsNotNull(table.Columns);
+                CollectionAssert.AllItemsAreNotNull(table.Columns);
+            }
+        }
+
+        [TestMethod]
+        public void ColumnOrdinalTest()
+        {
+            SqlCeDatabase target = new SqlCeDatabase(connectionString);
+            foreach (var table in target.Tables)
+                foreach (var column in table.Columns)
+                    Assert.AreNotEqual(0, column.Value.Ordinal);
+        }
+
+        [TestMethod]
+        public void ColumnNameNotNullTest()
+        {
+            SqlCeDatabase target = new SqlCeDatabase(connectionString);
+            foreach (var table in target.Tables)
+                foreach (var column in table.Columns)
+                    Assert.IsFalse(string.IsNullOrEmpty(column.Value.Name));
+        }
+
+        [TestMethod]
+        public void ColumnManagedTypeNotNullTest()
+        {
+            SqlCeDatabase target = new SqlCeDatabase(connectionString); 
+            foreach (var table in target.Tables)
+                foreach (var column in table.Columns)
+                    Assert.IsNotNull(column.Value.ManagedType);
+        }
+
+        [TestMethod]
+        public void ColumnDatabaseTypeNotNullTest()
+        {
+            SqlCeDatabase target = new SqlCeDatabase(connectionString);
+            foreach (var table in target.Tables)
+                foreach (var column in table.Columns)
+                    Assert.IsFalse(string.IsNullOrEmpty(column.Value.DatabaseType));
+        }
     }
 }

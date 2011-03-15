@@ -89,7 +89,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 {
                     connection.Open();
 
-                    command.CommandText = "SELECT COLUMN_NAME, CHARACTER_MAXIMUM_LENGTH, IS_NULLABLE, DATA_TYPE, AUTOINC_INCREMENT FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='" + table + "'";
+                    command.CommandText = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='" + table + "'";
                     using (var adapter = new SqlCeDataAdapter(command))
                         adapter.Fill(schema);
 
@@ -114,7 +114,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                             MaxLength = row.Field<int?>("CHARACTER_MAXIMUM_LENGTH"),
                             ManagedType = columnDescriptions.Columns[name].DataType,
                             AllowsNull = (string.Compare(row.Field<string>("IS_NULLABLE"), "YES", true) == 0),
-                            AutoIncrement = row["AUTOINC_INCREMENT"] != DBNull.Value
+                            AutoIncrement = row["AUTOINC_INCREMENT"] != DBNull.Value,
+                            Ordinal = row.Field<int>("ORDINAL_POSITION")
                         });
                     }
 
@@ -147,6 +148,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public bool IsPrimaryKey { get; set; }
         public bool AutoIncrement { get; set; }
         public bool IsForeignKey { get; set; }
+        public int Ordinal { get; set; }
 
         public override string ToString()
         {
