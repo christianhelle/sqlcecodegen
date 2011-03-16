@@ -64,6 +64,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             GenerateEntityBase();
             GenerateIRepository();
+            GenerateIDataRepository();
 
             foreach (var table in Database.Tables)
             {
@@ -117,6 +118,39 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             }
 
             code.AppendLine("}");
+        }
+
+        private void GenerateIDataRepository()
+        {
+            code.AppendLine("\t#region IDataRepository");
+            code.AppendLine("\tpublic partial interface IDataRepository");
+            code.AppendLine("\t{");
+            foreach (var table in Database.Tables)
+            {
+                code.AppendLine("\t\tI" + table.TableName + "Repository " + table.TableName + "Repository { get; }");
+            }
+            code.AppendLine("\t}");
+            code.AppendLine("\t#endregion");
+            code.AppendLine();
+
+            code.AppendLine("\t#region DataRepository");
+            code.AppendLine("\tpublic partial class DataRepository : IDataRepository");
+            code.AppendLine("\t{");
+            code.AppendLine("\t\tpublic DataRepository()");
+            code.AppendLine("\t\t{");
+            foreach (var table in Database.Tables)
+            {
+                code.AppendLine("\t\t\t" + table.TableName + "Repository = new " + table.TableName + "Repository();");
+            }
+            code.AppendLine("\t\t}");
+            code.AppendLine();
+            foreach (var table in Database.Tables)
+            {
+                code.AppendLine("\t\tpublic I" + table.TableName + "Repository " + table.TableName + "Repository { get; private set; }");
+            }
+            code.AppendLine("\t}");
+            code.AppendLine("\t#endregion");
+            code.AppendLine();
         }
 
         private void GenerateIRepository()
