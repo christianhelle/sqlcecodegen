@@ -239,6 +239,7 @@ namespace CodeGenGUI
                 if (dialog.ShowDialog() == DialogResult.Cancel)
                     return;
 
+                dataSource = dialog.FileName;
                 var codeGen = new CodeGenFileSerializer();
                 CodeGenFile file = codeGen.LoadFile(dialog.FileName);
                 rtbGeneratedCodeEntities.Text = file.GeneratedCode.Entities;
