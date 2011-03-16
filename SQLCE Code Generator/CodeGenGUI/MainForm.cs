@@ -8,7 +8,7 @@ using ChristianHelle.DatabaseTools.SqlCe.CodeGenCore;
 using ICSharpCode.TextEditor.Document;
 using System.Threading;
 
-namespace CodeGenGUI
+namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 {
     public partial class MainForm : Form
     {
@@ -272,16 +272,16 @@ namespace CodeGenGUI
                     return;
 
                 var codeGen = new CodeGenFile
-                {
-                    GeneratedCode = new GeneratedCode
-                    {
-                        Entities = rtbGeneratedCodeEntities.Text,
-                        DataAccessCode = rtbGeneratedCodeDataAccess.Text,
-                        EntityUnitTests = rtbGeneratedCodeEntityUnitTests.Text,
-                        DataAccessUnitTests = rtbGeneratedCodeDataAccessUnitTests.Text
-                    },
-                    DataSource = dataSource
-                };
+                                  {
+                                      GeneratedCode = new GeneratedCode
+                                                          {
+                                                              Entities = rtbGeneratedCodeEntities.Text,
+                                                              DataAccessCode = rtbGeneratedCodeDataAccess.Text,
+                                                              EntityUnitTests = rtbGeneratedCodeEntityUnitTests.Text,
+                                                              DataAccessUnitTests = rtbGeneratedCodeDataAccessUnitTests.Text
+                                                          },
+                                      DataSource = dataSource
+                                  };
                 var serializer = new CodeGenFileSerializer();
                 serializer.SaveFile(codeGen, dialog.FileName);
 
@@ -453,22 +453,22 @@ namespace CodeGenGUI
         {
             using (var stream = File.CreateText("Entities.cs"))
             {
-                stream.Write(rtbGeneratedCodeEntities.Text);
+                stream.Write((string) rtbGeneratedCodeEntities.Text);
                 stream.WriteLine();
             }
             using (var stream = File.CreateText("DataAccess.cs"))
             {
-                stream.Write(rtbGeneratedCodeDataAccess.Text);
+                stream.Write((string) rtbGeneratedCodeDataAccess.Text);
                 stream.WriteLine();
             }
             using (var stream = File.CreateText("EntityUnitTests.cs"))
             {
-                stream.Write(rtbGeneratedCodeEntityUnitTests.Text);
+                stream.Write((string) rtbGeneratedCodeEntityUnitTests.Text);
                 stream.WriteLine();
             }
             using (var stream = File.CreateText("DataAccessUnitTests.cs"))
             {
-                stream.Write(rtbGeneratedCodeDataAccessUnitTests.Text);
+                stream.Write((string) rtbGeneratedCodeDataAccessUnitTests.Text);
                 stream.WriteLine();
             }
         }
@@ -570,40 +570,40 @@ namespace CodeGenGUI
             WriteToTestResultsWindow("Executing tests...");
 
             ThreadPool.QueueUserWorkItem((state) =>
-            {
-                try
-                {
-                    testsRunning = true;
+                                             {
+                                                 try
+                                                 {
+                                                     testsRunning = true;
 
-                    var fi = new FileInfo(dataSource);
-                    fi.Attributes = FileAttributes.Normal;
+                                                     var fi = new FileInfo(dataSource);
+                                                     fi.Attributes = FileAttributes.Normal;
 
-                    var sw = Stopwatch.StartNew();
+                                                     var sw = Stopwatch.StartNew();
 
-                    var mstest = Environment.ExpandEnvironmentVariables(@"%VS90COMNTOOLS%\..\IDE\mstest.exe");
-                    var args = string.Format(@"/testcontainer:""{0}\DataAccess.dll""", Environment.CurrentDirectory);
+                                                     var mstest = Environment.ExpandEnvironmentVariables(@"%VS90COMNTOOLS%\..\IDE\mstest.exe");
+                                                     var args = string.Format(@"/testcontainer:""{0}\DataAccess.dll""", Environment.CurrentDirectory);
 
-                    var psi = new ProcessStartInfo(mstest, args);
-                    psi.RedirectStandardOutput = true;
-                    psi.CreateNoWindow = true;
-                    psi.UseShellExecute = false;
+                                                     var psi = new ProcessStartInfo(mstest, args);
+                                                     psi.RedirectStandardOutput = true;
+                                                     psi.CreateNoWindow = true;
+                                                     psi.UseShellExecute = false;
 
-                    var process = Process.Start(psi);
-                    string output = process.StandardOutput.ReadToEnd();
-                    process.WaitForExit();
+                                                     var process = Process.Start(psi);
+                                                     string output = process.StandardOutput.ReadToEnd();
+                                                     process.WaitForExit();
 
-                    Invoke((Action)delegate
-                    {
-                        rtbUnitTestOutput.ResetText();
-                        WriteToTestResultsWindow(output);
-                        WriteToTestResultsWindow(Environment.NewLine + "Executed in " + sw.Elapsed);
-                    });
-                }
-                finally
-                {
-                    testsRunning = false;
-                }
-            });
+                                                     Invoke((Action)delegate
+                                                                        {
+                                                                            rtbUnitTestOutput.ResetText();
+                                                                            WriteToTestResultsWindow(output);
+                                                                            WriteToTestResultsWindow(Environment.NewLine + "Executed in " + sw.Elapsed);
+                                                                        });
+                                                 }
+                                                 finally
+                                                 {
+                                                     testsRunning = false;
+                                                 }
+                                             });
         }
 
         private void regenerateCodeToolStripMenuItem_Click(object sender, EventArgs e)

@@ -1,4 +1,4 @@
-﻿namespace CodeGenGUI
+﻿namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 {
     partial class OpenDatabase
     {
@@ -59,7 +59,7 @@
             // 
             this.cbDatabase.FormattingEnabled = true;
             this.cbDatabase.Items.AddRange(new object[] {
-            "<Browse>"});
+                                                            "<Browse>"});
             this.cbDatabase.Location = new System.Drawing.Point(80, 16);
             this.cbDatabase.Name = "cbDatabase";
             this.cbDatabase.Size = new System.Drawing.Size(276, 21);

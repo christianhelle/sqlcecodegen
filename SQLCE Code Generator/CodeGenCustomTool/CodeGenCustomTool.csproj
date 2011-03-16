@@ -8,7 +8,7 @@
     <ProjectGuid>{DDFEFB32-623E-49EE-9627-A19B77E29FCA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CodeGenCustomTool</RootNamespace>
+    <RootNamespace>ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool</RootNamespace>
     <AssemblyName>CodeGenCustomTool</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

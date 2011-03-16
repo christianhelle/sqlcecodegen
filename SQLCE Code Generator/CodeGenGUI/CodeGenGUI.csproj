@@ -8,7 +8,7 @@
     <ProjectGuid>{0788ECDE-7366-4484-9EE5-FF944CE316C5}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>CodeGenGUI</RootNamespace>
+    <RootNamespace>ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI</RootNamespace>
     <AssemblyName>CodeGenGUI</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -94,6 +94,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

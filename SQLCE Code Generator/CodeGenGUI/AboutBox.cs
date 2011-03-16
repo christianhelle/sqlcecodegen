@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 
-namespace CodeGenGUI
+namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 {
     partial class AboutBox : Form
     {
