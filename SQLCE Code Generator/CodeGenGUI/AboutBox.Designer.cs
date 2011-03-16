@@ -1,4 +1,4 @@
-﻿namespace CodeGenGUI
+﻿namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 {
     partial class AboutBox
     {

@@ -1,4 +1,4 @@
-﻿namespace CodeGenGUI
+﻿namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 {
     partial class MainForm
     {
@@ -99,11 +99,11 @@
             // menuStrip
             // 
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.editToolStripMenuItem,
-            this.codeToolStripMenuItem,
-            this.toolsToolStripMenuItem,
-            this.helpToolStripMenuItem});
+                                                                                       this.fileToolStripMenuItem,
+                                                                                       this.editToolStripMenuItem,
+                                                                                       this.codeToolStripMenuItem,
+                                                                                       this.toolsToolStripMenuItem,
+                                                                                       this.helpToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
             this.menuStrip.Size = new System.Drawing.Size(784, 24);
@@ -113,13 +113,13 @@
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.newToolStripMenuItem,
-            this.openToolStripMenuItem,
-            this.toolStripSeparator,
-            this.saveToolStripMenuItem,
-            this.saveAsToolStripMenuItem,
-            this.toolStripSeparator1,
-            this.exitToolStripMenuItem});
+                                                                                                           this.newToolStripMenuItem,
+                                                                                                           this.openToolStripMenuItem,
+                                                                                                           this.toolStripSeparator,
+                                                                                                           this.saveToolStripMenuItem,
+                                                                                                           this.saveAsToolStripMenuItem,
+                                                                                                           this.toolStripSeparator1,
+                                                                                                           this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
             this.fileToolStripMenuItem.Text = "&File";
@@ -181,14 +181,14 @@
             // editToolStripMenuItem
             // 
             this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.undoToolStripMenuItem,
-            this.redoToolStripMenuItem,
-            this.toolStripSeparator3,
-            this.cutToolStripMenuItem,
-            this.copyToolStripMenuItem,
-            this.pasteToolStripMenuItem,
-            this.toolStripSeparator4,
-            this.selectAllToolStripMenuItem});
+                                                                                                           this.undoToolStripMenuItem,
+                                                                                                           this.redoToolStripMenuItem,
+                                                                                                           this.toolStripSeparator3,
+                                                                                                           this.cutToolStripMenuItem,
+                                                                                                           this.copyToolStripMenuItem,
+                                                                                                           this.pasteToolStripMenuItem,
+                                                                                                           this.toolStripSeparator4,
+                                                                                                           this.selectAllToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
             this.editToolStripMenuItem.Text = "&Edit";
@@ -259,9 +259,9 @@
             // codeToolStripMenuItem
             // 
             this.codeToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.buildToolStripMenuItem,
-            this.runUnitTestsToolStripMenuItem,
-            this.regenerateCodeToolStripMenuItem});
+                                                                                                           this.buildToolStripMenuItem,
+                                                                                                           this.runUnitTestsToolStripMenuItem,
+                                                                                                           this.regenerateCodeToolStripMenuItem});
             this.codeToolStripMenuItem.Name = "codeToolStripMenuItem";
             this.codeToolStripMenuItem.Size = new System.Drawing.Size(47, 20);
             this.codeToolStripMenuItem.Text = "Code";
@@ -292,8 +292,8 @@
             // toolsToolStripMenuItem
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.customizeToolStripMenuItem,
-            this.optionsToolStripMenuItem});
+                                                                                                            this.customizeToolStripMenuItem,
+                                                                                                            this.optionsToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.toolsToolStripMenuItem.Text = "&Tools";
@@ -314,8 +314,8 @@
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.toolStripSeparator5,
-            this.aboutToolStripMenuItem});
+                                                                                                           this.toolStripSeparator5,
+                                                                                                           this.aboutToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "&Help";
@@ -383,7 +383,7 @@
             treeNode1.Name = "nodeTables";
             treeNode1.Text = "Database Tables";
             this.treeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1});
+                                                                                 treeNode1});
             this.treeView.Size = new System.Drawing.Size(202, 401);
             this.treeView.TabIndex = 0;
             // 
@@ -668,4 +668,3 @@
 
     }
 }
-

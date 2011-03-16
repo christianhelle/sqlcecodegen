@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace CodeGenGUI
+namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 {
     public partial class OpenDatabase : Form
     {

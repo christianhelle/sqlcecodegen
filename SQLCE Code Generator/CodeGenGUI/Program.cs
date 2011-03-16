@@ -1,8 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
 
-namespace CodeGenGUI
+namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 {
     static class Program
     {
