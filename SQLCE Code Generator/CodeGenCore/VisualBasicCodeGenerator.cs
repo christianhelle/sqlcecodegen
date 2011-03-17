@@ -4,7 +4,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
     public class VisualBasicCodeGenerator : CodeGenerator
     {
-        const string NOT_SUPPORTED = "Only C# code generation is currently supported";
+        private const string NOT_SUPPORTED = "Only C# code generation is currently supported";
 
         public VisualBasicCodeGenerator(SqlCeDatabase database)
             : base(database)
