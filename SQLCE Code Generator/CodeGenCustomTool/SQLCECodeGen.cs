@@ -16,7 +16,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
             var connectionString = "Data Source=" + inputFileName;
             var database = new SqlCeDatabase(generatedNamespace, connectionString);
             var factory = new CodeGeneratorFactory(database);
-            var codeGenerator = factory.Create();
+            var codeGenerator = factory.Create(CodeProvider.FileExtension);
 
             codeGenerator.WriteHeaderInformation();
             codeGenerator.GenerateEntities();
