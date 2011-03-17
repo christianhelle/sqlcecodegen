@@ -5,12 +5,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGenCore", "CodeGenCore\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGenCore.UnitTest", "CodeGenCore.UnitTest\CodeGenCore.UnitTest.csproj", "{C7FFB52B-D5AF-41C5-9D80-DC9DB75BA0C3}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DE0B3A05-8970-48F5-9E1D-8C4D24D55E4A}"
-	ProjectSection(SolutionItems) = preProject
-		LocalTestRun.testrunconfig = LocalTestRun.testrunconfig
-		SQLCE Code Generator.vsmdi = SQLCE Code Generator.vsmdi
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGenCustomTool", "CodeGenCustomTool\CodeGenCustomTool.csproj", "{DDFEFB32-623E-49EE-9627-A19B77E29FCA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Depdendencies", "Depdendencies", "{8E05C125-6658-4A6C-A4EC-848EA7C24CB1}"
@@ -44,9 +38,6 @@ Global
 		SccProjectUniqueName5 = CodeGenGUI\\CodeGenGUI.csproj
 		SccProjectName5 = CodeGenGUI
 		SccLocalPath5 = CodeGenGUI
-	EndGlobalSection
-	GlobalSection(TestCaseManagementSettings) = postSolution
-		CategoryFile = SQLCE Code Generator.vsmdi
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

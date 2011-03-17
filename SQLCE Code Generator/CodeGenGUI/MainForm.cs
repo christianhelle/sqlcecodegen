@@ -127,7 +127,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         private string GenerateDataAccessUnitTestsCode(CodeGenerator codeGenerator)
         {
             WriteToOutputWindow("Generating Data Access Unit Tests Code");
-            var unitTestGenerator = new UnitTestCodeGenerator(codeGenerator.Database);
+            var unitTestGenerator = new CSharpUnitTestCodeGenerator(codeGenerator.Database);
             unitTestGenerator.WriteHeaderInformation();
             unitTestGenerator.GenerateDataAccessLayer();
             var code = unitTestGenerator.GetCode();
@@ -137,7 +137,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         private string GenerateEntityUnitTestsCode(CodeGenerator codeGenerator)
         {
             WriteToOutputWindow("Generating Entity Unit Tests Code");
-            var unitTestGenerator = new UnitTestCodeGenerator(codeGenerator.Database);
+            var unitTestGenerator = new CSharpUnitTestCodeGenerator(codeGenerator.Database);
             unitTestGenerator.WriteHeaderInformation();
             unitTestGenerator.GenerateEntities();
             var code = unitTestGenerator.GetCode();
@@ -181,7 +181,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             return codeGenerator;
         }
 
-        private void PopulateTables(List<Table> list)
+        private void PopulateTables(IEnumerable<Table> list)
         {
             var rootNode = new TreeNode("Database Tables");
             rootNode.Expand();
@@ -259,7 +259,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
         private void saveToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SafeOperation((Action)delegate { SaveFile(); });
+            SafeOperation(SaveFile);
         }
 
         private void SaveFile()
@@ -303,7 +303,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
         private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            SafeOperation((Action)delegate { SaveFile(); });
+            SafeOperation(SaveFile);
         }
 
         private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -412,111 +412,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         }
         #endregion
 
-        #region Compile Code
-        private void compileToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            tabOutput.SelectedTab = tabPageCompilerOutput;
-            CompileCSharp30();
-        }
-
-        private void CompileCSharp30()
-        {
-            rtbCompilerOutput.ResetText();
-            CreateOutputCSharpFile();
-
-            var sw = Stopwatch.StartNew();
-
-            var csc = Environment.ExpandEnvironmentVariables(@"%SystemRoot%\Microsoft.Net\Framework\v3.5\csc.exe");
-            var args = string.Format(@"/target:library /optimize /out:DataAccess.dll /reference:""{0}\System.Data.SqlServerCe.dll"" /reference:""{0}\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll"" ""{0}\*.cs""", Environment.CurrentDirectory);
-
-            WriteToCompilerOutputWindow("Compiling using C# 3.0");
-            WriteToCompilerOutputWindow(string.Format(Environment.NewLine + "Executing {0} {1}" + Environment.NewLine, csc, args));
-
-            var psi = new ProcessStartInfo(csc, args);
-            psi.RedirectStandardOutput = true;
-            psi.CreateNoWindow = true;
-            psi.UseShellExecute = false;
-
-            var process = Process.Start(psi);
-            var output = process.StandardOutput.ReadToEnd();
-            process.WaitForExit();
-            
-            //var list = new List<string> 
-            //{
-            //    string.Format("{0}\\Entities.cs", Environment.CurrentDirectory),
-            //    string.Format("{0}\\DataAccess.cs", Environment.CurrentDirectory),
-            //    string.Format("{0}\\EntityUnitTests.cs", Environment.CurrentDirectory),
-            //    string.Format("{0}\\DataAccessUnitTests.cs", Environment.CurrentDirectory)
-            //};
-            //var result = CodeCompiler.CompileCSharpFiles(list.ToArray());
-
-            //foreach (var item in result.Output)
-            //    WriteToCompilerOutputWindow(item);
-
-            WriteToCompilerOutputWindow(output);
-            WriteToCompilerOutputWindow("Executed in " + sw.Elapsed);
-
-            File.Delete(string.Format("{0}\\Entities.cs", Environment.CurrentDirectory));
-            File.Delete(string.Format("{0}\\DataAccess.cs", Environment.CurrentDirectory));
-            File.Delete(string.Format("{0}\\EntityUnitTests.cs", Environment.CurrentDirectory));
-            File.Delete(string.Format("{0}\\DataAccessUnitTests.cs", Environment.CurrentDirectory));
-        }
-
-        private void CreateOutputCSharpFile()
-        {
-            using (var stream = File.CreateText("Entities.cs"))
-            {
-                stream.Write((string)rtbGeneratedCodeEntities.Text);
-                stream.WriteLine();
-            }
-            using (var stream = File.CreateText("DataAccess.cs"))
-            {
-                stream.Write((string)rtbGeneratedCodeDataAccess.Text);
-                stream.WriteLine();
-            }
-            using (var stream = File.CreateText("EntityUnitTests.cs"))
-            {
-                stream.Write((string)rtbGeneratedCodeEntityUnitTests.Text);
-                stream.WriteLine();
-            }
-            using (var stream = File.CreateText("DataAccessUnitTests.cs"))
-            {
-                stream.Write((string)rtbGeneratedCodeDataAccessUnitTests.Text);
-                stream.WriteLine();
-            }
-        }
-        #endregion
-
-        void WriteToOutputWindow(string text)
-        {
-            rtbOutput.Text += Environment.NewLine + text;
-            rtbOutput.SelectionStart = rtbOutput.TextLength;
-            rtbOutput.ScrollToCaret();
-            rtbOutput.Update();
-
-            Trace.WriteLine(text);
-        }
-
-        void WriteToCompilerOutputWindow(string text)
-        {
-            rtbCompilerOutput.Text += Environment.NewLine + text;
-            rtbCompilerOutput.SelectionStart = rtbCompilerOutput.TextLength;
-            rtbCompilerOutput.ScrollToCaret();
-            rtbCompilerOutput.Update();
-
-            Trace.WriteLine(text);
-        }
-
-        void WriteToTestResultsWindow(string text)
-        {
-            rtbUnitTestOutput.Text += Environment.NewLine + text;
-            rtbUnitTestOutput.SelectionStart = rtbUnitTestOutput.TextLength;
-            rtbUnitTestOutput.ScrollToCaret();
-            rtbUnitTestOutput.Update();
-
-            Trace.WriteLine(text);
-        }
-
         #region Drag and Drop handling
         private void MainForm_DragEnter(object sender, DragEventArgs e)
         {
@@ -561,6 +456,83 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                     SqlCeDatabase database = new SqlCeDatabase(generatedNamespace, connectionString);
                     PopulateTables(database.Tables);
                 }
+            }
+        }
+        #endregion
+
+        #region Compile Code
+        private void compileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            tabOutput.SelectedTab = tabPageCompilerOutput;
+            CompileCSharp30();
+        }
+
+        private void CompileCSharp30()
+        {
+            rtbCompilerOutput.ResetText();
+            CreateOutputCSharpFile();
+
+            var sw = Stopwatch.StartNew();
+
+            var csc = Environment.ExpandEnvironmentVariables(@"%SystemRoot%\Microsoft.Net\Framework\v3.5\csc.exe");
+            var args = string.Format(@"/target:library /optimize /out:DataAccess.dll /reference:""{0}\System.Data.SqlServerCe.dll"" /reference:""{0}\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll"" ""{0}\*.cs""", Environment.CurrentDirectory);
+
+            WriteToCompilerOutputWindow("Compiling using C# 3.0");
+            WriteToCompilerOutputWindow(string.Format(Environment.NewLine + "Executing {0} {1}" + Environment.NewLine, csc, args));
+
+            var psi = new ProcessStartInfo(csc, args)
+                          {
+                              RedirectStandardOutput = true,
+                              CreateNoWindow = true,
+                              UseShellExecute = false
+                          };
+
+            var process = Process.Start(psi);
+            var output = process.StandardOutput.ReadToEnd();
+            process.WaitForExit();
+            
+            //var list = new List<string> 
+            //{
+            //    string.Format("{0}\\Entities.cs", Environment.CurrentDirectory),
+            //    string.Format("{0}\\DataAccess.cs", Environment.CurrentDirectory),
+            //    string.Format("{0}\\EntityUnitTests.cs", Environment.CurrentDirectory),
+            //    string.Format("{0}\\DataAccessUnitTests.cs", Environment.CurrentDirectory)
+            //};
+            //var result = CodeCompiler.CompileCSharpFiles(list.ToArray());
+
+            //foreach (var item in result.Output)
+            //    WriteToCompilerOutputWindow(item);
+
+            WriteToCompilerOutputWindow(output);
+            WriteToCompilerOutputWindow("Executed in " + sw.Elapsed);
+
+            File.Delete(string.Format("{0}\\Entities.cs", Environment.CurrentDirectory));
+            File.Delete(string.Format("{0}\\DataAccess.cs", Environment.CurrentDirectory));
+            File.Delete(string.Format("{0}\\EntityUnitTests.cs", Environment.CurrentDirectory));
+            File.Delete(string.Format("{0}\\DataAccessUnitTests.cs", Environment.CurrentDirectory));
+        }
+
+        private void CreateOutputCSharpFile()
+        {
+            using (var stream = File.CreateText("Entities.cs"))
+            {
+                stream.Write(rtbGeneratedCodeEntities.Text);
+                stream.WriteLine();
+            }
+            using (var stream = File.CreateText("DataAccess.cs"))
+            {
+                stream.Write(rtbGeneratedCodeDataAccess.Text);
+                stream.WriteLine();
+            }
+            using (var stream = File.CreateText("EntityUnitTests.cs"))
+            {
+                stream.Write(rtbGeneratedCodeEntityUnitTests.Text);
+                stream.WriteLine();
+            }
+            using (var stream = File.CreateText("DataAccessUnitTests.cs"))
+            {
+                stream.Write(rtbGeneratedCodeDataAccessUnitTests.Text);
+                stream.WriteLine();
             }
         }
         #endregion
@@ -629,6 +601,36 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             return output;
         }
         #endregion
+
+        void WriteToOutputWindow(string text)
+        {
+            rtbOutput.Text += Environment.NewLine + text;
+            rtbOutput.SelectionStart = rtbOutput.TextLength;
+            rtbOutput.ScrollToCaret();
+            rtbOutput.Update();
+
+            Trace.WriteLine(text);
+        }
+
+        void WriteToCompilerOutputWindow(string text)
+        {
+            rtbCompilerOutput.Text += Environment.NewLine + text;
+            rtbCompilerOutput.SelectionStart = rtbCompilerOutput.TextLength;
+            rtbCompilerOutput.ScrollToCaret();
+            rtbCompilerOutput.Update();
+
+            Trace.WriteLine(text);
+        }
+
+        void WriteToTestResultsWindow(string text)
+        {
+            rtbUnitTestOutput.Text += Environment.NewLine + text;
+            rtbUnitTestOutput.SelectionStart = rtbUnitTestOutput.TextLength;
+            rtbUnitTestOutput.ScrollToCaret();
+            rtbUnitTestOutput.Update();
+
+            Trace.WriteLine(text);
+        }
 
         private void regenerateCodeToolStripMenuItem_Click(object sender, EventArgs e)
         {
