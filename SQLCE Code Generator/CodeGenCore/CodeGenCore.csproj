@@ -54,6 +54,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeCompiler.cs" />
     <Compile Include="CodeGenerator.cs" />
     <Compile Include="CodeGeneratorFactory.cs" />
     <Compile Include="CodeGeneratorOptions.cs" />
@@ -78,4 +79,9 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties BuildVersion_UseGlobalSettings="True" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>
