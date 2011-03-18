@@ -191,18 +191,28 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\tvar actual = EntityBase.Connection.State;");
             code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(expected, actual);");
             code.AppendLine("\t\t}");
-            //code.AppendLine();
+            code.AppendLine("\t}");
+            code.AppendLine();
+
+            //code.AppendLine("\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]");
+            //code.AppendLine("\tpublic class DatabaseFileTest");
+            //code.AppendLine("\t{");
             //code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
             //code.AppendLine("\t\tpublic void CreateDatabaseTest()");
             //code.AppendLine("\t\t{");
-            //code.AppendLine("\t\t\tEntityBase.Connection.Close();");
-            //code.AppendLine("\t\t\tEntityBase.Connection.ConnectionString = @\"" + Database.ConnectionString + ".UnitTest.sdf\";");
-            //code.AppendLine("\t\t\tvar actual = EntityBase.CreateDatabase();");
+            //code.AppendLine("\t\t\tEntityBase.ConnectionString = @\"" + Database.ConnectionString + "_\" + RandomGenerator.GenerateString(10) + \".sdf\";");
+            //code.AppendLine("\t\t\tEntityBase.Connection.Dispose();");
+            //code.AppendLine("\t\t\tEntityBase.Connection = null;");
+            //code.AppendLine();
+            //code.AppendLine("\t\t\tvar actual = DatabaseFile.CreateDatabase();");
             //code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.AreNotEqual(0, actual);");
+            //code.AppendLine();
             //code.AppendLine("\t\t\tEntityBase.ConnectionString = @\"" + Database.ConnectionString + "\";");
+            //code.AppendLine("\t\t\tEntityBase.Connection.Dispose();");
+            //code.AppendLine("\t\t\tEntityBase.Connection = null;");
             //code.AppendLine("\t\t}");
-            code.AppendLine("\t}");
-            code.AppendLine();
+            //code.AppendLine("\t}");
+            //code.AppendLine();
 
             foreach (var table in Database.Tables)
             {
@@ -221,12 +231,28 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 GenerateDeleteAll(table);
                 GenerateSaveChanges(table);
                 GeneratePopulate(table);
+                GenerateCount(table);
 
                 code.AppendLine("\t}");
                 code.AppendLine();
             }
 
             code.AppendLine("}");
+            code.AppendLine();
+        }
+
+        private void GenerateCount(Table table)
+        {
+            Trace.WriteLine("Generating CountTest()");
+
+            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\tpublic void CountTest()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tCreateTest();");
+            code.AppendLine("\t\t\tI" + table.TableName + "Repository target = new " + table.TableName + "Repository();");
+            code.AppendLine("\t\t\tvar actual = target.Count();");
+            code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.AreNotEqual(0, actual);");
+            code.AppendLine("\t\t}");
             code.AppendLine();
         }
 
@@ -238,7 +264,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\tpublic void PopulateTest()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tPurgeTest();");
-            code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
+            code.AppendLine("\t\t\tI" + table.TableName + "Repository target = new " + table.TableName + "Repository();");
             code.AppendLine("\t\t\tvar actual = new System.Collections.Generic.List<" + table.TableName + ">();");
             code.AppendLine("\t\t\tfor (int i = 0; i < 10; i++)");
             code.AppendLine("\t\t\t\tactual.Add(new " + table.TableName);
@@ -269,7 +295,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
             code.AppendLine("\t\tpublic void UpdateTest()");
             code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
+            code.AppendLine("\t\t\tI" + table.TableName + "Repository target = new " + table.TableName + "Repository();");
             code.AppendLine("\t\t\tvar actual = target.ToList();");
             code.AppendLine("\t\t\tvar item = actual[0];");
             code.AppendLine("\t\t\ttarget.Update(item);");
@@ -282,7 +308,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
             code.AppendLine("\t\tpublic void PurgeTest()");
             code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
+            code.AppendLine("\t\t\tI" + table.TableName + "Repository target = new " + table.TableName + "Repository();");
             code.AppendLine("\t\t\ttarget.Purge();");
             code.AppendLine("\t\t\tvar actual = target.ToList();");
             code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.IsNull(actual);");
@@ -301,7 +327,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\t\tpublic void DeleteBy" + column.Value.Name + "Test()");
                 code.AppendLine("\t\t{");
                 code.AppendLine("\t\t\tPurgeTest();");
-                code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
+                code.AppendLine("\t\t\tI" + table.TableName + "Repository target = new " + table.TableName + "Repository();");
                 code.AppendLine("\t\t\tvar actual = new " + table.TableName);
                 code.AppendLine("\t\t\t{");
                 foreach (var col in table.Columns)
@@ -332,7 +358,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\tpublic void DeleteTest()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tPurgeTest();");
-            code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
+            code.AppendLine("\t\t\tI" + table.TableName + "Repository target = new " + table.TableName + "Repository();");
             code.AppendLine("\t\t\tvar actual = new " + table.TableName);
             code.AppendLine("\t\t\t{");
             foreach (var column in table.Columns)
@@ -372,7 +398,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\t\tpublic void SelectBy" + column.Value.Name + "WithTopTest()");
                 code.AppendLine("\t\t{");
                 code.AppendLine("\t\t\tCreateTest();");
-                code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
+                code.AppendLine("\t\t\tI" + table.TableName + "Repository target = new " + table.TableName + "Repository();");
                 code.AppendLine("\t\t\tvar record = target.ToList(1)[0];");
                 code.AppendLine("\t\t\tvar actual = target.SelectBy" + column.Value.Name + "(record." + column.Value.Name + ", 10);");
                 code.AppendLine();
@@ -399,7 +425,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\t\tpublic void SelectBy" + column.Value.Name + "Test()");
                 code.AppendLine("\t\t{");
                 code.AppendLine("\t\t\tCreateTest();");
-                code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
+                code.AppendLine("\t\t\tI" + table.TableName + "Repository target = new " + table.TableName + "Repository();");
                 code.AppendLine("\t\t\tvar record = target.ToList(1)[0];");
                 code.AppendLine("\t\t\tvar actual = target.SelectBy" + column.Value.Name + "(record." + column.Value.Name + ");");
                 code.AppendLine();
@@ -418,7 +444,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\tpublic void ToListWithTopTest()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tCreateTest();");
-            code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
+            code.AppendLine("\t\t\tI" + table.TableName + "Repository target = new " + table.TableName + "Repository();");
             code.AppendLine("\t\t\tvar actual = target.ToList(10);");
             code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.IsNotNull(actual);");
             code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.CollectionAssert.AllItemsAreNotNull(actual);");
@@ -431,7 +457,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\tpublic void ToArrayWithTopTest()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tCreateTest();");
-            code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
+            code.AppendLine("\t\t\tI" + table.TableName + "Repository target = new " + table.TableName + "Repository();");
             code.AppendLine("\t\t\tvar actual = target.ToArray(10);");
             code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.IsNotNull(actual);");
             code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.CollectionAssert.AllItemsAreNotNull(actual);");
@@ -447,7 +473,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\tpublic void ToListTest()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tCreateTest();");
-            code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
+            code.AppendLine("\t\t\tI" + table.TableName + "Repository target = new " + table.TableName + "Repository();");
             code.AppendLine("\t\t\tvar actual = target.ToList();");
             code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.IsNotNull(actual);");
             code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.CollectionAssert.AllItemsAreNotNull(actual);");
@@ -460,7 +486,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\tpublic void ToArrayTest()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tCreateTest();");
-            code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
+            code.AppendLine("\t\t\tI" + table.TableName + "Repository target = new " + table.TableName + "Repository();");
             code.AppendLine("\t\t\tvar actual = target.ToArray();");
             code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.IsNotNull(actual);");
             code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.CollectionAssert.AllItemsAreNotNull(actual);");
@@ -476,7 +502,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\tpublic void CreateWithParametersTest()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tPurgeTest();");
-            code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
+            code.AppendLine("\t\t\tI" + table.TableName + "Repository target = new " + table.TableName + "Repository();");
             code.Append("\t\t\ttarget.Create(");
 
             foreach (var column in table.Columns)
@@ -509,7 +535,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\tpublic void CreateTest()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tPurgeTest();");
-            code.AppendLine("\t\t\tvar target = new " + table.TableName + "Repository();");
+            code.AppendLine("\t\t\tI" + table.TableName + "Repository target = new " + table.TableName + "Repository();");
             code.AppendLine("\t\t\tvar actual = new " + table.TableName);
             code.AppendLine("\t\t\t{");
 
