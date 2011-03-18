@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
@@ -33,5 +30,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public abstract void GenerateSaveChanges();
         public abstract void GeneratePopulate();
         public abstract void GenerateCreate();
+        public abstract void GenerateCount();
     }
 }

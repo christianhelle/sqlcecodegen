@@ -26,6 +26,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\t\t\tconnectionInstance.Open();");
             code.AppendLine("\t\t\t\treturn connectionInstance;");
             code.AppendLine("\t\t\t}");
+            code.AppendLine("\t\t\tset { connectionInstance = value; }");
             code.AppendLine("\t\t}");
             code.AppendLine();
 
@@ -35,23 +36,30 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             //code.AppendLine("\t\t\t\tConnection.Open();");
             code.AppendLine("\t\t\treturn Connection.CreateCommand();");
             code.AppendLine("\t\t}");
+            code.AppendLine("\t}");
+            code.AppendLine("\t#endregion");
             code.AppendLine();
+        }
 
+        private void GenerateCreateDatabase()
+        {
+            code.AppendLine("\t#region DatabaseFile");
+            code.AppendLine("\tpublic static class DatabaseFile");
+            code.AppendLine("\t{");
             code.AppendLine("\t\tpublic static int CreateDatabase()");
             code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tint resultCount = 0;");
+            code.AppendLine();
             code.AppendLine("\t\t\tif (!System.IO.File.Exists(EntityBase.Connection.DataSource))");
             code.AppendLine("\t\t\t{");
             code.AppendLine("\t\t\t\tusing (var engine = new System.Data.SqlServerCe.SqlCeEngine(EntityBase.ConnectionString))");
             code.AppendLine("\t\t\t\t\tengine.CreateDatabase();");
-            code.AppendLine("\t\t\t}");
             code.AppendLine();
-            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
-            code.AppendLine("\t\t\t{");
-            code.AppendLine("\t\t\t\tint resultCount = 0;");
-            code.AppendLine();
+            code.AppendLine("\t\t\t\tusing (var command = EntityBase.CreateCommand())");
+            code.AppendLine("\t\t\t\t{");
             foreach (var table in Database.Tables)
             {
-                code.Append("\t\t\t\tcommand.CommandText = ");
+                code.Append("\t\t\t\t\tcommand.CommandText = ");
                 code.Append("\"CREATE TABLE " + table.TableName);
                 code.Append("(");
                 foreach (var column in table.Columns)
@@ -68,14 +76,14 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.Remove(code.Length - 2, 2);
                 code.Append(")\";");
                 code.AppendLine();
-                code.AppendLine("\t\t\t\tresultCount += command.ExecuteNonQuery();");
+                code.AppendLine("\t\t\t\t\tresultCount += command.ExecuteNonQuery();");
                 code.AppendLine();
             }
-            code.Append("\t\t\t\treturn resultCount;");
-            code.AppendLine();
+            code.AppendLine("\t\t\t\t}");
             code.AppendLine("\t\t\t}");
+            code.AppendLine();
+            code.AppendLine("\t\t\treturn resultCount;");
             code.AppendLine("\t\t}");
-
             code.AppendLine("\t}");
             code.AppendLine("\t#endregion");
             code.AppendLine();
@@ -108,61 +116,115 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("{");
 
             GenerateEntityBase();
+            //GenerateCreateDatabase();
             GenerateIRepository();
             GenerateIDataRepository();
 
             foreach (var table in Database.Tables)
             {
-                code.AppendLine("\t#region " + table.TableName + " Repository");
-
-                code.AppendLine("\tpublic partial interface I" + table.TableName + "Repository : IRepository<" + table.TableName + ">");
-                code.AppendLine("\t{");
-                foreach (var column in table.Columns)
-                {
-                    if (string.Compare(column.Value.DatabaseType, "ntext", true) == 0 || string.Compare(column.Value.DatabaseType, "image", true) == 0)
-                        continue;
-
-                    if (column.Value.ManagedType.IsValueType)
-                    {
-                        code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1}? {2});", table.TableName, column.Value.ManagedType, column.Value.Name);
-                        code.AppendLine();
-                        code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1}? {2}, int count);", table.TableName, column.Value.ManagedType, column.Value.Name);
-                        code.AppendLine();
-                    }
-                    else
-                    {
-                        code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1} {2});", table.TableName, column.Value.ManagedType, column.Value.Name);
-                        code.AppendLine();
-                        code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1} {2}, int count);", table.TableName, column.Value.ManagedType, column.Value.Name);
-                        code.AppendLine();
-                    }
-                }
-                code.AppendLine("\t}");
-                code.AppendLine();
-
-                code.AppendLine("\tpublic partial class " + table.TableName + "Repository : I" + table.TableName + "Repository");
-                code.AppendLine("\t{");
-
-                DataAccessLayerGenerator generator = new CSharpDataAccessLayerGenerator(code, table);
-                generator.GenerateSelectAll();
-                generator.GenerateSelectWithTop();
-                generator.GenerateSelectBy();
-                generator.GenerateSelectByWithTop();
-                generator.GenerateCreate();
-                generator.GenerateCreateIgnoringPrimaryKey();
-                generator.GenerateCreateUsingAllColumns();
-                generator.GeneratePopulate();
-                generator.GenerateDelete();
-                generator.GenerateDeleteBy();
-                generator.GenerateDeleteAll();
-                generator.GenerateSaveChanges();
-
-                code.AppendLine("\t}");
-                code.AppendLine("\t#endregion");
-                code.AppendLine();
+                GenerateITableRepository(table);
+                GenerateTableRepository(table);
             }
 
             code.AppendLine("}");
+        }
+
+        private void GenerateTableRepository(Table table)
+        {
+            code.AppendLine("\t#region " + table.TableName + " Repository");
+            code.AppendLine("\tpublic partial class " + table.TableName + "Repository : I" + table.TableName + "Repository");
+            code.AppendLine("\t{");
+
+            DataAccessLayerGenerator generator = new CSharpDataAccessLayerGenerator(code, table);
+            generator.GenerateSelectAll();
+            generator.GenerateSelectWithTop();
+            generator.GenerateSelectBy();
+            generator.GenerateSelectByWithTop();
+            generator.GenerateCreate();
+            generator.GenerateCreateIgnoringPrimaryKey();
+            generator.GenerateCreateUsingAllColumns();
+            generator.GeneratePopulate();
+            generator.GenerateDelete();
+            generator.GenerateDeleteBy();
+            generator.GenerateDeleteAll();
+            generator.GenerateSaveChanges();
+            generator.GenerateCount();
+
+            code.AppendLine("\t}");
+            code.AppendLine();
+            code.AppendLine("\t#endregion");
+        }
+
+        private void GenerateITableRepository(Table table)
+        {
+            code.AppendLine("\t#region I" + table.TableName + " Repository");
+
+            code.AppendLine("\tpublic partial interface I" + table.TableName + "Repository : IRepository<" + table.TableName + ">");
+            code.AppendLine("\t{");
+            foreach (var column in table.Columns)
+            {
+                if (string.Compare(column.Value.DatabaseType, "ntext", true) == 0 || string.Compare(column.Value.DatabaseType, "image", true) == 0)
+                    continue;
+
+                if (column.Value.ManagedType.IsValueType)
+                {
+                    code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1}? {2});", table.TableName, column.Value.ManagedType, column.Value.Name);
+                    code.AppendLine();
+                    code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1}? {2}, int count);", table.TableName, column.Value.ManagedType, column.Value.Name);
+                    code.AppendLine();
+                }
+                else
+                {
+                    code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1} {2});", table.TableName, column.Value.ManagedType, column.Value.Name);
+                    code.AppendLine();
+                    code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1} {2}, int count);", table.TableName, column.Value.ManagedType, column.Value.Name);
+                    code.AppendLine();
+                }
+            }
+            foreach (var column in table.Columns)
+            {
+                if (string.Compare(column.Value.DatabaseType, "ntext", true) == 0 || string.Compare(column.Value.DatabaseType, "image", true) == 0)
+                    continue;
+
+                if (column.Value.ManagedType.IsValueType)
+                {
+                    code.AppendFormat("\t\tint DeleteBy{1}({0}? {1});", column.Value.ManagedType, column.Value.Name);
+                    code.AppendLine();
+                }
+                else
+                {
+                    code.AppendFormat("\t\tint DeleteBy{1}({0} {1});", column.Value.ManagedType, column.Value.Name);
+                    code.AppendLine();
+                }
+            }
+            code.Append("\t\tvoid Create(");
+            foreach (var column in table.Columns)
+            {
+                if (column.Key == table.PrimaryKeyColumnName)
+                    continue;
+                if (column.Value.ManagedType.IsValueType)
+                    code.Append(column.Value + "? " + column.Key + ", ");
+                else
+                    code.Append(column.Value + " " + column.Key + ", ");
+            }
+            code.Remove(code.Length - 2, 2);
+            code.Append(");\n");
+
+            code.Append("\t\tvoid Create(");
+            foreach (var column in table.Columns)
+            {
+                if (column.Value.ManagedType.IsValueType)
+                    code.Append(column.Value + "? " + column.Key + ", ");
+                else
+                    code.Append(column.Value + " " + column.Key + ", ");
+            }
+            code.Remove(code.Length - 2, 2);
+            code.Append(");\n");
+
+            code.AppendLine("\t}");
+            code.AppendLine();
+            code.AppendLine("\t#endregion");
+            code.AppendLine();
         }
 
         private void GenerateIDataRepository()
@@ -172,7 +234,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t{");
             foreach (var table in Database.Tables)
             {
-                code.AppendLine("\t\tI" + table.TableName + "Repository " + table.TableName + "Repository { get; }");
+                code.AppendLine("\t\tI" + table.TableName + "Repository " + table.TableName + " { get; }");
             }
             code.AppendLine("\t}");
             code.AppendLine("\t#endregion");
@@ -185,13 +247,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t{");
             foreach (var table in Database.Tables)
             {
-                code.AppendLine("\t\t\t" + table.TableName + "Repository = new " + table.TableName + "Repository();");
+                code.AppendLine("\t\t\t" + table.TableName + " = new " + table.TableName + "Repository();");
             }
             code.AppendLine("\t\t}");
             code.AppendLine();
             foreach (var table in Database.Tables)
             {
-                code.AppendLine("\t\tpublic I" + table.TableName + "Repository " + table.TableName + "Repository { get; private set; }");
+                code.AppendLine("\t\tpublic I" + table.TableName + "Repository " + table.TableName + " { get; private set; }");
             }
             code.AppendLine("\t}");
             code.AppendLine("\t#endregion");
@@ -211,7 +273,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\tvoid Create(System.Collections.Generic.IEnumerable<T> items);");
             code.AppendLine("\t\tvoid Update(T item);");
             code.AppendLine("\t\tvoid Delete(T item);");
-            code.AppendLine("\t\tvoid Purge();");
+            code.AppendLine("\t\tint Purge();");
+            code.AppendLine("\t\tint Count();");
             code.AppendLine("\t}");
             code.AppendLine("\t#endregion");
             code.AppendLine();
