@@ -50,21 +50,25 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tint resultCount = 0;");
             code.AppendLine();
-            code.AppendLine("\t\t\tif (!System.IO.File.Exists(EntityBase.Connection.DataSource))");
-            code.AppendLine("\t\t\t{");
-            code.AppendLine("\t\t\t\tusing (var engine = new System.Data.SqlServerCe.SqlCeEngine(EntityBase.ConnectionString))");
-            code.AppendLine("\t\t\t\t\tengine.CreateDatabase();");
+            code.AppendLine("\t\t\tusing (var engine = new System.Data.SqlServerCe.SqlCeEngine(EntityBase.ConnectionString))");
+            code.AppendLine("\t\t\t\tengine.CreateDatabase();");
             code.AppendLine();
-            code.AppendLine("\t\t\t\tusing (var command = EntityBase.CreateCommand())");
-            code.AppendLine("\t\t\t\t{");
+            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
+            code.AppendLine("\t\t\t{");
             foreach (var table in Database.Tables)
             {
-                code.Append("\t\t\t\t\tcommand.CommandText = ");
+                code.Append("\t\t\t\tcommand.CommandText = ");
                 code.Append("\"CREATE TABLE " + table.TableName);
                 code.Append("(");
                 foreach (var column in table.Columns)
                 {
                     code.AppendFormat("{0} {1}", column.Key, column.Value.DatabaseType.ToUpper());
+                    if (string.Compare(column.Value.DatabaseType, "ntext", true) == 0 || 
+                        string.Compare(column.Value.DatabaseType, "image", true) == 0)
+                    {
+                        code.Append(", ");
+                        continue;
+                    }
                     if (column.Value.ManagedType == typeof(string))
                         code.Append("(" + column.Value.MaxLength + ")");
                     if (!column.Value.AllowsNull)
@@ -76,10 +80,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.Remove(code.Length - 2, 2);
                 code.Append(")\";");
                 code.AppendLine();
-                code.AppendLine("\t\t\t\t\tresultCount += command.ExecuteNonQuery();");
+                code.AppendLine("\t\t\t\tresultCount += command.ExecuteNonQuery();");
                 code.AppendLine();
             }
-            code.AppendLine("\t\t\t\t}");
             code.AppendLine("\t\t\t}");
             code.AppendLine();
             code.AppendLine("\t\t\treturn resultCount;");
@@ -116,7 +119,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("{");
 
             GenerateEntityBase();
-            //GenerateCreateDatabase();
+            GenerateCreateDatabase();
             GenerateIRepository();
             GenerateIDataRepository();
 

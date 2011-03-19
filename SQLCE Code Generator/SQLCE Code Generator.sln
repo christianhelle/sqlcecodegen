@@ -68,6 +68,8 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
+		BuildVersion_IncrementBeforeBuild = True
+		BuildVersion_UpdateAssemblyVersion = False
 		BuildVersion_UseGlobalSettings = False
 	EndGlobalSection
 EndGlobal

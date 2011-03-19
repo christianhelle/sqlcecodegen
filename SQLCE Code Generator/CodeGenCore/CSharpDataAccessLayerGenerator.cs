@@ -10,7 +10,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
         }
 
-        private void GetReaderValues(Table table)
+        private void GetReaderValues()
         {
             foreach (var column in table.Columns)
             {
@@ -35,7 +35,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\t\t\twhile (reader.Read())");
             code.AppendLine("\t\t\t\t\t{");
             code.AppendLine("\t\t\t\t\t\tvar item = new " + table.TableName + "();");
-            GetReaderValues(table);
+            GetReaderValues();
             code.AppendLine("\t\t\t\t\t\tlist.Add(item);");
             code.AppendLine("\t\t\t\t\t}");
             code.AppendLine("\t\t\t\t}");
@@ -66,7 +66,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\t\t\twhile (reader.Read())");
             code.AppendLine("\t\t\t\t\t{");
             code.AppendLine("\t\t\t\t\t\tvar item = new " + table.TableName + "();");
-            GetReaderValues(table);
+            GetReaderValues();
             code.AppendLine("\t\t\t\t\t\tlist.Add(item);");
             code.AppendLine("\t\t\t\t\t}");
             code.AppendLine("\t\t\t\t}");
@@ -114,7 +114,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\t\t\t\t\twhile (reader.Read())");
                 code.AppendLine("\t\t\t\t\t{");
                 code.AppendLine("\t\t\t\t\t\tvar item = new " + table.TableName + "();");
-                GetReaderValues(table);
+                GetReaderValues();
                 code.AppendLine("\t\t\t\t\t\tlist.Add(item);");
                 code.AppendLine("\t\t\t\t\t}");
                 code.AppendLine("\t\t\t\t}");
@@ -157,7 +157,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\t\t\t\t\twhile (reader.Read())");
                 code.AppendLine("\t\t\t\t\t{");
                 code.AppendLine("\t\t\t\t\t\tvar item = new " + table.TableName + "();");
-                GetReaderValues(table);
+                GetReaderValues();
                 code.AppendLine("\t\t\t\t\t\tlist.Add(item);");
                 code.AppendLine("\t\t\t\t\t}");
                 code.AppendLine("\t\t\t\t}");
@@ -167,6 +167,23 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\t\t#endregion");
                 code.AppendLine();
             }
+        }
+
+        public override void GenerateCount()
+        {
+            code.AppendLine("\t\t#region COUNT " + table.TableName);
+            code.AppendLine("\t\tpublic int Count()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
+            code.AppendLine("\t\t\t{");
+            code.AppendFormat("\t\t\t\tcommand.CommandText = \"SELECT COUNT(*) FROM {0}\";", table.TableName);
+            code.AppendLine();
+            code.AppendFormat("\t\t\t\treturn (int)command.ExecuteScalar();");
+            code.AppendLine();
+            code.AppendLine("\t\t\t}");
+            code.AppendLine("\t\t}");
+            code.AppendLine("\t\t#endregion");
+            code.AppendLine();
         }
 
         public override void GenerateCreate()
@@ -184,23 +201,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.Remove(code.Length - 2, 2);
             code.Append(");");
             code.AppendLine();
-            code.AppendLine("\t\t}");
-            code.AppendLine("\t\t#endregion");
-            code.AppendLine();
-        }
-
-        public override void GenerateCount()
-        {
-            code.AppendLine("\t\t#region COUNT " + table.TableName);
-            code.AppendLine("\t\tpublic int Count()");
-            code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
-            code.AppendLine("\t\t\t{");
-            code.AppendFormat("\t\t\t\tcommand.CommandText = \"SELECT COUNT(*) FROM {0}\";", table.TableName);
-            code.AppendLine();
-            code.AppendFormat("\t\t\t\treturn (int)command.ExecuteScalar();");
-            code.AppendLine();
-            code.AppendLine("\t\t\t}");
             code.AppendLine("\t\t}");
             code.AppendLine("\t\t#endregion");
             code.AppendLine();
