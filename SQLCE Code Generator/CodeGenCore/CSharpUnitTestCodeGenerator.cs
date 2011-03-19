@@ -194,25 +194,25 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t}");
             code.AppendLine();
 
-            //code.AppendLine("\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]");
-            //code.AppendLine("\tpublic class DatabaseFileTest");
-            //code.AppendLine("\t{");
-            //code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
-            //code.AppendLine("\t\tpublic void CreateDatabaseTest()");
-            //code.AppendLine("\t\t{");
-            //code.AppendLine("\t\t\tEntityBase.ConnectionString = @\"" + Database.ConnectionString + "_\" + RandomGenerator.GenerateString(10) + \".sdf\";");
-            //code.AppendLine("\t\t\tEntityBase.Connection.Dispose();");
-            //code.AppendLine("\t\t\tEntityBase.Connection = null;");
-            //code.AppendLine();
-            //code.AppendLine("\t\t\tvar actual = DatabaseFile.CreateDatabase();");
-            //code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.AreNotEqual(0, actual);");
-            //code.AppendLine();
-            //code.AppendLine("\t\t\tEntityBase.ConnectionString = @\"" + Database.ConnectionString + "\";");
-            //code.AppendLine("\t\t\tEntityBase.Connection.Dispose();");
-            //code.AppendLine("\t\t\tEntityBase.Connection = null;");
-            //code.AppendLine("\t\t}");
-            //code.AppendLine("\t}");
-            //code.AppendLine();
+            code.AppendLine("\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]");
+            code.AppendLine("\tpublic class DatabaseFileTest");
+            code.AppendLine("\t{");
+            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\tpublic void CreateDatabaseTest()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tEntityBase.ConnectionString = @\"" + Database.ConnectionString + "_\" + RandomGenerator.GenerateString(10) + \".sdf\";");
+            code.AppendLine("\t\t\tEntityBase.Connection.Dispose();");
+            code.AppendLine("\t\t\tEntityBase.Connection = null;");
+            code.AppendLine();
+            code.AppendLine("\t\t\tvar actual = DatabaseFile.CreateDatabase();");
+            code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.AreNotEqual(0, actual);");
+            code.AppendLine();
+            code.AppendLine("\t\t\tEntityBase.ConnectionString = @\"" + Database.ConnectionString + "\";");
+            code.AppendLine("\t\t\tEntityBase.Connection.Dispose();");
+            code.AppendLine("\t\t\tEntityBase.Connection = null;");
+            code.AppendLine("\t\t}");
+            code.AppendLine("\t}");
+            code.AppendLine();
 
             foreach (var table in Database.Tables)
             {
@@ -509,7 +509,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             {
                 if (table.PrimaryKeyColumnName == column.Value.Name && column.Value.AutoIncrement)
                     continue;
-                if (column.Value.IsForeignKey)
+                if (column.Value.IsForeignKey && column.Value.AllowsNull)
                     code.Append("null");
                 else
                     code.Append(
@@ -543,13 +543,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             {
                 if (table.PrimaryKeyColumnName == column.Value.Name && column.Value.AutoIncrement)
                     continue;
-                if (column.Value.IsForeignKey)
+                if (column.Value.IsForeignKey && column.Value.AllowsNull)
                     continue;
                 code.AppendFormat("\t\t\t\t{0} = {1},",
                                   column.Value.Name,
                                   column.Value.ManagedType.Equals(typeof(string))
-                                      ? "RandomGenerator.GenerateString(" + column.Value.MaxLength + ")"
-                                      : RandomGenerator.GenerateValue(column.Value.DatabaseType));
+                                    ? "RandomGenerator.GenerateString(" + column.Value.MaxLength + ")"
+                                    : RandomGenerator.GenerateValue(column.Value.DatabaseType));
                 code.AppendLine();
             }
             code.Remove(code.Length - 3, 2);
@@ -598,7 +598,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     return "new System.Random().NextDouble()";
 
                 case "money":
+                case "smallmoney":
                 case "numeric":
+                case "decimal":
                     return "System.Convert.ToDecimal(new System.Random().Next(1,1000))";
 
                 case "uniqueidentifier":
