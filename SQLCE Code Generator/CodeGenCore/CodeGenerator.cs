@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using System.IO;
 using System.Globalization;
+using System.Collections.Generic;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
@@ -39,6 +40,29 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public void ClearCode()
         {
             code.Remove(0, code.Length - 1);
+        }
+
+        protected void GenerateXmlDoc(int tabPrefixCount, string summary, params KeyValuePair<string, string>[] parameters)
+        {
+            for (int i = 0; i < tabPrefixCount; i++)
+                code.Append("\t");
+            code.AppendLine("/// <summary>");
+
+            for (int i = 0; i < tabPrefixCount; i++)
+                code.Append("\t");
+            code.AppendLine("/// " + summary);
+
+            for (int i = 0; i < tabPrefixCount; i++)
+                code.Append("\t");
+            code.AppendLine("/// </summary>");
+
+            foreach (var parameter in parameters)
+            {
+                for (int i = 0; i < tabPrefixCount; i++)
+                    code.Append("\t");
+                code.AppendFormat("<param name=\"{0}\">{1}</param>", parameter.Key, parameter.Value);
+                code.AppendLine();
+            }
         }
     }
 }
