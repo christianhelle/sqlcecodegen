@@ -1,5 +1,4 @@
-﻿using System;
-using System.Text;
+﻿using System.Text;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
@@ -24,6 +23,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public override void GenerateSelectAll()
         {
             code.AppendLine("\t\t#region SELECT *");
+            code.AppendLine();
+            GenerateXmlDoc(2, "Retrieves all items as a generic collection");
             code.AppendLine("\t\tpublic System.Collections.Generic.List<" + table.TableName + "> ToList()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tvar list = new System.Collections.Generic.List<" + table.TableName + ">();");
@@ -48,6 +49,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\tvar list = ToList();");
             code.AppendLine("\t\t\treturn list != null ? list.ToArray() : null;");
             code.AppendLine("\t\t}");
+            code.AppendLine();
             code.AppendLine("\t\t#endregion");
             code.AppendLine();
         }
@@ -55,6 +57,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public override void GenerateSelectWithTop()
         {
             code.AppendLine("\t\t#region SELECT TOP()");
+            code.AppendLine();
+            GenerateXmlDoc(2, "Retrieves the first set of items specified by count as a generic collection");
             code.AppendLine("\t\tpublic System.Collections.Generic.List<" + table.TableName + "> ToList(int count)");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tvar list = new System.Collections.Generic.List<" + table.TableName + ">();");
@@ -79,6 +83,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\tvar list = ToList(count);");
             code.AppendLine("\t\t\treturn list != null ? list.ToArray() : null;");
             code.AppendLine("\t\t}");
+            code.AppendLine();
             code.AppendLine("\t\t#endregion");
             code.AppendLine();
         }
@@ -91,10 +96,16 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     continue;
 
                 code.AppendLine("\t\t#region SELECT .... WHERE " + column.Value.Name + "=?");
+                code.AppendLine();
+
+                GenerateXmlDoc(2, "Retrieves a collection of items by " + column.Value.Name);
                 if (column.Value.ManagedType.IsValueType)
-                    code.AppendFormat("\n\t\tpublic System.Collections.Generic.List<{0}> SelectBy{2}({1}? {2})", table.TableName, column.Value.ManagedType, column.Value.Name);
+                    code.AppendFormat("\t\tpublic System.Collections.Generic.List<{0}> SelectBy{2}({1}? {2})",
+                                      table.TableName, column.Value.ManagedType, column.Value.Name);
                 else
-                    code.AppendFormat("\n\t\tpublic System.Collections.Generic.List<{0}> SelectBy{2}({1} {2})", table.TableName, column.Value.ManagedType, column.Value.Name);
+                    code.AppendFormat("\t\tpublic System.Collections.Generic.List<{0}> SelectBy{2}({1} {2})",
+                                      table.TableName, column.Value.ManagedType, column.Value.Name);
+
                 code.AppendLine();
                 code.AppendLine("\t\t{");
                 code.AppendLine("\t\t\tvar list = new System.Collections.Generic.List<" + table.TableName + ">();");
@@ -121,6 +132,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\t\t\t}");
                 code.AppendLine("\t\t\treturn list.Count > 0 ? list : null;");
                 code.AppendLine("\t\t}");
+                code.AppendLine();
                 code.AppendLine("\t\t#endregion");
                 code.AppendLine();
             }
@@ -134,10 +146,14 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     continue;
 
                 code.AppendLine("\t\t#region SELECT TOP(?).... WHERE " + column.Value.Name + "=?");
+                code.AppendLine();
+
+                GenerateXmlDoc(2, "Retrieves the first set of items specified by count by " + column.Value.Name);
                 if (column.Value.ManagedType.IsValueType)
-                    code.AppendFormat("\n\t\tpublic System.Collections.Generic.List<{0}> SelectBy{2}({1}? {2}, int count)", table.TableName, column.Value.ManagedType, column.Value.Name);
+                    code.AppendFormat("\t\tpublic System.Collections.Generic.List<{0}> SelectBy{2}({1}? {2}, int count)", table.TableName, column.Value.ManagedType, column.Value.Name);
                 else
-                    code.AppendFormat("\n\t\tpublic System.Collections.Generic.List<{0}> SelectBy{2}({1} {2}, int count)", table.TableName, column.Value.ManagedType, column.Value.Name);
+                    code.AppendFormat("\t\tpublic System.Collections.Generic.List<{0}> SelectBy{2}({1} {2}, int count)", table.TableName, column.Value.ManagedType, column.Value.Name);
+
                 code.AppendLine();
                 code.AppendLine("\t\t{");
                 code.AppendLine("\t\t\tvar list = new System.Collections.Generic.List<" + table.TableName + ">();");
@@ -164,6 +180,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\t\t\t}");
                 code.AppendLine("\t\t\treturn list.Count > 0 ? list : null;");
                 code.AppendLine("\t\t}");
+                code.AppendLine();
                 code.AppendLine("\t\t#endregion");
                 code.AppendLine();
             }
@@ -172,6 +189,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public override void GenerateCount()
         {
             code.AppendLine("\t\t#region COUNT " + table.TableName);
+            code.AppendLine();
+            GenerateXmlDoc(2, "Gets the number of records in the table");
             code.AppendLine("\t\tpublic int Count()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
@@ -182,6 +201,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine();
             code.AppendLine("\t\t\t}");
             code.AppendLine("\t\t}");
+            code.AppendLine();
             code.AppendLine("\t\t#endregion");
             code.AppendLine();
         }
@@ -189,6 +209,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public override void GenerateCreate()
         {
             code.AppendLine("\t\t#region INSERT " + table.TableName);
+            code.AppendLine();
+            GenerateXmlDoc(2, "Inserts the item to the table");
             code.AppendLine("\t\tpublic void Create(" + table.TableName + " item)");
             code.AppendLine("\t\t{");
             code.Append("\t\t\tCreate(");
@@ -202,6 +224,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.Append(");");
             code.AppendLine();
             code.AppendLine("\t\t}");
+            code.AppendLine();
             code.AppendLine("\t\t#endregion");
             code.AppendLine();
         }
@@ -209,6 +232,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public override void GenerateCreateIgnoringPrimaryKey()
         {
             code.AppendLine("\t\t#region INSERT Ignoring Primary Key");
+            code.AppendLine();
+            GenerateXmlDoc(2, "Inserts a new record to the table without specifying the primary key");
             code.Append("\t\tpublic void Create(");
             foreach (var column in table.Columns)
             {
@@ -268,6 +293,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\t\tcommand.ExecuteNonQuery();");
             code.AppendLine("\t\t\t}");
             code.AppendLine("\t\t}");
+            code.AppendLine();
             code.AppendLine("\t\t#endregion");
             code.AppendLine();
         }
@@ -275,6 +301,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public override void GenerateCreateUsingAllColumns()
         {
             code.AppendLine("\t\t#region INSERT " + table.TableName + " by fields");
+            code.AppendLine();
+            GenerateXmlDoc(2, "Inserts a new record to the table specifying all fields");
             code.Append("\t\tpublic void Create(");
             foreach (var column in table.Columns)
             {
@@ -319,6 +347,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\t\tcommand.ExecuteNonQuery();");
             code.AppendLine("\t\t\t}");
             code.AppendLine("\t\t}");
+            code.AppendLine();
             code.AppendLine("\t\t#endregion");
             code.AppendLine();
         }
@@ -326,6 +355,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public override void GeneratePopulate()
         {
             code.AppendLine("\t\t#region INSERT MANY");
+            code.AppendLine();
+            GenerateXmlDoc(2, "Populates the table with a collection of items");
             code.AppendLine("\t\tpublic void Create(System.Collections.Generic.IEnumerable<" + table.TableName + "> items)");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tforeach (var item in items)");
@@ -340,6 +371,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.Append(");");
             code.AppendLine();
             code.AppendLine("\t\t}");
+            code.AppendLine();
             code.AppendLine("\t\t#endregion");
             code.AppendLine();
         }
@@ -347,6 +379,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public override void GenerateDelete()
         {
             code.AppendLine("\t\t#region DELETE");
+            code.AppendLine();
+            GenerateXmlDoc(2, "Deletes the item");
             code.AppendLine("\t\tpublic void Delete(" + table.TableName + " item)");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
@@ -386,6 +420,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\t\tcommand.ExecuteNonQuery();");
             code.AppendLine("\t\t\t}");
             code.AppendLine("\t\t}");
+            code.AppendLine();
             code.AppendLine("\t\t#endregion");
             code.AppendLine();
         }
@@ -398,7 +433,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     continue;
 
                 code.AppendLine("\t\t#region DELETE BY " + column.Value.Name);
-                code.AppendFormat("\n\t\tpublic int DeleteBy{1}({0}{2} {1})", column.Value.ManagedType, column.Value.Name, column.Value.ManagedType.IsValueType ? "?" : string.Empty);
+                code.AppendLine();
+                GenerateXmlDoc(2, "Delete records by " + column.Value.Name);
+                code.AppendFormat("\t\tpublic int DeleteBy{1}({0}{2} {1})", column.Value.ManagedType, column.Value.Name, column.Value.ManagedType.IsValueType ? "?" : string.Empty);
                 code.AppendLine("\n\t\t{");
                 code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
                 code.AppendLine("\t\t\t{");
@@ -407,6 +444,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\n\t\t\t\treturn command.ExecuteNonQuery();");
                 code.AppendLine("\t\t\t}");
                 code.AppendLine("\t\t}");
+                code.AppendLine();
                 code.AppendLine("\t\t#endregion");
                 code.AppendLine();
             }
@@ -415,6 +453,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public override void GenerateDeleteAll()
         {
             code.AppendLine("\t\t#region Purge");
+            code.AppendLine();
+            GenerateXmlDoc(2, "Purges the contents of the table");
             code.AppendLine("\t\tpublic int Purge()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
@@ -424,6 +464,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\t}");
             code.AppendLine();
             code.AppendLine("\t\t}");
+            code.AppendLine();
             code.AppendLine("\t\t#endregion");
             code.AppendLine();
         }
@@ -431,6 +472,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public override void GenerateSaveChanges()
         {
             code.AppendLine("\t\t#region UPDATE");
+            code.AppendLine();
+            GenerateXmlDoc(2, "Updates the item");
             code.AppendLine("\t\tpublic void Update(" + table.TableName + " item)");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
@@ -462,6 +505,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\t\tcommand.ExecuteNonQuery();");
             code.AppendLine("\t\t\t}");
             code.AppendLine("\t\t}");
+            code.AppendLine();
             code.AppendLine("\t\t#endregion");
             code.AppendLine();
         }
