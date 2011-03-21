@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
     public class CSharpCodeGenerator : CodeGenerator
@@ -184,19 +186,23 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
                 if (column.Value.ManagedType.IsValueType)
                 {
-                    GenerateXmlDoc(2, "Retrieves a collection of items by " + column.Value.Name);
+                    GenerateXmlDoc(2, "Retrieves a collection of items by " + column.Value.Name, new KeyValuePair<string, string>(column.Value.Name, column.Value.Name + " value"));
                     code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1}? {2});", table.TableName, column.Value.ManagedType, column.Value.Name);
                     code.AppendLine();
-                    GenerateXmlDoc(2, "Retrieves the first set of items specified by count by " + column.Value.Name);
+                    GenerateXmlDoc(2, "Retrieves the first set of items specified by count by " + column.Value.Name,
+                        new KeyValuePair<string, string>(column.Value.Name, column.Value.Name + " value"),
+                        new KeyValuePair<string, string>("count", "the number of records to be retrieved"));
                     code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1}? {2}, int count);", table.TableName, column.Value.ManagedType, column.Value.Name);
                     code.AppendLine();
                 }
                 else
                 {
-                    GenerateXmlDoc(2, "Retrieves a collection of items by " + column.Value.Name);
+                    GenerateXmlDoc(2, "Retrieves a collection of items by " + column.Value.Name, new KeyValuePair<string, string>(column.Value.Name, column.Value.Name + " value"));
                     code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1} {2});", table.TableName, column.Value.ManagedType, column.Value.Name);
                     code.AppendLine();
-                    GenerateXmlDoc(2, "Retrieves the first set of items specified by count by " + column.Value.Name);
+                    GenerateXmlDoc(2, "Retrieves the first set of items specified by count by " + column.Value.Name,
+                        new KeyValuePair<string, string>(column.Value.Name, column.Value.Name + " value"),
+                        new KeyValuePair<string, string>("count", "the number of records to be retrieved"));
                     code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1} {2}, int count);", table.TableName, column.Value.ManagedType, column.Value.Name);
                     code.AppendLine();
                 }
@@ -207,7 +213,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 if (string.Compare(column.Value.DatabaseType, "ntext", true) == 0 || string.Compare(column.Value.DatabaseType, "image", true) == 0)
                     continue;
 
-                GenerateXmlDoc(2, "Delete records by " + column.Value.Name);
+                GenerateXmlDoc(2, "Delete records by " + column.Value.Name, new KeyValuePair<string, string>(column.Value.Name, column.Value.Name + " value"));
                 if (column.Value.ManagedType.IsValueType)
                 {
                     code.AppendFormat("\t\tint DeleteBy{1}({0}? {1});", column.Value.ManagedType, column.Value.Name);
@@ -301,19 +307,19 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t{");
             GenerateXmlDoc(2, "Retrieves all items as a generic collection");
             code.AppendLine("\t\tSystem.Collections.Generic.List<T> ToList();");
-            GenerateXmlDoc(2, "Retrieves the first set of items specified by count as a generic collection");
+            GenerateXmlDoc(2, "Retrieves the first set of items specified by count as a generic collection", new KeyValuePair<string, string>("count", "Number of records to be retrieved"));
             code.AppendLine("\t\tSystem.Collections.Generic.List<T> ToList(int count);");
             GenerateXmlDoc(2, "Retrieves all items as an array of T");
             code.AppendLine("\t\tT[] ToArray();");
-            GenerateXmlDoc(2, "Retrieves the first set of items specific by count as an array of T");
+            GenerateXmlDoc(2, "Retrieves the first set of items specific by count as an array of T", new KeyValuePair<string, string>("count", "Number of records to be retrieved"));
             code.AppendLine("\t\tT[] ToArray(int count);");
-            GenerateXmlDoc(2, "Inserts the item to the table");
+            GenerateXmlDoc(2, "Inserts the item to the table", new KeyValuePair<string, string>("item", "Item to be inserted to the database"));
             code.AppendLine("\t\tvoid Create(T item);");
-            GenerateXmlDoc(2, "Populates the table with a collection of items");
+            GenerateXmlDoc(2, "Populates the table with a collection of items", new KeyValuePair<string, string>("items", "Items to be inserted to the database"));
             code.AppendLine("\t\tvoid Create(System.Collections.Generic.IEnumerable<T> items);");
-            GenerateXmlDoc(2, "Updates the item");
+            GenerateXmlDoc(2, "Updates the item", new KeyValuePair<string, string>("item", "Item to be updated on the database"));
             code.AppendLine("\t\tvoid Update(T item);");
-            GenerateXmlDoc(2, "Deletes the item");
+            GenerateXmlDoc(2, "Deletes the item", new KeyValuePair<string, string>("item", "Item to be deleted from the database"));
             code.AppendLine("\t\tvoid Delete(T item);");
             GenerateXmlDoc(2, "Purges the contents of the table");
             code.AppendLine("\t\tint Purge();");

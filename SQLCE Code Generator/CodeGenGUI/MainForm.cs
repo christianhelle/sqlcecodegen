@@ -427,9 +427,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
         private void MainForm_DragDrop(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
+            SafeOperation(delegate
             {
-                string[] filePaths = (string[])(e.Data.GetData(DataFormats.FileDrop));
+                if (!e.Data.GetDataPresent(DataFormats.FileDrop)) 
+                    return;
+                var filePaths = (string[])(e.Data.GetData(DataFormats.FileDrop));
                 var ext = Path.GetExtension(filePaths[0]).ToLower();
                 if (ext == ".sdf")
                 {
@@ -456,7 +458,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                     SqlCeDatabase database = new SqlCeDatabase(generatedNamespace, connectionString);
                     PopulateTables(database.Tables);
                 }
-            }
+            });
         }
         #endregion
 
@@ -464,7 +466,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         private void compileToolStripMenuItem_Click(object sender, EventArgs e)
         {
             tabOutput.SelectedTab = tabPageCompilerOutput;
-            CompileCSharp30();
+            SafeOperation(CompileCSharp30);
         }
 
         private void CompileCSharp30()
@@ -490,7 +492,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             var process = Process.Start(psi);
             var output = process.StandardOutput.ReadToEnd();
             process.WaitForExit();
-            
+
             //var list = new List<string> 
             //{
             //    string.Format("{0}\\Entities.cs", Environment.CurrentDirectory),
@@ -539,6 +541,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
         #region Run Unit Tests
         private void runUnitTestsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SafeOperation(ExecuteUnitTests);
+        }
+
+        private void ExecuteUnitTests()
         {
             if (testsRunning)
                 return;

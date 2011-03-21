@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
@@ -58,7 +59,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             code.AppendLine("\t\t#region SELECT TOP()");
             code.AppendLine();
-            GenerateXmlDoc(2, "Retrieves the first set of items specified by count as a generic collection");
+            GenerateXmlDoc(2, "Retrieves the first set of items specified by count as a generic collection", new KeyValuePair<string, string>("count", "Number of records to be retrieved"));
             code.AppendLine("\t\tpublic System.Collections.Generic.List<" + table.TableName + "> ToList(int count)");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tvar list = new System.Collections.Generic.List<" + table.TableName + ">();");
@@ -98,7 +99,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\t\t#region SELECT .... WHERE " + column.Value.Name + "=?");
                 code.AppendLine();
 
-                GenerateXmlDoc(2, "Retrieves a collection of items by " + column.Value.Name);
+                GenerateXmlDoc(2, "Retrieves a collection of items by " + column.Value.Name, new KeyValuePair<string, string>(column.Value.Name, column.Value.Name + " value"));
                 if (column.Value.ManagedType.IsValueType)
                     code.AppendFormat("\t\tpublic System.Collections.Generic.List<{0}> SelectBy{2}({1}? {2})",
                                       table.TableName, column.Value.ManagedType, column.Value.Name);
@@ -148,7 +149,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\t\t#region SELECT TOP(?).... WHERE " + column.Value.Name + "=?");
                 code.AppendLine();
 
-                GenerateXmlDoc(2, "Retrieves the first set of items specified by count by " + column.Value.Name);
+                GenerateXmlDoc(2, "Retrieves the first set of items specified by count by " + column.Value.Name, new KeyValuePair<string, string>(column.Value.Name, column.Value.Name + " value"), new KeyValuePair<string, string>("count", "Number of records to be retrieved"));
                 if (column.Value.ManagedType.IsValueType)
                     code.AppendFormat("\t\tpublic System.Collections.Generic.List<{0}> SelectBy{2}({1}? {2}, int count)", table.TableName, column.Value.ManagedType, column.Value.Name);
                 else
@@ -210,7 +211,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             code.AppendLine("\t\t#region INSERT " + table.TableName);
             code.AppendLine();
-            GenerateXmlDoc(2, "Inserts the item to the table");
+            GenerateXmlDoc(2, "Inserts the item to the table", new KeyValuePair<string, string>("item", "Item to insert to the database"));
             code.AppendLine("\t\tpublic void Create(" + table.TableName + " item)");
             code.AppendLine("\t\t{");
             code.Append("\t\t\tCreate(");
@@ -233,7 +234,16 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             code.AppendLine("\t\t#region INSERT Ignoring Primary Key");
             code.AppendLine();
-            GenerateXmlDoc(2, "Inserts a new record to the table without specifying the primary key");
+            
+            var list = new List<KeyValuePair<string, string>>();
+            foreach (var column in table.Columns)
+            {
+                if (column.Key == table.PrimaryKeyColumnName)
+                    continue;
+                list.Add(new KeyValuePair<string, string>(column.Value.Name, column.Value.Name + " value"));
+            }
+
+            GenerateXmlDoc(2, "Inserts a new record to the table without specifying the primary key", list.ToArray());
             code.Append("\t\tpublic void Create(");
             foreach (var column in table.Columns)
             {
@@ -302,7 +312,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             code.AppendLine("\t\t#region INSERT " + table.TableName + " by fields");
             code.AppendLine();
-            GenerateXmlDoc(2, "Inserts a new record to the table specifying all fields");
+
+            var list = new List<KeyValuePair<string, string>>();
+            foreach (var column in table.Columns)
+                list.Add(new KeyValuePair<string, string>(column.Value.Name, column.Value.Name + " value"));
+
+            GenerateXmlDoc(2, "Inserts a new record to the table specifying all fields", list.ToArray());
             code.Append("\t\tpublic void Create(");
             foreach (var column in table.Columns)
             {
@@ -380,7 +395,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             code.AppendLine("\t\t#region DELETE");
             code.AppendLine();
-            GenerateXmlDoc(2, "Deletes the item");
+            GenerateXmlDoc(2, "Deletes the item", new KeyValuePair<string, string>("item", "Item to delete"));
             code.AppendLine("\t\tpublic void Delete(" + table.TableName + " item)");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
@@ -434,7 +449,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
                 code.AppendLine("\t\t#region DELETE BY " + column.Value.Name);
                 code.AppendLine();
-                GenerateXmlDoc(2, "Delete records by " + column.Value.Name);
+                GenerateXmlDoc(2, "Delete records by " + column.Value.Name,
+                               new KeyValuePair<string, string>(column.Value.Name, column.Value.Name + " value"));
                 code.AppendFormat("\t\tpublic int DeleteBy{1}({0}{2} {1})", column.Value.ManagedType, column.Value.Name, column.Value.ManagedType.IsValueType ? "?" : string.Empty);
                 code.AppendLine("\n\t\t{");
                 code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
@@ -473,7 +489,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             code.AppendLine("\t\t#region UPDATE");
             code.AppendLine();
-            GenerateXmlDoc(2, "Updates the item");
+            GenerateXmlDoc(2, "Updates the item", new KeyValuePair<string, string>("item", "Item to update"));
             code.AppendLine("\t\tpublic void Update(" + table.TableName + " item)");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
