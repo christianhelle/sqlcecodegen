@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
 using ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest.Properties;
+using ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Text;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
 {
@@ -88,6 +90,17 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             unitTestCodeGenerator.GenerateDataAccessLayer();
 
             AssertCompile(codeGenerator.GetCode(), unitTestCodeGenerator.GetCode());
+        }
+
+        [TestMethod]
+        public void CustomToolGeneratedCodeCanCompileTest()
+        {
+            var database = GetDatabase();
+            var actual = SQLCECodeGenerator.GenerateCode(database.Namespace, "TestDatabase.sdf", ".cs");
+
+            Assert.IsNotNull(actual);
+            Assert.AreNotEqual(0, actual.Length);
+            AssertCompile(Encoding.Default.GetString(actual));
         }
 
         private static void AssertCompile(params string[] sourceCode)

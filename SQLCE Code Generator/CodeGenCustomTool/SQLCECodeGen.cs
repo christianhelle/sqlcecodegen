@@ -12,11 +12,17 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
     {
         protected override byte[] GenerateCode(string inputFileName, string inputFileContent)
         {
-            var generatedNamespace = FileNameSpace + "." + new FileInfo(inputFileName).Name;
+            return GenerateCode(FileNameSpace, inputFileContent, CodeProvider.FileExtension);
+        }
+
+        public static byte[] GenerateCode(string FileNameSpace, string inputFileName, string fileExtension)
+        {
+            var fi = new FileInfo(inputFileName);
+            var generatedNamespace = FileNameSpace + "." + fi.Name.Replace(fi.Extension, string.Empty);
             var connectionString = "Data Source=" + inputFileName;
             var database = new SqlCeDatabase(generatedNamespace, connectionString);
             var factory = new CodeGeneratorFactory(database);
-            var codeGenerator = factory.Create(CodeProvider.FileExtension);
+            var codeGenerator = factory.Create(fileExtension);
 
             codeGenerator.WriteHeaderInformation();
             codeGenerator.GenerateEntities();

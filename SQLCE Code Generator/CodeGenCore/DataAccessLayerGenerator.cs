@@ -51,7 +51,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             {
                 for (int i = 0; i < tabPrefixCount; i++)
                     code.Append("\t");
-                code.AppendFormat("<param name=\"{0}\">{1}</param>", parameter.Key, parameter.Value);
+                code.AppendFormat("/// <param name=\"{0}\">{1}</param>", parameter.Key, parameter.Value);
                 code.AppendLine();
             }
         }
