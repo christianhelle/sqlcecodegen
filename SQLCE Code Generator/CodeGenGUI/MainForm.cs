@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Threading;
 using System.Windows.Forms;
 using ChristianHelle.DatabaseTools.SqlCe.CodeGenCore;
 using ICSharpCode.TextEditor.Document;
-using System.Threading;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 {
@@ -200,13 +200,17 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                 foreach (var column in item.Columns)
                 {
                     var columnNode = new TreeNode(column.Key);
+                    //columnNode.Nodes.Add("Ordinal Position - " + column.Value.Ordinal);
                     if (column.Value.IsPrimaryKey)
                         columnNode.Nodes.Add("Primary Key");
+                    if (column.Value.AutoIncrement)
+                        columnNode.Nodes.Add("Auto Increment");
                     if (column.Value.IsForeignKey)
                         columnNode.Nodes.Add("Foreign Key");
                     columnNode.Nodes.Add("Database Type - " + column.Value.DatabaseType);
                     columnNode.Nodes.Add("Managed Type - " + column.Value.ManagedType);
-                    columnNode.Nodes.Add("Max Length - " + column.Value.MaxLength);
+                    if (column.Value.ManagedType.Equals(typeof(string)))
+                        columnNode.Nodes.Add("Max Length - " + column.Value.MaxLength);
                     columnNode.Nodes.Add("Allows Null - " + column.Value.AllowsNull);
                     columns.Nodes.Add(columnNode);
                 }
@@ -429,7 +433,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         {
             SafeOperation(delegate
             {
-                if (!e.Data.GetDataPresent(DataFormats.FileDrop)) 
+                if (!e.Data.GetDataPresent(DataFormats.FileDrop))
                     return;
                 var filePaths = (string[])(e.Data.GetData(DataFormats.FileDrop));
                 var ext = Path.GetExtension(filePaths[0]).ToLower();
@@ -609,6 +613,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         }
         #endregion
 
+        #region Output Window
         void WriteToOutputWindow(string text)
         {
             rtbOutput.Text += Environment.NewLine + text;
@@ -638,6 +643,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
             Trace.WriteLine(text);
         }
+        #endregion
 
         private void regenerateCodeToolStripMenuItem_Click(object sender, EventArgs e)
         {
