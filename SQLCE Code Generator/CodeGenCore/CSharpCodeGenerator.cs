@@ -16,31 +16,37 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             GenerateXmlDoc(1, "Base class for all data access repositories");
             code.AppendLine("\tpublic static class EntityBase");
             code.AppendLine("\t{");
+            code.AppendLine("\t\tprivate static System.Data.SqlServerCe.SqlCeConnection connectionInstance = null;");
+            code.AppendLine("\t\tprivate static readonly object syncLock = new object();");
+            code.AppendLine();
             GenerateXmlDoc(2, "Gets or sets the global SQL CE Connection String to be used");
             code.AppendLine("\t\tpublic static System.String ConnectionString { get; set; }");
             code.AppendLine();
-
-            code.AppendLine("\t\tprivate static System.Data.SqlServerCe.SqlCeConnection connectionInstance = null;");
             GenerateXmlDoc(2, "Gets or sets the global SQL CE Connection instance");
             code.AppendLine("\t\tpublic static System.Data.SqlServerCe.SqlCeConnection Connection");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tget");
             code.AppendLine("\t\t\t{");
-            code.AppendLine("\t\t\t\tif (connectionInstance == null)");
-            code.AppendLine("\t\t\t\t\tconnectionInstance = new System.Data.SqlServerCe.SqlCeConnection(ConnectionString);");
-            code.AppendLine("\t\t\t\tif (connectionInstance.State != System.Data.ConnectionState.Open)");
-            code.AppendLine("\t\t\t\t\tconnectionInstance.Open();");
-            code.AppendLine("\t\t\t\treturn connectionInstance;");
+            code.AppendLine("\t\t\t\tlock (syncLock)");
+            code.AppendLine("\t\t\t\t{");
+            code.AppendLine("\t\t\t\t\tif (connectionInstance == null)");
+            code.AppendLine("\t\t\t\t\t\tconnectionInstance = new System.Data.SqlServerCe.SqlCeConnection(ConnectionString);");
+            code.AppendLine("\t\t\t\t\tif (connectionInstance.State != System.Data.ConnectionState.Open)");
+            code.AppendLine("\t\t\t\t\t\tconnectionInstance.Open();");
+            code.AppendLine("\t\t\t\t\treturn connectionInstance;");
+            code.AppendLine("\t\t\t\t}");
             code.AppendLine("\t\t\t}");
-            code.AppendLine("\t\t\tset { connectionInstance = value; }");
+            code.AppendLine("\t\t\tset");
+            code.AppendLine("\t\t\t{");
+            code.AppendLine("\t\t\t\tlock (syncLock)");
+            code.AppendLine("\t\t\t\t\tconnectionInstance = value;");
+            code.AppendLine("\t\t\t}");
             code.AppendLine("\t\t}");
             code.AppendLine();
 
             GenerateXmlDoc(2, "Create a SqlCeCommand instance using the global SQL CE Conection instance");
             code.AppendLine("\t\tpublic static System.Data.SqlServerCe.SqlCeCommand CreateCommand()");
             code.AppendLine("\t\t{");
-            //code.AppendLine("\t\t\tif (Connection.State != System.Data.ConnectionState.Open)");
-            //code.AppendLine("\t\t\t\tConnection.Open();");
             code.AppendLine("\t\t\treturn Connection.CreateCommand();");
             code.AppendLine("\t\t}");
             code.AppendLine("\t}");
@@ -147,6 +153,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         private void GenerateTableRepository(Table table)
         {
             code.AppendLine("\t#region " + table.TableName + " Repository");
+            code.AppendLine();
+
+            GenerateXmlDoc(1, "Default I" + table.TableName + "Repository implementation ");
             code.AppendLine("\tpublic partial class " + table.TableName + "Repository : I" + table.TableName + "Repository");
             code.AppendLine("\t{");
 
@@ -175,7 +184,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t#region I" + table.TableName + " Repository");
             code.AppendLine();
 
-            GenerateXmlDoc(1, "Default I" + table.TableName + "Repository implementation ");
+            GenerateXmlDoc(1, "Represents the " + table.TableName + " repository");
             code.AppendLine("\tpublic partial interface I" + table.TableName + "Repository : IRepository<" + table.TableName + ">");
             code.AppendLine("\t{");
 
