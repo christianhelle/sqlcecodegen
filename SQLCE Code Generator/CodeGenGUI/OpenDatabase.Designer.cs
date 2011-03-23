@@ -35,6 +35,7 @@
             this.chkRememberPassword = new System.Windows.Forms.CheckBox();
             this.btnConnect = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.btnOpenFileDialog = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // lblDatabase
@@ -59,10 +60,10 @@
             // 
             this.cbDatabase.FormattingEnabled = true;
             this.cbDatabase.Items.AddRange(new object[] {
-                                                            "<Browse>"});
+            "<Browse>"});
             this.cbDatabase.Location = new System.Drawing.Point(80, 16);
             this.cbDatabase.Name = "cbDatabase";
-            this.cbDatabase.Size = new System.Drawing.Size(276, 21);
+            this.cbDatabase.Size = new System.Drawing.Size(245, 21);
             this.cbDatabase.TabIndex = 2;
             this.cbDatabase.SelectedIndexChanged += new System.EventHandler(this.cbDatabase_SelectedIndexChanged);
             // 
@@ -106,6 +107,17 @@
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
+            // btnOpenFileDialog
+            // 
+            this.btnOpenFileDialog.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btnOpenFileDialog.Location = new System.Drawing.Point(331, 14);
+            this.btnOpenFileDialog.Name = "btnOpenFileDialog";
+            this.btnOpenFileDialog.Size = new System.Drawing.Size(25, 23);
+            this.btnOpenFileDialog.TabIndex = 7;
+            this.btnOpenFileDialog.Text = "...";
+            this.btnOpenFileDialog.UseVisualStyleBackColor = true;
+            this.btnOpenFileDialog.Click += new System.EventHandler(this.btnOpenFileDialog_Click);
+            // 
             // OpenDatabase
             // 
             this.AcceptButton = this.btnConnect;
@@ -113,6 +125,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(376, 132);
+            this.Controls.Add(this.btnOpenFileDialog);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnConnect);
             this.Controls.Add(this.chkRememberPassword);
@@ -125,6 +138,8 @@
             this.MinimizeBox = false;
             this.Name = "OpenDatabase";
             this.Text = "Connect to a Database";
+            this.Load += new System.EventHandler(this.OpenDatabase_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OpenDatabase_FormClosing);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -139,5 +154,6 @@
         private System.Windows.Forms.CheckBox chkRememberPassword;
         private System.Windows.Forms.Button btnConnect;
         private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.Button btnOpenFileDialog;
     }
 }
