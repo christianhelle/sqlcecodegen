@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
-    public class CSharpUnitTestCodeGenerator : CodeGenerator
+    public class CSharpUnitTestCodeGenerator : CSharpCodeGenerator
     {
         public CSharpUnitTestCodeGenerator(SqlCeDatabase tableDetails)
             : base(tableDetails)
