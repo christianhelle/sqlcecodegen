@@ -125,6 +125,16 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             }
             return tableList;
         }
+
+        public string GenerateCreateScript()
+        {
+            foreach (var table in Tables)
+            {
+
+            }
+
+            throw new NotImplementedException();
+        }
     }
 
     public class Table
