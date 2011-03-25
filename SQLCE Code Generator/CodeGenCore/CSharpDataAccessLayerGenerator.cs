@@ -234,7 +234,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             code.AppendLine("\t\t#region INSERT Ignoring Primary Key");
             code.AppendLine();
-            
+
             var list = new List<KeyValuePair<string, string>>();
             foreach (var column in table.Columns)
             {
@@ -374,17 +374,27 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             GenerateXmlDoc(2, "Populates the table with a collection of items");
             code.AppendLine("\t\tpublic void Create(System.Collections.Generic.IEnumerable<" + table.TableName + "> items)");
             code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tforeach (var item in items)");
-            code.Append("\t\t\t\tCreate(");
-            foreach (var column in table.Columns)
-            {
-                if (column.Value.IsPrimaryKey && column.Value.AutoIncrement)
-                    continue;
-                code.Append("item." + column.Value.Name + ", ");
-            }
-            code.Remove(code.Length - 2, 2);
-            code.Append(");");
+            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
+            code.AppendLine("\t\t\t{");
+            code.AppendLine("\t\t\t\tcommand.CommandType = System.Data.CommandType.TableDirect;");
+            code.AppendLine("\t\t\t\tcommand.CommandText = \"" + table.TableName + "\";");
             code.AppendLine();
+            code.AppendLine("\t\t\t\tusing (var resultSet = command.ExecuteResultSet(System.Data.SqlServerCe.ResultSetOptions.Updatable))");
+            code.AppendLine("\t\t\t\t{");
+            code.AppendLine("\t\t\t\t\tvar record = resultSet.CreateRecord();");
+            code.AppendLine("\t\t\t\t\tforeach (var item in items)");
+            code.AppendLine("\t\t\t\t\t{");
+            foreach (var item in table.Columns.Values)
+            {
+                if (item.AutoIncrement)
+                    continue;
+                code.AppendFormat("\t\t\t\t\t\trecord.SetValue({0}, item.{1});", item.Ordinal - 1, item.Name);
+                code.AppendLine();
+            }
+            code.AppendLine("\t\t\t\t\t\tresultSet.Insert(record);");
+            code.AppendLine("\t\t\t\t\t}");
+            code.AppendLine("\t\t\t\t}");
+            code.AppendLine("\t\t\t}");
             code.AppendLine("\t\t}");
             code.AppendLine();
             code.AppendLine("\t\t#endregion");
@@ -455,7 +465,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\n\t\t{");
                 code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
                 code.AppendLine("\t\t\t{");
-                code.AppendFormat("\n\t\t\t\tcommand.CommandText = \"DELETE FROM {0} WHERE {1}=@{1}\";", table.TableName, column.Value.Name);
+                code.AppendFormat("\t\t\t\tcommand.CommandText = \"DELETE FROM {0} WHERE {1}=@{1}\";", table.TableName, column.Value.Name);
                 code.AppendFormat("\n\t\t\t\tcommand.Parameters.AddWithValue(\"@{0}\", {0} != null ? (object){0} : System.DBNull.Value);", column.Value.Name);
                 code.AppendLine("\n\t\t\t\treturn command.ExecuteNonQuery();");
                 code.AppendLine("\t\t\t}");
@@ -478,7 +488,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\t\tcommand.CommandText = \"DELETE FROM " + table.TableName + "\";");
             code.AppendLine("\t\t\t\treturn command.ExecuteNonQuery();");
             code.AppendLine("\t\t\t}");
-            code.AppendLine();
             code.AppendLine("\t\t}");
             code.AppendLine();
             code.AppendLine("\t\t#endregion");
