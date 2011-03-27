@@ -272,7 +272,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             foreach (var column in table.Columns)
             {
-                if (table.PrimaryKeyColumnName == column.Value.Name && column.Value.AutoIncrement)
+                if (table.PrimaryKeyColumnName == column.Value.Name && column.Value.AutoIncrement.HasValue)
                     continue;
                 if (column.Value.IsForeignKey)
                     continue;
@@ -332,7 +332,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\t\t\t{");
                 foreach (var col in table.Columns)
                 {
-                    if (table.PrimaryKeyColumnName == col.Value.Name && col.Value.AutoIncrement)
+                    if (table.PrimaryKeyColumnName == col.Value.Name && col.Value.AutoIncrement.HasValue)
                         continue;
                     if (col.Value.IsForeignKey)
                         continue;
@@ -363,7 +363,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\t{");
             foreach (var column in table.Columns)
             {
-                if (table.PrimaryKeyColumnName == column.Value.Name && column.Value.AutoIncrement)
+                if (table.PrimaryKeyColumnName == column.Value.Name && column.Value.AutoIncrement.HasValue)
                     continue;
                 if (column.Value.IsForeignKey)
                     continue;
@@ -507,7 +507,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             foreach (var column in table.Columns)
             {
-                if (table.PrimaryKeyColumnName == column.Value.Name && column.Value.AutoIncrement)
+                if (table.PrimaryKeyColumnName == column.Value.Name && column.Value.AutoIncrement.HasValue)
                     continue;
                 if (column.Value.IsForeignKey && column.Value.AllowsNull)
                     code.Append("null");
@@ -541,7 +541,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             foreach (var column in table.Columns)
             {
-                if (table.PrimaryKeyColumnName == column.Value.Name && column.Value.AutoIncrement)
+                if (table.PrimaryKeyColumnName == column.Value.Name && column.Value.AutoIncrement.HasValue)
                     continue;
                 if (column.Value.IsForeignKey && column.Value.AllowsNull)
                     continue;

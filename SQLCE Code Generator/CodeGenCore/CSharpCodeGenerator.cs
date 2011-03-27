@@ -120,10 +120,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     }
                     if (column.Value.ManagedType == typeof(string))
                         code.Append("(" + column.Value.MaxLength + ")");
-                    if (!column.Value.AllowsNull)
-                        code.Append(" NOT NULL");
+                    if (column.Value.AutoIncrement.HasValue)
+                        code.AppendFormat(" IDENTITY({0},{1})", column.Value.AutoIncrementSeed, column.Value.AutoIncrement);
                     if (column.Value.IsPrimaryKey)
                         code.Append(" PRIMARY KEY");
+                    if (!column.Value.AllowsNull)
+                        code.Append(" NOT NULL");
                     code.Append(", ");
                 }
                 code.Remove(code.Length - 2, 2);

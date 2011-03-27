@@ -203,7 +203,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                     //columnNode.Nodes.Add("Ordinal Position - " + column.Value.Ordinal);
                     if (column.Value.IsPrimaryKey)
                         columnNode.Nodes.Add("Primary Key");
-                    if (column.Value.AutoIncrement)
+                    if (column.Value.AutoIncrement.HasValue)
                         columnNode.Nodes.Add("Auto Increment");
                     if (column.Value.IsForeignKey)
                         columnNode.Nodes.Add("Foreign Key");

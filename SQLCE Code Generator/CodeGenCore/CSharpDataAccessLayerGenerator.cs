@@ -217,7 +217,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.Append("\t\t\tCreate(");
             foreach (var column in table.Columns)
             {
-                if (column.Value.IsPrimaryKey && column.Value.AutoIncrement)
+                if (column.Value.IsPrimaryKey && column.Value.AutoIncrement.HasValue)
                     continue;
                 code.Append("item." + column.Value.Name + ", ");
             }
@@ -386,7 +386,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\t\t\t{");
             foreach (var item in table.Columns.Values)
             {
-                if (item.AutoIncrement)
+                if (item.AutoIncrement.HasValue)
                     continue;
                 code.AppendFormat("\t\t\t\t\t\trecord.SetValue({0}, item.{1});", item.Ordinal - 1, item.Name);
                 code.AppendLine();
