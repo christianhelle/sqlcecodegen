@@ -108,16 +108,18 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     foreach (DataRow row in schema.Rows)
                     {
                         var name = row.Field<string>("COLUMN_NAME");
-                        item.Columns.Add(name, new Column
+                        var column = new Column
                         {
                             Name = name,
                             DatabaseType = row.Field<string>("DATA_TYPE"),
                             MaxLength = row.Field<int?>("CHARACTER_MAXIMUM_LENGTH"),
                             ManagedType = columnDescriptions.Columns[name].DataType,
                             AllowsNull = (string.Compare(row.Field<string>("IS_NULLABLE"), "YES", true) == 0),
-                            AutoIncrement = row["AUTOINC_INCREMENT"] != DBNull.Value,
+                            AutoIncrement = row.Field<long?>("AUTOINC_INCREMENT"),
+                            AutoIncrementSeed = row.Field<long?>("AUTOINC_SEED"),
                             Ordinal = row.Field<int>("ORDINAL_POSITION")
-                        });
+                        };
+                        item.Columns.Add(name, column);
                     }
 
                     tableList.Add(table, item);
@@ -157,7 +159,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public string DatabaseType { get; set; }
         public bool AllowsNull { get; set; }
         public bool IsPrimaryKey { get; set; }
-        public bool AutoIncrement { get; set; }
+        public long? AutoIncrement { get; set; }
+        public long? AutoIncrementSeed { get; set; }
         public bool IsForeignKey { get; set; }
         public int Ordinal { get; set; }
 
