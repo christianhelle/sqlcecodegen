@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using ChristianHelle.DatabaseTools.SqlCe.CodeGenCore;
 using Microsoft.CustomTool;
+using System;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
 {
@@ -29,7 +30,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
             codeGenerator.GenerateDataAccessLayer();
 
             var generatedCode = codeGenerator.GetCode();
-            return Encoding.Unicode.GetBytes(generatedCode);
+            return Encoding.Default.GetBytes(generatedCode);
         }
     }
 }
