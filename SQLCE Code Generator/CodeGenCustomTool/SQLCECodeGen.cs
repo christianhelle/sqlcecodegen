@@ -1,9 +1,9 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 using ChristianHelle.DatabaseTools.SqlCe.CodeGenCore;
 using Microsoft.CustomTool;
-using System;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
 {
