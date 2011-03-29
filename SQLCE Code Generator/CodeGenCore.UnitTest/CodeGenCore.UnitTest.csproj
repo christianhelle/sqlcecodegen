@@ -76,6 +76,7 @@
     <Content Include="..\CodeGenConsole\TestDatabase.sdf">
       <Link>TestDatabase.sdf</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Generator>SQLCECodeGenerator</Generator>
     </Content>
   </ItemGroup>
   <ItemGroup>

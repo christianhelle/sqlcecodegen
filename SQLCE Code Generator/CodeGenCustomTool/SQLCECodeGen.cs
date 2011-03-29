@@ -12,7 +12,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
     {
         protected override byte[] GenerateCode(string inputFileName, string inputFileContent)
         {
-            return GenerateCode(FileNameSpace, inputFileContent, CodeProvider.FileExtension);
+            return GenerateCode(FileNameSpace, inputFileName, CodeProvider.FileExtension);
         }
 
         public static byte[] GenerateCode(string FileNameSpace, string inputFileName, string fileExtension)
@@ -29,7 +29,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
             codeGenerator.GenerateDataAccessLayer();
 
             var generatedCode = codeGenerator.GetCode();
-            return Encoding.Default.GetBytes(generatedCode.Trim());
+            return Encoding.Unicode.GetBytes(generatedCode);
         }
     }
 }
