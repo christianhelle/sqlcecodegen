@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CodeCompiler.cs" />
+    <Compile Include="CodeDomCodeGenerator.cs" />
     <Compile Include="CodeGenerator.cs" />
     <Compile Include="CodeGeneratorFactory.cs" />
     <Compile Include="CodeGeneratorOptions.cs" />

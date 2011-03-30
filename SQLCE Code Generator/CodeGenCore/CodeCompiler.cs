@@ -43,7 +43,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             return CompileSource(csc, sourceCode);
         }
 
-        public static CompilerResults CompileVBharpSource(params string[] sourceCode)
+        public static CompilerResults CompileVisualBasicSource(params string[] sourceCode)
         {
             return CompileSource(CodeDomProvider.CreateProvider("VisualBasic"), sourceCode);
         }

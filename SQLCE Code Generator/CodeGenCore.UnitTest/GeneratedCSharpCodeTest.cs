@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest.Properties;
-using ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool;
+﻿using ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text;
 
@@ -18,14 +16,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             var codeGenerator = factory.Create();
             codeGenerator.GenerateEntities();
 
-            AssertCompile(codeGenerator.GetCode());
-        }
-
-        private static SqlCeDatabase GetDatabase()
-        {
-            var defaultNamespace = typeof(CodeGenTest).Namespace;
-            var connectionString = Settings.Default.TestDatabaseConnectionString;
-            return new SqlCeDatabase(defaultNamespace, connectionString);
+            AssertCSharpCompile(codeGenerator.GetCode());
         }
 
         [TestMethod]
@@ -38,7 +29,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             codeGenerator.GenerateEntities();           
             codeGenerator.GenerateDataAccessLayer();
 
-            AssertCompile(codeGenerator.GetCode());
+            AssertCSharpCompile(codeGenerator.GetCode());
         }
         
         [TestMethod]
@@ -53,7 +44,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             var unitTestCodeGenerator = new CSharpUnitTestCodeGenerator(database);
             unitTestCodeGenerator.GenerateEntities();
 
-            AssertCompile(codeGenerator.GetCode(), unitTestCodeGenerator.GetCode());
+            AssertCSharpCompile(codeGenerator.GetCode(), unitTestCodeGenerator.GetCode());
         }
 
         [TestMethod]
@@ -70,7 +61,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             unitTestCodeGenerator.GenerateEntities();
             unitTestCodeGenerator.GenerateDataAccessLayer();
 
-            AssertCompile(codeGenerator.GetCode(), unitTestCodeGenerator.GetCode());
+            AssertCSharpCompile(codeGenerator.GetCode(), unitTestCodeGenerator.GetCode());
         }
 
         [TestMethod]
@@ -89,7 +80,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             unitTestCodeGenerator.GenerateEntities();
             unitTestCodeGenerator.GenerateDataAccessLayer();
 
-            AssertCompile(codeGenerator.GetCode(), unitTestCodeGenerator.GetCode());
+            AssertCSharpCompile(codeGenerator.GetCode(), unitTestCodeGenerator.GetCode());
         }
 
         [TestMethod]
@@ -100,17 +91,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
 
             Assert.IsNotNull(actual);
             Assert.AreNotEqual(0, actual.Length);
-            AssertCompile(Encoding.Default.GetString(actual));
-        }
-
-        private static void AssertCompile(params string[] sourceCode)
-        {
-            var actual = CodeCompiler.CompileCSharpSource(sourceCode);
-
-            foreach (var error in actual.Errors)
-                Trace.WriteLine(error, "ERROR");
-
-            Assert.AreEqual(0, actual.Errors.Count);
+            AssertCSharpCompile(Encoding.Default.GetString(actual));
         }
     }
 }

@@ -188,7 +188,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
             foreach (var item in list)
             {
-                var node = new TreeNode(item.TableName);
+                var node = new TreeNode(item.Name);
                 node.NodeFont = new Font(treeView.Font, FontStyle.Bold);
                 node.Expand();
                 rootNode.Nodes.Add(node);

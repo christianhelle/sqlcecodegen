@@ -26,17 +26,17 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t#region SELECT *");
             code.AppendLine();
             GenerateXmlDoc(2, "Retrieves all items as a generic collection");
-            code.AppendLine("\t\tpublic System.Collections.Generic.List<" + table.TableName + "> ToList()");
+            code.AppendLine("\t\tpublic System.Collections.Generic.List<" + table.Name + "> ToList()");
             code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tvar list = new System.Collections.Generic.List<" + table.TableName + ">();");
+            code.AppendLine("\t\t\tvar list = new System.Collections.Generic.List<" + table.Name + ">();");
             code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
             code.AppendLine("\t\t\t{");
-            code.AppendLine("\t\t\t\tcommand.CommandText = \"SELECT * FROM " + table.TableName + "\";");
+            code.AppendLine("\t\t\t\tcommand.CommandText = \"SELECT * FROM " + table.Name + "\";");
             code.AppendLine("\t\t\t\tusing (var reader = command.ExecuteReader())");
             code.AppendLine("\t\t\t\t{");
             code.AppendLine("\t\t\t\t\twhile (reader.Read())");
             code.AppendLine("\t\t\t\t\t{");
-            code.AppendLine("\t\t\t\t\t\tvar item = new " + table.TableName + "();");
+            code.AppendLine("\t\t\t\t\t\tvar item = new " + table.Name + "();");
             GetReaderValues();
             code.AppendLine("\t\t\t\t\t\tlist.Add(item);");
             code.AppendLine("\t\t\t\t\t}");
@@ -45,7 +45,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\treturn list.Count > 0 ? list : null;");
             code.AppendLine("\t\t}");
             code.AppendLine();
-            code.AppendLine("\t\tpublic " + table.TableName + "[] ToArray()");
+            code.AppendLine("\t\tpublic " + table.Name + "[] ToArray()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tvar list = ToList();");
             code.AppendLine("\t\t\treturn list != null ? list.ToArray() : null;");
@@ -60,17 +60,17 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t#region SELECT TOP()");
             code.AppendLine();
             GenerateXmlDoc(2, "Retrieves the first set of items specified by count as a generic collection", new KeyValuePair<string, string>("count", "Number of records to be retrieved"));
-            code.AppendLine("\t\tpublic System.Collections.Generic.List<" + table.TableName + "> ToList(int count)");
+            code.AppendLine("\t\tpublic System.Collections.Generic.List<" + table.Name + "> ToList(int count)");
             code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tvar list = new System.Collections.Generic.List<" + table.TableName + ">();");
+            code.AppendLine("\t\t\tvar list = new System.Collections.Generic.List<" + table.Name + ">();");
             code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
             code.AppendLine("\t\t\t{");
-            code.AppendLine("\t\t\t\tcommand.CommandText = string.Format(\"SELECT TOP({0}) * FROM " + table.TableName + "\", count);");
+            code.AppendLine("\t\t\t\tcommand.CommandText = string.Format(\"SELECT TOP({0}) * FROM " + table.Name + "\", count);");
             code.AppendLine("\t\t\t\tusing (var reader = command.ExecuteReader())");
             code.AppendLine("\t\t\t\t{");
             code.AppendLine("\t\t\t\t\twhile (reader.Read())");
             code.AppendLine("\t\t\t\t\t{");
-            code.AppendLine("\t\t\t\t\t\tvar item = new " + table.TableName + "();");
+            code.AppendLine("\t\t\t\t\t\tvar item = new " + table.Name + "();");
             GetReaderValues();
             code.AppendLine("\t\t\t\t\t\tlist.Add(item);");
             code.AppendLine("\t\t\t\t\t}");
@@ -79,7 +79,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\treturn list.Count > 0 ? list : null;");
             code.AppendLine("\t\t}");
             code.AppendLine();
-            code.AppendLine("\t\tpublic " + table.TableName + "[] ToArray(int count)");
+            code.AppendLine("\t\tpublic " + table.Name + "[] ToArray(int count)");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tvar list = ToList(count);");
             code.AppendLine("\t\t\treturn list != null ? list.ToArray() : null;");
@@ -102,30 +102,30 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 GenerateXmlDoc(2, "Retrieves a collection of items by " + column.Value.Name, new KeyValuePair<string, string>(column.Value.Name, column.Value.Name + " value"));
                 if (column.Value.ManagedType.IsValueType)
                     code.AppendFormat("\t\tpublic System.Collections.Generic.List<{0}> SelectBy{2}({1}? {2})",
-                                      table.TableName, column.Value.ManagedType, column.Value.Name);
+                                      table.Name, column.Value.ManagedType, column.Value.Name);
                 else
                     code.AppendFormat("\t\tpublic System.Collections.Generic.List<{0}> SelectBy{2}({1} {2})",
-                                      table.TableName, column.Value.ManagedType, column.Value.Name);
+                                      table.Name, column.Value.ManagedType, column.Value.Name);
 
                 code.AppendLine();
                 code.AppendLine("\t\t{");
-                code.AppendLine("\t\t\tvar list = new System.Collections.Generic.List<" + table.TableName + ">();");
+                code.AppendLine("\t\t\tvar list = new System.Collections.Generic.List<" + table.Name + ">();");
                 code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
                 code.AppendLine("\t\t\t{");
                 code.AppendLine("\t\t\tif (" + column.Value.Name + " != null)");
                 code.AppendLine("\t\t\t{");
-                code.AppendFormat("\t\t\t\tcommand.CommandText = \"SELECT * FROM {0} WHERE {1}=@{1}\";", table.TableName, column.Value.Name);
+                code.AppendFormat("\t\t\t\tcommand.CommandText = \"SELECT * FROM {0} WHERE {1}=@{1}\";", table.Name, column.Value.Name);
                 code.AppendFormat("\n\t\t\t\tcommand.Parameters.AddWithValue(\"@{0}\", {0});", column.Value.Name);
                 code.AppendLine();
                 code.AppendLine("\t\t\t}");
                 code.AppendLine("\t\t\telse");
-                code.AppendFormat("\t\t\t\tcommand.CommandText = \"SELECT * FROM {0} WHERE {1} IS NULL\";", table.TableName, column.Value.Name);
+                code.AppendFormat("\t\t\t\tcommand.CommandText = \"SELECT * FROM {0} WHERE {1} IS NULL\";", table.Name, column.Value.Name);
                 code.AppendLine();
                 code.AppendLine("\n\t\t\t\tusing (var reader = command.ExecuteReader())");
                 code.AppendLine("\t\t\t\t{");
                 code.AppendLine("\t\t\t\t\twhile (reader.Read())");
                 code.AppendLine("\t\t\t\t\t{");
-                code.AppendLine("\t\t\t\t\t\tvar item = new " + table.TableName + "();");
+                code.AppendLine("\t\t\t\t\t\tvar item = new " + table.Name + "();");
                 GetReaderValues();
                 code.AppendLine("\t\t\t\t\t\tlist.Add(item);");
                 code.AppendLine("\t\t\t\t\t}");
@@ -151,29 +151,29 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
                 GenerateXmlDoc(2, "Retrieves the first set of items specified by count by " + column.Value.Name, new KeyValuePair<string, string>(column.Value.Name, column.Value.Name + " value"), new KeyValuePair<string, string>("count", "Number of records to be retrieved"));
                 if (column.Value.ManagedType.IsValueType)
-                    code.AppendFormat("\t\tpublic System.Collections.Generic.List<{0}> SelectBy{2}({1}? {2}, int count)", table.TableName, column.Value.ManagedType, column.Value.Name);
+                    code.AppendFormat("\t\tpublic System.Collections.Generic.List<{0}> SelectBy{2}({1}? {2}, int count)", table.Name, column.Value.ManagedType, column.Value.Name);
                 else
-                    code.AppendFormat("\t\tpublic System.Collections.Generic.List<{0}> SelectBy{2}({1} {2}, int count)", table.TableName, column.Value.ManagedType, column.Value.Name);
+                    code.AppendFormat("\t\tpublic System.Collections.Generic.List<{0}> SelectBy{2}({1} {2}, int count)", table.Name, column.Value.ManagedType, column.Value.Name);
 
                 code.AppendLine();
                 code.AppendLine("\t\t{");
-                code.AppendLine("\t\t\tvar list = new System.Collections.Generic.List<" + table.TableName + ">();");
+                code.AppendLine("\t\t\tvar list = new System.Collections.Generic.List<" + table.Name + ">();");
                 code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
                 code.AppendLine("\t\t\t{");
                 code.AppendLine("\t\t\tif (" + column.Value.Name + " != null)");
                 code.AppendLine("\t\t\t{");
-                code.AppendFormat("\t\t\t\tcommand.CommandText = \"SELECT TOP(\" + count + \") * FROM {0} WHERE {1}=@{1}\";", table.TableName, column.Value.Name);
+                code.AppendFormat("\t\t\t\tcommand.CommandText = \"SELECT TOP(\" + count + \") * FROM {0} WHERE {1}=@{1}\";", table.Name, column.Value.Name);
                 code.AppendFormat("\n\t\t\t\tcommand.Parameters.AddWithValue(\"@{0}\", {0});", column.Value.Name);
                 code.AppendLine();
                 code.AppendLine("\t\t\t}");
                 code.AppendLine("\t\t\telse");
-                code.AppendFormat("\t\t\t\tcommand.CommandText = \"SELECT TOP(\" + count + \") * FROM {0} WHERE {1} IS NULL\";", table.TableName, column.Value.Name);
+                code.AppendFormat("\t\t\t\tcommand.CommandText = \"SELECT TOP(\" + count + \") * FROM {0} WHERE {1} IS NULL\";", table.Name, column.Value.Name);
                 code.AppendLine();
                 code.AppendLine("\n\t\t\t\tusing (var reader = command.ExecuteReader())");
                 code.AppendLine("\t\t\t\t{");
                 code.AppendLine("\t\t\t\t\twhile (reader.Read())");
                 code.AppendLine("\t\t\t\t\t{");
-                code.AppendLine("\t\t\t\t\t\tvar item = new " + table.TableName + "();");
+                code.AppendLine("\t\t\t\t\t\tvar item = new " + table.Name + "();");
                 GetReaderValues();
                 code.AppendLine("\t\t\t\t\t\tlist.Add(item);");
                 code.AppendLine("\t\t\t\t\t}");
@@ -189,14 +189,14 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         public override void GenerateCount()
         {
-            code.AppendLine("\t\t#region COUNT " + table.TableName);
+            code.AppendLine("\t\t#region COUNT " + table.Name);
             code.AppendLine();
             GenerateXmlDoc(2, "Gets the number of records in the table");
             code.AppendLine("\t\tpublic int Count()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
             code.AppendLine("\t\t\t{");
-            code.AppendFormat("\t\t\t\tcommand.CommandText = \"SELECT COUNT(*) FROM {0}\";", table.TableName);
+            code.AppendFormat("\t\t\t\tcommand.CommandText = \"SELECT COUNT(*) FROM {0}\";", table.Name);
             code.AppendLine();
             code.AppendFormat("\t\t\t\treturn (int)command.ExecuteScalar();");
             code.AppendLine();
@@ -209,10 +209,10 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         public override void GenerateCreate()
         {
-            code.AppendLine("\t\t#region INSERT " + table.TableName);
+            code.AppendLine("\t\t#region INSERT " + table.Name);
             code.AppendLine();
             GenerateXmlDoc(2, "Inserts the item to the table", new KeyValuePair<string, string>("item", "Item to insert to the database"));
-            code.AppendLine("\t\tpublic void Create(" + table.TableName + " item)");
+            code.AppendLine("\t\tpublic void Create(" + table.Name + " item)");
             code.AppendLine("\t\t{");
             code.Append("\t\t\tCreate(");
             foreach (var column in table.Columns)
@@ -274,7 +274,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\t{");
 
             var query = new StringBuilder();
-            query.Append("\"INSERT INTO " + table.TableName + " (");
+            query.Append("\"INSERT INTO " + table.Name + " (");
             foreach (var column in table.Columns)
             {
                 if (column.Key == table.PrimaryKeyColumnName)
@@ -310,7 +310,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         public override void GenerateCreateUsingAllColumns()
         {
-            code.AppendLine("\t\t#region INSERT " + table.TableName + " by fields");
+            code.AppendLine("\t\t#region INSERT " + table.Name + " by fields");
             code.AppendLine();
 
             var list = new List<KeyValuePair<string, string>>();
@@ -345,7 +345,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\t{");
 
             var query = new StringBuilder();
-            query.Append("\"INSERT INTO " + table.TableName + " (");
+            query.Append("\"INSERT INTO " + table.Name + " (");
             foreach (var column in table.Columns)
                 query.Append(column.Key + ", ");
             query.Remove(query.Length - 2, 2);
@@ -372,12 +372,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t#region INSERT MANY");
             code.AppendLine();
             GenerateXmlDoc(2, "Populates the table with a collection of items");
-            code.AppendLine("\t\tpublic void Create(System.Collections.Generic.IEnumerable<" + table.TableName + "> items)");
+            code.AppendLine("\t\tpublic void Create(System.Collections.Generic.IEnumerable<" + table.Name + "> items)");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
             code.AppendLine("\t\t\t{");
             code.AppendLine("\t\t\t\tcommand.CommandType = System.Data.CommandType.TableDirect;");
-            code.AppendLine("\t\t\t\tcommand.CommandText = \"" + table.TableName + "\";");
+            code.AppendLine("\t\t\t\tcommand.CommandText = \"" + table.Name + "\";");
             code.AppendLine();
             code.AppendLine("\t\t\t\tusing (var resultSet = command.ExecuteResultSet(System.Data.SqlServerCe.ResultSetOptions.Updatable))");
             code.AppendLine("\t\t\t\t{");
@@ -406,13 +406,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t#region DELETE");
             code.AppendLine();
             GenerateXmlDoc(2, "Deletes the item", new KeyValuePair<string, string>("item", "Item to delete"));
-            code.AppendLine("\t\tpublic void Delete(" + table.TableName + " item)");
+            code.AppendLine("\t\tpublic void Delete(" + table.Name + " item)");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
             code.AppendLine("\t\t\t{");
 
             var query = new StringBuilder();
-            query.Append("\"DELETE FROM " + table.TableName + " WHERE ");
+            query.Append("\"DELETE FROM " + table.Name + " WHERE ");
 
             var hasPrimaryKey = false;
             foreach (var column in table.Columns)
@@ -465,7 +465,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\n\t\t{");
                 code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
                 code.AppendLine("\t\t\t{");
-                code.AppendFormat("\t\t\t\tcommand.CommandText = \"DELETE FROM {0} WHERE {1}=@{1}\";", table.TableName, column.Value.Name);
+                code.AppendFormat("\t\t\t\tcommand.CommandText = \"DELETE FROM {0} WHERE {1}=@{1}\";", table.Name, column.Value.Name);
                 code.AppendFormat("\n\t\t\t\tcommand.Parameters.AddWithValue(\"@{0}\", {0} != null ? (object){0} : System.DBNull.Value);", column.Value.Name);
                 code.AppendLine("\n\t\t\t\treturn command.ExecuteNonQuery();");
                 code.AppendLine("\t\t\t}");
@@ -485,7 +485,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
             code.AppendLine("\t\t\t{");
-            code.AppendLine("\t\t\t\tcommand.CommandText = \"DELETE FROM " + table.TableName + "\";");
+            code.AppendLine("\t\t\t\tcommand.CommandText = \"DELETE FROM " + table.Name + "\";");
             code.AppendLine("\t\t\t\treturn command.ExecuteNonQuery();");
             code.AppendLine("\t\t\t}");
             code.AppendLine("\t\t}");
@@ -499,13 +499,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t#region UPDATE");
             code.AppendLine();
             GenerateXmlDoc(2, "Updates the item", new KeyValuePair<string, string>("item", "Item to update"));
-            code.AppendLine("\t\tpublic void Update(" + table.TableName + " item)");
+            code.AppendLine("\t\tpublic void Update(" + table.Name + " item)");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
             code.AppendLine("\t\t\t{");
 
             var query = new StringBuilder();
-            query.Append("\"UPDATE " + table.TableName + " SET ");
+            query.Append("\"UPDATE " + table.Name + " SET ");
             foreach (var column in table.Columns)
             {
                 if (column.Key == table.PrimaryKeyColumnName)
