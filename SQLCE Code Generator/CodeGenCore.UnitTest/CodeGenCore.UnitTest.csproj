@@ -63,6 +63,7 @@
     <Compile Include="CodeGeneratorFactoryTest.cs" />
     <Compile Include="CodeGenFileSerializerTest.cs" />
     <Compile Include="CodeGenTest.cs" />
+    <Compile Include="GeneratedCodeDomCodeGeneratorTest.cs" />
     <Compile Include="GeneratedCSharpCodeTest.cs" />
     <Compile Include="SqlCeDatabaseTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

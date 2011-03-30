@@ -23,13 +23,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public abstract void GenerateDataAccessLayer();
         public abstract void GenerateDataAccessLayer(DataAccessLayerGeneratorOptions options);
 
-        public string GetCode()
+        public virtual string GetCode()
         {
-            using (var writer = new StringWriter(code, CultureInfo.InvariantCulture))
-                return writer.ToString();
+            return code.ToString();
         }
 
-        public void ClearCode()
+        public virtual void ClearCode()
         {
             code.Remove(0, code.Length - 1);
         }

@@ -39,7 +39,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         {
             SqlCeDatabase target = new SqlCeDatabase(connectionString);         
             foreach (var table in target.Tables)
-                Assert.IsFalse(string.IsNullOrEmpty(table.TableName));
+                Assert.IsFalse(string.IsNullOrEmpty(table.Name));
         }
 
         [TestMethod]

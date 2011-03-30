@@ -1,5 +1,7 @@
+using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
+using ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest.Properties;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
 {
@@ -13,6 +15,33 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         {
             var fi = new FileInfo("TestDatabase.sdf");
             fi.Attributes = FileAttributes.Normal;
+        }
+
+        protected static SqlCeDatabase GetDatabase()
+        {
+            var defaultNamespace = typeof(CodeGenTest).Namespace;
+            var connectionString = Settings.Default.TestDatabaseConnectionString;
+            return new SqlCeDatabase(defaultNamespace, connectionString);
+        }
+
+        protected static void AssertCSharpCompile(params string[] sourceCode)
+        {
+            var actual = CodeCompiler.CompileCSharpSource(sourceCode);
+
+            foreach (var error in actual.Errors)
+                Trace.WriteLine(error, "ERROR");
+
+            Assert.AreEqual(0, actual.Errors.Count);
+        }
+
+        protected static void AssertVisualBasicCompile(params string[] sourceCode)
+        {
+            var actual = CodeCompiler.CompileVisualBasicSource(sourceCode);
+
+            foreach (var error in actual.Errors)
+                Trace.WriteLine(error, "ERROR");
+
+            Assert.AreEqual(0, actual.Errors.Count);
         }
     }
 }

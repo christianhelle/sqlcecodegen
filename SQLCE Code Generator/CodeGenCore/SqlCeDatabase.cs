@@ -44,7 +44,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 {
                     conn.Open();
                     cmd.CommandText = @"SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.INDEXES WHERE TABLE_NAME=@Name AND PRIMARY_KEY=1";
-                    cmd.Parameters.AddWithValue("@Name", table.TableName);
+                    cmd.Parameters.AddWithValue("@Name", table.Name);
                     var primaryKeyColumnName = cmd.ExecuteScalar();
                     if (primaryKeyColumnName != null)
                     {
@@ -101,7 +101,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
                     var item = new Table
                     {
-                        TableName = table,
+                        Name = table,
                         Columns = new Dictionary<string, Column>(schema.Rows.Count)
                     };
 
@@ -141,13 +141,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
     public class Table
     {
-        public string TableName { get; set; }
+        public string Name { get; set; }
         public Dictionary<string, Column> Columns { get; set; }
         public string PrimaryKeyColumnName { get; set; }
 
         public override string ToString()
         {
-            return TableName;
+            return Name;
         }
     }
 
