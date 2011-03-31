@@ -1,12 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.CodeDom;
-using System.Globalization;
-using Microsoft.CSharp;
-using System.IO;
 using System.CodeDom.Compiler;
-using Microsoft.VisualBasic;
+using System.Collections.Generic;
 using System.Data.SqlServerCe;
+using System.Globalization;
+using System.IO;
+using Microsoft.CSharp;
+using Microsoft.VisualBasic;
+using System.Text;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
@@ -68,7 +69,10 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             codeNamespace.Comments.Add(new CodeCommentStatement("</auto-generatedInfo>"));
             codeNamespace.Comments.Add(new CodeCommentStatement("--------------------------------------------------------------------------------------------------"));
             codeNamespace.Comments.Add(new CodeCommentStatement(string.Empty));
+            codeNamespace.Comments.Add(new CodeCommentStatement(string.Empty));
         }
+
+        #region Generate Entities
 
         public override void GenerateEntities()
         {
@@ -83,6 +87,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 type.Attributes = MemberAttributes.Public;
                 type.IsPartial = true;
                 type.IsClass = true;
+                type.StartDirectives.Add(new CodeRegionDirective(CodeRegionMode.Start, table.Name));
+                type.EndDirectives.Add(new CodeRegionDirective(CodeRegionMode.End, table.Name));
                 GenerateXmlDoc(type.Comments, "Represents the " + table.Name + " table");
 
                 foreach (var column in table.Columns)
@@ -140,6 +146,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             }
         }
 
+        #endregion
+
         public override void GenerateDataAccessLayer()
         {
             GenerateDataAccessLayer(new DataAccessLayerGeneratorOptions());
@@ -157,8 +165,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 GenerateITableRepository(table);
                 GenerateTableRepository(table);
             }
-
-            code.AppendLine("}");
         }
 
         private void GenerateITableRepository(Table table)
@@ -179,8 +185,124 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         private void GenerateCreateDatabase()
         {
+            // public static class DatabaseFile
+            var type = new CodeTypeDeclaration("DatabaseFile");
+            type.Attributes = MemberAttributes.Public | MemberAttributes.Static;
+            type.IsClass = true;
+            type.IsPartial = true;
+            type.StartDirectives.Add(new CodeRegionDirective(CodeRegionMode.Start, "DatabaseFile"));
+            type.EndDirectives.Add(new CodeRegionDirective(CodeRegionMode.End, null));
+            GenerateXmlDoc(type.Comments, "Helper class for generating the database file in runtime");
+
+            // public static int CreateDatabase()
+            var method = new CodeMemberMethod();
+            method.Attributes = MemberAttributes.Public | MemberAttributes.Static;
+            method.ReturnType = new CodeTypeReference(typeof(int));
+            method.Name = "CreateDatabase";
+
+            // int resultCount = 0
+            var resultCount = new CodeVariableDeclarationStatement(typeof(int), "resultCount");
+            resultCount.InitExpression = new CodePrimitiveExpression(0);
+
+            // SqlCeEngine engine = null;
+            var engine = new CodeVariableDeclarationStatement(typeof(SqlCeEngine), "engine");
+            engine.InitExpression = new CodePrimitiveExpression(null);
+
+            // try
+            var engineTryFinally = new CodeTryCatchFinallyStatement();
+
+            // engine = new SqlCeEngine(EntityBase.ConectionString);
+            engineTryFinally.TryStatements.Add(
+                new CodeAssignStatement(
+                    new CodeVariableReferenceExpression("engine"),
+                    new CodeObjectCreateExpression(typeof(SqlCeEngine),
+                        new CodeFieldReferenceExpression(
+                            new CodeTypeReferenceExpression(new CodeTypeReference("EntityBase")), "ConnectionString"))));
+
+            // engine.CreateDatabase();
+            engineTryFinally.TryStatements.Add(
+                new CodeMethodInvokeExpression(
+                    new CodeMethodReferenceExpression(
+                        new CodeVariableReferenceExpression("engine"), "CreateDatabase")));
+
+            // finally { engine.Dispose(); }
+            engineTryFinally.FinallyStatements.Add(
+                new CodeMethodInvokeExpression(
+                    new CodeMethodReferenceExpression(
+                        new CodeVariableReferenceExpression("engine"), "Dispose")));
+
+            // SqlCeCommand command = null;
+            var command = new CodeVariableDeclarationStatement(typeof(SqlCeCommand), "command");
+            command.InitExpression = new CodePrimitiveExpression(null);
+
+            // try
+            var commandTryFinally = new CodeTryCatchFinallyStatement();
+
+            // command = EntityBase.CreateCommand();
+            commandTryFinally.TryStatements.Add(
+                new CodeAssignStatement(
+                    new CodeVariableReferenceExpression("command"),
+                    new CodeMethodInvokeExpression(
+                        new CodeTypeReferenceExpression("EntityBase"), "CreateCommand")));
+
+            foreach (var table in Database.Tables)
+            {
+                var query = new StringBuilder();
+                query.Append("CREATE TABLE ");
+                query.Append(table.Name);
+                query.Append("(");
+
+                foreach (var column in table.Columns)
+                {
+                    query.AppendFormat("{0} {1}", column.Key, column.Value.DatabaseType.ToUpper());
+                    if (string.Compare(column.Value.DatabaseType, "ntext", true) == 0 ||
+                        string.Compare(column.Value.DatabaseType, "image", true) == 0)
+                    {
+                        query.Append(", ");
+                        continue;
+                    }
+                    if (column.Value.ManagedType == typeof(string))
+                        query.Append("(" + column.Value.MaxLength + ")");
+                    if (column.Value.AutoIncrement.HasValue)
+                        query.AppendFormat(" IDENTITY({0},{1})", column.Value.AutoIncrementSeed, column.Value.AutoIncrement);
+                    if (column.Value.IsPrimaryKey)
+                        query.Append(" PRIMARY KEY");
+                    if (!column.Value.AllowsNull)
+                        query.Append(" NOT NULL");
+                    query.Append(", ");
+                }
+                query.Remove(query.Length - 2, 2);
+                query.Append(")");
+
+                // command.CommandText = "CREATE TABLE ....."
+                commandTryFinally.TryStatements.Add(
+                    new CodeAssignStatement(
+                        new CodePropertyReferenceExpression(new CodeVariableReferenceExpression("command"), "CommandText"),
+                        new CodePrimitiveExpression(query.ToString())));
+
+                // resultCount += command.ExecuteNonQuery()
+                commandTryFinally.TryStatements.Add(
+                    new CodeMethodInvokeExpression(
+                        new CodeMethodReferenceExpression(new CodeVariableReferenceExpression("command"), "ExecuteNonQuery")));
+            }
+
+            // finally { command.Dispose(); }
+            commandTryFinally.FinallyStatements.Add(
+                new CodeMethodInvokeExpression(
+                    new CodeMethodReferenceExpression(
+                        new CodeVariableReferenceExpression("command"), "Dispose")));
+
+            method.Statements.Add(resultCount);
+            method.Statements.Add(engine);
+            method.Statements.Add(engineTryFinally);
+            method.Statements.Add(command);
+            method.Statements.Add(commandTryFinally);
+            method.Statements.Add(new CodeMethodReturnStatement(new CodeVariableReferenceExpression("resultCount")));
+            type.Members.Add(method);
+            codeNamespace.Types.Add(type);
         }
 
+        #region Generate EntityBase
         private void GenerateEntityBase()
         {
             // public static class EntityBase
@@ -188,6 +310,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             type.Attributes = MemberAttributes.Public | MemberAttributes.Static;
             type.IsPartial = true;
             type.IsClass = true;
+            type.StartDirectives.Add(new CodeRegionDirective(CodeRegionMode.Start, "EntityBase"));
+            type.EndDirectives.Add(new CodeRegionDirective(CodeRegionMode.End, null));
             GenerateXmlDoc(type.Comments, "Base class for all data access repositories");
 
             // private static readonly object syncLock = new object();
@@ -195,33 +319,15 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             lockField.Attributes = MemberAttributes.Private | MemberAttributes.Static | MemberAttributes.Final;
             lockField.InitExpression = new CodeObjectCreateExpression(typeof(object));
 
-            // private static SqlCeConnection connectionInstance;
+            // private static SqlCeConnection connectionInstance = null;
             var connField = new CodeMemberField(typeof(SqlCeConnection), "connectionInstance");
             connField.Attributes = MemberAttributes.Private | MemberAttributes.Static;
+            connField.InitExpression = new CodePrimitiveExpression(null);
 
-            // private static string connectionString;
-            var connStrField = new CodeMemberField(typeof(string), "connectionString");
+            // public static string ConnectionString = null;
+            var connStrField = new CodeMemberField(typeof(string), "ConnectionString");
             connStrField.Attributes = MemberAttributes.Public | MemberAttributes.Static;
-
-            // public static string ConnectionString
-            var connStrProperty = new CodeMemberProperty();
-            connStrProperty.Name = "ConnectionString";
-            connStrProperty.Type = new CodeTypeReference(typeof(SqlCeConnection));
-            connStrProperty.Attributes = MemberAttributes.Public | MemberAttributes.Static;
-            GenerateXmlDoc(connStrProperty.Comments, "Gets or sets the global SQL CE Connection String to be used");
-
-            // get { }
-            connStrProperty.GetStatements.Add(
-                 new CodeMethodReturnStatement(
-                     new CodeFieldReferenceExpression(
-                         new CodeThisReferenceExpression(), "connectionString")));
-
-            // set { }
-            connStrProperty.SetStatements.Add(
-                new CodeAssignStatement(
-                    new CodeFieldReferenceExpression(
-                        new CodeThisReferenceExpression(), "connectionString"),
-                        new CodePropertySetValueReferenceExpression()));
+            connStrField.InitExpression = new CodePrimitiveExpression(null);
 
             // public static SqlCeConnection Connection
             var connectionProperty = new CodeMemberProperty();
@@ -236,80 +342,68 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             //     connection.Open();
             connectionProperty.GetStatements.Add(
                 new CodeConditionStatement(
-                    new CodeSnippetExpression("connectionInstance == null"),
-                    new CodeExpressionStatement(
-                        new CodeFieldReferenceExpression(
-                            new CodeObjectCreateExpression(), "connectionInstance"))));
+                    new CodeBinaryOperatorExpression(
+                        new CodeVariableReferenceExpression("connectionInstance"),
+                        CodeBinaryOperatorType.IdentityEquality,
+                        new CodePrimitiveExpression(null)),
+                    new CodeAssignStatement(
+                        new CodeFieldReferenceExpression(null, "connectionInstance"),
+                        new CodeObjectCreateExpression(typeof(SqlCeConnection)))));
 
             // if (connectionInstance.State != System.Data.ConnectionState.Open)
             //     connection.Open();
             connectionProperty.GetStatements.Add(
                 new CodeConditionStatement(
-                    new CodeSnippetExpression("connectionInstance.State != System.Data.ConnectionState.Open"),
-                    new CodeSnippetStatement("connectionInstance.Open")));
+                    new CodeBinaryOperatorExpression(
+                        new CodeVariableReferenceExpression("connectionInstance.State"),
+                        CodeBinaryOperatorType.IdentityInequality,
+                        new CodeSnippetExpression("System.Data.ConnectionState.Open")),
+                    new CodeMethodReturnStatement(
+                        new CodeFieldReferenceExpression(null, "connectionInstance"))));
+
+            // connectionInstance.ConnectionString = ConnectionString;
+            connectionProperty.GetStatements.Add(
+                new CodeAssignStatement(
+                    new CodePropertyReferenceExpression(new CodeVariableReferenceExpression("connectionInstance"), "ConnectionString"),
+                    new CodeFieldReferenceExpression(null, "ConnectionString")));
+
+            // connectionInstance.Open();
+            connectionProperty.GetStatements.Add(
+                new CodeMethodInvokeExpression(
+                    new CodeFieldReferenceExpression(null, "connectionInstance"),
+                    "Open"));
 
             // return connectionInstance;
             connectionProperty.GetStatements.Add(
                  new CodeMethodReturnStatement(
-                     new CodeFieldReferenceExpression(
-                         new CodeThisReferenceExpression(), "connectionInstance")));
+                     new CodeFieldReferenceExpression(null, "connectionInstance")));
 
-            // set { }
+            // set { connectionInstance = value; }
             connectionProperty.SetStatements.Add(
                 new CodeAssignStatement(
-                    new CodeFieldReferenceExpression(
-                        new CodeThisReferenceExpression(), "connectionInstance"),
+                    new CodeFieldReferenceExpression(null, "connectionInstance"),
                         new CodePropertySetValueReferenceExpression()));
+
+            var createCommandMethod = new CodeMemberMethod();
+            createCommandMethod.Attributes = MemberAttributes.Public | MemberAttributes.Static;
+            createCommandMethod.ReturnType = new CodeTypeReference(typeof(SqlCeCommand));
+            createCommandMethod.Name = "CreateCommand";
+            GenerateXmlDoc(createCommandMethod.Comments, "Create a SqlCeCommand instance using the global SQL CE Conection instance");
+
+            createCommandMethod.Statements.Add(
+                new CodeMethodReturnStatement(
+                    new CodeMethodInvokeExpression(
+                        new CodePropertyReferenceExpression(null, "Connection"),
+                        "CreateCommand")));
 
             type.Members.Add(lockField);
             type.Members.Add(connStrField);
             type.Members.Add(connField);
             type.Members.Add(connectionProperty);
+            type.Members.Add(createCommandMethod);
             codeNamespace.Types.Add(type);
-
-            //code.AppendLine("\t#region EntityBase");
-            //code.AppendLine();
-            //GenerateXmlDoc(1, "Base class for all data access repositories");
-            //code.AppendLine("\tpublic static class EntityBase");
-            //code.AppendLine("\t{");
-            //code.AppendLine("\t\tprivate static System.Data.SqlServerCe.SqlCeConnection connectionInstance = null;");
-            //code.AppendLine("\t\tprivate static readonly object syncLock = new object();");
-            //code.AppendLine();
-            //GenerateXmlDoc(2, "Gets or sets the global SQL CE Connection String to be used");
-            //code.AppendLine("\t\tpublic static System.String ConnectionString { get; set; }");
-            //code.AppendLine();
-            //GenerateXmlDoc(2, "Gets or sets the global SQL CE Connection instance");
-            //code.AppendLine("\t\tpublic static System.Data.SqlServerCe.SqlCeConnection Connection");
-            //code.AppendLine("\t\t{");
-            //code.AppendLine("\t\t\tget");
-            //code.AppendLine("\t\t\t{");
-            //code.AppendLine("\t\t\t\tlock (syncLock)");
-            //code.AppendLine("\t\t\t\t{");
-            //code.AppendLine("\t\t\t\t\tif (connectionInstance == null)");
-            //code.AppendLine("\t\t\t\t\t\tconnectionInstance = new System.Data.SqlServerCe.SqlCeConnection(ConnectionString);");
-            //code.AppendLine("\t\t\t\t\tif (connectionInstance.State != System.Data.ConnectionState.Open)");
-            //code.AppendLine("\t\t\t\t\t\tconnectionInstance.Open();");
-            //code.AppendLine("\t\t\t\t\treturn connectionInstance;");
-            //code.AppendLine("\t\t\t\t}");
-            //code.AppendLine("\t\t\t}");
-            //code.AppendLine("\t\t\tset");
-            //code.AppendLine("\t\t\t{");
-            //code.AppendLine("\t\t\t\tlock (syncLock)");
-            //code.AppendLine("\t\t\t\t\tconnectionInstance = value;");
-            //code.AppendLine("\t\t\t}");
-            //code.AppendLine("\t\t}");
-            //code.AppendLine();
-
-            //GenerateXmlDoc(2, "Create a SqlCeCommand instance using the global SQL CE Conection instance");
-            //code.AppendLine("\t\tpublic static System.Data.SqlServerCe.SqlCeCommand CreateCommand()");
-            //code.AppendLine("\t\t{");
-            //code.AppendLine("\t\t\treturn Connection.CreateCommand();");
-            //code.AppendLine("\t\t}");
-            //code.AppendLine("\t}");
-            //code.AppendLine();
-            //code.AppendLine("\t#endregion");
-            //code.AppendLine();
         }
+        #endregion
 
         #region IDisposable Members
 
