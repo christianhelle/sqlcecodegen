@@ -448,6 +448,18 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine();
             code.AppendLine("\t\t#endregion");
             code.AppendLine();
+
+            code.AppendLine("\t\t#region DELETE MANY");
+            code.AppendLine();
+            GenerateXmlDoc(2, "Deletes a collection of item", new KeyValuePair<string, string>("items", "Items to delete"));
+            code.AppendLine("\t\tpublic void Delete(System.Collections.Generic.IEnumerable<" + table.Name + "> items)");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tforeach (var item in items)");
+            code.AppendLine("\t\t\t\tDelete(item);");
+            code.AppendLine("\t\t}");
+            code.AppendLine();
+            code.AppendLine("\t\t#endregion");
+            code.AppendLine();
         }
 
         public override void GenerateDeleteBy()
@@ -529,6 +541,18 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             code.AppendLine("\t\t\t\tcommand.ExecuteNonQuery();");
             code.AppendLine("\t\t\t}");
+            code.AppendLine("\t\t}");
+            code.AppendLine();
+            code.AppendLine("\t\t#endregion");
+            code.AppendLine();
+
+            code.AppendLine("\t\t#region UPDATE MANY");
+            code.AppendLine();
+            GenerateXmlDoc(2, "Updates a collection of items", new KeyValuePair<string, string>("items", "Items to update"));
+            code.AppendLine("\t\tpublic void Update(System.Collections.Generic.IEnumerable<" + table.Name + "> items)");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tforeach (var item in items)");
+            code.AppendLine("\t\t\t\tUpdate(item);");
             code.AppendLine("\t\t}");
             code.AppendLine();
             code.AppendLine("\t\t#endregion");

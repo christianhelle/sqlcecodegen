@@ -138,7 +138,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\ttry");
             code.AppendLine("\t\t\t{");
-            code.AppendLine("\t\t\t\tvar value = RandomGenerator.GenerateString(" + column.Value.MaxLength.Value + 1 + ");");
+            code.AppendLine("\t\t\t\tvar value = RandomGenerator.GenerateString(" + (column.Value.MaxLength.Value + 1) + ");");
             code.AppendLine("\t\t\t\tvar target = new " + table.Name + "();");
             code.AppendLine("\t\t\t\ttarget." + column.Value.Name + " = value;");
             code.AppendLine("\t\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.Fail(\"ArgumentException expected\");");
@@ -301,6 +301,16 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\ttarget.Update(item);");
             code.AppendLine("\t\t}");
             code.AppendLine();
+
+            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\tpublic void UpdateManyTest()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tPopulateTest();");
+            code.AppendLine("\t\t\tI" + table.Name + "Repository target = new " + table.Name + "Repository();");
+            code.AppendLine("\t\t\tvar actual = target.ToList();");
+            code.AppendLine("\t\t\ttarget.Update(actual);");
+            code.AppendLine("\t\t}");
+            code.AppendLine();
         }
 
         private void GenerateDeleteAll(Table table)
@@ -377,6 +387,16 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.Remove(code.Length - 3, 2);
             code.AppendLine("\t\t\t};");
             code.AppendLine("\t\t\ttarget.Create(actual);");
+            code.AppendLine("\t\t\ttarget.Delete(actual);");
+            code.AppendLine("\t\t}");
+            code.AppendLine();
+
+            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\tpublic void DeleteManyTest()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tPopulateTest();");
+            code.AppendLine("\t\t\tI" + table.Name + "Repository target = new " + table.Name + "Repository();");
+            code.AppendLine("\t\t\tvar actual = target.ToList();");
             code.AppendLine("\t\t\ttarget.Delete(actual);");
             code.AppendLine("\t\t}");
             code.AppendLine();

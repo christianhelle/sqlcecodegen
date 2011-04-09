@@ -4,6 +4,8 @@ using System.Runtime.InteropServices;
 using System.Text;
 using ChristianHelle.DatabaseTools.SqlCe.CodeGenCore;
 using Microsoft.CustomTool;
+using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
 {
@@ -24,6 +26,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
             var database = new SqlCeDatabase(generatedNamespace, connectionString);
             var factory = new CodeGeneratorFactory(database);
             var codeGenerator = factory.Create(fileExtension);
+
+            if (codeGenerator is VisualBasicCodeGenerator)
+            {
+                const string WARNING = "Visual Basic .NET code generation is currently not supported";
+                Trace.WriteLine(WARNING, "NOT SUPPORT");
+                MessageBox.Show(WARNING, "Coming soon...");
+            }
 
             codeGenerator.WriteHeaderInformation();
             codeGenerator.GenerateEntities();
