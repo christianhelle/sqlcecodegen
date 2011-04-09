@@ -371,8 +371,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\tvoid Create(System.Collections.Generic.IEnumerable<T> items);");
             GenerateXmlDoc(2, "Updates the item", new KeyValuePair<string, string>("item", "Item to be updated on the database"));
             code.AppendLine("\t\tvoid Update(T item);");
+            GenerateXmlDoc(2, "Updates a collection items", new KeyValuePair<string, string>("items", "Items to be updated on the database"));
+            code.AppendLine("\t\tvoid Update(System.Collections.Generic.IEnumerable<T> items);");
             GenerateXmlDoc(2, "Deletes the item", new KeyValuePair<string, string>("item", "Item to be deleted from the database"));
             code.AppendLine("\t\tvoid Delete(T item);");
+            GenerateXmlDoc(2, "Deletes a collection of item", new KeyValuePair<string, string>("items", "Items to be deleted from the database"));
+            code.AppendLine("\t\tvoid Delete(System.Collections.Generic.IEnumerable<T> items);");
             GenerateXmlDoc(2, "Purges the contents of the table");
             code.AppendLine("\t\tint Purge();");
             GenerateXmlDoc(2, "Gets the number of records in the table");
