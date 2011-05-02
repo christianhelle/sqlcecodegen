@@ -212,7 +212,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             generator.GenerateDelete();
             generator.GenerateDeleteBy();
             generator.GenerateDeleteAll();
-            generator.GenerateSaveChanges();
+            generator.GenerateUpdate();
             generator.GenerateCount();
 
             code.AppendLine("\t}");
