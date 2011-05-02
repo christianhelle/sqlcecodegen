@@ -449,13 +449,67 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t#endregion");
             code.AppendLine();
 
+            GenerateDeleteMany();
+        }
+
+        private void GenerateDeleteMany()
+        {
             code.AppendLine("\t\t#region DELETE MANY");
             code.AppendLine();
             GenerateXmlDoc(2, "Deletes a collection of item", new KeyValuePair<string, string>("items", "Items to delete"));
             code.AppendLine("\t\tpublic void Delete(System.Collections.Generic.IEnumerable<" + table.Name + "> items)");
             code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tforeach (var item in items)");
-            code.AppendLine("\t\t\t\tDelete(item);");
+            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
+            code.AppendLine("\t\t\t{");
+
+            var query = new StringBuilder();
+            query.Append("\"DELETE FROM " + table.Name + " WHERE ");
+
+            var hasPrimaryKey = false;
+            foreach (var column in table.Columns)
+            {
+                if (!column.Value.IsPrimaryKey) continue;
+                hasPrimaryKey = true;
+                query.Append(column.Key + " = @" + column.Key);
+                break;
+            }
+            if (!hasPrimaryKey)
+            {
+                foreach (var column in table.Columns)
+                    query.Append(column.Key + " = @" + column.Key + " AND ");
+                query.Remove(query.Length - 5, 5);
+            }
+            query.Append("\";");
+
+            code.AppendLine("\t\t\t\tcommand.CommandText = " + query);
+            foreach (var column in table.Columns)
+            {
+                if (!hasPrimaryKey)
+                    code.AppendLine("\t\t\t\tcommand.Parameters.Add(\"@" + column.Key + "\", typeof( " + column.Value.ManagedType + "));");
+                else if (column.Value.IsPrimaryKey)
+                {
+                    code.AppendLine("\t\t\t\tcommand.Parameters.Add(\"@" + column.Key + "\", typeof( " + column.Value.ManagedType + "));");
+                    break;
+                }
+            }
+            code.AppendLine("\t\t\t\tcommand.Prepare();");
+            code.AppendLine();
+
+            code.AppendLine("\t\t\t\tforeach (var item in items)");
+            code.AppendLine("\t\t\t\t{");
+            foreach (var column in table.Columns)
+            {
+                if (!hasPrimaryKey)
+                    code.AppendLine("\t\t\t\t\t\tcommand.Parameters[\"@" + column.Key + "\"].Value = item." + column.Key + " != null ? (object)item." + column.Key + " : System.DBNull.Value;");
+                else if (column.Value.IsPrimaryKey)
+                {
+                    code.AppendLine("\t\t\t\t\t\tcommand.Parameters[\"@" + column.Key + "\"].Value = item." + column.Key + " != null ? (object)item." + column.Key + " : System.DBNull.Value;");
+                    break;
+                }
+                code.AppendLine("\t\t\t\t\tcommand.ExecuteNonQuery();");
+            }
+            code.AppendLine("\t\t\t\t}");
+            code.AppendLine("\t\t\t}");
             code.AppendLine("\t\t}");
             code.AppendLine();
             code.AppendLine("\t\t#endregion");
@@ -506,7 +560,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine();
         }
 
-        public override void GenerateSaveChanges()
+        public override void GenerateUpdate()
         {
             code.AppendLine("\t\t#region UPDATE");
             code.AppendLine();
@@ -546,13 +600,52 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t#endregion");
             code.AppendLine();
 
+            GenerateUpdateMany();
+        }
+
+        private void GenerateUpdateMany()
+        {
             code.AppendLine("\t\t#region UPDATE MANY");
             code.AppendLine();
             GenerateXmlDoc(2, "Updates a collection of items", new KeyValuePair<string, string>("items", "Items to update"));
             code.AppendLine("\t\tpublic void Update(System.Collections.Generic.IEnumerable<" + table.Name + "> items)");
             code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tforeach (var item in items)");
-            code.AppendLine("\t\t\t\tUpdate(item);");
+            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
+            code.AppendLine("\t\t\t{");
+
+            var query = new StringBuilder();
+            query.Append("\"UPDATE " + table.Name + " SET ");
+            foreach (var column in table.Columns)
+            {
+                if (column.Key == table.PrimaryKeyColumnName)
+                    continue;
+                query.Append(column.Key + " = @" + column.Key + ", ");
+            }
+            query.Remove(query.Length - 2, 2);
+            foreach (var column in table.Columns)
+            {
+                if (column.Key == table.PrimaryKeyColumnName)
+                {
+                    query.Append(" WHERE " + column.Key + " = @" + column.Key);
+                    break;
+                }
+            }
+            query.Append("\";");
+
+            code.AppendLine("\t\t\t\tcommand.CommandText = " + query);
+            foreach (var column in table.Columns)
+                code.AppendLine("\t\t\t\tcommand.Parameters.Add(\"@" + column.Key + "\", typeof(" + column.Value.ManagedType + "));");
+            code.AppendLine("\t\t\t\tcommand.Prepare();");
+            code.AppendLine();
+
+            code.AppendLine("\t\t\t\tforeach (var item in items)");
+            code.AppendLine("\t\t\t\t{"); 
+            foreach (var column in table.Columns)
+                code.AppendLine("\t\t\t\t\tcommand.Parameters[\"@" + column.Key + "\"].Value = item." + column.Key + " != null ? (object)item." + column.Key + " : System.DBNull.Value;");
+            code.AppendLine("\t\t\t\t\tcommand.ExecuteNonQuery();");
+            code.AppendLine("\t\t\t\t}");
+            
+            code.AppendLine("\t\t\t}");
             code.AppendLine("\t\t}");
             code.AppendLine();
             code.AppendLine("\t\t#endregion");
