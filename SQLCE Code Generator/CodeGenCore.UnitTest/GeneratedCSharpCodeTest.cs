@@ -87,7 +87,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         public void CustomToolGeneratedCodeCanCompileTest()
         {
             var database = GetDatabase();
-            var actual = SQLCECodeGenerator.GenerateCode(database.Namespace, "TestDatabase.sdf", ".cs");
+            var actual = CodeGeneratorCustomTool.GenerateCode(database.Namespace, "TestDatabase.sdf", ".cs");
 
             Assert.IsNotNull(actual);
             Assert.AreNotEqual(0, actual.Length);
