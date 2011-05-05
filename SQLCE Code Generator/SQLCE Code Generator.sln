@@ -18,11 +18,13 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "CodeGenInstaller", "CodeGen
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGenGUI", "CodeGenGUI\CodeGenGUI.csproj", "{0788ECDE-7366-4484-9EE5-FF944CE316C5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGenVSAddin", "CodeGenVSAddin\CodeGenVSAddin.csproj", "{A59EBBFA-02C1-44B5-BDB8-6F7C49F360D4}"
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 6
+		SccNumberOfProjects = 7
 		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/TFS02
+		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs02
 		SccLocalPath0 = .
 		SccProjectUniqueName1 = CodeGenCore\\CodeGenCore.csproj
 		SccProjectName1 = CodeGenCore
@@ -39,6 +41,9 @@ Global
 		SccProjectUniqueName5 = CodeGenGUI\\CodeGenGUI.csproj
 		SccProjectName5 = CodeGenGUI
 		SccLocalPath5 = CodeGenGUI
+		SccProjectUniqueName6 = CodeGenVSAddin\\CodeGenVSAddin.csproj
+		SccProjectName6 = CodeGenVSAddin
+		SccLocalPath6 = CodeGenVSAddin
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,13 +69,17 @@ Global
 		{0788ECDE-7366-4484-9EE5-FF944CE316C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0788ECDE-7366-4484-9EE5-FF944CE316C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0788ECDE-7366-4484-9EE5-FF944CE316C5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A59EBBFA-02C1-44B5-BDB8-6F7C49F360D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A59EBBFA-02C1-44B5-BDB8-6F7C49F360D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A59EBBFA-02C1-44B5-BDB8-6F7C49F360D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A59EBBFA-02C1-44B5-BDB8-6F7C49F360D4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_UseGlobalSettings = False
-		BuildVersion_UpdateAssemblyVersion = False
 		BuildVersion_IncrementBeforeBuild = True
+		BuildVersion_UpdateAssemblyVersion = False
+		BuildVersion_UseGlobalSettings = False
 	EndGlobalSection
 EndGlobal
