@@ -14,6 +14,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
     {
         private string dataSource;
         private bool launchedWithArgument;
+        private static readonly string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SQLCE Code Generator");
 
         public MainForm(string[] args)
         {
@@ -480,8 +481,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
             var sw = Stopwatch.StartNew();
 
+
             var csc = Environment.ExpandEnvironmentVariables(@"%SystemRoot%\Microsoft.Net\Framework\v3.5\csc.exe");
-            var args = string.Format(@"/target:library /optimize /out:DataAccess.dll /reference:""{0}\System.Data.SqlServerCe.dll"" /reference:""{0}\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll"" ""{0}\*.cs""", Environment.CurrentDirectory);
+            var args = string.Format(@"/target:library /optimize /out:""{0}\DataAccess.dll"" /reference:""{1}\System.Data.SqlServerCe.dll"" /reference:""{1}\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll"" ""{0}\*.cs""", path, Environment.CurrentDirectory);
 
             WriteToCompilerOutputWindow("Compiling using C# 3.0");
             WriteToCompilerOutputWindow(string.Format(Environment.NewLine + "Executing {0} {1}" + Environment.NewLine, csc, args));
@@ -496,46 +498,49 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             var process = Process.Start(psi);
             var output = process.StandardOutput.ReadToEnd();
             process.WaitForExit();
+            WriteToCompilerOutputWindow(output);
 
             //var list = new List<string> 
             //{
-            //    string.Format("{0}\\Entities.cs", Environment.CurrentDirectory),
-            //    string.Format("{0}\\DataAccess.cs", Environment.CurrentDirectory),
-            //    string.Format("{0}\\EntityUnitTests.cs", Environment.CurrentDirectory),
-            //    string.Format("{0}\\DataAccessUnitTests.cs", Environment.CurrentDirectory)
+            //    string.Format("{0}\\Entities.cs", path),
+            //    string.Format("{0}\\DataAccess.cs", path),
+            //    string.Format("{0}\\EntityUnitTests.cs", path),
+            //    string.Format("{0}\\DataAccessUnitTests.cs", path)
             //};
             //var result = CodeCompiler.CompileCSharpFiles(list.ToArray());
 
             //foreach (var item in result.Output)
             //    WriteToCompilerOutputWindow(item);
 
-            WriteToCompilerOutputWindow(output);
-            WriteToCompilerOutputWindow("Executed in " + sw.Elapsed);
+            File.Delete(string.Format("{0}\\Entities.cs", path));
+            File.Delete(string.Format("{0}\\DataAccess.cs", path));
+            File.Delete(string.Format("{0}\\EntityUnitTests.cs", path));
+            File.Delete(string.Format("{0}\\DataAccessUnitTests.cs", path));
 
-            File.Delete(string.Format("{0}\\Entities.cs", Environment.CurrentDirectory));
-            File.Delete(string.Format("{0}\\DataAccess.cs", Environment.CurrentDirectory));
-            File.Delete(string.Format("{0}\\EntityUnitTests.cs", Environment.CurrentDirectory));
-            File.Delete(string.Format("{0}\\DataAccessUnitTests.cs", Environment.CurrentDirectory));
+            WriteToCompilerOutputWindow("Executed in " + sw.Elapsed);
         }
 
         private void CreateOutputCSharpFile()
         {
-            using (var stream = File.CreateText("Entities.cs"))
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+
+            using (var stream = File.CreateText(Path.Combine(path, "Entities.cs")))
             {
                 stream.Write(rtbGeneratedCodeEntities.Text);
                 stream.WriteLine();
             }
-            using (var stream = File.CreateText("DataAccess.cs"))
+            using (var stream = File.CreateText(Path.Combine(path, "DataAccess.cs")))
             {
                 stream.Write(rtbGeneratedCodeDataAccess.Text);
                 stream.WriteLine();
             }
-            using (var stream = File.CreateText("EntityUnitTests.cs"))
+            using (var stream = File.CreateText(Path.Combine(path, "EntityUnitTests.cs")))
             {
                 stream.Write(rtbGeneratedCodeEntityUnitTests.Text);
                 stream.WriteLine();
             }
-            using (var stream = File.CreateText("DataAccessUnitTests.cs"))
+            using (var stream = File.CreateText(Path.Combine(path, "DataAccessUnitTests.cs")))
             {
                 stream.Write(rtbGeneratedCodeDataAccessUnitTests.Text);
                 stream.WriteLine();
@@ -599,7 +604,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         private static string CompileUsingCSharpCommandLineCompiler()
         {
             var mstest = Environment.ExpandEnvironmentVariables(@"%VS90COMNTOOLS%\..\IDE\mstest.exe");
-            var args = string.Format(@"/testcontainer:""{0}\DataAccess.dll""", Environment.CurrentDirectory);
+            var args = string.Format(@"/testcontainer:""{0}\DataAccess.dll""", path);
 
             var psi = new ProcessStartInfo(mstest, args);
             psi.RedirectStandardOutput = true;

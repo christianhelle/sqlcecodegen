@@ -2,6 +2,7 @@
 using System.CodeDom.Compiler;
 using Microsoft.CSharp;
 using System.Collections.Generic;
+using System.IO;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
@@ -20,7 +21,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         public static CompilerResults CompileFiles(CodeDomProvider provider, params string[] sourceFiles)
         {
-            var exeName = String.Format(@"{0}\DataAccess.dll", Environment.CurrentDirectory);
+            var exeName = String.Format(@"{0}\DataAccess.dll", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SQLCE Code Generator"));
             var compilerParameters = new CompilerParameters
             {
                 GenerateExecutable = false,
@@ -50,7 +51,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         public static CompilerResults CompileSource(CodeDomProvider provider, params string[] sourceCode)
         {
-            var exeName = String.Format(@"{0}\DataAccess.dll", Environment.CurrentDirectory);
+            var exeName = String.Format(@"{0}\DataAccess.dll", Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SQLCE Code Generator"));
             var compilerParameters = new CompilerParameters
             {
                 GenerateExecutable = false,
