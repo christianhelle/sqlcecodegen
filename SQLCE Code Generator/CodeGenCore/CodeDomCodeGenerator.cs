@@ -5,9 +5,9 @@ using System.Collections.Generic;
 using System.Data.SqlServerCe;
 using System.Globalization;
 using System.IO;
+using System.Text;
 using Microsoft.CSharp;
 using Microsoft.VisualBasic;
-using System.Text;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {

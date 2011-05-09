@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlServerCe;
 using System.Text;
+using System.Diagnostics;
+using System.Data.SqlClient;
+using System.IO;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
@@ -17,21 +20,79 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             Namespace = defaultNamespace;
             ConnectionString = connectionString;
-            AnalyzeDatabase(connectionString);
+
+            Verify();
+            AnalyzeDatabase();
+        }
+
+        public void Verify()
+        {
+            try
+            {
+                using (var engine = new SqlCeEngine(ConnectionString))
+                    engine.Verify();
+                using (var connection = new SqlCeConnection(ConnectionString))
+                    connection.Open();
+            }
+            catch (SqlCeInvalidDatabaseFormatException)
+            {
+                Upgrade();
+            }
+        }
+
+        public void Upgrade()
+        {
+            var file = new FileInfo(new SqlConnectionStringBuilder(ConnectionString).DataSource);
+            var appData = Path.Combine(Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), "SQLCE Code Generator");
+            if (!Directory.Exists(appData))
+                Directory.CreateDirectory(appData);
+            var newFile = file.CopyTo(Path.Combine(appData, file.Name), true);
+
+            var newConnString = new SqlConnectionStringBuilder(ConnectionString);
+            newConnString.DataSource = newFile.FullName;
+
+            ConnectionString = newConnString.ToString().Replace("\"", "'");
+            using (var engine = new SqlCeEngine(ConnectionString))
+                engine.Upgrade();
+
+            using (var connection = new SqlCeConnection(ConnectionString))
+                connection.Open();
+        }
+
+        public object GetTableData(Table table)
+        {
+            using (var conn = new SqlCeConnection(ConnectionString))
+            using (var adapter = new SqlCeDataAdapter("SELECT * FROM " + table.Name, conn))
+            {
+                var dataTable = new DataTable(table.DisplayName);
+                adapter.Fill(dataTable);
+                return dataTable;
+            }
+        }
+
+        public object GetTableData(string tableName, string columnName)
+        {
+            using (var conn = new SqlCeConnection(ConnectionString))
+            using (var adapter = new SqlCeDataAdapter(string.Format("SELECT {0} FROM {1}", columnName, tableName), conn))
+            {
+                var dataTable = new DataTable(tableName);
+                adapter.Fill(dataTable);
+                return dataTable;
+            }
         }
 
         public string Namespace { get; set; }
         public List<Table> Tables { get; set; }
         public string ConnectionString { get; private set; }
 
-        private void AnalyzeDatabase(string connectionString)
+        public void AnalyzeDatabase()
         {
-            var engine = new SqlCeEngine(connectionString);
+            var engine = new SqlCeEngine(ConnectionString);
             var tables = engine.GetTables();
             if (tables == null) return;
 
-            var tableList = GetTableInformation(connectionString, tables);
-            FetchPrimaryKeys(tableList, connectionString);
+            var tableList = GetTableInformation(ConnectionString, tables);
+            FetchPrimaryKeys(tableList, ConnectionString);
         }
 
         private void FetchPrimaryKeys(Dictionary<string, Table> tableList, string connectionString)
@@ -45,10 +106,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     conn.Open();
                     cmd.CommandText = @"SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.INDEXES WHERE TABLE_NAME=@Name AND PRIMARY_KEY=1";
                     cmd.Parameters.AddWithValue("@Name", table.Name);
-                    var primaryKeyColumnName = cmd.ExecuteScalar();
+                    var primaryKeyColumnName = cmd.ExecuteScalar() as string;
                     if (primaryKeyColumnName != null)
                     {
-                        table.PrimaryKeyColumnName = primaryKeyColumnName.ToString();
+                        table.PrimaryKeyColumnName = primaryKeyColumnName;
+                        if (primaryKeyColumnName.Contains(" "))
+                            table.PrimaryKeyColumnName = string.Format("[{0}]", primaryKeyColumnName);
                         if (table.Columns.ContainsKey(table.PrimaryKeyColumnName))
                             table.Columns[table.PrimaryKeyColumnName].IsPrimaryKey = true;
                     }
@@ -81,8 +144,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         private static Dictionary<string, Table> GetTableInformation(string connectionString, ICollection<string> tables)
         {
             var tableList = new Dictionary<string, Table>(tables.Count);
-            foreach (var table in tables)
+            foreach (var tableName in tables)
             {
+                string table = tableName;
+                Trace.WriteLine("Analyazing " + table);
+
+                if (table.Contains(" "))
+                    table = string.Format("[{0}]", table);
                 var schema = new DataTable(table);
 
                 using (var connection = new SqlCeConnection(connectionString))
@@ -90,7 +158,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 {
                     connection.Open();
 
-                    command.CommandText = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='" + table + "'";
+                    command.CommandText = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='" + tableName + "'";
                     using (var adapter = new SqlCeDataAdapter(command))
                         adapter.Fill(schema);
 
@@ -102,18 +170,25 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     var item = new Table
                     {
                         Name = table,
+                        DisplayName = tableName,
+                        ClassName = tableName.Replace(" ", string.Empty),
                         Columns = new Dictionary<string, Column>(schema.Rows.Count)
                     };
 
                     foreach (DataRow row in schema.Rows)
                     {
-                        var name = row.Field<string>("COLUMN_NAME");
+                        var displayName = row.Field<string>("COLUMN_NAME");
+                        var name = displayName;
+                        if (name.Contains(" "))
+                            name = string.Format("[{0}]", name);
                         var column = new Column
                         {
                             Name = name,
+                            DisplayName = displayName,
+                            FieldName = displayName.Replace(" ", string.Empty),
                             DatabaseType = row.Field<string>("DATA_TYPE"),
                             MaxLength = row.Field<int?>("CHARACTER_MAXIMUM_LENGTH"),
-                            ManagedType = columnDescriptions.Columns[name].DataType,
+                            ManagedType = columnDescriptions.Columns[displayName].DataType,
                             AllowsNull = (string.Compare(row.Field<string>("IS_NULLABLE"), "YES", true) == 0),
                             AutoIncrement = row.Field<long?>("AUTOINC_INCREMENT"),
                             AutoIncrementSeed = row.Field<long?>("AUTOINC_SEED"),
@@ -136,37 +211,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             }
 
             throw new NotImplementedException();
-        }
-    }
-
-    public class Table
-    {
-        public string Name { get; set; }
-        public Dictionary<string, Column> Columns { get; set; }
-        public string PrimaryKeyColumnName { get; set; }
-
-        public override string ToString()
-        {
-            return Name;
-        }
-    }
-
-    public class Column
-    {
-        public string Name { get; set; }
-        public int? MaxLength { get; set; }
-        public Type ManagedType { get; set; }
-        public string DatabaseType { get; set; }
-        public bool AllowsNull { get; set; }
-        public bool IsPrimaryKey { get; set; }
-        public long? AutoIncrement { get; set; }
-        public long? AutoIncrementSeed { get; set; }
-        public bool IsForeignKey { get; set; }
-        public int Ordinal { get; set; }
-
-        public override string ToString()
-        {
-            return ManagedType.ToString();
         }
     }
 }

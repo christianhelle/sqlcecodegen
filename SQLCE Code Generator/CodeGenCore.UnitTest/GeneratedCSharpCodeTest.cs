@@ -5,6 +5,7 @@ using System.Text;
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
 {
     [TestClass]
+    [DeploymentItem("Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll")]
     public class GeneratedCSharpCodeTest : CodeGenBaseTest
     {
         [TestMethod]

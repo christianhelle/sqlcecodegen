@@ -7,6 +7,8 @@ using System.Threading;
 using System.Windows.Forms;
 using ChristianHelle.DatabaseTools.SqlCe.CodeGenCore;
 using ICSharpCode.TextEditor.Document;
+using System.Reflection;
+using Microsoft.SqlServer.MessageBox;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 {
@@ -14,7 +16,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
     {
         private string dataSource;
         private bool launchedWithArgument;
-        private static readonly string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SQLCE Code Generator");
+        private SqlCeDatabase database;
+        private readonly string path;
 
         public MainForm(string[] args)
         {
@@ -24,6 +27,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             rtbGeneratedCodeDataAccess.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy("C#");
             rtbGeneratedCodeEntityUnitTests.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy("C#");
             rtbGeneratedCodeDataAccessUnitTests.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy("C#");
+            path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SQLCE Code Generator");
 
             if (args != null && args.Length == 1)
             {
@@ -60,7 +64,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             var fi = new FileInfo(file.DataSource);
             string generatedNamespace = GetType().Namespace + "." + fi.Name.Replace(fi.Extension, string.Empty);
             string connectionString = "Data Source=" + file.DataSource;
-            SqlCeDatabase database = new SqlCeDatabase(generatedNamespace, connectionString);
+            database = new SqlCeDatabase(generatedNamespace, connectionString);
             PopulateTables(database.Tables);
         }
 
@@ -172,7 +176,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             var connectionString = "Data Source=" + inputFileName;
 
             WriteToOutputWindow("Analyzing Database...");
-            var database = new SqlCeDatabase(generatedNamespace, connectionString);
+            database = new SqlCeDatabase(generatedNamespace, connectionString);
 
             WriteToOutputWindow(string.Format("Found {0} tables", database.Tables.Count));
             PopulateTables(database.Tables);
@@ -189,7 +193,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
             foreach (var item in list)
             {
-                var node = new TreeNode(item.Name);
+                var node = new TreeNode(item.DisplayName);
+                node.Tag = item;
                 node.NodeFont = new Font(treeView.Font, FontStyle.Bold);
                 node.Expand();
                 rootNode.Nodes.Add(node);
@@ -200,7 +205,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
                 foreach (var column in item.Columns)
                 {
-                    var columnNode = new TreeNode(column.Key);
+                    var columnNode = new TreeNode(column.Value.DisplayName);
+                    columnNode.Tag = new KeyValuePair<string, string>(item.Name, column.Value.Name);
                     //columnNode.Nodes.Add("Ordinal Position - " + column.Value.Ordinal);
                     if (column.Value.IsPrimaryKey)
                         columnNode.Nodes.Add("Primary Key");
@@ -255,7 +261,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                 FileInfo fi = new FileInfo(file.DataSource);
                 string generatedNamespace = GetType().Namespace + "." + fi.Name.Replace(fi.Extension, string.Empty);
                 string connectionString = "Data Source=" + file.DataSource;
-                SqlCeDatabase database = new SqlCeDatabase(generatedNamespace, connectionString);
+                database = new SqlCeDatabase(generatedNamespace, connectionString);
                 PopulateTables(database.Tables);
 
                 Text = "SQL CE Code Generator - " + Path.GetFileNameWithoutExtension(dialog.FileName);
@@ -294,7 +300,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             }
         }
 
-        static void SafeOperation(Action action)
+        void SafeOperation(Action action, string errorMessage = null)
         {
             try
             {
@@ -302,7 +308,14 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.ToString(), "Error");
+                if (!string.IsNullOrEmpty(errorMessage))
+                    WriteToOutputWindow(Environment.NewLine + "Error: " + errorMessage);
+                else
+                    WriteToOutputWindow(Environment.NewLine + "Error: " + ex.Message);
+
+                var exception = new ApplicationException(errorMessage, ex);
+                var mbox = new ExceptionMessageBox(exception) { Caption = "Error" };
+                mbox.Show(null);
             }
         }
 
@@ -460,7 +473,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                     var fi = new FileInfo(file.DataSource);
                     string generatedNamespace = GetType().Namespace + "." + fi.Name.Replace(fi.Extension, string.Empty);
                     string connectionString = "Data Source=" + file.DataSource;
-                    SqlCeDatabase database = new SqlCeDatabase(generatedNamespace, connectionString);
+                    database = new SqlCeDatabase(generatedNamespace, connectionString);
                     PopulateTables(database.Tables);
                 }
             });
@@ -601,7 +614,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             }
         }
 
-        private static string CompileUsingCSharpCommandLineCompiler()
+        private string CompileUsingCSharpCommandLineCompiler()
         {
             var mstest = Environment.ExpandEnvironmentVariables(@"%VS90COMNTOOLS%\..\IDE\mstest.exe");
             var args = string.Format(@"/testcontainer:""{0}\DataAccess.dll""", path);
@@ -663,6 +676,28 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
             GenerateCode();
             WriteToOutputWindow(Environment.NewLine + "Executed in " + sw.Elapsed);
+        }
+
+        private void treeView_AfterSelect(object sender, TreeViewEventArgs e)
+        {
+            SafeOperation((Action)delegate
+            {
+                var table = e.Node.Tag as Table;
+                if (table != null)
+                {
+                    dataGridView.DataSource = database.GetTableData(table);
+                    return;
+                }
+
+                var columnData = e.Node.Tag as Nullable<KeyValuePair<string, string>>;
+                if (columnData != null)
+                {
+                    dataGridView.DataSource = database.GetTableData(columnData.Value.Key, columnData.Value.Value);
+                    return;
+                }
+
+                dataGridView.DataSource = null;
+            }, "Unable to load table data");
         }
     }
 }

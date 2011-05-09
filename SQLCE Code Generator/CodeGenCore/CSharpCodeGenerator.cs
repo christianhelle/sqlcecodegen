@@ -118,7 +118,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.Append("(");
                 foreach (var column in table.Columns)
                 {
-                    code.AppendFormat("{0} {1}", column.Key, column.Value.DatabaseType.ToUpper());
+                    code.AppendFormat("{0} {1}", column.Value.FieldName, column.Value.DatabaseType.ToUpper());
                     if (string.Compare(column.Value.DatabaseType, "ntext", true) == 0 ||
                         string.Compare(column.Value.DatabaseType, "image", true) == 0)
                     {
@@ -193,11 +193,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         private void GenerateTableRepository(Table table)
         {
-            code.AppendLine("\t#region " + table.Name + " Repository");
+            code.AppendLine("\t#region " + table.ClassName + " Repository");
             code.AppendLine();
 
-            GenerateXmlDoc(1, "Default I" + table.Name + "Repository implementation ");
-            code.AppendLine("\tpublic partial class " + table.Name + "Repository : I" + table.Name + "Repository");
+            GenerateXmlDoc(1, "Default I" + table.ClassName + "Repository implementation ");
+            code.AppendLine("\tpublic partial class " + table.ClassName + "Repository : I" + table.ClassName + "Repository");
             code.AppendLine("\t{");
 
             DataAccessLayerGenerator generator = new CSharpDataAccessLayerGenerator(code, table);
@@ -223,11 +223,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         private void GenerateITableRepository(Table table)
         {
-            code.AppendLine("\t#region I" + table.Name + " Repository");
+            code.AppendLine("\t#region I" + table.ClassName + " Repository");
             code.AppendLine();
 
-            GenerateXmlDoc(1, "Represents the " + table.Name + " repository");
-            code.AppendLine("\tpublic partial interface I" + table.Name + "Repository : IRepository<" + table.Name + ">");
+            GenerateXmlDoc(1, "Represents the " + table.ClassName + " repository");
+            code.AppendLine("\tpublic partial interface I" + table.ClassName + "Repository : IRepository<" + table.ClassName + ">");
             code.AppendLine("\t{");
 
             foreach (var column in table.Columns)
@@ -237,24 +237,24 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
                 if (column.Value.ManagedType.IsValueType)
                 {
-                    GenerateXmlDoc(2, "Retrieves a collection of items by " + column.Value.Name, new KeyValuePair<string, string>(column.Value.Name, column.Value.Name + " value"));
-                    code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1}? {2});", table.Name, column.Value.ManagedType, column.Value.Name);
+                    GenerateXmlDoc(2, "Retrieves a collection of items by " + column.Value.FieldName, new KeyValuePair<string, string>(column.Value.FieldName, column.Value.FieldName + " value"));
+                    code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1}? {2});", table.ClassName, column.Value.ManagedType, column.Value.FieldName);
                     code.AppendLine();
-                    GenerateXmlDoc(2, "Retrieves the first set of items specified by count by " + column.Value.Name,
-                        new KeyValuePair<string, string>(column.Value.Name, column.Value.Name + " value"),
+                    GenerateXmlDoc(2, "Retrieves the first set of items specified by count by " + column.Value.FieldName,
+                        new KeyValuePair<string, string>(column.Value.FieldName, column.Value.FieldName + " value"),
                         new KeyValuePair<string, string>("count", "the number of records to be retrieved"));
-                    code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1}? {2}, int count);", table.Name, column.Value.ManagedType, column.Value.Name);
+                    code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1}? {2}, int count);", table.ClassName, column.Value.ManagedType, column.Value.FieldName);
                     code.AppendLine();
                 }
                 else
                 {
-                    GenerateXmlDoc(2, "Retrieves a collection of items by " + column.Value.Name, new KeyValuePair<string, string>(column.Value.Name, column.Value.Name + " value"));
-                    code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1} {2});", table.Name, column.Value.ManagedType, column.Value.Name);
+                    GenerateXmlDoc(2, "Retrieves a collection of items by " + column.Value.FieldName, new KeyValuePair<string, string>(column.Value.FieldName, column.Value.FieldName + " value"));
+                    code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1} {2});", table.ClassName, column.Value.ManagedType, column.Value.FieldName);
                     code.AppendLine();
-                    GenerateXmlDoc(2, "Retrieves the first set of items specified by count by " + column.Value.Name,
-                        new KeyValuePair<string, string>(column.Value.Name, column.Value.Name + " value"),
+                    GenerateXmlDoc(2, "Retrieves the first set of items specified by count by " + column.Value.FieldName,
+                        new KeyValuePair<string, string>(column.Value.FieldName, column.Value.FieldName + " value"),
                         new KeyValuePair<string, string>("count", "the number of records to be retrieved"));
-                    code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1} {2}, int count);", table.Name, column.Value.ManagedType, column.Value.Name);
+                    code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1} {2}, int count);", table.ClassName, column.Value.ManagedType, column.Value.FieldName);
                     code.AppendLine();
                 }
             }
@@ -264,41 +264,44 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 if (string.Compare(column.Value.DatabaseType, "ntext", true) == 0 || string.Compare(column.Value.DatabaseType, "image", true) == 0)
                     continue;
 
-                GenerateXmlDoc(2, "Delete records by " + column.Value.Name, new KeyValuePair<string, string>(column.Value.Name, column.Value.Name + " value"));
+                GenerateXmlDoc(2, "Delete records by " + column.Value.FieldName, new KeyValuePair<string, string>(column.Value.FieldName, column.Value.FieldName + " value"));
                 if (column.Value.ManagedType.IsValueType)
                 {
-                    code.AppendFormat("\t\tint DeleteBy{1}({0}? {1});", column.Value.ManagedType, column.Value.Name);
+                    code.AppendFormat("\t\tint DeleteBy{1}({0}? {1});", column.Value.ManagedType, column.Value.FieldName);
                     code.AppendLine();
                 }
                 else
                 {
-                    code.AppendFormat("\t\tint DeleteBy{1}({0} {1});", column.Value.ManagedType, column.Value.Name);
+                    code.AppendFormat("\t\tint DeleteBy{1}({0} {1});", column.Value.ManagedType, column.Value.FieldName);
                     code.AppendLine();
                 }
             }
 
-            GenerateXmlDoc(2, "Create new record without specifying a primary key");
-            code.Append("\t\tvoid Create(");
-            foreach (var column in table.Columns)
+            if (!string.IsNullOrEmpty(table.PrimaryKeyColumnName))
             {
-                if (column.Key == table.PrimaryKeyColumnName)
-                    continue;
-                if (column.Value.ManagedType.IsValueType)
-                    code.Append(column.Value + "? " + column.Key + ", ");
-                else
-                    code.Append(column.Value + " " + column.Key + ", ");
+                GenerateXmlDoc(2, "Create new record without specifying a primary key");
+                code.Append("\t\tvoid Create(");
+                foreach (var column in table.Columns)
+                {
+                    if (column.Value.Name == table.PrimaryKeyColumnName)
+                        continue;
+                    if (column.Value.ManagedType.IsValueType)
+                        code.Append(column.Value + "? " + column.Value.FieldName + ", ");
+                    else
+                        code.Append(column.Value + " " + column.Value.FieldName + ", ");
+                }
+                code.Remove(code.Length - 2, 2);
+                code.Append(");\n");
             }
-            code.Remove(code.Length - 2, 2);
-            code.Append(");\n");
 
             GenerateXmlDoc(2, "Create new record specifying all fields");
             code.Append("\t\tvoid Create(");
             foreach (var column in table.Columns)
             {
                 if (column.Value.ManagedType.IsValueType)
-                    code.Append(column.Value + "? " + column.Key + ", ");
+                    code.Append(column.Value + "? " + column.Value.FieldName + ", ");
                 else
-                    code.Append(column.Value + " " + column.Key + ", ");
+                    code.Append(column.Value + " " + column.Value.FieldName + ", ");
             }
             code.Remove(code.Length - 2, 2);
             code.Append(");\n");
@@ -318,8 +321,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t{");
             foreach (var table in Database.Tables)
             {
-                GenerateXmlDoc(2, "Gets an instance of the I" + table.Name + "Repository");
-                code.AppendLine("\t\tI" + table.Name + "Repository " + table.Name + " { get; }");
+                GenerateXmlDoc(2, "Gets an instance of the I" + table.ClassName + "Repository");
+                code.AppendLine("\t\tI" + table.ClassName + "Repository " + table.ClassName + " { get; }");
             }
             code.AppendLine("\t}");
             code.AppendLine("\t#endregion");
@@ -335,14 +338,14 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t{");
             foreach (var table in Database.Tables)
             {
-                code.AppendLine("\t\t\t" + table.Name + " = new " + table.Name + "Repository();");
+                code.AppendLine("\t\t\t" + table.ClassName + " = new " + table.ClassName + "Repository();");
             }
             code.AppendLine("\t\t}");
             code.AppendLine();
             foreach (var table in Database.Tables)
             {
-                GenerateXmlDoc(2, "Gets an instance of the I" + table.Name + "Repository");
-                code.AppendLine("\t\tpublic I" + table.Name + "Repository " + table.Name + " { get; private set; }");
+                GenerateXmlDoc(2, "Gets an instance of the I" + table.ClassName + "Repository");
+                code.AppendLine("\t\tpublic I" + table.ClassName + "Repository " + table.ClassName + " { get; private set; }");
             }
             code.AppendLine("\t}");
             code.AppendLine();
@@ -390,35 +393,35 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         private void GenerateEntity(Table table, EntityGeneratorOptions options)
         {
-            code.AppendLine("\t#region " + table.Name);
+            code.AppendLine("\t#region " + table.ClassName);
             code.AppendLine();
 
-            GenerateXmlDoc(1, "Represents the " + table.Name + " table");
-            code.AppendLine("\tpublic partial class " + table.Name);
+            GenerateXmlDoc(1, "Represents the " + table.ClassName + " table");
+            code.AppendLine("\tpublic partial class " + table.ClassName);
             code.AppendLine("\t{");
 
             foreach (var column in table.Columns)
             {
-                code.AppendLine("\t\tprivate " + column.Value.ManagedType + (column.Value.ManagedType.IsValueType ? "? _" : " _") + column.Value.Name + ";");
+                code.AppendLine("\t\tprivate " + column.Value.ManagedType + (column.Value.ManagedType.IsValueType ? "? _" : " _") + column.Value.FieldName + ";");
 
                 if (column.Value.MaxLength > 0 && column.Value.ManagedType.Equals(typeof(string)))
                 {
-                    GenerateXmlDoc(2, "The Maximum Length the " + column.Value.Name + " field allows");
-                    code.AppendLine("\t\tpublic const int " + column.Value.Name + "_MAX_LENGTH = " + column.Value.MaxLength + ";");
+                    GenerateXmlDoc(2, "The Maximum Length the " + column.Value.FieldName + " field allows");
+                    code.AppendLine("\t\tpublic const int " + column.Value.FieldName + "_MAX_LENGTH = " + column.Value.MaxLength + ";");
                 }
 
-                GenerateXmlDoc(2, "Gets or sets the value of " + column.Value.Name);
-                code.AppendLine("\t\tpublic " + column.Value.ManagedType + (column.Value.ManagedType.IsValueType ? "? " : " ") + column.Value.Name);
+                GenerateXmlDoc(2, "Gets or sets the value of " + column.Value.FieldName);
+                code.AppendLine("\t\tpublic " + column.Value.ManagedType + (column.Value.ManagedType.IsValueType ? "? " : " ") + column.Value.FieldName);
                 code.AppendLine("\t\t{");
-                code.AppendLine("\t\t\t get { return _" + column.Value.Name + "; }");
-                code.AppendLine("\t\t\t set");
+                code.AppendLine("\t\t\tget { return _" + column.Value.FieldName + "; }");
+                code.AppendLine("\t\t\tset");
                 code.AppendLine("\t\t\t{");
-                code.AppendLine("\t\t\t\t_" + column.Value.Name + " = value;");
+                code.AppendLine("\t\t\t\t_" + column.Value.FieldName + " = value;");
 
                 if (column.Value.MaxLength > 0 && column.Value.ManagedType.Equals(typeof(string)))
                 {
-                    code.AppendLine("\t\t\t\tif (_" + column.Value.Name + " != null && " + column.Value.Name + ".Length > " + column.Value.Name + "_MAX_LENGTH)");
-                    code.AppendLine("\t\t\t\t\tthrow new System.ArgumentException(\"Max length for " + column.Value.Name + " is " + column.Value.MaxLength + "\");");
+                    code.AppendLine("\t\t\t\tif (_" + column.Value.FieldName + " != null && " + column.Value.FieldName + ".Length > " + column.Value.FieldName + "_MAX_LENGTH)");
+                    code.AppendLine("\t\t\t\t\tthrow new System.ArgumentException(\"Max length for " + column.Value.FieldName + " is " + column.Value.MaxLength + "\");");
                 }
 
                 code.AppendLine("\t\t\t}");
