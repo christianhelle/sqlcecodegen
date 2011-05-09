@@ -1,12 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGenCore", "CodeGenCore\CodeGenCore.csproj", "{CE1B35D2-02CC-4195-A4E6-07FDE2915E99}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGenCore.UnitTest", "CodeGenCore.UnitTest\CodeGenCore.UnitTest.csproj", "{C7FFB52B-D5AF-41C5-9D80-DC9DB75BA0C3}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGenCustomTool", "CodeGenCustomTool\CodeGenCustomTool.csproj", "{DDFEFB32-623E-49EE-9627-A19B77E29FCA}"
-EndProject
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Depdendencies", "Depdendencies", "{8E05C125-6658-4A6C-A4EC-848EA7C24CB1}"
 	ProjectSection(SolutionItems) = preProject
 		Depdendencies\ICSharpCode.TextEditor.dll = Depdendencies\ICSharpCode.TextEditor.dll
@@ -14,11 +8,28 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Depdendencies", "Depdendenc
 		Depdendencies\Microsoft.VisualStudio.BaseCodeGeneratorWithSite.dll = Depdendencies\Microsoft.VisualStudio.BaseCodeGeneratorWithSite.dll
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGenCore", "CodeGenCore\CodeGenCore.csproj", "{CE1B35D2-02CC-4195-A4E6-07FDE2915E99}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGenCore.UnitTest", "CodeGenCore.UnitTest\CodeGenCore.UnitTest.csproj", "{C7FFB52B-D5AF-41C5-9D80-DC9DB75BA0C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGenCustomTool", "CodeGenCustomTool\CodeGenCustomTool.csproj", "{DDFEFB32-623E-49EE-9627-A19B77E29FCA}"
+EndProject
 Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "CodeGenInstaller", "CodeGenInstaller\CodeGenInstaller.vdproj", "{CFABF11F-5630-47E0-9E38-565C606E4039}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGenGUI", "CodeGenGUI\CodeGenGUI.csproj", "{0788ECDE-7366-4484-9EE5-FF944CE316C5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodeGenVSAddin", "CodeGenVSAddin\CodeGenVSAddin.csproj", "{A59EBBFA-02C1-44B5-BDB8-6F7C49F360D4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E188B63F-09B0-4CFB-9865-31CFA62CE024}"
+	ProjectSection(SolutionItems) = preProject
+		Local.testsettings = Local.testsettings
+		SQLCE Code Generator.vsmdi = SQLCE Code Generator.vsmdi
+		TraceAndTestImpact.testsettings = TraceAndTestImpact.testsettings
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Visual Studio Tools", "Visual Studio Tools", "{CA13B6A4-8DDB-4DDC-8931-44064EF24237}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Code Generator", "Code Generator", "{CAB4AD78-B9B2-4408-A73D-209386387FEA}"
 EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
@@ -27,23 +38,32 @@ Global
 		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs02
 		SccLocalPath0 = .
 		SccProjectUniqueName1 = CodeGenCore\\CodeGenCore.csproj
+		SccProjectTopLevelParentUniqueName1 = SQLCE\u0020Code\u0020Generator.sln
 		SccProjectName1 = CodeGenCore
 		SccLocalPath1 = CodeGenCore
 		SccProjectUniqueName2 = CodeGenCustomTool\\CodeGenCustomTool.csproj
+		SccProjectTopLevelParentUniqueName2 = SQLCE\u0020Code\u0020Generator.sln
 		SccProjectName2 = CodeGenCustomTool
 		SccLocalPath2 = CodeGenCustomTool
 		SccProjectUniqueName3 = CodeGenInstaller\\CodeGenInstaller.vdproj
+		SccProjectTopLevelParentUniqueName3 = SQLCE\u0020Code\u0020Generator.sln
 		SccProjectName3 = CodeGenInstaller
 		SccLocalPath3 = CodeGenInstaller
 		SccProjectUniqueName4 = CodeGenCore.UnitTest\\CodeGenCore.UnitTest.csproj
+		SccProjectTopLevelParentUniqueName4 = SQLCE\u0020Code\u0020Generator.sln
 		SccProjectName4 = CodeGenCore.UnitTest
 		SccLocalPath4 = CodeGenCore.UnitTest
 		SccProjectUniqueName5 = CodeGenGUI\\CodeGenGUI.csproj
+		SccProjectTopLevelParentUniqueName5 = SQLCE\u0020Code\u0020Generator.sln
 		SccProjectName5 = CodeGenGUI
 		SccLocalPath5 = CodeGenGUI
 		SccProjectUniqueName6 = CodeGenVSAddin\\CodeGenVSAddin.csproj
+		SccProjectTopLevelParentUniqueName6 = SQLCE\u0020Code\u0020Generator.sln
 		SccProjectName6 = CodeGenVSAddin
 		SccLocalPath6 = CodeGenVSAddin
+	EndGlobalSection
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = SQLCE Code Generator.vsmdi
 	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,9 +97,17 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C7FFB52B-D5AF-41C5-9D80-DC9DB75BA0C3} = {CAB4AD78-B9B2-4408-A73D-209386387FEA}
+		{0788ECDE-7366-4484-9EE5-FF944CE316C5} = {CAB4AD78-B9B2-4408-A73D-209386387FEA}
+		{CE1B35D2-02CC-4195-A4E6-07FDE2915E99} = {CAB4AD78-B9B2-4408-A73D-209386387FEA}
+		{CFABF11F-5630-47E0-9E38-565C606E4039} = {CA13B6A4-8DDB-4DDC-8931-44064EF24237}
+		{A59EBBFA-02C1-44B5-BDB8-6F7C49F360D4} = {CA13B6A4-8DDB-4DDC-8931-44064EF24237}
+		{DDFEFB32-623E-49EE-9627-A19B77E29FCA} = {CA13B6A4-8DDB-4DDC-8931-44064EF24237}
+	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_IncrementBeforeBuild = True
-		BuildVersion_UpdateAssemblyVersion = False
 		BuildVersion_UseGlobalSettings = False
+		BuildVersion_UpdateAssemblyVersion = False
+		BuildVersion_IncrementBeforeBuild = True
 	EndGlobalSection
 EndGlobal

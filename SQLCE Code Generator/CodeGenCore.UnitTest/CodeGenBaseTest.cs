@@ -1,7 +1,6 @@
 using System.Diagnostics;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
-using ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest.Properties;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
 {
@@ -20,7 +19,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         protected static SqlCeDatabase GetDatabase()
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
-            var connectionString = Settings.Default.TestDatabaseConnectionString;
+            var connectionString = "Data Source=TestDatabase.sdf";
             return new SqlCeDatabase(defaultNamespace, connectionString);
         }
 

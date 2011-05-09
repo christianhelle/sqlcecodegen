@@ -66,12 +66,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
             var factory = new CodeGeneratorFactory(database);
             var codeGenerator = factory.Create(fileExtension);
 
-            if (codeGenerator is VisualBasicCodeGenerator)
-            {
-                const string WARNING = "Visual Basic .NET code generation is currently not supported";
-                Trace.WriteLine(WARNING, "NOT SUPPORT");
-                MessageBox.Show(WARNING, "Coming soon...");
-            }
+            //if (codeGenerator is VisualBasicCodeGenerator)
+            //{
+            //    const string WARNING = "Visual Basic .NET code generation is currently not supported";
+            //    Trace.WriteLine(WARNING, "NOT SUPPORT");
+            //    MessageBox.Show(WARNING, "Coming soon...");
+            //}
 
             codeGenerator.WriteHeaderInformation();
             codeGenerator.GenerateEntities();
