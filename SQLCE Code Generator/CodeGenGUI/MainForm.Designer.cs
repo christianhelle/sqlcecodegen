@@ -74,12 +74,12 @@
             this.tabOutput = new System.Windows.Forms.TabControl();
             this.tabPageOutput = new System.Windows.Forms.TabPage();
             this.rtbOutput = new System.Windows.Forms.TextBox();
+            this.tabTableData = new System.Windows.Forms.TabPage();
+            this.dataGridView = new System.Windows.Forms.DataGridView();
             this.tabPageCompilerOutput = new System.Windows.Forms.TabPage();
             this.rtbCompilerOutput = new System.Windows.Forms.TextBox();
             this.tabPageTestResults = new System.Windows.Forms.TabPage();
             this.rtbUnitTestOutput = new System.Windows.Forms.TextBox();
-            this.tabTableData = new System.Windows.Forms.TabPage();
-            this.dataGridView = new System.Windows.Forms.DataGridView();
             this.menuStrip.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -94,10 +94,10 @@
             this.tabPageDataAccessUnitTests.SuspendLayout();
             this.tabOutput.SuspendLayout();
             this.tabPageOutput.SuspendLayout();
-            this.tabPageCompilerOutput.SuspendLayout();
-            this.tabPageTestResults.SuspendLayout();
             this.tabTableData.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
+            this.tabPageCompilerOutput.SuspendLayout();
+            this.tabPageTestResults.SuspendLayout();
             this.SuspendLayout();
             // 
             // menuStrip
@@ -532,6 +532,32 @@
             this.rtbOutput.Size = new System.Drawing.Size(770, 79);
             this.rtbOutput.TabIndex = 0;
             // 
+            // tabTableData
+            // 
+            this.tabTableData.Controls.Add(this.dataGridView);
+            this.tabTableData.Location = new System.Drawing.Point(4, 22);
+            this.tabTableData.Name = "tabTableData";
+            this.tabTableData.Padding = new System.Windows.Forms.Padding(3);
+            this.tabTableData.Size = new System.Drawing.Size(776, 85);
+            this.tabTableData.TabIndex = 3;
+            this.tabTableData.Text = "Table Data";
+            this.tabTableData.UseVisualStyleBackColor = true;
+            // 
+            // dataGridView
+            // 
+            this.dataGridView.AllowUserToAddRows = false;
+            this.dataGridView.AllowUserToDeleteRows = false;
+            this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
+            this.dataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
+            this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView.Location = new System.Drawing.Point(3, 3);
+            this.dataGridView.Name = "dataGridView";
+            this.dataGridView.ReadOnly = true;
+            this.dataGridView.Size = new System.Drawing.Size(770, 79);
+            this.dataGridView.TabIndex = 0;
+            this.dataGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridView_DataError);
+            // 
             // tabPageCompilerOutput
             // 
             this.tabPageCompilerOutput.Controls.Add(this.rtbCompilerOutput);
@@ -580,31 +606,6 @@
             this.rtbUnitTestOutput.Size = new System.Drawing.Size(770, 79);
             this.rtbUnitTestOutput.TabIndex = 0;
             // 
-            // tabTableData
-            // 
-            this.tabTableData.Controls.Add(this.dataGridView);
-            this.tabTableData.Location = new System.Drawing.Point(4, 22);
-            this.tabTableData.Name = "tabTableData";
-            this.tabTableData.Padding = new System.Windows.Forms.Padding(3);
-            this.tabTableData.Size = new System.Drawing.Size(776, 85);
-            this.tabTableData.TabIndex = 3;
-            this.tabTableData.Text = "Table Data";
-            this.tabTableData.UseVisualStyleBackColor = true;
-            // 
-            // dataGridView
-            // 
-            this.dataGridView.AllowUserToAddRows = false;
-            this.dataGridView.AllowUserToDeleteRows = false;
-            this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells;
-            this.dataGridView.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells;
-            this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView.Location = new System.Drawing.Point(3, 3);
-            this.dataGridView.Name = "dataGridView";
-            this.dataGridView.ReadOnly = true;
-            this.dataGridView.Size = new System.Drawing.Size(770, 79);
-            this.dataGridView.TabIndex = 0;
-            // 
             // MainForm
             // 
             this.AllowDrop = true;
@@ -637,12 +638,12 @@
             this.tabOutput.ResumeLayout(false);
             this.tabPageOutput.ResumeLayout(false);
             this.tabPageOutput.PerformLayout();
+            this.tabTableData.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.tabPageCompilerOutput.ResumeLayout(false);
             this.tabPageCompilerOutput.PerformLayout();
             this.tabPageTestResults.ResumeLayout(false);
             this.tabPageTestResults.PerformLayout();
-            this.tabTableData.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 

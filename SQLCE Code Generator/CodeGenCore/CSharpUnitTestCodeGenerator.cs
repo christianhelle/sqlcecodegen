@@ -4,9 +4,9 @@ using System.Diagnostics;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
-    public class CSharpUnitTestCodeGenerator : CSharpCodeGenerator
+    public abstract class CSharpUnitTestCodeGenerator : CSharpCodeGenerator
     {
-        public CSharpUnitTestCodeGenerator(SqlCeDatabase tableDetails)
+        protected CSharpUnitTestCodeGenerator(SqlCeDatabase tableDetails)
             : base(tableDetails)
         {
         }
@@ -19,13 +19,16 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public override void GenerateEntities(EntityGeneratorOptions options)
         {
             Trace.WriteLine("Generating Entity Unit Tests");
-
+            
             code.AppendLine("\nnamespace " + Database.Namespace);
             code.AppendLine("{");
 
+            IncludeUnitTestNamespaces();
+            code.AppendLine();
+
             foreach (var table in Database.Tables)
             {
-                code.AppendLine("\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]");
+                code.AppendLine("\t" + GetTestClassAttribute());
                 code.AppendLine("\tpublic class " + table.ClassName + "EntityTest");
                 code.AppendLine("\t{");
 
@@ -44,6 +47,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             GenerateRandomGenerator();
             code.AppendLine("}");
         }
+
+        protected abstract void IncludeUnitTestNamespaces();
+        protected abstract string GetTestClassAttribute();
+        protected abstract string GetTestMethodAttribute();
+        protected abstract string GetTestInitializeAttribute();
 
         private void GenerateRandomGenerator()
         {
@@ -77,7 +85,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             Trace.WriteLine("Generating " + column.Value.FieldName + "Test()");
 
-            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\t" + GetTestMethodAttribute());
             code.AppendLine("\t\tpublic void " + column.Value.FieldName + "Test()");
             code.AppendLine("\t\t{");
 
@@ -91,19 +99,19 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\tvar target = new " + table.ClassName + "();");
             code.AppendLine("\t\t\ttarget." + column.Value.FieldName + " = value;");
             code.AppendLine();
-            code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(value, target." + column.Value.FieldName + ");");
+            code.AppendLine("\t\t\tAssert.AreEqual(value, target." + column.Value.FieldName + ");");
             code.AppendLine("\t\t}");
             code.AppendLine();
 
             Trace.WriteLine("Generating " + column.Value.FieldName + "NullTest()");
 
-            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\t" + GetTestMethodAttribute());
             code.AppendLine("\t\tpublic void " + column.Value.FieldName + "NullTest()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tvar target = new " + table.ClassName + "();");
             code.AppendLine("\t\t\ttarget." + column.Value.FieldName + " = null;");
             code.AppendLine();
-            code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(null, target." + column.Value.FieldName + ");");
+            code.AppendLine("\t\t\tAssert.AreEqual(null, target." + column.Value.FieldName + ");");
             code.AppendLine("\t\t}");
             code.AppendLine();
         }
@@ -115,14 +123,14 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             Trace.WriteLine("Generating " + column.Value.FieldName + "MaxLengthTest()");
 
-            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\t" + GetTestMethodAttribute());
             code.AppendLine("\t\tpublic void " + column.Value.FieldName + "MaxLengthTest()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tvar value = RandomGenerator.GenerateString(" + column.Value.MaxLength.Value + ");");
             code.AppendLine("\t\t\tvar target = new " + table.ClassName + "();");
             code.AppendLine("\t\t\ttarget." + column.Value.FieldName + " = value;");
             code.AppendLine();
-            code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(value, target." + column.Value.FieldName + ");");
+            code.AppendLine("\t\t\tAssert.AreEqual(value, target." + column.Value.FieldName + ");");
             code.AppendLine("\t\t}");
             code.AppendLine();
 
@@ -132,8 +140,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             Trace.WriteLine("Generating " + column.Value.FieldName + "MaxLengthArgumentExceptionTest()");
 
-            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
-            //code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.ExpectedException(typeof(System.ArgumentException))]");
+            code.AppendLine("\t\t" + GetTestMethodAttribute());
+            //code.AppendLine("\t\t[ExpectedException(typeof(System.ArgumentException))]");
             code.AppendLine("\t\tpublic void " + column.Value.FieldName + "MaxLengthArgumentExceptionTest()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\ttry");
@@ -141,12 +149,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\t\tvar value = RandomGenerator.GenerateString(" + (column.Value.MaxLength.Value + 1) + ");");
             code.AppendLine("\t\t\t\tvar target = new " + table.ClassName + "();");
             code.AppendLine("\t\t\t\ttarget." + column.Value.FieldName + " = value;");
-            code.AppendLine("\t\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.Fail(\"ArgumentException expected\");");
+            code.AppendLine("\t\t\t\tAssert.Fail(\"ArgumentException expected\");");
             code.AppendLine("\t\t\t}");
             code.AppendLine("\t\t\tcatch (System.ArgumentException) { }");
             code.AppendLine("\t\t\tcatch (System.Exception)");
             code.AppendLine("\t\t\t{");
-            code.AppendLine("\t\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.Fail(\"ArgumentException expected\");");
+            code.AppendLine("\t\t\t\tAssert.Fail(\"ArgumentException expected\");");
             code.AppendLine("\t\t\t}");
             code.AppendLine("\t\t}");
             code.AppendLine();
@@ -164,10 +172,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\nnamespace " + Database.Namespace);
             code.AppendLine("{");
 
-            code.AppendLine("\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]");
+            IncludeUnitTestNamespaces();
+            code.AppendLine();
+
+            code.AppendLine("\t" + GetTestClassAttribute());
             code.AppendLine("\tpublic class DataAccessTestBase");
             code.AppendLine("\t{");
-            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestInitialize]");
+            code.AppendLine("\t\t" + GetTestInitializeAttribute());
             code.AppendLine("\t\tpublic void Initialize()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tEntityBase.ConnectionString = @\"" + Database.ConnectionString + "\";");
@@ -175,29 +186,29 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t}");
             code.AppendLine();
 
-            code.AppendLine("\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]");
+            code.AppendLine("\t" + GetTestClassAttribute());
             code.AppendLine("\tpublic class EntityBaseTest : DataAccessTestBase");
             code.AppendLine("\t{");
-            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\t" + GetTestMethodAttribute());
             code.AppendLine("\t\tpublic void CreateCommandTest()");
             code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.IsNotNull(EntityBase.CreateCommand());");
+            code.AppendLine("\t\t\tAssert.IsNotNull(EntityBase.CreateCommand());");
             code.AppendLine("\t\t}");
             code.AppendLine();
-            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\t" + GetTestMethodAttribute());
             code.AppendLine("\t\tpublic void ConnectionIsOpenTest()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tvar expected = System.Data.ConnectionState.Open;");
             code.AppendLine("\t\t\tvar actual = EntityBase.Connection.State;");
-            code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.AreEqual(expected, actual);");
+            code.AppendLine("\t\t\tAssert.AreEqual(expected, actual);");
             code.AppendLine("\t\t}");
             code.AppendLine("\t}");
             code.AppendLine();
 
-            code.AppendLine("\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]");
+            code.AppendLine("\t" + GetTestClassAttribute());
             code.AppendLine("\tpublic class DatabaseFileTest");
             code.AppendLine("\t{");
-            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\t" + GetTestMethodAttribute());
             code.AppendLine("\t\tpublic void CreateDatabaseTest()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tEntityBase.ConnectionString = @\"" + Database.ConnectionString + "_\" + RandomGenerator.GenerateString(10) + \".sdf\";");
@@ -205,7 +216,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\tEntityBase.Connection = null;");
             code.AppendLine();
             code.AppendLine("\t\t\tvar actual = DatabaseFile.CreateDatabase();");
-            code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.AreNotEqual(0, actual);");
+            code.AppendLine("\t\t\tAssert.AreNotEqual(0, actual);");
             code.AppendLine();
             code.AppendLine("\t\t\tEntityBase.ConnectionString = @\"" + Database.ConnectionString + "\";");
             code.AppendLine("\t\t\tEntityBase.Connection.Dispose();");
@@ -216,7 +227,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             foreach (var table in Database.Tables)
             {
-                code.AppendLine("\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]");
+                code.AppendLine("\t" + GetTestClassAttribute());
                 code.AppendLine("\tpublic class " + table.ClassName + "DataAccessTest : DataAccessTestBase");
                 code.AppendLine("\t{");
 
@@ -245,13 +256,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             Trace.WriteLine("Generating CountTest()");
 
-            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\t" + GetTestMethodAttribute());
             code.AppendLine("\t\tpublic void CountTest()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tCreateTest();");
             code.AppendLine("\t\t\tI" + table.ClassName + "Repository target = new " + table.ClassName + "Repository();");
             code.AppendLine("\t\t\tvar actual = target.Count();");
-            code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.AreNotEqual(0, actual);");
+            code.AppendLine("\t\t\tAssert.AreNotEqual(0, actual);");
             code.AppendLine("\t\t}");
             code.AppendLine();
         }
@@ -260,7 +271,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             Trace.WriteLine("Generating PopulateTest()");
 
-            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\t" + GetTestMethodAttribute());
             code.AppendLine("\t\tpublic void PopulateTest()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tPurgeTest();");
@@ -292,7 +303,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         private void GenerateSaveChanges(Table table)
         {
-            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\t" + GetTestMethodAttribute());
             code.AppendLine("\t\tpublic void UpdateTest()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tI" + table.ClassName + "Repository target = new " + table.ClassName + "Repository();");
@@ -302,7 +313,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t}");
             code.AppendLine();
 
-            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\t" + GetTestMethodAttribute());
             code.AppendLine("\t\tpublic void UpdateManyTest()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tPopulateTest();");
@@ -315,13 +326,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         private void GenerateDeleteAll(Table table)
         {
-            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\t" + GetTestMethodAttribute());
             code.AppendLine("\t\tpublic void PurgeTest()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tI" + table.ClassName + "Repository target = new " + table.ClassName + "Repository();");
             code.AppendLine("\t\t\ttarget.Purge();");
             code.AppendLine("\t\t\tvar actual = target.ToList();");
-            code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.IsNull(actual);");
+            code.AppendLine("\t\t\tAssert.IsNull(actual);");
             code.AppendLine("\t\t}");
             code.AppendLine();
         }
@@ -333,7 +344,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 if (string.Compare(column.Value.DatabaseType, "ntext", true) == 0 || string.Compare(column.Value.DatabaseType, "image", true) == 0)
                     continue;
 
-                code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+                code.AppendLine("\t\t" + GetTestMethodAttribute());
                 code.AppendLine("\t\tpublic void DeleteBy" + column.Value.FieldName + "Test()");
                 code.AppendLine("\t\t{");
                 code.AppendLine("\t\t\tPurgeTest();");
@@ -364,7 +375,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         private void GenerateDelete(Table table)
         {
-            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\t" + GetTestMethodAttribute());
             code.AppendLine("\t\tpublic void DeleteTest()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tPurgeTest();");
@@ -391,7 +402,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t}");
             code.AppendLine();
 
-            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\t" + GetTestMethodAttribute());
             code.AppendLine("\t\tpublic void DeleteManyTest()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tPopulateTest();");
@@ -414,7 +425,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
                 Trace.WriteLine("Generating SelectBy" + column.Value.FieldName + "WithTopTest()");
 
-                code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+                code.AppendLine("\t\t" + GetTestMethodAttribute());
                 code.AppendLine("\t\tpublic void SelectBy" + column.Value.FieldName + "WithTopTest()");
                 code.AppendLine("\t\t{");
                 code.AppendLine("\t\t\tCreateTest();");
@@ -422,8 +433,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\t\t\tvar record = target.ToList(1)[0];");
                 code.AppendLine("\t\t\tvar actual = target.SelectBy" + column.Value.FieldName + "(record." + column.Value.FieldName + ", 10);");
                 code.AppendLine();
-                code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.IsNotNull(actual);");
-                code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.CollectionAssert.AllItemsAreNotNull(actual);");
+                code.AppendLine("\t\t\tAssert.IsNotNull(actual);");
+                code.AppendLine("\t\t\tCollectionAssert.AllItemsAreNotNull(actual);");
                 code.AppendLine("\t\t}");
                 code.AppendLine();
             }
@@ -441,7 +452,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
                 Trace.WriteLine("Generating SelectBy" + column.Value.FieldName + "Test()");
 
-                code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+                code.AppendLine("\t\t" + GetTestMethodAttribute());
                 code.AppendLine("\t\tpublic void SelectBy" + column.Value.FieldName + "Test()");
                 code.AppendLine("\t\t{");
                 code.AppendLine("\t\t\tCreateTest();");
@@ -449,8 +460,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\t\t\tvar record = target.ToList(1)[0];");
                 code.AppendLine("\t\t\tvar actual = target.SelectBy" + column.Value.FieldName + "(record." + column.Value.FieldName + ");");
                 code.AppendLine();
-                code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.IsNotNull(actual);");
-                code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.CollectionAssert.AllItemsAreNotNull(actual);");
+                code.AppendLine("\t\t\tAssert.IsNotNull(actual);");
+                code.AppendLine("\t\t\tCollectionAssert.AllItemsAreNotNull(actual);");
                 code.AppendLine("\t\t}");
                 code.AppendLine();
             }
@@ -460,27 +471,27 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             Trace.WriteLine("Generating ToListWithTopTest()");
 
-            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\t" + GetTestMethodAttribute());
             code.AppendLine("\t\tpublic void ToListWithTopTest()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tCreateTest();");
             code.AppendLine("\t\t\tI" + table.ClassName + "Repository target = new " + table.ClassName + "Repository();");
             code.AppendLine("\t\t\tvar actual = target.ToList(10);");
-            code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.IsNotNull(actual);");
-            code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.CollectionAssert.AllItemsAreNotNull(actual);");
+            code.AppendLine("\t\t\tAssert.IsNotNull(actual);");
+            code.AppendLine("\t\t\tCollectionAssert.AllItemsAreNotNull(actual);");
             code.AppendLine("\t\t}");
             code.AppendLine();
 
             Trace.WriteLine("Generating ToArrayWithTopTest()");
 
-            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\t" + GetTestMethodAttribute());
             code.AppendLine("\t\tpublic void ToArrayWithTopTest()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tCreateTest();");
             code.AppendLine("\t\t\tI" + table.ClassName + "Repository target = new " + table.ClassName + "Repository();");
             code.AppendLine("\t\t\tvar actual = target.ToArray(10);");
-            code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.IsNotNull(actual);");
-            code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.CollectionAssert.AllItemsAreNotNull(actual);");
+            code.AppendLine("\t\t\tAssert.IsNotNull(actual);");
+            code.AppendLine("\t\t\tCollectionAssert.AllItemsAreNotNull(actual);");
             code.AppendLine("\t\t}");
             code.AppendLine();
         }
@@ -489,27 +500,27 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             Trace.WriteLine("Generating ToListTest()");
 
-            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\t" + GetTestMethodAttribute());
             code.AppendLine("\t\tpublic void ToListTest()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tCreateTest();");
             code.AppendLine("\t\t\tI" + table.ClassName + "Repository target = new " + table.ClassName + "Repository();");
             code.AppendLine("\t\t\tvar actual = target.ToList();");
-            code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.IsNotNull(actual);");
-            code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.CollectionAssert.AllItemsAreNotNull(actual);");
+            code.AppendLine("\t\t\tAssert.IsNotNull(actual);");
+            code.AppendLine("\t\t\tCollectionAssert.AllItemsAreNotNull(actual);");
             code.AppendLine("\t\t}");
             code.AppendLine();
 
             Trace.WriteLine("Generating ToArrayTest()");
 
-            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\t" + GetTestMethodAttribute());
             code.AppendLine("\t\tpublic void ToArrayTest()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tCreateTest();");
             code.AppendLine("\t\t\tI" + table.ClassName + "Repository target = new " + table.ClassName + "Repository();");
             code.AppendLine("\t\t\tvar actual = target.ToArray();");
-            code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.Assert.IsNotNull(actual);");
-            code.AppendLine("\t\t\tMicrosoft.VisualStudio.TestTools.UnitTesting.CollectionAssert.AllItemsAreNotNull(actual);");
+            code.AppendLine("\t\t\tAssert.IsNotNull(actual);");
+            code.AppendLine("\t\t\tCollectionAssert.AllItemsAreNotNull(actual);");
             code.AppendLine("\t\t}");
             code.AppendLine();
         }
@@ -518,7 +529,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             Trace.WriteLine("Generating CreateWithParametersTest()");
 
-            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\t" + GetTestMethodAttribute());
             code.AppendLine("\t\tpublic void CreateWithParametersTest()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tPurgeTest();");
@@ -551,7 +562,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             Trace.WriteLine("Generating CreateTest()");
 
-            code.AppendLine("\t\t[Microsoft.VisualStudio.TestTools.UnitTesting.TestMethod]");
+            code.AppendLine("\t\t" + GetTestMethodAttribute());
             code.AppendLine("\t\tpublic void CreateTest()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tPurgeTest();");
@@ -629,6 +640,62 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 default:
                     return null;
             }
+        }
+    }
+
+    public class MsTestUnitTestCodeGenerator : CSharpUnitTestCodeGenerator
+    {
+        public MsTestUnitTestCodeGenerator(SqlCeDatabase tableDetails)
+            : base(tableDetails)
+        {
+        }
+
+        protected override void IncludeUnitTestNamespaces()
+        {
+            code.AppendLine("\tusing Microsoft.VisualStudio.TestTools.UnitTesting;");
+        }
+
+        protected override string GetTestClassAttribute()
+        {
+            return "[TestClass]";
+        }
+
+        protected override string GetTestMethodAttribute()
+        {
+            return "[TestMethod]";
+        }
+
+        protected override string GetTestInitializeAttribute()
+        {
+            return "[TestInitialize]";
+        }
+    }
+
+    public class NUnitTestCodeGenerator : CSharpUnitTestCodeGenerator
+    {
+        public NUnitTestCodeGenerator(SqlCeDatabase tableDetails)
+            : base(tableDetails)
+        {
+        }
+
+        protected override void IncludeUnitTestNamespaces()
+        {
+            code.AppendLine("\tusing NUnit.Framework;");
+        }
+
+        protected override string GetTestClassAttribute()
+        {
+            return "[TestFixture]";
+        }
+
+        protected override string GetTestMethodAttribute()
+        {
+            return "[Test]";
+        }
+
+        protected override string GetTestInitializeAttribute()
+        {
+            return "[SetUp]";
         }
     }
 }

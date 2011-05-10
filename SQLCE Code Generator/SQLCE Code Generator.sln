@@ -31,6 +31,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Visual Studio Tools", "Visu
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Code Generator", "Code Generator", "{CAB4AD78-B9B2-4408-A73D-209386387FEA}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQLCE 4.0 Libraries", "SQLCE 4.0 Libraries", "{4546160E-A872-4336-A411-C5A8E5450ACB}"
+	ProjectSection(SolutionItems) = preProject
+		Depdendencies\SQLCE 4.0 Libraries\sqlceca40.dll = Depdendencies\SQLCE 4.0 Libraries\sqlceca40.dll
+		Depdendencies\SQLCE 4.0 Libraries\sqlcecompact40.dll = Depdendencies\SQLCE 4.0 Libraries\sqlcecompact40.dll
+		Depdendencies\SQLCE 4.0 Libraries\sqlceer40EN.dll = Depdendencies\SQLCE 4.0 Libraries\sqlceer40EN.dll
+		Depdendencies\SQLCE 4.0 Libraries\sqlceme40.dll = Depdendencies\SQLCE 4.0 Libraries\sqlceme40.dll
+		Depdendencies\SQLCE 4.0 Libraries\sqlceoledb40.dll = Depdendencies\SQLCE 4.0 Libraries\sqlceoledb40.dll
+		Depdendencies\SQLCE 4.0 Libraries\sqlceqp40.dll = Depdendencies\SQLCE 4.0 Libraries\sqlceqp40.dll
+		Depdendencies\SQLCE 4.0 Libraries\sqlcese40.dll = Depdendencies\SQLCE 4.0 Libraries\sqlcese40.dll
+		Depdendencies\SQLCE 4.0 Libraries\System.Data.SqlServerCe.dll = Depdendencies\SQLCE 4.0 Libraries\System.Data.SqlServerCe.dll
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NUnit", "NUnit", "{CBE24E71-C017-4122-B48C-03114D2DE1CA}"
+	ProjectSection(SolutionItems) = preProject
+		Depdendencies\NUnit\nunit.framework.dll = Depdendencies\NUnit\nunit.framework.dll
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccNumberOfProjects = 7
@@ -98,6 +115,8 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{4546160E-A872-4336-A411-C5A8E5450ACB} = {8E05C125-6658-4A6C-A4EC-848EA7C24CB1}
+		{CBE24E71-C017-4122-B48C-03114D2DE1CA} = {8E05C125-6658-4A6C-A4EC-848EA7C24CB1}
 		{C7FFB52B-D5AF-41C5-9D80-DC9DB75BA0C3} = {CAB4AD78-B9B2-4408-A73D-209386387FEA}
 		{0788ECDE-7366-4484-9EE5-FF944CE316C5} = {CAB4AD78-B9B2-4408-A73D-209386387FEA}
 		{CE1B35D2-02CC-4195-A4E6-07FDE2915E99} = {CAB4AD78-B9B2-4408-A73D-209386387FEA}
@@ -106,8 +125,8 @@ Global
 		{DDFEFB32-623E-49EE-9627-A19B77E29FCA} = {CA13B6A4-8DDB-4DDC-8931-44064EF24237}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_UseGlobalSettings = False
-		BuildVersion_UpdateAssemblyVersion = False
 		BuildVersion_IncrementBeforeBuild = True
+		BuildVersion_UpdateAssemblyVersion = False
+		BuildVersion_UseGlobalSettings = False
 	EndGlobalSection
 EndGlobal

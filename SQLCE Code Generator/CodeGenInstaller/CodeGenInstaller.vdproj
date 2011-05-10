@@ -15,8 +15,8 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_1F14C3123BD2D2387EF521B331CCF468"
-        "OwnerKey" = "8:_575BADDC208A4A0DA483E8C2A7A08C9A"
+        "MsmKey" = "8:_054EBAFBA4230F6707EA0DC2D29A84AD"
+        "OwnerKey" = "8:_2E790EAD63A049DF84EE097B9931045E"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -27,24 +27,6 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_575BADDC208A4A0DA483E8C2A7A08C9A"
-        "OwnerKey" = "8:_UNDEFINED"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_765C17DFD6CD13FF592FC5D78B1EBFE5"
-        "OwnerKey" = "8:_2E790EAD63A049DF84EE097B9931045E"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_765C17DFD6CD13FF592FC5D78B1EBFE5"
-        "OwnerKey" = "8:_575BADDC208A4A0DA483E8C2A7A08C9A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
         "MsmKey" = "8:_86875C783B1861790243F102712C9F04"
         "OwnerKey" = "8:_2E790EAD63A049DF84EE097B9931045E"
         "MsmSig" = "8:_UNDEFINED"
@@ -52,31 +34,13 @@
         "Entry"
         {
         "MsmKey" = "8:_86875C783B1861790243F102712C9F04"
-        "OwnerKey" = "8:_575BADDC208A4A0DA483E8C2A7A08C9A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_86875C783B1861790243F102712C9F04"
-        "OwnerKey" = "8:_765C17DFD6CD13FF592FC5D78B1EBFE5"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_8CFDC1CEDB895866FBDEF17531CA76E6"
-        "OwnerKey" = "8:_575BADDC208A4A0DA483E8C2A7A08C9A"
+        "OwnerKey" = "8:_054EBAFBA4230F6707EA0DC2D29A84AD"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_992644DD6A6FF5989EFF476AE9D93313"
         "OwnerKey" = "8:_2E790EAD63A049DF84EE097B9931045E"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_992644DD6A6FF5989EFF476AE9D93313"
-        "OwnerKey" = "8:_575BADDC208A4A0DA483E8C2A7A08C9A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -130,24 +94,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_575BADDC208A4A0DA483E8C2A7A08C9A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_1F14C3123BD2D2387EF521B331CCF468"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_8CFDC1CEDB895866FBDEF17531CA76E6"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_99430F7B78F2719D3963A7D724A8C734"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -160,7 +106,7 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_765C17DFD6CD13FF592FC5D78B1EBFE5"
+        "OwnerKey" = "8:_054EBAFBA4230F6707EA0DC2D29A84AD"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -351,45 +297,14 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_1F14C3123BD2D2387EF521B331CCF468"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_054EBAFBA4230F6707EA0DC2D29A84AD"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:ICSharpCode.TextEditor, Version=3.0.0.3437, Culture=neutral, PublicKeyToken=4d61825e8dd49f1a, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:CodeGenCore, Version=1.1.0.1, Culture=neutral, PublicKeyToken=bb748fcfacf21f9b, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_1F14C3123BD2D2387EF521B331CCF468"
-                    {
-                    "Name" = "8:ICSharpCode.TextEditor.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:ICSharpCode.TextEditor.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_C296FF3876624722BFD513FAD7C82829"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_765C17DFD6CD13FF592FC5D78B1EBFE5"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:CodeGenCore, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bb748fcfacf21f9b, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_765C17DFD6CD13FF592FC5D78B1EBFE5"
+                    "_054EBAFBA4230F6707EA0DC2D29A84AD"
                     {
                     "Name" = "8:CodeGenCore.dll"
                     "Attributes" = "3:512"
@@ -427,37 +342,6 @@
                     }
                 }
             "SourcePath" = "8:System.Data.SqlServerCe.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_C296FF3876624722BFD513FAD7C82829"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_8CFDC1CEDB895866FBDEF17531CA76E6"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_8CFDC1CEDB895866FBDEF17531CA76E6"
-                    {
-                    "Name" = "8:Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C296FF3876624722BFD513FAD7C82829"
@@ -676,7 +560,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:SQL CE Code Generator"
         "ProductCode" = "8:{7062A6C2-9172-4624-9408-2B19A7078B5F}"
-        "PackageCode" = "8:{A9CA6CE5-B764-4F24-A88E-2CD97BBC258F}"
+        "PackageCode" = "8:{13B81DC8-EE9E-4B9B-8545-1278B8187EAC}"
         "UpgradeCode" = "8:{CCC6BAAE-44C4-4AC9-81D0-6908A6914681}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -1144,20 +1028,6 @@
         }
         "Shortcut"
         {
-            "{970C0BB2-C7D0-45D7-ABFA-7EC378858BC0}:_7078251EBD094D7090DAE483F24C34C3"
-            {
-            "Name" = "8:SQLCE Code Generator"
-            "Arguments" = "8:"
-            "Description" = "8:"
-            "ShowCmd" = "3:1"
-            "IconIndex" = "3:0"
-            "Transitive" = "11:FALSE"
-            "Target" = "8:_575BADDC208A4A0DA483E8C2A7A08C9A"
-            "Folder" = "8:_4C4B437984754A8D9E10FCCFDCE96803"
-            "WorkingFolder" = "8:_C296FF3876624722BFD513FAD7C82829"
-            "Icon" = "8:"
-            "Feature" = "8:"
-            }
         }
         "UserInterface"
         {
@@ -1559,7 +1429,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_2E790EAD63A049DF84EE097B9931045E"
             {
-            "SourcePath" = "8:..\\CodeGenCustomTool\\obj\\Release\\CodeGenCustomTool.dll"
+            "SourcePath" = "8:..\\CodeGenCustomTool\\obj\\Debug\\CodeGenCustomTool.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C296FF3876624722BFD513FAD7C82829"
@@ -1580,34 +1450,6 @@
             "OutputConfiguration" = "8:"
             "OutputGroupCanonicalName" = "8:Built"
             "OutputProjectGuid" = "8:{DDFEFB32-623E-49EE-9627-A19B77E29FCA}"
-            "ShowKeyOutput" = "11:TRUE"
-                "ExcludeFilters"
-                {
-                }
-            }
-            "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_575BADDC208A4A0DA483E8C2A7A08C9A"
-            {
-            "SourcePath" = "8:..\\CodeGenGUI\\obj\\Release\\CodeGenGUI.exe"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_C296FF3876624722BFD513FAD7C82829"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:FALSE"
-            "IsolateTo" = "8:"
-            "ProjectOutputGroupRegister" = "3:1"
-            "OutputConfiguration" = "8:"
-            "OutputGroupCanonicalName" = "8:Built"
-            "OutputProjectGuid" = "8:{0788ECDE-7366-4484-9EE5-FF944CE316C5}"
             "ShowKeyOutput" = "11:TRUE"
                 "ExcludeFilters"
                 {

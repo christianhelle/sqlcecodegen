@@ -6,7 +6,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
 {
     [TestClass]
     [DeploymentItem("Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll")]
-    public class GeneratedCSharpCodeTest : CodeGenBaseTest
+    public class GeneratedCSharpCodeMsTest : CodeGenBaseTest
     {
         [TestMethod]
         public void EntitiesCodeCanCompileTest()
@@ -27,12 +27,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             var factory = new CodeGeneratorFactory(database);
 
             var codeGenerator = factory.Create();
-            codeGenerator.GenerateEntities();           
+            codeGenerator.GenerateEntities();
             codeGenerator.GenerateDataAccessLayer();
 
             AssertCSharpCompile(codeGenerator.GetCode());
         }
-        
+
         [TestMethod]
         public void EntityUnitTestCodeCanCompileTest()
         {
@@ -42,7 +42,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             var codeGenerator = factory.Create();
             codeGenerator.GenerateEntities();
 
-            var unitTestCodeGenerator = new CSharpUnitTestCodeGenerator(database);
+            var unitTestCodeGenerator = new MsTestUnitTestCodeGenerator(database);
             unitTestCodeGenerator.GenerateEntities();
 
             AssertCSharpCompile(codeGenerator.GetCode(), unitTestCodeGenerator.GetCode());
@@ -58,7 +58,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             codeGenerator.GenerateEntities();
             codeGenerator.GenerateDataAccessLayer();
 
-            var unitTestCodeGenerator = new CSharpUnitTestCodeGenerator(database);
+            var unitTestCodeGenerator = new MsTestUnitTestCodeGenerator(database);
             unitTestCodeGenerator.GenerateEntities();
             unitTestCodeGenerator.GenerateDataAccessLayer();
 
@@ -76,7 +76,99 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             codeGenerator.GenerateEntities();
             codeGenerator.GenerateDataAccessLayer();
 
-            var unitTestCodeGenerator = new CSharpUnitTestCodeGenerator(database);
+            var unitTestCodeGenerator = new MsTestUnitTestCodeGenerator(database);
+            unitTestCodeGenerator.WriteHeaderInformation();
+            unitTestCodeGenerator.GenerateEntities();
+            unitTestCodeGenerator.GenerateDataAccessLayer();
+
+            AssertCSharpCompile(codeGenerator.GetCode(), unitTestCodeGenerator.GetCode());
+        }
+
+        [TestMethod]
+        public void CustomToolGeneratedCodeCanCompileTest()
+        {
+            var database = GetDatabase();
+            var actual = CodeGeneratorCustomTool.GenerateCode(database.Namespace, "TestDatabase.sdf", ".cs");
+
+            Assert.IsNotNull(actual);
+            Assert.AreNotEqual(0, actual.Length);
+            AssertCSharpCompile(Encoding.Default.GetString(actual));
+        }
+    }
+
+    [TestClass]
+    [DeploymentItem("nunit.framework.dll")]
+    public class GeneratedCSharpCodeNUnitTest : CodeGenBaseTest
+    {
+        [TestMethod]
+        public void EntitiesCodeCanCompileTest()
+        {
+            var database = GetDatabase();
+            var factory = new CodeGeneratorFactory(database);
+
+            var codeGenerator = factory.Create();
+            codeGenerator.GenerateEntities();
+
+            AssertCSharpCompile(codeGenerator.GetCode());
+        }
+
+        [TestMethod]
+        public void DataAccessCodeCanCompileTest()
+        {
+            var database = GetDatabase();
+            var factory = new CodeGeneratorFactory(database);
+
+            var codeGenerator = factory.Create();
+            codeGenerator.GenerateEntities();
+            codeGenerator.GenerateDataAccessLayer();
+
+            AssertCSharpCompile(codeGenerator.GetCode());
+        }
+
+        [TestMethod]
+        public void EntityUnitTestCodeCanCompileTest()
+        {
+            var database = GetDatabase();
+            var factory = new CodeGeneratorFactory(database);
+
+            var codeGenerator = factory.Create();
+            codeGenerator.GenerateEntities();
+
+            var unitTestCodeGenerator = new NUnitTestCodeGenerator(database);
+            unitTestCodeGenerator.GenerateEntities();
+
+            AssertCSharpCompile(codeGenerator.GetCode(), unitTestCodeGenerator.GetCode());
+        }
+
+        [TestMethod]
+        public void DataAccessUnitTestCodeCanCompileTest()
+        {
+            var database = GetDatabase();
+            var factory = new CodeGeneratorFactory(database);
+
+            var codeGenerator = factory.Create();
+            codeGenerator.GenerateEntities();
+            codeGenerator.GenerateDataAccessLayer();
+
+            var unitTestCodeGenerator = new NUnitTestCodeGenerator(database);
+            unitTestCodeGenerator.GenerateEntities();
+            unitTestCodeGenerator.GenerateDataAccessLayer();
+
+            AssertCSharpCompile(codeGenerator.GetCode(), unitTestCodeGenerator.GetCode());
+        }
+
+        [TestMethod]
+        public void AllGeneratedCodeCanCompileTest()
+        {
+            var database = GetDatabase();
+            var factory = new CodeGeneratorFactory(database);
+
+            var codeGenerator = factory.Create();
+            codeGenerator.WriteHeaderInformation();
+            codeGenerator.GenerateEntities();
+            codeGenerator.GenerateDataAccessLayer();
+
+            var unitTestCodeGenerator = new NUnitTestCodeGenerator(database);
             unitTestCodeGenerator.WriteHeaderInformation();
             unitTestCodeGenerator.GenerateEntities();
             unitTestCodeGenerator.GenerateDataAccessLayer();
