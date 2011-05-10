@@ -132,7 +132,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         private string GenerateDataAccessUnitTestsCode(CodeGenerator codeGenerator)
         {
             WriteToOutputWindow("Generating Data Access Unit Tests Code");
-            var unitTestGenerator = new CSharpUnitTestCodeGenerator(codeGenerator.Database);
+            var unitTestGenerator = new NUnitTestCodeGenerator(codeGenerator.Database);
             unitTestGenerator.WriteHeaderInformation();
             unitTestGenerator.GenerateDataAccessLayer();
             var code = unitTestGenerator.GetCode();
@@ -142,7 +142,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         private string GenerateEntityUnitTestsCode(CodeGenerator codeGenerator)
         {
             WriteToOutputWindow("Generating Entity Unit Tests Code");
-            var unitTestGenerator = new CSharpUnitTestCodeGenerator(codeGenerator.Database);
+            var unitTestGenerator = new NUnitTestCodeGenerator(codeGenerator.Database);
             unitTestGenerator.WriteHeaderInformation();
             unitTestGenerator.GenerateEntities();
             var code = unitTestGenerator.GetCode();
@@ -496,7 +496,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
 
             var csc = Environment.ExpandEnvironmentVariables(@"%SystemRoot%\Microsoft.Net\Framework\v3.5\csc.exe");
-            var args = string.Format(@"/target:library /optimize /out:""{0}\DataAccess.dll"" /reference:""{1}\System.Data.SqlServerCe.dll"" /reference:""{1}\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll"" ""{0}\*.cs""", path, Environment.CurrentDirectory);
+            var args = string.Format(@"/target:library /optimize /out:""{0}\DataAccess.dll"" /reference:""{1}\System.Data.SqlServerCe.dll"" /reference:""{1}\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll"" /reference:""{1}\nunit.framework.dll"" ""{0}\*.cs""", path, Environment.CurrentDirectory);
 
             WriteToCompilerOutputWindow("Compiling using C# 3.0");
             WriteToCompilerOutputWindow(string.Format(Environment.NewLine + "Executing {0} {1}" + Environment.NewLine, csc, args));
@@ -617,6 +617,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         private string CompileUsingCSharpCommandLineCompiler()
         {
             var mstest = Environment.ExpandEnvironmentVariables(@"%VS90COMNTOOLS%\..\IDE\mstest.exe");
+            if (!File.Exists(mstest))
+                mstest = Environment.ExpandEnvironmentVariables(@"%VS100COMNTOOLS%\..\IDE\mstest.exe");
             var args = string.Format(@"/testcontainer:""{0}\DataAccess.dll""", path);
 
             var psi = new ProcessStartInfo(mstest, args);
@@ -698,6 +700,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
                 dataGridView.DataSource = null;
             }, "Unable to load table data");
+        }
+
+        private void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            e.Cancel = true;
+            e.ThrowException = false;
         }
     }
 }
