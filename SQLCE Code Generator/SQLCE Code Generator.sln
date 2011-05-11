@@ -45,7 +45,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SQLCE 4.0 Libraries", "SQLC
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "NUnit", "NUnit", "{CBE24E71-C017-4122-B48C-03114D2DE1CA}"
 	ProjectSection(SolutionItems) = preProject
+		Depdendencies\NUnit\nunit-console-runner.dll = Depdendencies\NUnit\nunit-console-runner.dll
+		Depdendencies\NUnit\nunit-console.exe = Depdendencies\NUnit\nunit-console.exe
+		Depdendencies\NUnit\nunit.core.dll = Depdendencies\NUnit\nunit.core.dll
+		Depdendencies\NUnit\nunit.core.interfaces.dll = Depdendencies\NUnit\nunit.core.interfaces.dll
 		Depdendencies\NUnit\nunit.framework.dll = Depdendencies\NUnit\nunit.framework.dll
+		Depdendencies\NUnit\nunit.util.dll = Depdendencies\NUnit\nunit.util.dll
 	EndProjectSection
 EndProject
 Global
@@ -125,8 +130,8 @@ Global
 		{DDFEFB32-623E-49EE-9627-A19B77E29FCA} = {CA13B6A4-8DDB-4DDC-8931-44064EF24237}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_IncrementBeforeBuild = True
-		BuildVersion_UpdateAssemblyVersion = False
 		BuildVersion_UseGlobalSettings = False
+		BuildVersion_UpdateAssemblyVersion = False
+		BuildVersion_IncrementBeforeBuild = True
 	EndGlobalSection
 EndGlobal

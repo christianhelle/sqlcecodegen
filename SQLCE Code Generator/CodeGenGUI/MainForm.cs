@@ -599,7 +599,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                 fi.Attributes = FileAttributes.Normal;
 
                 var sw = Stopwatch.StartNew();
-                string output = CompileUsingCSharpCommandLineCompiler();
+                string output = ExecuteUnitTestRunner();
 
                 Invoke((Action)delegate
                 {
@@ -614,14 +614,17 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             }
         }
 
-        private string CompileUsingCSharpCommandLineCompiler()
+        private string ExecuteUnitTestRunner()
         {
-            var mstest = Environment.ExpandEnvironmentVariables(@"%VS90COMNTOOLS%\..\IDE\mstest.exe");
-            if (!File.Exists(mstest))
-                mstest = Environment.ExpandEnvironmentVariables(@"%VS100COMNTOOLS%\..\IDE\mstest.exe");
-            var args = string.Format(@"/testcontainer:""{0}\DataAccess.dll""", path);
+            //var testRunner = Environment.ExpandEnvironmentVariables(@"%VS90COMNTOOLS%\..\IDE\mstest.exe");
+            //if (!File.Exists(testRunner))
+            //    testRunner = Environment.ExpandEnvironmentVariables(@"%VS100COMNTOOLS%\..\IDE\mstest.exe");
+            //var args = string.Format(@"/testcontainer:""{0}\DataAccess.dll""", path);
 
-            var psi = new ProcessStartInfo(mstest, args);
+            var testRunner = Path.Combine(Environment.CurrentDirectory, "NUnit\\nunit-console.exe");
+            var args = string.Format(@" /nodots ""{0}\DataAccess.dll""", path);
+
+            var psi = new ProcessStartInfo(testRunner, args);
             psi.RedirectStandardOutput = true;
             psi.CreateNoWindow = true;
             psi.UseShellExecute = false;
