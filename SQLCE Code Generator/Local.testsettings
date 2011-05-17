@@ -6,6 +6,7 @@
     <DeploymentItem filename="SqlCeDatabase.UnitTest\TestDatabase40.sdf" />
   </Deployment>
   <Execution>
+    <Hosts skipUnhostableTests="false" />
     <TestTypeSpecific>
       <UnitTestRunConfig testTypeId="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b">
         <AssemblyResolution>

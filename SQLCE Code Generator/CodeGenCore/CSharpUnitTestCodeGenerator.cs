@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Data.SqlServerCe;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
@@ -211,7 +212,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t" + GetTestMethodAttribute());
             code.AppendLine("\t\tpublic void CreateDatabaseTest()");
             code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tEntityBase.ConnectionString = @\"" + Database.ConnectionString + "_\" + RandomGenerator.GenerateString(10) + \".sdf\";");
+            code.AppendLine("\t\t\tEntityBase.ConnectionString = @\"Data Source='" + new SqlCeConnectionStringBuilder(Database.ConnectionString).DataSource + "_\" + RandomGenerator.GenerateString(10) + \".sdf'\";");
             code.AppendLine("\t\t\tEntityBase.Connection.Dispose();");
             code.AppendLine("\t\t\tEntityBase.Connection = null;");
             code.AppendLine();
