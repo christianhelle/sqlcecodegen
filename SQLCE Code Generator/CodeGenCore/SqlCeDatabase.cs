@@ -51,7 +51,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             var newConnString = new SqlConnectionStringBuilder(ConnectionString);
             newConnString.DataSource = newFile.FullName;
 
-            ConnectionString = newConnString.ToString().Replace("\"", "'");
+            var firstIdx = newConnString.ToString().IndexOf("\"", 0);
+            var lastIdx = newConnString.ToString().LastIndexOf("\"");
+            var connStr = new StringBuilder(newConnString.ToString());
+            connStr[firstIdx] = '\'';
+            connStr[lastIdx] = '\'';
+
+            ConnectionString = connStr.ToString();
             using (var engine = new SqlCeEngine(ConnectionString))
                 engine.Upgrade();
 
