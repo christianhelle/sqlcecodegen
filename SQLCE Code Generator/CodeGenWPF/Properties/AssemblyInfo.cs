@@ -7,12 +7,12 @@ using System.Windows;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("CodeGenWPF")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("SQL CE Code Generator GUI")]
+[assembly: AssemblyDescription("Stand alone GUI application for automatically generating a .NET data access layer code for objects in a SQL Server Compact Edition database.")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
-[assembly: AssemblyProduct("CodeGenWPF")]
-[assembly: AssemblyCopyright("Copyright © Microsoft 2011")]
+[assembly: AssemblyCompany("Christian Resma Helle")]
+[assembly: AssemblyProduct("SQL CE Code Generator GUI")]
+[assembly: AssemblyCopyright("Copyright © Christian Resma Helle 2009")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("SQL CE Code Generator GUI")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("Stand alone GUI application for automatically generating a .NET data access layer code for objects in a SQL Server Compact Edition database.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Christian Resma Helle")]
 [assembly: AssemblyProduct("SQL CE Code Generator GUI")]
@@ -32,4 +32,4 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.1.0.1")]
+[assembly: AssemblyVersion("1.1.0.2")]

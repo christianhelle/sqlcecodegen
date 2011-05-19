@@ -16,14 +16,14 @@
     {
         "Entry"
         {
-        "MsmKey" = "8:_2CEEE1DBC6E154F2759F57EE481BB3DF"
+        "MsmKey" = "8:_1ABAEE125D1967F2C18B4CB07A706DF0"
         "OwnerKey" = "8:_2E790EAD63A049DF84EE097B9931045E"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_2CEEE1DBC6E154F2759F57EE481BB3DF"
-        "OwnerKey" = "8:_A4CA9D97ED25C222750EE439FA84EF03"
+        "MsmKey" = "8:_1ABAEE125D1967F2C18B4CB07A706DF0"
+        "OwnerKey" = "8:_F88A8DB8C5BB6257239D3206BF9F3CD1"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -34,20 +34,14 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_3CADB96299B1F2515F915DA85D99641B"
+        "MsmKey" = "8:_7F8B7256E5C5AE4BB019E0E039A400EB"
         "OwnerKey" = "8:_2E790EAD63A049DF84EE097B9931045E"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_9DD9D66605F5B5500EBB9ABE4176B7D5"
-        "OwnerKey" = "8:_2E790EAD63A049DF84EE097B9931045E"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_9DD9D66605F5B5500EBB9ABE4176B7D5"
-        "OwnerKey" = "8:_3CADB96299B1F2515F915DA85D99641B"
+        "MsmKey" = "8:_7F8B7256E5C5AE4BB019E0E039A400EB"
+        "OwnerKey" = "8:_C107DE6AF7105828DBB5FB1F503A2D1D"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -59,24 +53,30 @@
         "Entry"
         {
         "MsmKey" = "8:_9E75E708FC8BC8FB47EB5FB6608121F5"
-        "OwnerKey" = "8:_3CADB96299B1F2515F915DA85D99641B"
+        "OwnerKey" = "8:_C107DE6AF7105828DBB5FB1F503A2D1D"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_A4CA9D97ED25C222750EE439FA84EF03"
+        "MsmKey" = "8:_9FD641E45118A452DBF6780D325D1366"
+        "OwnerKey" = "8:_7F8B7256E5C5AE4BB019E0E039A400EB"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_C107DE6AF7105828DBB5FB1F503A2D1D"
         "OwnerKey" = "8:_2E790EAD63A049DF84EE097B9931045E"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_C1FEAED83F8E57C65E6CE6E6F2D70C63"
-        "OwnerKey" = "8:_9DD9D66605F5B5500EBB9ABE4176B7D5"
+        "MsmKey" = "8:_D6E141695CE26A412A3303A9BC37C318"
+        "OwnerKey" = "8:_2E790EAD63A049DF84EE097B9931045E"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_E3C1B842B87919DFDCB17C1BA7A7B2D4"
+        "MsmKey" = "8:_F88A8DB8C5BB6257239D3206BF9F3CD1"
         "OwnerKey" = "8:_2E790EAD63A049DF84EE097B9931045E"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -95,31 +95,31 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_3CADB96299B1F2515F915DA85D99641B"
+        "OwnerKey" = "8:_C107DE6AF7105828DBB5FB1F503A2D1D"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_E3C1B842B87919DFDCB17C1BA7A7B2D4"
+        "OwnerKey" = "8:_D6E141695CE26A412A3303A9BC37C318"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_A4CA9D97ED25C222750EE439FA84EF03"
+        "OwnerKey" = "8:_F88A8DB8C5BB6257239D3206BF9F3CD1"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_2CEEE1DBC6E154F2759F57EE481BB3DF"
+        "OwnerKey" = "8:_7F8B7256E5C5AE4BB019E0E039A400EB"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_9DD9D66605F5B5500EBB9ABE4176B7D5"
+        "OwnerKey" = "8:_1ABAEE125D1967F2C18B4CB07A706DF0"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -298,14 +298,14 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_2CEEE1DBC6E154F2759F57EE481BB3DF"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_1ABAEE125D1967F2C18B4CB07A706DF0"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_2CEEE1DBC6E154F2759F57EE481BB3DF"
+                    "_1ABAEE125D1967F2C18B4CB07A706DF0"
                     {
                     "Name" = "8:System.Data.SqlServerCe.dll"
                     "Attributes" = "3:512"
@@ -329,45 +329,14 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_3CADB96299B1F2515F915DA85D99641B"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:Microsoft.VisualStudio.BaseCodeGeneratorWithSite, Version=1.1.0.0, Culture=neutral, PublicKeyToken=fd07cb18fc57563b"
-                "ScatterAssemblies"
-                {
-                    "_3CADB96299B1F2515F915DA85D99641B"
-                    {
-                    "Name" = "8:Microsoft.VisualStudio.BaseCodeGeneratorWithSite.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:Microsoft.VisualStudio.BaseCodeGeneratorWithSite.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_C296FF3876624722BFD513FAD7C82829"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_9DD9D66605F5B5500EBB9ABE4176B7D5"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_7F8B7256E5C5AE4BB019E0E039A400EB"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:VSLangProj, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a"
                 "ScatterAssemblies"
                 {
-                    "_9DD9D66605F5B5500EBB9ABE4176B7D5"
+                    "_7F8B7256E5C5AE4BB019E0E039A400EB"
                     {
                     "Name" = "8:VSLangProj.dll"
                     "Attributes" = "3:512"
@@ -422,38 +391,7 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_A4CA9D97ED25C222750EE439FA84EF03"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:CodeGenCore, Version=1.1.0.1, Culture=neutral, PublicKeyToken=bb748fcfacf21f9b, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_A4CA9D97ED25C222750EE439FA84EF03"
-                    {
-                    "Name" = "8:CodeGenCore.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:CodeGenCore.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_C296FF3876624722BFD513FAD7C82829"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
-            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_C1FEAED83F8E57C65E6CE6E6F2D70C63"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_9FD641E45118A452DBF6780D325D1366"
             {
             "SourcePath" = "8:vslangproj.olb"
             "TargetName" = "8:vslangproj.olb"
@@ -473,20 +411,82 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_E3C1B842B87919DFDCB17C1BA7A7B2D4"
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_C107DE6AF7105828DBB5FB1F503A2D1D"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:Microsoft.VisualStudio.BaseCodeGeneratorWithSite, Version=1.1.0.0, Culture=neutral, PublicKeyToken=fd07cb18fc57563b"
+                "ScatterAssemblies"
+                {
+                    "_C107DE6AF7105828DBB5FB1F503A2D1D"
+                    {
+                    "Name" = "8:Microsoft.VisualStudio.BaseCodeGeneratorWithSite.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:Microsoft.VisualStudio.BaseCodeGeneratorWithSite.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_C296FF3876624722BFD513FAD7C82829"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_D6E141695CE26A412A3303A9BC37C318"
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
             "AssemblyAsmDisplayName" = "8:Microsoft.ExceptionMessageBox, Version=9.0.242.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_E3C1B842B87919DFDCB17C1BA7A7B2D4"
+                    "_D6E141695CE26A412A3303A9BC37C318"
                     {
                     "Name" = "8:Microsoft.ExceptionMessageBox.dll"
                     "Attributes" = "3:512"
                     }
                 }
             "SourcePath" = "8:Microsoft.ExceptionMessageBox.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_C296FF3876624722BFD513FAD7C82829"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F88A8DB8C5BB6257239D3206BF9F3CD1"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:CodeGenCore, Version=1.1.0.2, Culture=neutral, PublicKeyToken=bb748fcfacf21f9b, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_F88A8DB8C5BB6257239D3206BF9F3CD1"
+                    {
+                    "Name" = "8:CodeGenCore.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:CodeGenCore.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C296FF3876624722BFD513FAD7C82829"
@@ -561,7 +561,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:SQL CE Code Generator"
         "ProductCode" = "8:{7062A6C2-9172-4624-9408-2B19A7078B5F}"
-        "PackageCode" = "8:{9985D1FD-C88B-4221-A7ED-214426CE6E36}"
+        "PackageCode" = "8:{D3105B70-0890-4A04-ABC8-05B13FF029DA}"
         "UpgradeCode" = "8:{CCC6BAAE-44C4-4AC9-81D0-6908A6914681}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -647,6 +647,44 @@
                                                             "Transitive" = "11:FALSE"
                                                                 "Keys"
                                                                 {
+                                                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_20475A9C04D3461A983E51285C61174C"
+                                                                    {
+                                                                    "Name" = "8:SQLCEMSTestCodeGenerator"
+                                                                    "Condition" = "8:"
+                                                                    "AlwaysCreate" = "11:FALSE"
+                                                                    "DeleteAtUninstall" = "11:FALSE"
+                                                                    "Transitive" = "11:FALSE"
+                                                                        "Keys"
+                                                                        {
+                                                                        }
+                                                                        "Values"
+                                                                        {
+                                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_2B4A83A87D914644A44A2D710D19F43C"
+                                                                            {
+                                                                            "Name" = "8:CLSID"
+                                                                            "Condition" = "8:"
+                                                                            "Transitive" = "11:FALSE"
+                                                                            "ValueTypes" = "3:1"
+                                                                            "Value" = "8:7690FAC3-0662-49AB-BA02-E65A9F0974A6"
+                                                                            }
+                                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_504B56FA65E64B0E9A428232B2E0B40E"
+                                                                            {
+                                                                            "Name" = "8:(Default)"
+                                                                            "Condition" = "8:"
+                                                                            "Transitive" = "11:FALSE"
+                                                                            "ValueTypes" = "3:1"
+                                                                            "Value" = "8:SQLCE Data Access Layer Unit Test Code Generator (MSTest)"
+                                                                            }
+                                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_5D78460389C04FD69D92A9F58E606551"
+                                                                            {
+                                                                            "Name" = "8:GeneratesDesignTimeSource"
+                                                                            "Condition" = "8:"
+                                                                            "Transitive" = "11:FALSE"
+                                                                            "ValueTypes" = "3:3"
+                                                                            "Value" = "3:1"
+                                                                            }
+                                                                        }
+                                                                    }
                                                                     "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_CDA67DC9936B44EF9B6B3741A9543AE1"
                                                                     {
                                                                     "Name" = "8:SQLCECodeGenerator"
@@ -682,6 +720,44 @@
                                                                             "Transitive" = "11:FALSE"
                                                                             "ValueTypes" = "3:1"
                                                                             "Value" = "8:SQLCE Data Access Layer Code Generator"
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_E7D4BBF81A2948F7BC118DB4E8ED08E3"
+                                                                    {
+                                                                    "Name" = "8:SQLCENUnitCodeGenerator"
+                                                                    "Condition" = "8:"
+                                                                    "AlwaysCreate" = "11:FALSE"
+                                                                    "DeleteAtUninstall" = "11:FALSE"
+                                                                    "Transitive" = "11:FALSE"
+                                                                        "Keys"
+                                                                        {
+                                                                        }
+                                                                        "Values"
+                                                                        {
+                                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_4F812D4BFE354CFDA841C8249D503D79"
+                                                                            {
+                                                                            "Name" = "8:CLSID"
+                                                                            "Condition" = "8:"
+                                                                            "Transitive" = "11:FALSE"
+                                                                            "ValueTypes" = "3:1"
+                                                                            "Value" = "8:CEE56EE5-9FF2-4504-AB85-3548E4CEDCBD"
+                                                                            }
+                                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_7152B6395A6A4E7A9C2C874B4865E7B4"
+                                                                            {
+                                                                            "Name" = "8:GeneratesDesignTimeSource"
+                                                                            "Condition" = "8:"
+                                                                            "Transitive" = "11:FALSE"
+                                                                            "ValueTypes" = "3:3"
+                                                                            "Value" = "3:1"
+                                                                            }
+                                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_CFA22752F8854FAA8B4229FC72FF0566"
+                                                                            {
+                                                                            "Name" = "8:(Default)"
+                                                                            "Condition" = "8:"
+                                                                            "Transitive" = "11:FALSE"
+                                                                            "ValueTypes" = "3:1"
+                                                                            "Value" = "8:SQLCE Data Access Layer Unit Test Code Generator (NUnit)"
                                                                             }
                                                                         }
                                                                     }
@@ -727,6 +803,82 @@
                                                             "Transitive" = "11:FALSE"
                                                                 "Keys"
                                                                 {
+                                                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_726FFD4E3C5343B2AE71FBF14968054F"
+                                                                    {
+                                                                    "Name" = "8:SQLCEMSTestCodeGenerator"
+                                                                    "Condition" = "8:"
+                                                                    "AlwaysCreate" = "11:FALSE"
+                                                                    "DeleteAtUninstall" = "11:FALSE"
+                                                                    "Transitive" = "11:FALSE"
+                                                                        "Keys"
+                                                                        {
+                                                                        }
+                                                                        "Values"
+                                                                        {
+                                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_29BF6D670AF747A98EBDA6C846ABCE63"
+                                                                            {
+                                                                            "Name" = "8:(Default)"
+                                                                            "Condition" = "8:"
+                                                                            "Transitive" = "11:FALSE"
+                                                                            "ValueTypes" = "3:1"
+                                                                            "Value" = "8:SQLCE Data Access Layer Unit Test Code Generator (MSTest)"
+                                                                            }
+                                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_2AD646C3D19F4944BC3E5D7915EBC5F7"
+                                                                            {
+                                                                            "Name" = "8:CLSID"
+                                                                            "Condition" = "8:"
+                                                                            "Transitive" = "11:FALSE"
+                                                                            "ValueTypes" = "3:1"
+                                                                            "Value" = "8:7690FAC3-0662-49AB-BA02-E65A9F0974A6"
+                                                                            }
+                                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_408E750EA8834E5F8C1DA3356399B73D"
+                                                                            {
+                                                                            "Name" = "8:GeneratesDesignTimeSource"
+                                                                            "Condition" = "8:"
+                                                                            "Transitive" = "11:FALSE"
+                                                                            "ValueTypes" = "3:3"
+                                                                            "Value" = "3:1"
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_74CD591D29384F589F1C832695BAE805"
+                                                                    {
+                                                                    "Name" = "8:SQLCENUnitCodeGenerator"
+                                                                    "Condition" = "8:"
+                                                                    "AlwaysCreate" = "11:FALSE"
+                                                                    "DeleteAtUninstall" = "11:FALSE"
+                                                                    "Transitive" = "11:FALSE"
+                                                                        "Keys"
+                                                                        {
+                                                                        }
+                                                                        "Values"
+                                                                        {
+                                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_A592856D7B0345F0850D8F57E1A62488"
+                                                                            {
+                                                                            "Name" = "8:CLSID"
+                                                                            "Condition" = "8:"
+                                                                            "Transitive" = "11:FALSE"
+                                                                            "ValueTypes" = "3:1"
+                                                                            "Value" = "8:CEE56EE5-9FF2-4504-AB85-3548E4CEDCBD"
+                                                                            }
+                                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_E8ABA7E7F1E0453CA85FA7BBAF87305C"
+                                                                            {
+                                                                            "Name" = "8:GeneratesDesignTimeSource"
+                                                                            "Condition" = "8:"
+                                                                            "Transitive" = "11:FALSE"
+                                                                            "ValueTypes" = "3:3"
+                                                                            "Value" = "3:1"
+                                                                            }
+                                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_FB27AA3321E64E3DA54FF42A8DBAC1F4"
+                                                                            {
+                                                                            "Name" = "8:(Default)"
+                                                                            "Condition" = "8:"
+                                                                            "Transitive" = "11:FALSE"
+                                                                            "ValueTypes" = "3:1"
+                                                                            "Value" = "8:SQLCE Data Access Layer Unit Test Code Generator (NUnit)"
+                                                                            }
+                                                                        }
+                                                                    }
                                                                     "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_C26BF058A2DD47458D45C1D7A5AC7CAC"
                                                                     {
                                                                     "Name" = "8:SQLCECodeGenerator"
@@ -844,6 +996,82 @@
                                                                     "Transitive" = "11:FALSE"
                                                                         "Keys"
                                                                         {
+                                                                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_1504BDE3F5D643ABBCC9ABA579A4CB07"
+                                                                            {
+                                                                            "Name" = "8:SQLCEMSTestCodeGenerator"
+                                                                            "Condition" = "8:"
+                                                                            "AlwaysCreate" = "11:FALSE"
+                                                                            "DeleteAtUninstall" = "11:FALSE"
+                                                                            "Transitive" = "11:FALSE"
+                                                                                "Keys"
+                                                                                {
+                                                                                }
+                                                                                "Values"
+                                                                                {
+                                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_AF0FC7D6CB0F42A095CD609A68EC13B0"
+                                                                                    {
+                                                                                    "Name" = "8:(Default)"
+                                                                                    "Condition" = "8:"
+                                                                                    "Transitive" = "11:FALSE"
+                                                                                    "ValueTypes" = "3:1"
+                                                                                    "Value" = "8:SQLCE Data Access Layer Unit Test Code Generator (MSTest)"
+                                                                                    }
+                                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_B86B21072DAF483D879CDE6D996BB6E0"
+                                                                                    {
+                                                                                    "Name" = "8:CLSID"
+                                                                                    "Condition" = "8:"
+                                                                                    "Transitive" = "11:FALSE"
+                                                                                    "ValueTypes" = "3:1"
+                                                                                    "Value" = "8:7690FAC3-0662-49AB-BA02-E65A9F0974A6"
+                                                                                    }
+                                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_C1E1460B4D774F9E8F735361258CD2D4"
+                                                                                    {
+                                                                                    "Name" = "8:GeneratesDesignTimeSource"
+                                                                                    "Condition" = "8:"
+                                                                                    "Transitive" = "11:FALSE"
+                                                                                    "ValueTypes" = "3:3"
+                                                                                    "Value" = "3:1"
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_4026748B931C4D20B05C79A2D7A57CDA"
+                                                                            {
+                                                                            "Name" = "8:SQLCENUnitCodeGenerator"
+                                                                            "Condition" = "8:"
+                                                                            "AlwaysCreate" = "11:FALSE"
+                                                                            "DeleteAtUninstall" = "11:FALSE"
+                                                                            "Transitive" = "11:FALSE"
+                                                                                "Keys"
+                                                                                {
+                                                                                }
+                                                                                "Values"
+                                                                                {
+                                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_9BB5FF0130AA412D95EE1BFA14724B5D"
+                                                                                    {
+                                                                                    "Name" = "8:CLSID"
+                                                                                    "Condition" = "8:"
+                                                                                    "Transitive" = "11:FALSE"
+                                                                                    "ValueTypes" = "3:1"
+                                                                                    "Value" = "8:CEE56EE5-9FF2-4504-AB85-3548E4CEDCBD"
+                                                                                    }
+                                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_B14AC3228EC1440582E9301FB495A15B"
+                                                                                    {
+                                                                                    "Name" = "8:GeneratesDesignTimeSource"
+                                                                                    "Condition" = "8:"
+                                                                                    "Transitive" = "11:FALSE"
+                                                                                    "ValueTypes" = "3:3"
+                                                                                    "Value" = "3:1"
+                                                                                    }
+                                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_E44D258DE240499DA34F6237726B9130"
+                                                                                    {
+                                                                                    "Name" = "8:(Default)"
+                                                                                    "Condition" = "8:"
+                                                                                    "Transitive" = "11:FALSE"
+                                                                                    "ValueTypes" = "3:1"
+                                                                                    "Value" = "8:SQLCE Data Access Layer Unit Test Code Generator (NUnit)"
+                                                                                    }
+                                                                                }
+                                                                            }
                                                                             "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_FCCE00731A2643C6878EF62EB5798F3E"
                                                                             {
                                                                             "Name" = "8:SQLCECodeGenerator"
@@ -924,6 +1152,44 @@
                                                                     "Transitive" = "11:FALSE"
                                                                         "Keys"
                                                                         {
+                                                                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_7DFF1C687AD7433B8B3BE3F742D0CAAB"
+                                                                            {
+                                                                            "Name" = "8:SQLCEMSTestCodeGenerator"
+                                                                            "Condition" = "8:"
+                                                                            "AlwaysCreate" = "11:FALSE"
+                                                                            "DeleteAtUninstall" = "11:FALSE"
+                                                                            "Transitive" = "11:FALSE"
+                                                                                "Keys"
+                                                                                {
+                                                                                }
+                                                                                "Values"
+                                                                                {
+                                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_1E9DF9D07E8A4C39B752B8C1F05ADAAB"
+                                                                                    {
+                                                                                    "Name" = "8:GeneratesDesignTimeSource"
+                                                                                    "Condition" = "8:"
+                                                                                    "Transitive" = "11:FALSE"
+                                                                                    "ValueTypes" = "3:3"
+                                                                                    "Value" = "3:1"
+                                                                                    }
+                                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_EFB38FB5D0404D7DBE5377239A6664A9"
+                                                                                    {
+                                                                                    "Name" = "8:(Default)"
+                                                                                    "Condition" = "8:"
+                                                                                    "Transitive" = "11:FALSE"
+                                                                                    "ValueTypes" = "3:1"
+                                                                                    "Value" = "8:SQLCE Data Access Layer Unit Test Code Generator (MSTest)"
+                                                                                    }
+                                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_F3B310928BE641C998ADE738AFDD3E6B"
+                                                                                    {
+                                                                                    "Name" = "8:CLSID"
+                                                                                    "Condition" = "8:"
+                                                                                    "Transitive" = "11:FALSE"
+                                                                                    "ValueTypes" = "3:1"
+                                                                                    "Value" = "8:7690FAC3-0662-49AB-BA02-E65A9F0974A6"
+                                                                                    }
+                                                                                }
+                                                                            }
                                                                             "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_9E79D7A2AF7B435F87ED084BC5DF924C"
                                                                             {
                                                                             "Name" = "8:SQLCECodeGenerator"
@@ -959,6 +1225,44 @@
                                                                                     "Transitive" = "11:FALSE"
                                                                                     "ValueTypes" = "3:1"
                                                                                     "Value" = "8:{64264FF6-2DD0-489a-A8C2-8FD7855FE3BF}"
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_DF2446DC896946EFA72D11FBF453DAC2"
+                                                                            {
+                                                                            "Name" = "8:SQLCENUnitCodeGenerator"
+                                                                            "Condition" = "8:"
+                                                                            "AlwaysCreate" = "11:FALSE"
+                                                                            "DeleteAtUninstall" = "11:FALSE"
+                                                                            "Transitive" = "11:FALSE"
+                                                                                "Keys"
+                                                                                {
+                                                                                }
+                                                                                "Values"
+                                                                                {
+                                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_52E23C6C997644628FAF74A4BA64D71E"
+                                                                                    {
+                                                                                    "Name" = "8:(Default)"
+                                                                                    "Condition" = "8:"
+                                                                                    "Transitive" = "11:FALSE"
+                                                                                    "ValueTypes" = "3:1"
+                                                                                    "Value" = "8:SQLCE Data Access Layer Unit Test Code Generator (NUnit)"
+                                                                                    }
+                                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_AAF3B90A41FA495BB3384BF9078190EF"
+                                                                                    {
+                                                                                    "Name" = "8:GeneratesDesignTimeSource"
+                                                                                    "Condition" = "8:"
+                                                                                    "Transitive" = "11:FALSE"
+                                                                                    "ValueTypes" = "3:3"
+                                                                                    "Value" = "3:1"
+                                                                                    }
+                                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_EC35422925794A68AC6D633160867F0F"
+                                                                                    {
+                                                                                    "Name" = "8:CLSID"
+                                                                                    "Condition" = "8:"
+                                                                                    "Transitive" = "11:FALSE"
+                                                                                    "ValueTypes" = "3:1"
+                                                                                    "Value" = "8:CEE56EE5-9FF2-4504-AB85-3548E4CEDCBD"
                                                                                     }
                                                                                 }
                                                                             }
