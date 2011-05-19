@@ -85,8 +85,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SQLCECodeGen.cs" />
+    <Compile Include="CodeGeneratorCustomTool.cs" />
+    <Compile Include="SQLCEMSTestCodeGenerator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SQLCECodeGenerator.cs" />
+    <Compile Include="SQLCENUnitCodeGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CodeGenCore\CodeGenCore.csproj">

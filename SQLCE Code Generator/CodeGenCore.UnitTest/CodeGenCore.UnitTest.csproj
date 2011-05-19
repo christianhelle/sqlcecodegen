@@ -90,6 +90,7 @@
     <Compile Include="CodeGeneratorFactoryTest.cs" />
     <Compile Include="CodeGenFileSerializerTest.cs" />
     <Compile Include="CodeGenTest.cs" />
+    <Compile Include="UnitTestCodeGeneratorFactory.cs" />
     <None Include="GeneratedCodeDomCodeGeneratorTest.cs" />
     <Compile Include="GeneratedCSharpCodeTest.cs" />
     <Compile Include="SqlCeDatabaseTest.cs" />

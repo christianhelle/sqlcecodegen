@@ -90,6 +90,7 @@
     <Compile Include="SqlCeDatabase.cs" />
     <Compile Include="SqlCeEngineExtensions.cs" />
     <Compile Include="Table.cs" />
+    <Compile Include="UnitTestCodeGeneratorFactory.cs" />
     <Compile Include="VisualBasicCodeGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
