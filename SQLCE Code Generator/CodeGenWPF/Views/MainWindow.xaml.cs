@@ -11,6 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using CodeGenWPF.ViewModels;
 
 namespace CodeGenWPF.Views
 {
@@ -28,6 +29,59 @@ namespace CodeGenWPF.Views
         {
             var about = new AboutBox(this);
             about.ShowDialog();
+        }
+
+        private void Exit_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            ((MainViewModel)DataContext).New();
+        }
+
+        private void Save_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Open_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void New_Click(object sender, RoutedEventArgs e)
+        {
+            ((MainViewModel)DataContext).New();
+        }
+
+        private void SaveAs_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Build_Click(object sender, RoutedEventArgs e)
+        {
+            ((MainViewModel)DataContext).CompileCSharp30();
+        }
+
+        private void RunUnitTests_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void ReGenerateCode_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void textOutput_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var textBox = (TextBox)sender;
+            textBox.SelectionStart = textBox.Text.Length - 1;
+            textBox.ScrollToEnd();
+            textBox.UpdateLayout();
         }
     }
 }
