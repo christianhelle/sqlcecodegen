@@ -552,7 +552,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             }
 
             code.Remove(code.Length - 2, 2);
-            code.Append(");");
+            code.Append(", null);");
             code.AppendLine();
 
             code.AppendLine("\t\t}");
@@ -599,7 +599,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             switch (databaseType.ToLower())
             {
                 case "tinyint":
-                    return "new System.Byte()";
+                    return "(System.Byte)new System.Random().Next(0, 255)";
 
                 case "smallint":
                     return "(short)new System.Random().Next(1, 1000)";

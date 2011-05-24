@@ -52,15 +52,18 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             code.AppendLine("\t#region EntityBase");
             code.AppendLine();
+
             GenerateXmlDoc(1, "Base class for all data access repositories");
             code.AppendLine("\tpublic static class EntityBase");
             code.AppendLine("\t{");
             code.AppendLine("\t\tprivate static System.Data.SqlServerCe.SqlCeConnection connectionInstance = null;");
             code.AppendLine("\t\tprivate static readonly object syncLock = new object();");
             code.AppendLine();
+
             GenerateXmlDoc(2, "Gets or sets the global SQL CE Connection String to be used");
             code.AppendLine("\t\tpublic static System.String ConnectionString { get; set; }");
             code.AppendLine();
+
             GenerateXmlDoc(2, "Gets or sets the global SQL CE Connection instance");
             code.AppendLine("\t\tpublic static System.Data.SqlServerCe.SqlCeConnection Connection");
             code.AppendLine("\t\t{");
@@ -88,8 +91,18 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\treturn Connection.CreateCommand();");
             code.AppendLine("\t\t}");
-            code.AppendLine("\t}");
             code.AppendLine();
+
+            GenerateXmlDoc(2, "Create a SqlCeCommand instance using the global SQL CE Conection instance and associate this with a transaction", new KeyValuePair<string,string>("transaction", "SqlCeTransaction to be used for the SqlCeCommand"));
+            code.AppendLine("\t\tpublic static System.Data.SqlServerCe.SqlCeCommand CreateCommand(System.Data.SqlServerCe.SqlCeTransaction transaction)");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tvar command = Connection.CreateCommand();");
+            code.AppendLine("\t\t\tcommand.Transaction = transaction;");
+            code.AppendLine("\t\t\treturn command;");
+            code.AppendLine("\t\t}");
+            code.AppendLine();
+
+            code.AppendLine("\t}");
             code.AppendLine("\t#endregion");
             code.AppendLine();
         }
@@ -109,7 +122,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\tusing (var engine = new System.Data.SqlServerCe.SqlCeEngine(EntityBase.ConnectionString))");
             code.AppendLine("\t\t\t\tengine.CreateDatabase();");
             code.AppendLine();
-            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
+            code.AppendLine("\t\t\tusing (var transaction = EntityBase.Connection.BeginTransaction())");
+            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand(transaction))");
             code.AppendLine("\t\t\t{");
             foreach (var table in Database.Tables)
             {
@@ -141,6 +155,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\t\t\t\tresultCount += command.ExecuteNonQuery();");
                 code.AppendLine();
             }
+            code.Remove(code.Length - 1, 1);
+            code.AppendLine("\t\t\t\ttransaction.Commit();");
             code.AppendLine("\t\t\t}");
             code.AppendLine();
             code.AppendLine("\t\t\treturn resultCount;");
@@ -291,7 +307,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                         code.Append(column.Value + " " + column.Value.FieldName + ", ");
                 }
                 code.Remove(code.Length - 2, 2);
-                code.Append(");\n");
+                code.Append(", System.Data.SqlServerCe.SqlCeTransaction transaction);\n");
             }
 
             GenerateXmlDoc(2, "Create new record specifying all fields");
@@ -304,7 +320,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     code.Append(column.Value + " " + column.Value.FieldName + ", ");
             }
             code.Remove(code.Length - 2, 2);
-            code.Append(");\n");
+            code.Append(", System.Data.SqlServerCe.SqlCeTransaction transaction);\n");
 
             code.AppendLine("\t}");
             code.AppendLine();
@@ -407,7 +423,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 if (column.Value.MaxLength > 0 && column.Value.ManagedType.Equals(typeof(string)))
                 {
                     GenerateXmlDoc(2, "The Maximum Length the " + column.Value.FieldName + " field allows");
-                    code.AppendLine("\t\tpublic const int " + column.Value.FieldName + "_MAX_LENGTH = " + column.Value.MaxLength + ";");
+                    code.AppendLine("\t\tpublic const int " + column.Value.FieldName + "_Max_Length = " + column.Value.MaxLength + ";");
                 }
 
                 GenerateXmlDoc(2, "Gets or sets the value of " + column.Value.FieldName);
@@ -420,7 +436,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
                 if (column.Value.MaxLength > 0 && column.Value.ManagedType.Equals(typeof(string)))
                 {
-                    code.AppendLine("\t\t\t\tif (_" + column.Value.FieldName + " != null && " + column.Value.FieldName + ".Length > " + column.Value.FieldName + "_MAX_LENGTH)");
+                    code.AppendLine("\t\t\t\tif (_" + column.Value.FieldName + " != null && " + column.Value.FieldName + ".Length > " + column.Value.FieldName + "_Max_Length)");
                     code.AppendLine("\t\t\t\t\tthrow new System.ArgumentException(\"Max length for " + column.Value.FieldName + " is " + column.Value.MaxLength + "\");");
                 }
 
