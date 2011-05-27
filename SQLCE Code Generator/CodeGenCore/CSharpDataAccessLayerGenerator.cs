@@ -353,7 +353,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     continue;
                 if (!column.Value.ManagedType.Equals(typeof(string)))
                     continue;
-                code.AppendLine("\t\t\tif (" + column.Value.FieldName + " != null && " + column.Value.FieldName + ".Length > " + table.ClassName + "." + column.Value.Name + "_Max_Length)");
+                code.AppendLine("\t\t\tif (" + column.Value.FieldName + " != null && " + column.Value.FieldName + ".Length > " + table.ClassName + "." + column.Value.FieldName + "_Max_Length)");
                 code.AppendLine("\t\t\t\tthrow new System.ArgumentException(\"Max length for " + column.Value.FieldName + " is " + column.Value.MaxLength + "\");");
             }
             code.AppendLine();
