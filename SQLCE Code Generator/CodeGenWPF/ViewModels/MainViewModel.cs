@@ -50,6 +50,28 @@ namespace CodeGenWPF.ViewModels
         public TextDocument EntityUnitTestSourceCode { get; set; }
         public TextDocument DataAccessUnitTestSourceCode { get; set; }
 
+        private bool isBusyAnalyzingTables;
+        public bool IsBusyAnalyzingTables
+        {
+            get { return isBusyAnalyzingTables; }
+            set
+            {
+                isBusyAnalyzingTables = value;
+                RaisePropertyChanged("IsBusyAnalyzingTables");
+            }
+        }
+
+        private bool isBusyGeneratingCode;
+        public bool IsBusyGeneratingCode
+        {
+            get { return isBusyGeneratingCode; }
+            set
+            {
+                isBusyGeneratingCode = value;
+                RaisePropertyChanged("IsBusyGeneratingCode");
+            }
+        }
+
         public void ShowAboutBox()
         {
             var about = new AboutBox(null);
@@ -104,7 +126,7 @@ namespace CodeGenWPF.ViewModels
             Trace.WriteLine(text);
         }
 
-        private void GenerateCode()
+        public void GenerateCode()
         {
             Output = null;
             var codeGenerator = CreateCodeGenerator(dataSource);
@@ -296,6 +318,54 @@ namespace CodeGenWPF.ViewModels
                 stream.Write(DataAccessUnitTestSourceCode.Text);
                 stream.WriteLine();
             }
+        }
+
+        public void RunUnitTests()
+        {
+            CompileCSharp30();
+
+            SelectedTabIndex = 3;
+            RaisePropertyChanged("SelectedTabIndex");
+            WriteToTestResultsWindow("Executing tests...");
+
+            var fi = new FileInfo(dataSource);
+            fi.Attributes = FileAttributes.Normal;
+
+            var sw = Stopwatch.StartNew();
+            string output = ExecuteUnitTestRunner();
+
+            UnitTestResults = null;
+            WriteToTestResultsWindow(output);
+            WriteToTestResultsWindow(Environment.NewLine + "Executed in " + sw.Elapsed);
+        }
+
+        void WriteToTestResultsWindow(string text)
+        {
+            UnitTestResults += Environment.NewLine + text;
+            RaisePropertyChanged("UnitTestResults");
+
+            Trace.WriteLine(text);
+        }
+
+        private string ExecuteUnitTestRunner()
+        {
+            //var testRunner = Environment.ExpandEnvironmentVariables(@"%VS90COMNTOOLS%\..\IDE\mstest.exe");
+            //if (!File.Exists(testRunner))
+            //    testRunner = Environment.ExpandEnvironmentVariables(@"%VS100COMNTOOLS%\..\IDE\mstest.exe");
+            //var args = string.Format(@"/testcontainer:""{0}\DataAccess.dll""", path);
+
+            var testRunner = Path.Combine(Environment.CurrentDirectory, "NUnit\\nunit-console.exe");
+            var args = string.Format(@" /nodots ""{0}\DataAccess.dll""", path);
+
+            var psi = new ProcessStartInfo(testRunner, args);
+            psi.RedirectStandardOutput = true;
+            psi.CreateNoWindow = true;
+            psi.UseShellExecute = false;
+
+            var process = Process.Start(psi);
+            string output = process.StandardOutput.ReadToEnd();
+            process.WaitForExit();
+            return output;
         }
     }
 }

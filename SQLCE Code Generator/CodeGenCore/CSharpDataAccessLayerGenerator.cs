@@ -33,7 +33,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\tpublic System.Collections.Generic.List<" + table.ClassName + "> ToList()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tvar list = new System.Collections.Generic.List<" + table.ClassName + ">();");
-            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
+            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand(Transaction))");
             code.AppendLine("\t\t\t{");
             code.AppendLine("\t\t\t\tcommand.CommandText = \"SELECT * FROM " + table.ClassName + "\";");
             code.AppendLine("\t\t\t\tusing (var reader = command.ExecuteReader())");
@@ -67,7 +67,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\tpublic System.Collections.Generic.List<" + table.ClassName + "> ToList(int count)");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tvar list = new System.Collections.Generic.List<" + table.ClassName + ">();");
-            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
+            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand(Transaction))");
             code.AppendLine("\t\t\t{");
             code.AppendLine("\t\t\t\tcommand.CommandText = string.Format(\"SELECT TOP({0}) * FROM " + table.ClassName + "\", count);");
             code.AppendLine("\t\t\t\tusing (var reader = command.ExecuteReader())");
@@ -114,7 +114,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine();
                 code.AppendLine("\t\t{");
                 code.AppendLine("\t\t\tvar list = new System.Collections.Generic.List<" + table.ClassName + ">();");
-                code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
+                code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand(Transaction))");
                 code.AppendLine("\t\t\t{");
                 code.AppendLine("\t\t\t\tif (" + column.Value.FieldName + " != null)");
                 code.AppendLine("\t\t\t\t{");
@@ -162,7 +162,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine();
                 code.AppendLine("\t\t{");
                 code.AppendLine("\t\t\tvar list = new System.Collections.Generic.List<" + table.ClassName + ">();");
-                code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
+                code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand(Transaction))");
                 code.AppendLine("\t\t\t{");
                 code.AppendLine("\t\t\tif (" + column.Value.FieldName + " != null)");
                 code.AppendLine("\t\t\t{");
@@ -198,7 +198,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             GenerateXmlDoc(2, "Gets the number of records in the table");
             code.AppendLine("\t\tpublic int Count()");
             code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
+            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand(Transaction))");
             code.AppendLine("\t\t\t{");
             code.AppendFormat("\t\t\t\tcommand.CommandText = \"SELECT COUNT(*) FROM {0}\";", table.ClassName);
             code.AppendLine();
@@ -218,14 +218,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             GenerateXmlDoc(2, "Inserts the item to the table", new KeyValuePair<string, string>("item", "Item to insert to the database"));
             code.AppendLine("\t\tpublic void Create(" + table.ClassName + " item)");
             code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tCreate(item, null);");
-            code.AppendLine("\t\t}");
-            code.AppendLine();
-
-            code.AppendLine();
-            GenerateXmlDoc(2, "Inserts the item to the table", new KeyValuePair<string, string>("item", "Item to insert to the database"));
-            code.AppendLine("\t\tpublic void Create(" + table.ClassName + " item, System.Data.SqlServerCe.SqlCeTransaction transaction)");
-            code.AppendLine("\t\t{");
             code.Append("\t\t\tCreate(");
             foreach (var column in table.Columns)
             {
@@ -234,7 +226,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.Append("item." + column.Value.FieldName + ", ");
             }
             code.Remove(code.Length - 2, 2);
-            code.Append(", transaction);");
+            code.Append(");");
             code.AppendLine();
             code.AppendLine("\t\t}");
             code.AppendLine();
@@ -257,7 +249,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     continue;
                 list.Add(new KeyValuePair<string, string>(column.Value.FieldName, column.Value.FieldName + " value"));
             }
-            list.Add(new KeyValuePair<string, string>("transaction", "SqlCeTransaction instance"));
 
             GenerateXmlDoc(2, "Inserts a new record to the table without specifying the primary key", list.ToArray());
             code.Append("\t\tpublic void Create(");
@@ -271,7 +262,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     code.Append(column.Value + " " + column.Value.FieldName + ", ");
             }
             code.Remove(code.Length - 2, 2);
-            code.Append(", System.Data.SqlServerCe.SqlCeTransaction transaction)");
+            code.Append(")");
             code.AppendLine();
             code.AppendLine("\t\t{");
 
@@ -286,7 +277,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             }
             code.AppendLine();
 
-            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand(transaction))");
+            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand(Transaction))");
             code.AppendLine("\t\t\t{");
 
             var query = new StringBuilder();
@@ -332,7 +323,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             var list = new List<KeyValuePair<string, string>>();
             foreach (var column in table.Columns)
                 list.Add(new KeyValuePair<string, string>(column.Value.FieldName, column.Value.FieldName + " value"));
-            list.Add(new KeyValuePair<string, string>("transaction", "SqlCeTransaction instance"));
 
             GenerateXmlDoc(2, "Inserts a new record to the table specifying all fields", list.ToArray());
             code.Append("\t\tpublic void Create(");
@@ -344,7 +334,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     code.Append(column.Value + " " + column.Value.FieldName + ", ");
             }
             code.Remove(code.Length - 2, 2);
-            code.Append(", System.Data.SqlServerCe.SqlCeTransaction transaction)\n");
+            code.Append(")\n");
             code.AppendLine("\t\t{");
 
             foreach (var column in table.Columns)
@@ -358,7 +348,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             }
             code.AppendLine();
 
-            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand(transaction))");
+            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand(Transaction))");
             code.AppendLine("\t\t\t{");
 
             var query = new StringBuilder();
@@ -391,8 +381,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             GenerateXmlDoc(2, "Populates the table with a collection of items");
             code.AppendLine("\t\tpublic void Create(System.Collections.Generic.IEnumerable<" + table.ClassName + "> items)");
             code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tusing (var transaction = EntityBase.Connection.BeginTransaction())");
-            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand(transaction))");
+            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand(Transaction))");
             code.AppendLine("\t\t\t{");
             code.AppendLine("\t\t\t\tcommand.CommandType = System.Data.CommandType.TableDirect;");
             code.AppendLine("\t\t\t\tcommand.CommandText = \"" + table.ClassName + "\";");
@@ -412,7 +401,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\t\t\t\tresultSet.Insert(record);");
             code.AppendLine("\t\t\t\t\t}");
             code.AppendLine("\t\t\t\t}");
-            code.AppendLine("\t\t\t\ttransaction.Commit();");
             code.AppendLine("\t\t\t}");
             code.AppendLine("\t\t}");
             code.AppendLine();
@@ -427,7 +415,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             GenerateXmlDoc(2, "Deletes the item", new KeyValuePair<string, string>("item", "Item to delete"));
             code.AppendLine("\t\tpublic void Delete(" + table.ClassName + " item)");
             code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
+            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand(Transaction))");
             code.AppendLine("\t\t\t{");
 
             var query = new StringBuilder();
@@ -478,8 +466,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             GenerateXmlDoc(2, "Deletes a collection of item", new KeyValuePair<string, string>("items", "Items to delete"));
             code.AppendLine("\t\tpublic void Delete(System.Collections.Generic.IEnumerable<" + table.ClassName + "> items)");
             code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tusing (var transaction = EntityBase.Connection.BeginTransaction())");
-            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
+            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand(Transaction))");
             code.AppendLine("\t\t\t{");
 
             var query = new StringBuilder();
@@ -531,7 +518,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\t\t\t\t\tcommand.ExecuteNonQuery();");
             }
             code.AppendLine("\t\t\t\t}");
-            code.AppendLine("\t\t\t\ttransaction.Commit();");
             code.AppendLine("\t\t\t}");
             code.AppendLine("\t\t}");
             code.AppendLine();
@@ -552,7 +538,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                                new KeyValuePair<string, string>(column.Value.FieldName, column.Value.FieldName + " value"));
                 code.AppendFormat("\t\tpublic int DeleteBy{1}({0}{2} {1})", column.Value.ManagedType, column.Value.FieldName, column.Value.ManagedType.IsValueType ? "?" : string.Empty);
                 code.AppendLine("\n\t\t{");
-                code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
+                code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand(Transaction))");
                 code.AppendLine("\t\t\t{");
                 code.AppendFormat("\t\t\t\tcommand.CommandText = \"DELETE FROM {0} WHERE {1}=@{1}\";", table.Name, column.Value.FieldName);
                 code.AppendFormat("\n\t\t\t\tcommand.Parameters.AddWithValue(\"@{0}\", {0} != null ? (object){0} : System.DBNull.Value);", column.Value.FieldName);
@@ -572,7 +558,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             GenerateXmlDoc(2, "Purges the contents of the table");
             code.AppendLine("\t\tpublic int Purge()");
             code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
+            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand(Transaction))");
             code.AppendLine("\t\t\t{");
             code.AppendLine("\t\t\t\tcommand.CommandText = \"DELETE FROM " + table.Name + "\";");
             code.AppendLine("\t\t\t\treturn command.ExecuteNonQuery();");
@@ -590,7 +576,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             GenerateXmlDoc(2, "Updates the item", new KeyValuePair<string, string>("item", "Item to update"));
             code.AppendLine("\t\tpublic void Update(" + table.ClassName + " item)");
             code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
+            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand(Transaction))");
             code.AppendLine("\t\t\t{");
 
             var query = new StringBuilder();
@@ -633,8 +619,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             GenerateXmlDoc(2, "Updates a collection of items", new KeyValuePair<string, string>("items", "Items to update"));
             code.AppendLine("\t\tpublic void Update(System.Collections.Generic.IEnumerable<" + table.ClassName + "> items)");
             code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tusing (var transaction = EntityBase.Connection.BeginTransaction())");
-            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand())");
+            code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand(Transaction))");
             code.AppendLine("\t\t\t{");
 
             var query = new StringBuilder();
@@ -669,7 +654,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\t\t\t\t\tcommand.Parameters[\"@" + column.Value.FieldName + "\"].Value = item." + column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value;");
             code.AppendLine("\t\t\t\t\tcommand.ExecuteNonQuery();");
             code.AppendLine("\t\t\t\t}");
-            code.AppendLine("\t\t\t\ttransaction.Commit();");
 
             code.AppendLine("\t\t\t}");
             code.AppendLine("\t\t}");

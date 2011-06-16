@@ -552,7 +552,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             }
 
             code.Remove(code.Length - 2, 2);
-            code.Append(", null);");
+            code.Append(");");
             code.AppendLine();
 
             code.AppendLine("\t\t}");

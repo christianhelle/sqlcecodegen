@@ -68,12 +68,12 @@ namespace CodeGenWPF.Views
 
         private void RunUnitTests_Click(object sender, RoutedEventArgs e)
         {
-
+            ((MainViewModel)DataContext).RunUnitTests();
         }
 
         private void ReGenerateCode_Click(object sender, RoutedEventArgs e)
         {
-
+            ((MainViewModel)DataContext).GenerateCode();
         }
 
         private void textOutput_TextChanged(object sender, TextChangedEventArgs e)
