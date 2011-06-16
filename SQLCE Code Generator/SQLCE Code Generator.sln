@@ -187,9 +187,4 @@ Global
 		{A59EBBFA-02C1-44B5-BDB8-6F7C49F360D4} = {CA13B6A4-8DDB-4DDC-8931-44064EF24237}
 		{DDFEFB32-623E-49EE-9627-A19B77E29FCA} = {CA13B6A4-8DDB-4DDC-8931-44064EF24237}
 	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		BuildVersion_UseGlobalSettings = False
-		BuildVersion_UpdateAssemblyVersion = False
-		BuildVersion_IncrementBeforeBuild = True
-	EndGlobalSection
 EndGlobal
