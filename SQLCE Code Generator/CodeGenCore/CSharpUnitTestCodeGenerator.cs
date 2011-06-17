@@ -184,6 +184,33 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tEntityBase.ConnectionString = @\"" + Database.ConnectionString + "\";");
             code.AppendLine("\t\t}");
+            code.AppendLine(@"
+
+        protected static DataAccessRandomGenerator RandomGenerator = new DataAccessRandomGenerator();
+
+        protected class DataAccessRandomGenerator
+        {
+            const string PWD_CHARSET = ""abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVXYZ1234567890"";
+
+            public string GenerateString(int len)
+            {
+                if (len > 4000) len = 4000;
+                var buffer = new byte[len * 2];
+                new System.Security.Cryptography.RNGCryptoServiceProvider().GetBytes(buffer);
+
+                using (var stream = new System.IO.MemoryStream(buffer, 0, buffer.Length, false, false))
+                using (var reader = new System.IO.BinaryReader(stream))
+                {
+                    var builder = new System.Text.StringBuilder(buffer.Length, buffer.Length);
+                    while (len-- > 0)
+                    {
+                        var i = (reader.ReadUInt16() & 8) % PWD_CHARSET.Length;
+                        builder.Append(PWD_CHARSET[i]);
+                    }
+                    return builder.ToString();
+                }
+            }
+        }");
             code.AppendLine("\t}");
             code.AppendLine();
 
@@ -207,7 +234,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine();
 
             code.AppendLine("\t" + GetTestClassAttribute());
-            code.AppendLine("\tpublic class DatabaseFileTest");
+            code.AppendLine("\tpublic class DatabaseFileTest : DataAccessTestBase");
             code.AppendLine("\t{");
             code.AppendLine("\t\t" + GetTestMethodAttribute());
             code.AppendLine("\t\tpublic void CreateDatabaseTest()");

@@ -9,12 +9,25 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
     public class GeneratedCSharpCodeMsTest : CodeGenBaseTest
     {
         [TestMethod]
+        public void WriteHeaderInformationTest()
+        {
+            var database = GetDatabase();
+            var factory = new CodeGeneratorFactory(database);
+
+            var codeGenerator = factory.Create();
+            codeGenerator.WriteHeaderInformation();
+
+            Assert.IsFalse(string.IsNullOrEmpty(codeGenerator.GetCode()));
+        }
+
+        [TestMethod]
         public void EntitiesCodeCanCompileTest()
         {
             var database = GetDatabase();
             var factory = new CodeGeneratorFactory(database);
 
             var codeGenerator = factory.Create();
+            codeGenerator.WriteHeaderInformation();
             codeGenerator.GenerateEntities();
 
             AssertCSharpCompile(codeGenerator.GetCode());
@@ -27,6 +40,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             var factory = new CodeGeneratorFactory(database);
 
             var codeGenerator = factory.Create();
+            codeGenerator.WriteHeaderInformation();
             codeGenerator.GenerateEntities();
             codeGenerator.GenerateDataAccessLayer();
 
@@ -43,6 +57,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             codeGenerator.GenerateEntities();
 
             var unitTestCodeGenerator = new MsTestUnitTestCodeGenerator(database);
+            unitTestCodeGenerator.WriteHeaderInformation();
             unitTestCodeGenerator.GenerateEntities();
 
             AssertCSharpCompile(codeGenerator.GetCode(), unitTestCodeGenerator.GetCode());
@@ -59,7 +74,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             codeGenerator.GenerateDataAccessLayer();
 
             var unitTestCodeGenerator = new MsTestUnitTestCodeGenerator(database);
-            unitTestCodeGenerator.GenerateEntities();
+            unitTestCodeGenerator.WriteHeaderInformation();
             unitTestCodeGenerator.GenerateDataAccessLayer();
 
             AssertCSharpCompile(codeGenerator.GetCode(), unitTestCodeGenerator.GetCode());
@@ -101,12 +116,25 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
     public class GeneratedCSharpCodeNUnitTest : CodeGenBaseTest
     {
         [TestMethod]
+        public void WriteHeaderInformationTest()
+        {
+            var database = GetDatabase();
+            var factory = new CodeGeneratorFactory(database);
+
+            var codeGenerator = factory.Create();
+            codeGenerator.WriteHeaderInformation();
+
+            Assert.IsFalse(string.IsNullOrEmpty(codeGenerator.GetCode()));
+        }
+
+        [TestMethod]
         public void EntitiesCodeCanCompileTest()
         {
             var database = GetDatabase();
             var factory = new CodeGeneratorFactory(database);
 
             var codeGenerator = factory.Create();
+            codeGenerator.WriteHeaderInformation();
             codeGenerator.GenerateEntities();
 
             AssertCSharpCompile(codeGenerator.GetCode());
@@ -119,6 +147,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             var factory = new CodeGeneratorFactory(database);
 
             var codeGenerator = factory.Create();
+            codeGenerator.WriteHeaderInformation();
             codeGenerator.GenerateEntities();
             codeGenerator.GenerateDataAccessLayer();
 
@@ -135,6 +164,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             codeGenerator.GenerateEntities();
 
             var unitTestCodeGenerator = new NUnitTestCodeGenerator(database);
+            unitTestCodeGenerator.WriteHeaderInformation();
             unitTestCodeGenerator.GenerateEntities();
 
             AssertCSharpCompile(codeGenerator.GetCode(), unitTestCodeGenerator.GetCode());
@@ -151,7 +181,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             codeGenerator.GenerateDataAccessLayer();
 
             var unitTestCodeGenerator = new NUnitTestCodeGenerator(database);
-            unitTestCodeGenerator.GenerateEntities();
+            unitTestCodeGenerator.WriteHeaderInformation();
             unitTestCodeGenerator.GenerateDataAccessLayer();
 
             AssertCSharpCompile(codeGenerator.GetCode(), unitTestCodeGenerator.GetCode());

@@ -367,5 +367,25 @@ namespace CodeGenWPF.ViewModels
             process.WaitForExit();
             return output;
         }
+
+        public void UseNUnitTestFramework()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UseMSTestTestFramework()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ToggleGenerateEntityUnitTests()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ToggleGenerateDataAccessUnitTests()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

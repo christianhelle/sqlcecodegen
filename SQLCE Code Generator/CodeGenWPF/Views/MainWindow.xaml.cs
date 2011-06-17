@@ -83,5 +83,25 @@ namespace CodeGenWPF.Views
             textBox.ScrollToEnd();
             textBox.UpdateLayout();
         }
+
+        private void NUnit_Click(object sender, RoutedEventArgs e)
+        {
+            ((MainViewModel)DataContext).UseNUnitTestFramework();
+        }
+
+        private void MSTest_Click(object sender, RoutedEventArgs e)
+        {
+            ((MainViewModel)DataContext).UseMSTestTestFramework();
+        }
+
+        private void GenerateEntityUnitTests_Click(object sender, RoutedEventArgs e)
+        {
+            ((MainViewModel)DataContext).ToggleGenerateEntityUnitTests();
+        }
+
+        private void GenerateDataAccessUnitTests_Click(object sender, RoutedEventArgs e)
+        {
+            ((MainViewModel)DataContext).ToggleGenerateDataAccessUnitTests();
+        }
     }
 }

@@ -9,6 +9,8 @@ using ChristianHelle.DatabaseTools.SqlCe.CodeGenCore;
 using ICSharpCode.TextEditor.Document;
 using System.Reflection;
 using Microsoft.SqlServer.MessageBox;
+using System.Configuration;
+using ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI.Properties;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 {
@@ -18,6 +20,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         private bool launchedWithArgument;
         private SqlCeDatabase database;
         private readonly string path;
+        private const string MSTEST = "MSTest";
+        private const string NUNIT = "NUnit";
 
         public MainForm(string[] args)
         {
@@ -28,6 +32,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             rtbGeneratedCodeEntityUnitTests.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy("C#");
             rtbGeneratedCodeDataAccessUnitTests.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy("C#");
             path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SQLCE Code Generator");
+
+            LoadSettings();
 
             if (args != null && args.Length == 1)
             {
@@ -52,7 +58,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                     LoadFile(argument);
                 }
             }
-        }
+       }
 
         private void LoadFile(string argument)
         {
@@ -93,11 +99,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                 fi.Attributes = FileAttributes.Normal;
 
                 dataSource = dialog.FileName;
-                var sw = Stopwatch.StartNew();
 
                 GenerateCode();
-
-                WriteToOutputWindow(Environment.NewLine + "Executed in " + sw.Elapsed);
 
                 Text = "SQL CE Code Generator - Untitled";
             }
@@ -121,18 +124,25 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
         private void GenerateCode()
         {
-            rtbOutput.ResetText();
+            var sw = Stopwatch.StartNew();
+
+            ClearAllControls();
             var codeGenerator = CreateCodeGenerator(dataSource);
             rtbGeneratedCodeEntities.Text = GenerateEntitiesCode(codeGenerator);
             rtbGeneratedCodeDataAccess.Text = GenerateDataAccessCode(codeGenerator);
             rtbGeneratedCodeEntityUnitTests.Text = GenerateEntityUnitTestsCode(codeGenerator);
             rtbGeneratedCodeDataAccessUnitTests.Text = GenerateDataAccessUnitTestsCode(codeGenerator);
+
+            WriteToOutputWindow(Environment.NewLine + "Executed in " + sw.Elapsed);
         }
 
         private string GenerateDataAccessUnitTestsCode(CodeGenerator codeGenerator)
         {
+            if (!Convert.ToBoolean(Settings.Default.GenerateDataAccessUnitTests))
+                return null;
+
             WriteToOutputWindow("Generating Data Access Unit Tests Code");
-            var unitTestGenerator = new NUnitTestCodeGenerator(codeGenerator.Database);
+            var unitTestGenerator = UnitTestCodeGeneratorFactory.Create(codeGenerator.Database, Settings.Default.TestFramework);
             unitTestGenerator.WriteHeaderInformation();
             unitTestGenerator.GenerateDataAccessLayer();
             var code = unitTestGenerator.GetCode();
@@ -141,8 +151,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
         private string GenerateEntityUnitTestsCode(CodeGenerator codeGenerator)
         {
+            if (!Convert.ToBoolean(Settings.Default.GenerateEntityUnitTests))
+                return null;
+
             WriteToOutputWindow("Generating Entity Unit Tests Code");
-            var unitTestGenerator = new NUnitTestCodeGenerator(codeGenerator.Database);
+            var unitTestGenerator = UnitTestCodeGeneratorFactory.Create(codeGenerator.Database, Settings.Default.TestFramework);
             unitTestGenerator.WriteHeaderInformation();
             unitTestGenerator.GenerateEntities();
             var code = unitTestGenerator.GetCode();
@@ -616,13 +629,19 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
         private string ExecuteUnitTestRunner()
         {
-            //var testRunner = Environment.ExpandEnvironmentVariables(@"%VS90COMNTOOLS%\..\IDE\mstest.exe");
-            //if (!File.Exists(testRunner))
-            //    testRunner = Environment.ExpandEnvironmentVariables(@"%VS100COMNTOOLS%\..\IDE\mstest.exe");
-            //var args = string.Format(@"/testcontainer:""{0}\DataAccess.dll""", path);
-
-            var testRunner = Path.Combine(Environment.CurrentDirectory, "NUnit\\nunit-console.exe");
-            var args = string.Format(@" /nodots ""{0}\DataAccess.dll""", path);
+            string testRunner, args;
+            if (Settings.Default["TestFramework"] == MSTEST)
+            {
+                testRunner = Environment.ExpandEnvironmentVariables(@"%VS90COMNTOOLS%\..\IDE\mstest.exe");
+                if (!File.Exists(testRunner))
+                    testRunner = Environment.ExpandEnvironmentVariables(@"%VS100COMNTOOLS%\..\IDE\mstest.exe");
+                args = string.Format(@"/testcontainer:""{0}\DataAccess.dll""", path);
+            }
+            else
+            {
+                testRunner = Path.Combine(Environment.CurrentDirectory, "NUnit\\nunit-console.exe");
+                args = string.Format(@" /nodots ""{0}\DataAccess.dll""", path);
+            }
 
             var psi = new ProcessStartInfo(testRunner, args);
             psi.RedirectStandardOutput = true;
@@ -710,5 +729,81 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             e.Cancel = true;
             e.ThrowException = false;
         }
+
+        #region Options
+
+        private void LoadSettings()
+        {
+            switch (Settings.Default.TestFramework)
+            {
+                case NUNIT:
+                    nUnitToolStripMenuItem.Checked = true;
+                    mSTestToolStripMenuItem.Checked = false;
+                    break;
+                case MSTEST:
+                    nUnitToolStripMenuItem.Checked = true;
+                    mSTestToolStripMenuItem.Checked = false;
+                    break;
+                default:
+                    nUnitToolStripMenuItem.Checked = true;
+                    mSTestToolStripMenuItem.Checked = false;
+                    break;
+            }
+
+            entityUnitTestsToolStripMenuItem.Checked = Settings.Default.GenerateEntityUnitTests;
+            dataAccessUnitTestsToolStripMenuItem.Checked = Settings.Default.GenerateDataAccessUnitTests;
+        }
+        
+        private void PromptToRegenerateCode()
+        {
+            var dialogResult = MessageBox.Show(
+                "Do you want to re-generate the code?", 
+                "Re-generate code", 
+                MessageBoxButtons.YesNo, 
+                MessageBoxIcon.Question);
+
+            if (dialogResult == DialogResult.Yes)
+                GenerateCode();
+        }
+
+        private void nUnitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            nUnitToolStripMenuItem.Checked = true;
+            mSTestToolStripMenuItem.Checked = false;
+            Settings.Default.TestFramework = NUNIT;
+            Settings.Default.Save();
+
+            PromptToRegenerateCode();
+        }
+
+        private void mSTestToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            nUnitToolStripMenuItem.Checked = false;
+            mSTestToolStripMenuItem.Checked = true;
+            Settings.Default.TestFramework = MSTEST;
+            Settings.Default.Save();
+
+            PromptToRegenerateCode();
+        }
+
+        private void entityUnitTestsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            entityUnitTestsToolStripMenuItem.Checked = !entityUnitTestsToolStripMenuItem.Checked;
+            Settings.Default.GenerateEntityUnitTests = !Settings.Default.GenerateEntityUnitTests;
+            Settings.Default.Save();
+
+            PromptToRegenerateCode();
+        }
+
+        private void dataAccessUnitTestsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            dataAccessUnitTestsToolStripMenuItem.Checked = !dataAccessUnitTestsToolStripMenuItem.Checked;
+            Settings.Default.GenerateDataAccessUnitTests = !Settings.Default.GenerateDataAccessUnitTests;
+            Settings.Default.Save();
+
+            PromptToRegenerateCode();
+        } 
+
+        #endregion
     }
 }
