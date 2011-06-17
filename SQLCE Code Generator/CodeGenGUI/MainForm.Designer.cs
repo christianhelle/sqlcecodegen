@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Database Tables");
+            System.Windows.Forms.TreeNode treeNode6 = new System.Windows.Forms.TreeNode("Database Tables");
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -80,6 +80,12 @@
             this.rtbCompilerOutput = new System.Windows.Forms.TextBox();
             this.tabPageTestResults = new System.Windows.Forms.TabPage();
             this.rtbUnitTestOutput = new System.Windows.Forms.TextBox();
+            this.testFrameworkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.nUnitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.mSTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.codeGenerationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.entityUnitTestsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.dataAccessUnitTestsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -296,23 +302,26 @@
             // toolsToolStripMenuItem
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.customizeToolStripMenuItem,
-            this.optionsToolStripMenuItem});
+            this.optionsToolStripMenuItem,
+            this.customizeToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.toolsToolStripMenuItem.Text = "&Tools";
-            this.toolsToolStripMenuItem.Visible = false;
             // 
             // customizeToolStripMenuItem
             // 
             this.customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-            this.customizeToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
+            this.customizeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.customizeToolStripMenuItem.Text = "&Customize";
+            this.customizeToolStripMenuItem.Visible = false;
             // 
             // optionsToolStripMenuItem
             // 
+            this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.testFrameworkToolStripMenuItem,
+            this.codeGenerationToolStripMenuItem});
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.optionsToolStripMenuItem.Text = "&Options";
             // 
             // helpToolStripMenuItem
@@ -384,10 +393,10 @@
             this.treeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView.Location = new System.Drawing.Point(0, 0);
             this.treeView.Name = "treeView";
-            treeNode1.Name = "nodeTables";
-            treeNode1.Text = "Database Tables";
+            treeNode6.Name = "nodeTables";
+            treeNode6.Text = "Database Tables";
             this.treeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1});
+            treeNode6});
             this.treeView.Size = new System.Drawing.Size(202, 401);
             this.treeView.TabIndex = 0;
             this.treeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_AfterSelect);
@@ -606,6 +615,58 @@
             this.rtbUnitTestOutput.Size = new System.Drawing.Size(770, 79);
             this.rtbUnitTestOutput.TabIndex = 0;
             // 
+            // testFrameworkToolStripMenuItem
+            // 
+            this.testFrameworkToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.nUnitToolStripMenuItem,
+            this.mSTestToolStripMenuItem});
+            this.testFrameworkToolStripMenuItem.Name = "testFrameworkToolStripMenuItem";
+            this.testFrameworkToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.testFrameworkToolStripMenuItem.Text = "Test Framework";
+            // 
+            // nUnitToolStripMenuItem
+            // 
+            this.nUnitToolStripMenuItem.Checked = true;
+            this.nUnitToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.nUnitToolStripMenuItem.Name = "nUnitToolStripMenuItem";
+            this.nUnitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.nUnitToolStripMenuItem.Text = "NUnit";
+            this.nUnitToolStripMenuItem.Click += new System.EventHandler(this.nUnitToolStripMenuItem_Click);
+            // 
+            // mSTestToolStripMenuItem
+            // 
+            this.mSTestToolStripMenuItem.Name = "mSTestToolStripMenuItem";
+            this.mSTestToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.mSTestToolStripMenuItem.Text = "MSTest";
+            this.mSTestToolStripMenuItem.Click += new System.EventHandler(this.mSTestToolStripMenuItem_Click);
+            // 
+            // codeGenerationToolStripMenuItem
+            // 
+            this.codeGenerationToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.entityUnitTestsToolStripMenuItem,
+            this.dataAccessUnitTestsToolStripMenuItem});
+            this.codeGenerationToolStripMenuItem.Name = "codeGenerationToolStripMenuItem";
+            this.codeGenerationToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.codeGenerationToolStripMenuItem.Text = "Code Generation";
+            // 
+            // entityUnitTestsToolStripMenuItem
+            // 
+            this.entityUnitTestsToolStripMenuItem.Checked = true;
+            this.entityUnitTestsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.entityUnitTestsToolStripMenuItem.Name = "entityUnitTestsToolStripMenuItem";
+            this.entityUnitTestsToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.entityUnitTestsToolStripMenuItem.Text = "Entity Unit Tests";
+            this.entityUnitTestsToolStripMenuItem.Click += new System.EventHandler(this.entityUnitTestsToolStripMenuItem_Click);
+            // 
+            // dataAccessUnitTestsToolStripMenuItem
+            // 
+            this.dataAccessUnitTestsToolStripMenuItem.Checked = true;
+            this.dataAccessUnitTestsToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.dataAccessUnitTestsToolStripMenuItem.Name = "dataAccessUnitTestsToolStripMenuItem";
+            this.dataAccessUnitTestsToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
+            this.dataAccessUnitTestsToolStripMenuItem.Text = "Data Access Unit Tests";
+            this.dataAccessUnitTestsToolStripMenuItem.Click += new System.EventHandler(this.dataAccessUnitTestsToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AllowDrop = true;
@@ -701,6 +762,12 @@
         private ICSharpCode.TextEditor.TextEditorControl rtbGeneratedCodeDataAccessUnitTests;
         private System.Windows.Forms.TabPage tabTableData;
         private System.Windows.Forms.DataGridView dataGridView;
+        private System.Windows.Forms.ToolStripMenuItem testFrameworkToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem nUnitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem mSTestToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem codeGenerationToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem entityUnitTestsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem dataAccessUnitTestsToolStripMenuItem;
 
     }
 }

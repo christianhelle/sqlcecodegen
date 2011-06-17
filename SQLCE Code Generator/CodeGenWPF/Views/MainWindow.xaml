@@ -45,6 +45,22 @@
                     <MenuItem Header="Re-generate code"
                               Click="ReGenerateCode_Click" />
                 </MenuItem>
+                <MenuItem Header="Tools">
+                    <MenuItem Header="Options">
+                        <MenuItem Header="Test Framework">
+                            <MenuItem Header="NUnit"
+                                      Click="NUnit_Click" />
+                            <MenuItem Header="MSTest"
+                                      Click="MSTest_Click" />
+                        </MenuItem>
+                        <MenuItem Header="Code Generation">
+                            <MenuItem Header="Generate Entity Unit Tests"
+                                      Click="GenerateEntityUnitTests_Click" />
+                            <MenuItem Header="Generate Data Access Unit Tests"
+                                      Click="GenerateDataAccessUnitTests_Click" />
+                        </MenuItem>
+                    </MenuItem>
+                </MenuItem>
                 <MenuItem Header="Help">
                     <MenuItem Header="About"
                               Click="About_Click" />

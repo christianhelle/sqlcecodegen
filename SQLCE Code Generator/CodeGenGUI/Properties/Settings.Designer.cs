@@ -22,5 +22,41 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI.Properties {
                 return defaultInstance;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool GenerateEntityUnitTests {
+            get {
+                return ((bool)(this["GenerateEntityUnitTests"]));
+            }
+            set {
+                this["GenerateEntityUnitTests"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool GenerateDataAccessUnitTests {
+            get {
+                return ((bool)(this["GenerateDataAccessUnitTests"]));
+            }
+            set {
+                this["GenerateDataAccessUnitTests"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("NUnit")]
+        public string TestFramework {
+            get {
+                return ((string)(this["TestFramework"]));
+            }
+            set {
+                this["TestFramework"] = value;
+            }
+        }
     }
 }
