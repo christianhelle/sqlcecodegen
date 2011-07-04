@@ -286,7 +286,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             {
                 if (column.Value.Name == table.PrimaryKeyColumnName)
                     continue;
-                query.Append(column.Value.FieldName + ", ");
+                query.Append(column.Value.Name + ", ");
             }
             query.Remove(query.Length - 2, 2);
             query.Append(") ");
@@ -354,7 +354,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             var query = new StringBuilder();
             query.Append("\"INSERT INTO " + table.Name + " (");
             foreach (var column in table.Columns)
-                query.Append(column.Value.FieldName + ", ");
+                query.Append(column.Value.Name + ", ");
             query.Remove(query.Length - 2, 2);
             query.Append(") ");
             query.Append(" VALUES (");
@@ -426,13 +426,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             {
                 if (!column.Value.IsPrimaryKey) continue;
                 hasPrimaryKey = true;
-                query.Append(column.Value.FieldName + " = @" + column.Value.FieldName);
+                query.Append(column.Value.Name + " = @" + column.Value.FieldName);
                 break;
             }
             if (!hasPrimaryKey)
             {
                 foreach (var column in table.Columns)
-                    query.Append(column.Value.FieldName + " = @" + column.Value.FieldName + " AND ");
+                    query.Append(column.Value.Name + " = @" + column.Value.FieldName + " AND ");
                 query.Remove(query.Length - 5, 5);
             }
             query.Append("\";");
@@ -477,13 +477,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             {
                 if (!column.Value.IsPrimaryKey) continue;
                 hasPrimaryKey = true;
-                query.Append(column.Value.FieldName + " = @" + column.Value.FieldName);
+                query.Append(column.Value.Name + " = @" + column.Value.FieldName);
                 break;
             }
             if (!hasPrimaryKey)
             {
                 foreach (var column in table.Columns)
-                    query.Append(column.Value.FieldName + " = @" + column.Value.FieldName + " AND ");
+                    query.Append(column.Value.Name + " = @" + column.Value.FieldName + " AND ");
                 query.Remove(query.Length - 5, 5);
             }
             query.Append("\";");
@@ -540,7 +540,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\n\t\t{");
                 code.AppendLine("\t\t\tusing (var command = EntityBase.CreateCommand(Transaction))");
                 code.AppendLine("\t\t\t{");
-                code.AppendFormat("\t\t\t\tcommand.CommandText = \"DELETE FROM {0} WHERE {1}=@{1}\";", table.Name, column.Value.FieldName);
+                code.AppendFormat("\t\t\t\tcommand.CommandText = \"DELETE FROM {0} WHERE {1}=@{2}\";", table.Name, column.Value.Name, column.Value.FieldName);
                 code.AppendFormat("\n\t\t\t\tcommand.Parameters.AddWithValue(\"@{0}\", {0} != null ? (object){0} : System.DBNull.Value);", column.Value.FieldName);
                 code.AppendLine("\n\t\t\t\treturn command.ExecuteNonQuery();");
                 code.AppendLine("\t\t\t}");
@@ -585,14 +585,14 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             {
                 if (column.Value.Name == table.PrimaryKeyColumnName)
                     continue;
-                query.Append(column.Value.FieldName + " = @" + column.Value.FieldName + ", ");
+                query.Append(column.Value.Name + " = @" + column.Value.FieldName + ", ");
             }
             query.Remove(query.Length - 2, 2);
             foreach (var column in table.Columns)
             {
                 if (column.Value.Name == table.PrimaryKeyColumnName)
                 {
-                    query.Append(" WHERE " + column.Value.FieldName + " = @" + column.Value.FieldName);
+                    query.Append(" WHERE " + column.Value.Name + " = @" + column.Value.FieldName);
                     break;
                 }
             }

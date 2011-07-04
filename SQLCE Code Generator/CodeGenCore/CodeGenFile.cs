@@ -10,6 +10,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
     {
         public string DataSource { get; set; }
         public GeneratedCode GeneratedCode { get; set; }
+        public string TestFramework { get; set; }
     }
 
     [Serializable]

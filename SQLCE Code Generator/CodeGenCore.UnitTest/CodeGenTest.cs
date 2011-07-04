@@ -26,7 +26,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         public void WriteHeaderInformationTest()
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
-            var connectionString = "Data Source=TestDatabase.sdf";
+            const string connectionString = "Data Source=TestDatabase.sdf";
             var database = GetDatabase(defaultNamespace, connectionString);
             var factory = new CodeGeneratorFactory(database);
             var codeGenerator = factory.Create();
@@ -40,28 +40,65 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         public void GenerateEntitiesTest()
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
-            var connectionString = "Data Source=TestDatabase.sdf";
+            const string connectionString = "Data Source=TestDatabase.sdf";
             var database = GetDatabase(defaultNamespace, connectionString);
             var factory = new CodeGeneratorFactory(database);
             var codeGenerator = factory.Create();
             codeGenerator.GenerateEntities();
 
-            Assert.IsNotNull(codeGenerator.GetCode());
-            Assert.IsFalse(string.IsNullOrEmpty(codeGenerator.GetCode()));
+            var actual = codeGenerator.GetCode();
+            Assert.IsNotNull(actual);
+            Assert.IsFalse(string.IsNullOrEmpty(actual));
+        }
+
+        [TestMethod]
+        public void GenerateEntitiesCanCompileTest()
+        {
+            var defaultNamespace = typeof(CodeGenTest).Namespace;
+            const string connectionString = "Data Source=TestDatabase.sdf";
+            var database = GetDatabase(defaultNamespace, connectionString);
+            var factory = new CodeGeneratorFactory(database);
+            var codeGenerator = factory.Create();
+            codeGenerator.GenerateEntities();
+
+            var actual = codeGenerator.GetCode();
+            Assert.IsNotNull(actual);
+            Assert.IsFalse(string.IsNullOrEmpty(actual));
+
+            AssertCSharpCompile(actual);
         }
 
         [TestMethod]
         public void GenerateDataAccessLayerTest()
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
-            var connectionString = "Data Source=TestDatabase.sdf";
+            const string connectionString = "Data Source=TestDatabase.sdf";
             var database = GetDatabase(defaultNamespace, connectionString);
             var factory = new CodeGeneratorFactory(database);
             var codeGenerator = factory.Create();
             codeGenerator.GenerateDataAccessLayer();
 
-            Assert.IsNotNull(codeGenerator.GetCode());
-            Assert.IsFalse(string.IsNullOrEmpty(codeGenerator.GetCode()));
+            var actual = codeGenerator.GetCode();
+            Assert.IsNotNull(actual);
+            Assert.IsFalse(string.IsNullOrEmpty(actual));
+        }
+
+        [TestMethod]
+        public void GenerateDataAccessLayerCanCompileTest()
+        {
+            var defaultNamespace = typeof(CodeGenTest).Namespace;
+            const string connectionString = "Data Source=TestDatabase.sdf";
+            var database = GetDatabase(defaultNamespace, connectionString);
+            var factory = new CodeGeneratorFactory(database);
+            var codeGenerator = factory.Create();
+            codeGenerator.GenerateEntities();
+            codeGenerator.GenerateDataAccessLayer();
+
+            var actual = codeGenerator.GetCode();
+            Assert.IsNotNull(actual);
+            Assert.IsFalse(string.IsNullOrEmpty(actual));
+
+            AssertCSharpCompile(actual);
         }
     }
 }

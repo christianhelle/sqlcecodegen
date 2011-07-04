@@ -6,7 +6,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
     [TestClass]
     [DeploymentItem("app.config")]
     [DeploymentItem("TestDatabase.sdf")]
-    public class SqlCeDatabaseTest
+    public class ISqlCeDatabaseTest
     {
         private readonly string connectionString = "Data Source=TestDatabase.sdf";
 
