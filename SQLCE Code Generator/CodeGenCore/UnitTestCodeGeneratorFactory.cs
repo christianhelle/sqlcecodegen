@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
@@ -16,29 +13,27 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         public CodeGenerator Create(string testfx)
         {
-            if (string.Compare(testfx, "mstest", true) == 0)
-                return new MsTestUnitTestCodeGenerator(database);
-
-            if (string.Compare(testfx, "nunit", true) == 0)
-                return new NUnitTestCodeGenerator(database);
-
-            return Create(database);
+            return Create(database, testfx);
         }
 
         public static CodeGenerator Create(SqlCeDatabase database, string testfx)
         {
-            if (string.Compare(testfx, "mstest", true) == 0)
-                return new MsTestUnitTestCodeGenerator(database);
+            switch (testfx.ToLower())
+            {
+                case "mstest":
+                    return new MsTestUnitTestCodeGenerator(database);
+                case "nunit":
+                    return new NUnitTestCodeGenerator(database);
+                case "xunit":
+                    return new xUnitTestCodeGenerator(database);
+            }
 
-            if (string.Compare(testfx, "nunit", true) == 0)
-                return new NUnitTestCodeGenerator(database);
-
-            return Create(database);
+            throw new NotSupportedException("Unit Test Framework not supported");
         }
 
         public CodeGenerator Create()
         {
-            return new MsTestUnitTestCodeGenerator(database);
+            return Create(database);
         }
 
         public static CodeGenerator Create(SqlCeDatabase database)

@@ -25,6 +25,41 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             AnalyzeDatabase();
         }
 
+        public bool VerifyConnectionStringPassword()
+        {
+            try
+            {
+                using (var conn = new SqlCeConnection(ConnectionString))
+                    conn.Open();
+                return true;
+            }
+            catch (SqlCeInvalidDatabaseFormatException)
+            {
+                try
+                {
+                    Upgrade();
+                    return VerifyConnectionStringPassword();
+                }
+                catch (SqlCeException e)
+                {
+                    return HandleInvalidPassword(e);
+                }
+            }
+            catch (SqlCeException e)
+            {
+                return HandleInvalidPassword(e);
+            }
+        }
+
+        private static bool HandleInvalidPassword(SqlCeException e)
+        {
+            if (e.NativeError == 25028 ||
+                e.NativeError == 25140 ||
+                e.Message.ToLower().Contains("password"))
+                return false;
+            throw e;
+        }
+
         public void Verify()
         {
             try
@@ -89,7 +124,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         public string Namespace { get; set; }
         public List<Table> Tables { get; set; }
-        public string ConnectionString { get; private set; }
+        public string ConnectionString { get; set; }
 
         public void AnalyzeDatabase()
         {

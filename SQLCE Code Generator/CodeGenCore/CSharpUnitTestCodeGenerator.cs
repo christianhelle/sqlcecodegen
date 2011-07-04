@@ -20,7 +20,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public override void GenerateEntities(EntityGeneratorOptions options)
         {
             Trace.WriteLine("Generating Entity Unit Tests");
-            
+
             code.AppendLine("\nnamespace " + Database.Namespace);
             code.AppendLine("{");
 
@@ -49,10 +49,36 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("}");
         }
 
+        protected virtual void GenerateHelperClasses() { }
         protected abstract void IncludeUnitTestNamespaces();
         protected abstract string GetTestClassAttribute();
         protected abstract string GetTestMethodAttribute();
         protected abstract string GetTestInitializeAttribute();
+
+        protected virtual string GetAssertAreEqualMethod()
+        {
+            return "Assert.AreEqual";
+        }
+
+        protected virtual string GetAssertAreNotEqualMethod()
+        {
+            return "Assert.AreNotEqual";
+        }
+
+        protected virtual string GetAssertIsNotNullMethod()
+        {
+            return "Assert.IsNotNull";
+        }
+
+        protected virtual string GetAssertIsTrueMethod()
+        {
+            return "Assert.IsTrue";
+        }
+
+        protected virtual string GetAssertIsNullMethod()
+        {
+            return "Assert.IsNull";
+        }
 
         private void GenerateRandomGenerator()
         {
@@ -100,7 +126,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\tvar target = new " + table.ClassName + "();");
             code.AppendLine("\t\t\ttarget." + column.Value.FieldName + " = value;");
             code.AppendLine();
-            code.AppendLine("\t\t\tAssert.AreEqual(value, target." + column.Value.FieldName + ");");
+            code.AppendLine("\t\t\t" + GetAssertAreEqualMethod() + "(value, target." + column.Value.FieldName + ");");
             code.AppendLine("\t\t}");
             code.AppendLine();
 
@@ -112,7 +138,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\tvar target = new " + table.ClassName + "();");
             code.AppendLine("\t\t\ttarget." + column.Value.FieldName + " = null;");
             code.AppendLine();
-            code.AppendLine("\t\t\tAssert.AreEqual(null, target." + column.Value.FieldName + ");");
+            code.AppendLine("\t\t\t" + GetAssertAreEqualMethod() + "(null, target." + column.Value.FieldName + ");");
             code.AppendLine("\t\t}");
             code.AppendLine();
         }
@@ -131,7 +157,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\tvar target = new " + table.ClassName + "();");
             code.AppendLine("\t\t\ttarget." + column.Value.FieldName + " = value;");
             code.AppendLine();
-            code.AppendLine("\t\t\tAssert.AreEqual(value, target." + column.Value.FieldName + ");");
+            code.AppendLine("\t\t\t" + GetAssertAreEqualMethod() + "(value, target." + column.Value.FieldName + ");");
             code.AppendLine("\t\t}");
             code.AppendLine();
 
@@ -150,12 +176,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\t\tvar value = RandomGenerator.GenerateString(" + (column.Value.MaxLength.Value + 1) + ");");
             code.AppendLine("\t\t\t\tvar target = new " + table.ClassName + "();");
             code.AppendLine("\t\t\t\ttarget." + column.Value.FieldName + " = value;");
-            code.AppendLine("\t\t\t\tAssert.Fail(\"ArgumentException expected\");");
+            code.AppendLine("\t\t\t\t" + GetAssertIsTrueMethod() + "(false, \"ArgumentException expected\");");
             code.AppendLine("\t\t\t}");
             code.AppendLine("\t\t\tcatch (System.ArgumentException) { }");
             code.AppendLine("\t\t\tcatch (System.Exception)");
             code.AppendLine("\t\t\t{");
-            code.AppendLine("\t\t\t\tAssert.Fail(\"ArgumentException expected\");");
+            code.AppendLine("\t\t\t\t" + GetAssertIsTrueMethod() + "(false, \"ArgumentException expected\");");
             code.AppendLine("\t\t\t}");
             code.AppendLine("\t\t}");
             code.AppendLine();
@@ -179,13 +205,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t" + GetTestClassAttribute());
             code.AppendLine("\tpublic class DataAccessTestBase");
             code.AppendLine("\t{");
-            code.AppendLine("\t\t" + GetTestInitializeAttribute());
-            code.AppendLine("\t\tpublic void Initialize()");
+            code.AppendLine("\t\tpublic DataAccessTestBase()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tEntityBase.ConnectionString = @\"" + Database.ConnectionString + "\";");
             code.AppendLine("\t\t}");
             code.AppendLine(@"
-
         protected static DataAccessRandomGenerator RandomGenerator = new DataAccessRandomGenerator();
 
         protected class DataAccessRandomGenerator
@@ -220,7 +244,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t" + GetTestMethodAttribute());
             code.AppendLine("\t\tpublic void CreateCommandTest()");
             code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tAssert.IsNotNull(EntityBase.CreateCommand());");
+            code.AppendLine("\t\t\t" + GetAssertIsNotNullMethod() + "(EntityBase.CreateCommand());");
             code.AppendLine("\t\t}");
             code.AppendLine();
             code.AppendLine("\t\t" + GetTestMethodAttribute());
@@ -228,7 +252,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tvar expected = System.Data.ConnectionState.Open;");
             code.AppendLine("\t\t\tvar actual = EntityBase.Connection.State;");
-            code.AppendLine("\t\t\tAssert.AreEqual(expected, actual);");
+            code.AppendLine("\t\t\t" + GetAssertAreEqualMethod() + "(expected, actual);");
             code.AppendLine("\t\t}");
             code.AppendLine("\t}");
             code.AppendLine();
@@ -244,7 +268,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\tEntityBase.Connection = null;");
             code.AppendLine();
             code.AppendLine("\t\t\tvar actual = DatabaseFile.CreateDatabase();");
-            code.AppendLine("\t\t\tAssert.AreNotEqual(0, actual);");
+            code.AppendLine("\t\t\t" + GetAssertAreNotEqualMethod() + "(0, actual);");
             code.AppendLine();
             code.AppendLine("\t\t\tEntityBase.ConnectionString = @\"" + Database.ConnectionString + "\";");
             code.AppendLine("\t\t\tEntityBase.Connection.Dispose();");
@@ -276,6 +300,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine();
             }
 
+            GenerateHelperClasses();
             code.AppendLine("}");
             code.AppendLine();
         }
@@ -290,7 +315,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\tCreateTest();");
             code.AppendLine("\t\t\tI" + table.ClassName + "Repository target = new " + table.ClassName + "Repository();");
             code.AppendLine("\t\t\tvar actual = target.Count();");
-            code.AppendLine("\t\t\tAssert.AreNotEqual(0, actual);");
+            code.AppendLine("\t\t\t" + GetAssertAreNotEqualMethod() + "(0, actual);");
             code.AppendLine("\t\t}");
             code.AppendLine();
         }
@@ -360,7 +385,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\tI" + table.ClassName + "Repository target = new " + table.ClassName + "Repository();");
             code.AppendLine("\t\t\ttarget.Purge();");
             code.AppendLine("\t\t\tvar actual = target.ToList();");
-            code.AppendLine("\t\t\tAssert.IsNull(actual);");
+            code.AppendLine("\t\t\t" + GetAssertIsNullMethod() + "(actual);");
             code.AppendLine("\t\t}");
             code.AppendLine();
         }
@@ -461,7 +486,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\t\t\tvar record = target.ToList(1)[0];");
                 code.AppendLine("\t\t\tvar actual = target.SelectBy" + column.Value.FieldName + "(record." + column.Value.FieldName + ", 10);");
                 code.AppendLine();
-                code.AppendLine("\t\t\tAssert.IsNotNull(actual);");
+                code.AppendLine("\t\t\t" + GetAssertIsNotNullMethod() + "(actual);");
                 code.AppendLine("\t\t\tCollectionAssert.AllItemsAreNotNull(actual);");
                 code.AppendLine("\t\t}");
                 code.AppendLine();
@@ -488,7 +513,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\t\t\tvar record = target.ToList(1)[0];");
                 code.AppendLine("\t\t\tvar actual = target.SelectBy" + column.Value.FieldName + "(record." + column.Value.FieldName + ");");
                 code.AppendLine();
-                code.AppendLine("\t\t\tAssert.IsNotNull(actual);");
+                code.AppendLine("\t\t\t" + GetAssertIsNotNullMethod() + "(actual);");
                 code.AppendLine("\t\t\tCollectionAssert.AllItemsAreNotNull(actual);");
                 code.AppendLine("\t\t}");
                 code.AppendLine();
@@ -505,7 +530,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\tCreateTest();");
             code.AppendLine("\t\t\tI" + table.ClassName + "Repository target = new " + table.ClassName + "Repository();");
             code.AppendLine("\t\t\tvar actual = target.ToList(10);");
-            code.AppendLine("\t\t\tAssert.IsNotNull(actual);");
+            code.AppendLine("\t\t\t" + GetAssertIsNotNullMethod() + "(actual);");
             code.AppendLine("\t\t\tCollectionAssert.AllItemsAreNotNull(actual);");
             code.AppendLine("\t\t}");
             code.AppendLine();
@@ -518,7 +543,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\tCreateTest();");
             code.AppendLine("\t\t\tI" + table.ClassName + "Repository target = new " + table.ClassName + "Repository();");
             code.AppendLine("\t\t\tvar actual = target.ToArray(10);");
-            code.AppendLine("\t\t\tAssert.IsNotNull(actual);");
+            code.AppendLine("\t\t\t" + GetAssertIsNotNullMethod() + "(actual);");
             code.AppendLine("\t\t\tCollectionAssert.AllItemsAreNotNull(actual);");
             code.AppendLine("\t\t}");
             code.AppendLine();
@@ -534,7 +559,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\tCreateTest();");
             code.AppendLine("\t\t\tI" + table.ClassName + "Repository target = new " + table.ClassName + "Repository();");
             code.AppendLine("\t\t\tvar actual = target.ToList();");
-            code.AppendLine("\t\t\tAssert.IsNotNull(actual);");
+            code.AppendLine("\t\t\t" + GetAssertIsNotNullMethod() + "(actual);");
             code.AppendLine("\t\t\tCollectionAssert.AllItemsAreNotNull(actual);");
             code.AppendLine("\t\t}");
             code.AppendLine();
@@ -547,7 +572,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\tCreateTest();");
             code.AppendLine("\t\t\tI" + table.ClassName + "Repository target = new " + table.ClassName + "Repository();");
             code.AppendLine("\t\t\tvar actual = target.ToArray();");
-            code.AppendLine("\t\t\tAssert.IsNotNull(actual);");
+            code.AppendLine("\t\t\t" + GetAssertIsNotNullMethod() + "(actual);");
             code.AppendLine("\t\t\tCollectionAssert.AllItemsAreNotNull(actual);");
             code.AppendLine("\t\t}");
             code.AppendLine();
@@ -668,62 +693,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 default:
                     return null;
             }
-        }
-    }
-
-    public class MsTestUnitTestCodeGenerator : CSharpUnitTestCodeGenerator
-    {
-        public MsTestUnitTestCodeGenerator(SqlCeDatabase tableDetails)
-            : base(tableDetails)
-        {
-        }
-
-        protected override void IncludeUnitTestNamespaces()
-        {
-            code.AppendLine("\tusing Microsoft.VisualStudio.TestTools.UnitTesting;");
-        }
-
-        protected override string GetTestClassAttribute()
-        {
-            return "[TestClass]";
-        }
-
-        protected override string GetTestMethodAttribute()
-        {
-            return "[TestMethod]";
-        }
-
-        protected override string GetTestInitializeAttribute()
-        {
-            return "[TestInitialize]";
-        }
-    }
-
-    public class NUnitTestCodeGenerator : CSharpUnitTestCodeGenerator
-    {
-        public NUnitTestCodeGenerator(SqlCeDatabase tableDetails)
-            : base(tableDetails)
-        {
-        }
-
-        protected override void IncludeUnitTestNamespaces()
-        {
-            code.AppendLine("\tusing NUnit.Framework;");
-        }
-
-        protected override string GetTestClassAttribute()
-        {
-            return "[TestFixture]";
-        }
-
-        protected override string GetTestMethodAttribute()
-        {
-            return "[Test]";
-        }
-
-        protected override string GetTestInitializeAttribute()
-        {
-            return "[SetUp]";
         }
     }
 }

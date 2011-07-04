@@ -1,7 +1,4 @@
 ﻿using System.Text;
-using System.IO;
-using System.Globalization;
-using System.Collections.Generic;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {

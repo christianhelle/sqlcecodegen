@@ -7,19 +7,21 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
     [TestClass]
     [DeploymentItem("app.config")]
     [DeploymentItem("TestDatabase.sdf")]
+    [DeploymentItem("Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll")]
+    [DeploymentItem("nunit.framework.dll")]
+    [DeploymentItem("xunit.dll")]
     public class CodeGenBaseTest
     {
         [TestInitialize]
         public void Initialize()
         {
-            var fi = new FileInfo("TestDatabase.sdf");
-            fi.Attributes = FileAttributes.Normal;
+            File.SetAttributes("TestDatabase.sdf", FileAttributes.Normal);
         }
 
         protected static SqlCeDatabase GetDatabase()
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
-            var connectionString = "Data Source=TestDatabase.sdf";
+            const string connectionString = "Data Source=TestDatabase.sdf";
             return new SqlCeDatabase(defaultNamespace, connectionString);
         }
 

@@ -23,13 +23,19 @@
         "Entry"
         {
         "MsmKey" = "8:_1ABAEE125D1967F2C18B4CB07A706DF0"
-        "OwnerKey" = "8:_F88A8DB8C5BB6257239D3206BF9F3CD1"
+        "OwnerKey" = "8:_4395836EA0D648CB24C23F63C6532F82"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_2E790EAD63A049DF84EE097B9931045E"
         "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_4395836EA0D648CB24C23F63C6532F82"
+        "OwnerKey" = "8:_2E790EAD63A049DF84EE097B9931045E"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -76,14 +82,14 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_F88A8DB8C5BB6257239D3206BF9F3CD1"
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_2E790EAD63A049DF84EE097B9931045E"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_2E790EAD63A049DF84EE097B9931045E"
+        "OwnerKey" = "8:_4395836EA0D648CB24C23F63C6532F82"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -102,12 +108,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_D6E141695CE26A412A3303A9BC37C318"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_F88A8DB8C5BB6257239D3206BF9F3CD1"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -329,6 +329,37 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_4395836EA0D648CB24C23F63C6532F82"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:CodeGenCore, Version=1.1.0.27252, Culture=neutral, PublicKeyToken=bb748fcfacf21f9b, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_4395836EA0D648CB24C23F63C6532F82"
+                    {
+                    "Name" = "8:CodeGenCore.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:CodeGenCore.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_C296FF3876624722BFD513FAD7C82829"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_7F8B7256E5C5AE4BB019E0E039A400EB"
             {
             "AssemblyRegister" = "3:1"
@@ -473,37 +504,6 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_F88A8DB8C5BB6257239D3206BF9F3CD1"
-            {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:CodeGenCore, Version=1.1.0.2, Culture=neutral, PublicKeyToken=bb748fcfacf21f9b, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_F88A8DB8C5BB6257239D3206BF9F3CD1"
-                    {
-                    "Name" = "8:CodeGenCore.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:CodeGenCore.dll"
-            "TargetName" = "8:"
-            "Tag" = "8:"
-            "Folder" = "8:_C296FF3876624722BFD513FAD7C82829"
-            "Condition" = "8:"
-            "Transitive" = "11:FALSE"
-            "Vital" = "11:TRUE"
-            "ReadOnly" = "11:FALSE"
-            "Hidden" = "11:FALSE"
-            "System" = "11:FALSE"
-            "Permanent" = "11:FALSE"
-            "SharedLegacy" = "11:FALSE"
-            "PackageAs" = "3:1"
-            "Register" = "3:1"
-            "Exclude" = "11:FALSE"
-            "IsDependency" = "11:TRUE"
-            "IsolateTo" = "8:"
-            }
         }
         "FileType"
         {
@@ -561,7 +561,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:SQL CE Code Generator"
         "ProductCode" = "8:{7062A6C2-9172-4624-9408-2B19A7078B5F}"
-        "PackageCode" = "8:{D3105B70-0890-4A04-ABC8-05B13FF029DA}"
+        "PackageCode" = "8:{04006F6E-E2F5-4D57-8608-947F4A74F739}"
         "UpgradeCode" = "8:{CCC6BAAE-44C4-4AC9-81D0-6908A6914681}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -1734,7 +1734,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_2E790EAD63A049DF84EE097B9931045E"
             {
-            "SourcePath" = "8:..\\CodeGenCustomTool\\obj\\Debug\\CodeGenCustomTool.dll"
+            "SourcePath" = "8:..\\CodeGenCustomTool\\obj\\Release\\CodeGenCustomTool.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C296FF3876624722BFD513FAD7C82829"

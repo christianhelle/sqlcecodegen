@@ -3,7 +3,7 @@
   <Description>These are default test settings for a local test run.</Description>
   <Deployment>
     <DeploymentItem filename="CodeGenConsole\TestDatabase.sdf" />
-    <DeploymentItem filename="SqlCeDatabase.UnitTest\TestDatabase40.sdf" />
+    <DeploymentItem filename="ISqlCeDatabase.UnitTest\TestDatabase40.sdf" />
   </Deployment>
   <Execution>
     <Hosts skipUnhostableTests="false" />

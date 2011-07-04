@@ -1,15 +1,14 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("SQL CE Code Generator Core")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("SQL Compact Code Generator Core")]
+[assembly: AssemblyDescription("SQL Compact Code Generator Engine")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Christian Resma Helle")]
-[assembly: AssemblyProduct("SQL CE Code Generator Core")]
+[assembly: AssemblyProduct("SQL Compact Code Generator Core")]
 [assembly: AssemblyCopyright("Copyright © Christian Resma Helle 2009")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
@@ -31,5 +30,4 @@ using System.Runtime.InteropServices;
 //
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
-// [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.1.0.3")]
+[assembly: AssemblyVersion("1.1.0.*")]

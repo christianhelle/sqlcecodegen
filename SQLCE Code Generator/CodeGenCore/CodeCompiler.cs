@@ -25,19 +25,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public static CompilerResults CompileFiles(CodeDomProvider provider, params string[] sourceFiles)
         {
             var exeName = GetOutputFilename();
-            var compilerParameters = new CompilerParameters
-            {
-                GenerateExecutable = false,
-                OutputAssembly = exeName,
-                GenerateInMemory = false,
-                TreatWarningsAsErrors = false,
-                IncludeDebugInformation = false,
-            };
-            compilerParameters.ReferencedAssemblies.Add("System.dll");
-            compilerParameters.ReferencedAssemblies.Add("System.Data.dll");
-            compilerParameters.ReferencedAssemblies.Add("System.Data.SqlServerCe.dll");
-            compilerParameters.ReferencedAssemblies.Add("Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll");
-            compilerParameters.ReferencedAssemblies.Add("nunit.framework.dll");
+            var compilerParameters = GetCompilerParameters(exeName);
 
             return provider.CompileAssemblyFromFile(compilerParameters, sourceFiles);
         }
@@ -65,6 +53,23 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public static CompilerResults CompileSource(CodeDomProvider provider, params string[] sourceCode)
         {
             var exeName = GetOutputFilename();
+            var compilerParameters = GetCompilerParameters(exeName);
+
+            return provider.CompileAssemblyFromSource(compilerParameters, sourceCode);
+        }
+
+        #endregion
+
+        private static string GetOutputFilename()
+        {
+            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SQL Compact Code Generator");
+            if (!Directory.Exists(path))
+                Directory.CreateDirectory(path);
+            return string.Format(@"{0}\DataAccess.dll", path);
+        }
+
+        private static CompilerParameters GetCompilerParameters(string exeName)
+        {
             var compilerParameters = new CompilerParameters
             {
                 GenerateExecutable = false,
@@ -74,22 +79,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 IncludeDebugInformation = false,
             };
             compilerParameters.ReferencedAssemblies.Add("System.dll");
+            compilerParameters.ReferencedAssemblies.Add("System.Core.dll");
             compilerParameters.ReferencedAssemblies.Add("System.Data.dll");
             compilerParameters.ReferencedAssemblies.Add("System.Data.SqlServerCe.dll");
             compilerParameters.ReferencedAssemblies.Add("Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll");
             compilerParameters.ReferencedAssemblies.Add("nunit.framework.dll");
-
-            return provider.CompileAssemblyFromSource(compilerParameters, sourceCode);
-        }
-
-        #endregion
-
-        private static string GetOutputFilename()
-        {
-            var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SQLCE Code Generator");
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
-            return string.Format(@"{0}\DataAccess.dll", path);
+            compilerParameters.ReferencedAssemblies.Add("xunit.dll");
+            return compilerParameters;
         }
     }
 }

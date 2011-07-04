@@ -6,72 +6,123 @@ using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using ChristianHelle.DatabaseTools.SqlCe.CodeGenCore;
-using ICSharpCode.TextEditor.Document;
-using System.Reflection;
-using Microsoft.SqlServer.MessageBox;
-using System.Configuration;
 using ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI.Properties;
+using ICSharpCode.TextEditor.Document;
+using Microsoft.SqlServer.MessageBox;
+using System.Data.SqlServerCe;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 {
     public partial class MainForm : Form
     {
+        private const string TITLE = "SQL Compact Code Generator";
+        private const string LANGUAGE = "C#";
+
         private string dataSource;
-        private bool launchedWithArgument;
+        private readonly bool launchedWithArgument;
         private SqlCeDatabase database;
-        private readonly string path;
+        private readonly string appDataPath;
         private const string MSTEST = "MSTest";
         private const string NUNIT = "NUnit";
+        private const string XUNIT = "xUnit";
 
         public MainForm(string[] args)
         {
             InitializeComponent();
+            dataGridView.DoubleBuffered(true);
 
-            rtbGeneratedCodeEntities.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy("C#");
-            rtbGeneratedCodeDataAccess.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy("C#");
-            rtbGeneratedCodeEntityUnitTests.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy("C#");
-            rtbGeneratedCodeDataAccessUnitTests.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy("C#");
-            path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SQLCE Code Generator");
+            rtbGeneratedCodeEntities.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy(LANGUAGE);
+            rtbGeneratedCodeDataAccess.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy(LANGUAGE);
+            rtbGeneratedCodeEntityUnitTests.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy(LANGUAGE);
+            rtbGeneratedCodeDataAccessUnitTests.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy(LANGUAGE);
+            appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), TITLE);
 
             LoadSettings();
 
-            if (args != null && args.Length == 1)
+            if (args == null || args.Length != 1) return;
+            launchedWithArgument = true;
+            var argument = args[0];
+
+            var ext = Path.GetExtension(argument);
+            if (string.IsNullOrEmpty(ext)) return;
+            switch (ext.ToLower())
             {
-                launchedWithArgument = true;
-                var argument = args[0];
-
-                var ext = Path.GetExtension(argument).ToLower();
-                if (ext == ".sdf")
-                {
-                    Text = "SQL CE Code Generator - Untitled";
-
+                case ".sdf":
+                    Text = string.Format("{0} - Untitled", TITLE);
                     var sw = Stopwatch.StartNew();
-
                     GenerateCode();
-
                     WriteToOutputWindow(Environment.NewLine + "Executed in " + sw.Elapsed);
-                }
-                else if (ext == ".codegen")
-                {
-                    Text = "SQL CE Code Generator - " + Path.GetFileNameWithoutExtension(argument);
-
+                    break;
+                case ".codegen":
+                    Text = string.Format("{0} - {1}", TITLE, Path.GetFileNameWithoutExtension(argument));
                     LoadFile(argument);
-                }
+                    break;
             }
-       }
+        }
+
+        public override sealed string Text
+        {
+            get { return base.Text; }
+            set { base.Text = value; }
+        }
 
         private void LoadFile(string argument)
         {
+            var sw = Stopwatch.StartNew();
+            ClearAllControls();
+
+            WriteToOutputWindow("Loading file...");
+
             var codeGen = new CodeGenFileSerializer();
             var file = codeGen.LoadFile(argument);
-            rtbGeneratedCodeEntities.Text = file.GeneratedCode.Entities;
-            rtbGeneratedCodeDataAccess.Text = file.GeneratedCode.DataAccessCode;
 
-            var fi = new FileInfo(file.DataSource);
+            dataSource = file.DataSource;
+            var fi = new FileInfo(dataSource);
             string generatedNamespace = GetType().Namespace + "." + fi.Name.Replace(fi.Extension, string.Empty);
             string connectionString = "Data Source=" + file.DataSource;
-            database = new SqlCeDatabase(generatedNamespace, connectionString);
+
+            GetDatabase(file.DataSource, generatedNamespace, connectionString);
+            if (database == null)
+                return;
+
+            if (!string.IsNullOrEmpty(file.TestFramework))
+            {
+                Settings.Default.TestFramework = file.TestFramework;
+                LoadSettings();
+            }
+
+            WriteToOutputWindow(string.Format("Found {0} tables{1}", database.Tables.Count, Environment.NewLine));
             PopulateTables(database.Tables);
+
+            WriteToOutputWindow("Loading Generated Entities Code");
+            rtbGeneratedCodeEntities.Text = file.GeneratedCode.Entities;
+
+            WriteToOutputWindow("Loading Generated Data Access Code");
+            rtbGeneratedCodeDataAccess.Text = file.GeneratedCode.DataAccessCode;
+
+            if (!string.IsNullOrEmpty(file.GeneratedCode.EntityUnitTests))
+            {
+                WriteToOutputWindow("Loading Generated Entities Unit Test Code");
+                rtbGeneratedCodeEntityUnitTests.Text = file.GeneratedCode.EntityUnitTests;
+            }
+            else
+                entityUnitTestsToolStripMenuItem.Checked = false;
+
+            if (!string.IsNullOrEmpty(file.GeneratedCode.DataAccessUnitTests))
+            {
+                WriteToOutputWindow("Loading Generated Data Access Unit Test Code");
+                rtbGeneratedCodeDataAccessUnitTests.Text = file.GeneratedCode.DataAccessUnitTests;
+            }
+            else
+                dataAccessUnitTestsToolStripMenuItem.Checked = false;
+
+            var lineCount = 0;
+            lineCount += rtbGeneratedCodeEntities.Text.GetLineCount();
+            lineCount += rtbGeneratedCodeDataAccess.Text.GetLineCount();
+            lineCount += rtbGeneratedCodeEntityUnitTests.Text.GetLineCount();
+            lineCount += rtbGeneratedCodeDataAccessUnitTests.Text.GetLineCount();
+
+            WriteToOutputWindow(string.Format("{0}Loaded {1} lines of code in {2}{0}", Environment.NewLine, lineCount, sw.Elapsed));
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -102,7 +153,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
                 GenerateCode();
 
-                Text = "SQL CE Code Generator - Untitled";
+                Text = string.Format("{0} - Untitled", TITLE);
             }
         }
 
@@ -127,13 +178,43 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             var sw = Stopwatch.StartNew();
 
             ClearAllControls();
-            var codeGenerator = CreateCodeGenerator(dataSource);
-            rtbGeneratedCodeEntities.Text = GenerateEntitiesCode(codeGenerator);
-            rtbGeneratedCodeDataAccess.Text = GenerateDataAccessCode(codeGenerator);
-            rtbGeneratedCodeEntityUnitTests.Text = GenerateEntityUnitTestsCode(codeGenerator);
-            rtbGeneratedCodeDataAccessUnitTests.Text = GenerateDataAccessUnitTestsCode(codeGenerator);
 
-            WriteToOutputWindow(Environment.NewLine + "Executed in " + sw.Elapsed);
+            var codeGenerator = CreateCodeGenerator(dataSource);
+            if (codeGenerator == null)
+                return;
+
+            var entitiesCode = GenerateEntitiesCode(codeGenerator);
+            var dataAccessCode = GenerateDataAccessCode(codeGenerator);
+            var entityUnitTestsCode = GenerateEntityUnitTestsCode(codeGenerator);
+            var dataAccessUnitTestsCode = GenerateDataAccessUnitTestsCode(codeGenerator);
+
+            var lineCount = 0;
+            lineCount += entitiesCode.GetLineCount();
+            lineCount += dataAccessCode.GetLineCount();
+            lineCount += entityUnitTestsCode.GetLineCount();
+            lineCount += dataAccessUnitTestsCode.GetLineCount();
+
+            WriteToOutputWindow(string.Format("{0}Generated {1} lines of code in {2}{0}", Environment.NewLine, lineCount, sw.Elapsed));
+
+            WriteToOutputWindow("Loading Generated Entities Code");
+            rtbGeneratedCodeEntities.Text = entitiesCode;
+
+            WriteToOutputWindow("Loading Generated Data Access Code");
+            rtbGeneratedCodeDataAccess.Text = dataAccessCode;
+
+            if (!string.IsNullOrEmpty(entityUnitTestsCode))
+            {
+                WriteToOutputWindow("Loading Generated Entities Unit Test Code");
+                rtbGeneratedCodeEntityUnitTests.Text = entityUnitTestsCode;
+            }
+
+            if (!string.IsNullOrEmpty(dataAccessUnitTestsCode))
+            {
+                WriteToOutputWindow("Loading Generated Data Access Unit Test Code");
+                rtbGeneratedCodeDataAccessUnitTests.Text = dataAccessUnitTestsCode;
+            }
+
+            WriteToOutputWindow(string.Format("{0}Executed in {1}", Environment.NewLine, sw.Elapsed));
         }
 
         private string GenerateDataAccessUnitTestsCode(CodeGenerator codeGenerator)
@@ -186,12 +267,14 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         {
             var fi = new FileInfo(inputFileName);
             var generatedNamespace = "ChristianHelle.DatabaseTools.SqlCe." + fi.Name.Replace(fi.Extension, string.Empty);
-            var connectionString = "Data Source=" + inputFileName;
+            var connectionString = GetConnectionString(inputFileName);
 
             WriteToOutputWindow("Analyzing Database...");
-            database = new SqlCeDatabase(generatedNamespace, connectionString);
+            GetDatabase(inputFileName, generatedNamespace, connectionString);
+            if (database == null)
+                return null;
 
-            WriteToOutputWindow(string.Format("Found {0} tables", database.Tables.Count));
+            WriteToOutputWindow(string.Format("Found {0} tables{1}", database.Tables.Count, Environment.NewLine));
             PopulateTables(database.Tables);
 
             var factory = new CodeGeneratorFactory(database);
@@ -199,9 +282,47 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             return codeGenerator;
         }
 
+        private void GetDatabase(string inputFileName, string generatedNamespace, string connectionString)
+        {
+            try
+            {
+                database = new SqlCeDatabase(generatedNamespace, connectionString);
+            }
+            catch (SqlCeException e)
+            {
+                if (e.NativeError == 25028 || e.NativeError == 25140 || e.Message.ToLower().Contains("password"))
+                {
+                    var password = PromptForPassword();
+                    if (!string.IsNullOrEmpty(password))
+                        GetDatabase(inputFileName, generatedNamespace, GetConnectionString(inputFileName, password));
+                }
+            }
+        }
+
+        private string PromptForPassword()
+        {
+            using (var form = new PasswordForm())
+            {
+                form.Owner = this;
+                var result = form.ShowDialog();
+                if (result != DialogResult.OK)
+                {
+                    database = null;
+                    WriteToOutputWindow(Environment.NewLine + "Operation Cancelled...");
+                    return null;
+                }
+                return form.Password;
+            }
+        }
+
+        private static string GetConnectionString(string inputFileName, string password = null)
+        {
+            return string.Format("Data Source={0}; Password={1}", inputFileName, password);
+        }
+
         private void PopulateTables(IEnumerable<Table> list)
         {
-            var rootNode = new TreeNode("Database Tables");
+            var rootNode = new TreeNode(new FileInfo(dataSource).Name);
             rootNode.Expand();
 
             foreach (var item in list)
@@ -259,25 +380,26 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             using (var dialog = new OpenFileDialog())
             {
                 dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                dialog.Filter = "SQLCE Code Generator files (*.codegen)|*.codegen";
+                dialog.Filter = "SQL Compact Code Generator files (*.codegen)|*.codegen";
                 if (dialog.ShowDialog() == DialogResult.Cancel)
                     return;
 
                 dataSource = dialog.FileName;
-                var codeGen = new CodeGenFileSerializer();
-                CodeGenFile file = codeGen.LoadFile(dialog.FileName);
-                rtbGeneratedCodeEntities.Text = file.GeneratedCode.Entities;
-                rtbGeneratedCodeDataAccess.Text = file.GeneratedCode.DataAccessCode;
-                rtbGeneratedCodeEntityUnitTests.Text = file.GeneratedCode.EntityUnitTests;
-                rtbGeneratedCodeDataAccessUnitTests.Text = file.GeneratedCode.DataAccessUnitTests;
+                LoadFile(dataSource);
+                //var codeGen = new CodeGenFileSerializer();
+                //CodeGenFile file = codeGen.LoadFile(dialog.FileName);
+                //rtbGeneratedCodeEntities.Text = file.GeneratedCode.Entities;
+                //rtbGeneratedCodeDataAccess.Text = file.GeneratedCode.DataAccessCode;
+                //rtbGeneratedCodeEntityUnitTests.Text = file.GeneratedCode.EntityUnitTests;
+                //rtbGeneratedCodeDataAccessUnitTests.Text = file.GeneratedCode.DataAccessUnitTests;
 
-                FileInfo fi = new FileInfo(file.DataSource);
-                string generatedNamespace = GetType().Namespace + "." + fi.Name.Replace(fi.Extension, string.Empty);
-                string connectionString = "Data Source=" + file.DataSource;
-                database = new SqlCeDatabase(generatedNamespace, connectionString);
-                PopulateTables(database.Tables);
+                //FileInfo fi = new FileInfo(file.DataSource);
+                //string generatedNamespace = GetType().Namespace + "." + fi.Name.Replace(fi.Extension, string.Empty);
+                //string connectionString = "Data Source=" + file.DataSource;
+                //database = new SqlCeDatabase(generatedNamespace, connectionString);
+                //PopulateTables(database.Tables);
 
-                Text = "SQL CE Code Generator - " + Path.GetFileNameWithoutExtension(dialog.FileName);
+                //Text = string.Format("{0} - {1}", TITLE, Path.GetFileNameWithoutExtension(dialog.FileName));
             }
         }
 
@@ -291,7 +413,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             using (var dialog = new SaveFileDialog())
             {
                 dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
-                dialog.Filter = "SQLCE Code Generator files (*.codegen)|*.codegen";
+                dialog.Filter = "SQL Compact Code Generator files (*.codegen)|*.codegen";
                 if (dialog.ShowDialog() == DialogResult.Cancel)
                     return;
 
@@ -304,12 +426,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                                                               EntityUnitTests = rtbGeneratedCodeEntityUnitTests.Text,
                                                               DataAccessUnitTests = rtbGeneratedCodeDataAccessUnitTests.Text
                                                           },
-                                      DataSource = dataSource
+                                      DataSource = dataSource,
+                                      TestFramework = Settings.Default.TestFramework
                                   };
                 var serializer = new CodeGenFileSerializer();
                 serializer.SaveFile(codeGen, dialog.FileName);
 
-                Text = "SQL CE Code Generator - " + Path.GetFileNameWithoutExtension(dialog.FileName);
+                Text = string.Format("{0} - {1}", TITLE, Path.GetFileNameWithoutExtension(dialog.FileName));
             }
         }
 
@@ -321,14 +444,17 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             }
             catch (Exception ex)
             {
-                if (!string.IsNullOrEmpty(errorMessage))
-                    WriteToOutputWindow(Environment.NewLine + "Error: " + errorMessage);
-                else
-                    WriteToOutputWindow(Environment.NewLine + "Error: " + ex.Message);
+                Invoke((Action)delegate
+                {
+                    //if (!string.IsNullOrEmpty(errorMessage))
+                    //    WriteToOutputWindow(Environment.NewLine + "Error: " + errorMessage);
+                    //else
+                    //    WriteToOutputWindow(Environment.NewLine + "Error: " + ex.Message);
 
-                var exception = new ApplicationException(errorMessage, ex);
-                var mbox = new ExceptionMessageBox(exception) { Caption = "Error" };
-                mbox.Show(null);
+                    var exception = new ApplicationException(errorMessage, ex);
+                    var mbox = new ExceptionMessageBox(exception) { Caption = "Error" };
+                    mbox.Show(null);
+                });
             }
         }
 
@@ -345,7 +471,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
         #region Clipboard Handling
 
-        int currentCodeViewTab = 0;
+        int currentCodeViewTab;
 
         private void tabGeneratedCode_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -444,16 +570,10 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         #endregion
 
         #region Drag and Drop handling
+
         private void MainForm_DragEnter(object sender, DragEventArgs e)
         {
-            if (e.Data.GetDataPresent(DataFormats.FileDrop))
-            {
-                e.Effect = DragDropEffects.Copy;
-            }
-            else
-            {
-                e.Effect = DragDropEffects.None;
-            }
+            e.Effect = e.Data.GetDataPresent(DataFormats.FileDrop) ? DragDropEffects.Copy : DragDropEffects.None;
         }
 
         private void MainForm_DragDrop(object sender, DragEventArgs e)
@@ -462,32 +582,36 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             {
                 if (!e.Data.GetDataPresent(DataFormats.FileDrop))
                     return;
+
                 var filePaths = (string[])(e.Data.GetData(DataFormats.FileDrop));
-                var ext = Path.GetExtension(filePaths[0]).ToLower();
-                if (ext == ".sdf")
+                var ext = Path.GetExtension(filePaths[0]);
+                if (string.IsNullOrEmpty(ext)) return;
+
+                switch (ext.ToLower())
                 {
-                    Text = "SQL CE Code Generator - Untitled";
+                    case ".sdf":
+                        Text = string.Format("{0} - Untitled", TITLE);
+                        var sw = Stopwatch.StartNew();
+                        GenerateCode();
+                        WriteToOutputWindow(Environment.NewLine + "Executed in " + sw.Elapsed);
+                        break;
 
-                    var sw = Stopwatch.StartNew();
-                    GenerateCode();
-                    WriteToOutputWindow(Environment.NewLine + "Executed in " + sw.Elapsed);
-                }
-                else if (ext == ".codegen")
-                {
-                    Text = "SQL CE Code Generator - " + Path.GetFileNameWithoutExtension(filePaths[0]);
+                    case ".codegen":
+                        Text = string.Format("{0} - {1}", TITLE, Path.GetFileNameWithoutExtension(filePaths[0]));
 
-                    var codeGen = new CodeGenFileSerializer();
-                    var file = codeGen.LoadFile(filePaths[0]);
-                    rtbGeneratedCodeEntities.Text = file.GeneratedCode.Entities;
-                    rtbGeneratedCodeDataAccess.Text = file.GeneratedCode.DataAccessCode;
-                    rtbGeneratedCodeEntityUnitTests.Text = file.GeneratedCode.EntityUnitTests;
-                    rtbGeneratedCodeDataAccessUnitTests.Text = file.GeneratedCode.DataAccessUnitTests;
+                        var codeGen = new CodeGenFileSerializer();
+                        var file = codeGen.LoadFile(filePaths[0]);
+                        rtbGeneratedCodeEntities.Text = file.GeneratedCode.Entities;
+                        rtbGeneratedCodeDataAccess.Text = file.GeneratedCode.DataAccessCode;
+                        rtbGeneratedCodeEntityUnitTests.Text = file.GeneratedCode.EntityUnitTests;
+                        rtbGeneratedCodeDataAccessUnitTests.Text = file.GeneratedCode.DataAccessUnitTests;
 
-                    var fi = new FileInfo(file.DataSource);
-                    string generatedNamespace = GetType().Namespace + "." + fi.Name.Replace(fi.Extension, string.Empty);
-                    string connectionString = "Data Source=" + file.DataSource;
-                    database = new SqlCeDatabase(generatedNamespace, connectionString);
-                    PopulateTables(database.Tables);
+                        var fi = new FileInfo(file.DataSource);
+                        string generatedNamespace = GetType().Namespace + "." + fi.Name.Replace(fi.Extension, string.Empty);
+                        string connectionString = "Data Source=" + file.DataSource;
+                        database = new SqlCeDatabase(generatedNamespace, connectionString);
+                        PopulateTables(database.Tables);
+                        break;
                 }
             });
         }
@@ -503,13 +627,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         private void CompileCSharp30()
         {
             rtbCompilerOutput.ResetText();
-            CreateOutputCSharpFile();
+            CreateOutputFiles();
 
             var sw = Stopwatch.StartNew();
 
-
             var csc = Environment.ExpandEnvironmentVariables(@"%SystemRoot%\Microsoft.Net\Framework\v3.5\csc.exe");
-            var args = string.Format(@"/target:library /optimize /out:""{0}\DataAccess.dll"" /reference:""{1}\System.Data.SqlServerCe.dll"" /reference:""{1}\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll"" /reference:""{1}\nunit.framework.dll"" ""{0}\*.cs""", path, Environment.CurrentDirectory);
+            var args = string.Format(@"/target:library /optimize /out:""{0}\DataAccess.dll"" /reference:""{1}\System.Data.SqlServerCe.dll"" /reference:""{1}\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll"" /reference:""{1}\NUnit\nunit.framework.dll"" /reference:""{1}\xUnit\xunit.dll"" ""{0}\*.cs""", appDataPath, Environment.CurrentDirectory);
 
             WriteToCompilerOutputWindow("Compiling using C# 3.0");
             WriteToCompilerOutputWindow(string.Format(Environment.NewLine + "Executing {0} {1}" + Environment.NewLine, csc, args));
@@ -526,50 +649,50 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             process.WaitForExit();
             WriteToCompilerOutputWindow(output);
 
-            //var list = new List<string> 
-            //{
-            //    string.Format("{0}\\Entities.cs", path),
-            //    string.Format("{0}\\DataAccess.cs", path),
-            //    string.Format("{0}\\EntityUnitTests.cs", path),
-            //    string.Format("{0}\\DataAccessUnitTests.cs", path)
-            //};
-            //var result = CodeCompiler.CompileCSharpFiles(list.ToArray());
-
-            //foreach (var item in result.Output)
-            //    WriteToCompilerOutputWindow(item);
-
-            File.Delete(string.Format("{0}\\Entities.cs", path));
-            File.Delete(string.Format("{0}\\DataAccess.cs", path));
-            File.Delete(string.Format("{0}\\EntityUnitTests.cs", path));
-            File.Delete(string.Format("{0}\\DataAccessUnitTests.cs", path));
+            File.Delete(string.Format("{0}\\Entities.cs", appDataPath));
+            File.Delete(string.Format("{0}\\DataAccess.cs", appDataPath));
+            File.Delete(string.Format("{0}\\EntityUnitTests.cs", appDataPath));
+            File.Delete(string.Format("{0}\\DataAccessUnitTests.cs", appDataPath));
 
             WriteToCompilerOutputWindow("Executed in " + sw.Elapsed);
         }
 
-        private void CreateOutputCSharpFile()
+        private void CreateOutputFiles()
         {
-            if (!Directory.Exists(path))
-                Directory.CreateDirectory(path);
+            if (!Directory.Exists(appDataPath))
+                Directory.CreateDirectory(appDataPath);
 
-            using (var stream = File.CreateText(Path.Combine(path, "Entities.cs")))
+            using (var stream = File.CreateText(Path.Combine(appDataPath, "Entities.cs")))
             {
                 stream.Write(rtbGeneratedCodeEntities.Text);
                 stream.WriteLine();
             }
-            using (var stream = File.CreateText(Path.Combine(path, "DataAccess.cs")))
+            using (var stream = File.CreateText(Path.Combine(appDataPath, "DataAccess.cs")))
             {
                 stream.Write(rtbGeneratedCodeDataAccess.Text);
                 stream.WriteLine();
             }
-            using (var stream = File.CreateText(Path.Combine(path, "EntityUnitTests.cs")))
+            using (var stream = File.CreateText(Path.Combine(appDataPath, "EntityUnitTests.cs")))
             {
                 stream.Write(rtbGeneratedCodeEntityUnitTests.Text);
                 stream.WriteLine();
             }
-            using (var stream = File.CreateText(Path.Combine(path, "DataAccessUnitTests.cs")))
+            using (var stream = File.CreateText(Path.Combine(appDataPath, "DataAccessUnitTests.cs")))
             {
                 stream.Write(rtbGeneratedCodeDataAccessUnitTests.Text);
                 stream.WriteLine();
+            }
+
+            using (var stream = File.Create(Path.Combine(appDataPath, "xunit.dll")))
+            {
+                var buffer = File.ReadAllBytes(Path.Combine(Environment.CurrentDirectory, "xUnit\\xunit.dll"));
+                stream.Write(buffer, 0, buffer.Length);
+            }
+
+            using (var stream = File.Create(Path.Combine(appDataPath, "nunit.framework.dll")))
+            {
+                var buffer = File.ReadAllBytes(Path.Combine(Environment.CurrentDirectory, "NUnit\\nunit.framework.dll"));
+                stream.Write(buffer, 0, buffer.Length);
             }
         }
         #endregion
@@ -599,27 +722,33 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         private void RunUnitTests()
         {
             WriteToTestResultsWindow("Executing tests...");
-            ThreadPool.QueueUserWorkItem((state) => RunUnitTestWorker());
+            ThreadPool.QueueUserWorkItem(state => RunUnitTestWorker());
         }
 
         private void RunUnitTestWorker()
         {
+            if (testsRunning)
+                return;
+
             try
             {
                 testsRunning = true;
 
-                var fi = new FileInfo(dataSource);
-                fi.Attributes = FileAttributes.Normal;
-
-                var sw = Stopwatch.StartNew();
-                string output = ExecuteUnitTestRunner();
-
-                Invoke((Action)delegate
+                SafeOperation(() =>
                 {
-                    rtbUnitTestOutput.ResetText();
-                    WriteToTestResultsWindow(output);
-                    WriteToTestResultsWindow(Environment.NewLine + "Executed in " + sw.Elapsed);
-                });
+                    var fi = new FileInfo(dataSource);
+                    fi.Attributes = FileAttributes.Normal;
+
+                    var sw = Stopwatch.StartNew();
+                    string output = ExecuteUnitTestRunner();
+
+                    Invoke((Action)delegate
+                                        {
+                                            rtbUnitTestOutput.ResetText();
+                                            WriteToTestResultsWindow(output);
+                                            WriteToTestResultsWindow(Environment.NewLine + "Executed in " + sw.Elapsed);
+                                        });
+                }, "Unable to run unit tests");
             }
             finally
             {
@@ -629,30 +758,43 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
         private string ExecuteUnitTestRunner()
         {
-            string testRunner, args;
-            if (Settings.Default["TestFramework"] == MSTEST)
-            {
-                testRunner = Environment.ExpandEnvironmentVariables(@"%VS90COMNTOOLS%\..\IDE\mstest.exe");
-                if (!File.Exists(testRunner))
-                    testRunner = Environment.ExpandEnvironmentVariables(@"%VS100COMNTOOLS%\..\IDE\mstest.exe");
-                args = string.Format(@"/testcontainer:""{0}\DataAccess.dll""", path);
-            }
-            else
-            {
-                testRunner = Path.Combine(Environment.CurrentDirectory, "NUnit\\nunit-console.exe");
-                args = string.Format(@" /nodots ""{0}\DataAccess.dll""", path);
-            }
-
-            var psi = new ProcessStartInfo(testRunner, args);
-            psi.RedirectStandardOutput = true;
-            psi.CreateNoWindow = true;
-            psi.UseShellExecute = false;
-
+            string args;
+            var testRunner = GetTestRunner(out args);
+            var psi = new ProcessStartInfo(testRunner, args) { RedirectStandardOutput = true, CreateNoWindow = true, UseShellExecute = false };
             var process = Process.Start(psi);
-            string output = process.StandardOutput.ReadToEnd();
+            var output = process.StandardOutput.ReadToEnd();
             process.WaitForExit();
             return output;
         }
+
+        private string GetTestRunner(out string args)
+        {
+            string testRunner;
+            switch (Settings.Default.TestFramework)
+            {
+                case MSTEST:
+                    testRunner = Environment.ExpandEnvironmentVariables(@"%VS90COMNTOOLS%\..\IDE\mstest.exe");
+                    if (!File.Exists(testRunner))
+                        testRunner = Environment.ExpandEnvironmentVariables(@"%VS100COMNTOOLS%\..\IDE\mstest.exe");
+                    args = string.Format(@"/testcontainer:""{0}\DataAccess.dll""", appDataPath);
+                    break;
+
+                case NUNIT:
+                    testRunner = Path.Combine(Environment.CurrentDirectory, "NUnit\\nunit-console.exe");
+                    args = string.Format(@" /nodots ""{0}\DataAccess.dll""", appDataPath);
+                    break;
+
+                case XUNIT:
+                    testRunner = Path.Combine(Environment.CurrentDirectory, "xUnit\\xunit.console.exe");
+                    args = string.Format(@" ""{0}\DataAccess.dll"" /silent", appDataPath);
+                    break;
+
+                default:
+                    throw new ApplicationException("Missing Unit Test Runner");
+            }
+            return testRunner;
+        }
+
         #endregion
 
         #region Output Window
@@ -689,8 +831,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
         private void regenerateCodeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var sw = Stopwatch.StartNew();
-
             treeView.Nodes.Clear();
             treeView.Update();
             rtbGeneratedCodeEntities.ResetText();
@@ -699,12 +839,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             tabGeneratedCode.Refresh();
 
             GenerateCode();
-            WriteToOutputWindow(Environment.NewLine + "Executed in " + sw.Elapsed);
         }
 
         private void treeView_AfterSelect(object sender, TreeViewEventArgs e)
         {
-            SafeOperation((Action)delegate
+            SafeOperation(() =>
             {
                 var table = e.Node.Tag as Table;
                 if (table != null)
@@ -713,7 +852,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                     return;
                 }
 
-                var columnData = e.Node.Tag as Nullable<KeyValuePair<string, string>>;
+                var columnData = e.Node.Tag as KeyValuePair<string, string>?;
                 if (columnData != null)
                 {
                     dataGridView.DataSource = database.GetTableData(columnData.Value.Key, columnData.Value.Value);
@@ -721,12 +860,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                 }
 
                 dataGridView.DataSource = null;
-            }, "Unable to load table data");
+            },
+            "Unable to load table data");
         }
 
         private void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
-            e.Cancel = true;
+            e.Cancel = false;
             e.ThrowException = false;
         }
 
@@ -739,70 +879,101 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                 case NUNIT:
                     nUnitToolStripMenuItem.Checked = true;
                     mSTestToolStripMenuItem.Checked = false;
+                    xUnitToolStripMenuItem.Checked = false;
                     break;
                 case MSTEST:
-                    nUnitToolStripMenuItem.Checked = true;
-                    mSTestToolStripMenuItem.Checked = false;
+                    nUnitToolStripMenuItem.Checked = false;
+                    mSTestToolStripMenuItem.Checked = true;
+                    xUnitToolStripMenuItem.Checked = false;
                     break;
                 default:
-                    nUnitToolStripMenuItem.Checked = true;
+                    nUnitToolStripMenuItem.Checked = false;
                     mSTestToolStripMenuItem.Checked = false;
+                    xUnitToolStripMenuItem.Checked = true;
                     break;
             }
 
             entityUnitTestsToolStripMenuItem.Checked = Settings.Default.GenerateEntityUnitTests;
             dataAccessUnitTestsToolStripMenuItem.Checked = Settings.Default.GenerateDataAccessUnitTests;
         }
-        
+
         private void PromptToRegenerateCode()
         {
             var dialogResult = MessageBox.Show(
-                "Do you want to re-generate the code?", 
-                "Re-generate code", 
-                MessageBoxButtons.YesNo, 
+                "Do you want to re-generate the code?",
+                "Re-generate code",
+                MessageBoxButtons.YesNo,
                 MessageBoxIcon.Question);
 
             if (dialogResult == DialogResult.Yes)
-                GenerateCode();
+                SafeOperation(GenerateCode);
         }
 
         private void nUnitToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            nUnitToolStripMenuItem.Checked = true;
-            mSTestToolStripMenuItem.Checked = false;
-            Settings.Default.TestFramework = NUNIT;
-            Settings.Default.Save();
+            SafeOperation(() =>
+            {
+                nUnitToolStripMenuItem.Checked = true;
+                mSTestToolStripMenuItem.Checked = false;
+                xUnitToolStripMenuItem.Checked = false;
+                Settings.Default.TestFramework = NUNIT;
+                Settings.Default.Save();
 
-            PromptToRegenerateCode();
+                PromptToRegenerateCode();
+            });
         }
 
         private void mSTestToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            nUnitToolStripMenuItem.Checked = false;
-            mSTestToolStripMenuItem.Checked = true;
-            Settings.Default.TestFramework = MSTEST;
-            Settings.Default.Save();
+            SafeOperation(() =>
+            {
+                nUnitToolStripMenuItem.Checked = false;
+                mSTestToolStripMenuItem.Checked = true;
+                xUnitToolStripMenuItem.Checked = false;
+                Settings.Default.TestFramework = MSTEST;
+                Settings.Default.Save();
 
-            PromptToRegenerateCode();
+                PromptToRegenerateCode();
+            });
+        }
+
+        private void xUnitToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SafeOperation(() =>
+            {
+                nUnitToolStripMenuItem.Checked = false;
+                mSTestToolStripMenuItem.Checked = false;
+                xUnitToolStripMenuItem.Checked = true;
+                Settings.Default.TestFramework = XUNIT;
+                Settings.Default.Save();
+
+                PromptToRegenerateCode();
+            });
         }
 
         private void entityUnitTestsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            entityUnitTestsToolStripMenuItem.Checked = !entityUnitTestsToolStripMenuItem.Checked;
-            Settings.Default.GenerateEntityUnitTests = !Settings.Default.GenerateEntityUnitTests;
-            Settings.Default.Save();
+            SafeOperation(() =>
+            {
+                entityUnitTestsToolStripMenuItem.Checked = !entityUnitTestsToolStripMenuItem.Checked;
+                Settings.Default.GenerateEntityUnitTests = !Settings.Default.GenerateEntityUnitTests;
+                Settings.Default.Save();
 
-            PromptToRegenerateCode();
+                PromptToRegenerateCode();
+            });
         }
 
         private void dataAccessUnitTestsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            dataAccessUnitTestsToolStripMenuItem.Checked = !dataAccessUnitTestsToolStripMenuItem.Checked;
-            Settings.Default.GenerateDataAccessUnitTests = !Settings.Default.GenerateDataAccessUnitTests;
-            Settings.Default.Save();
+            SafeOperation(() =>
+            {
+                dataAccessUnitTestsToolStripMenuItem.Checked = !dataAccessUnitTestsToolStripMenuItem.Checked;
+                Settings.Default.GenerateDataAccessUnitTests = !Settings.Default.GenerateDataAccessUnitTests;
+                Settings.Default.Save();
 
-            PromptToRegenerateCode();
-        } 
+                PromptToRegenerateCode();
+            });
+        }
 
         #endregion
     }

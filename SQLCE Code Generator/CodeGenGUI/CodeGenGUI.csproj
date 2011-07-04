@@ -75,9 +75,6 @@
       <SpecificVersion>False</SpecificVersion>
       <Private>True</Private>
     </Reference>
-    <Reference Include="nunit.framework, Version=2.5.10.11092, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
-      <HintPath>..\Depdendencies\NUnit\nunit.framework.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
@@ -100,6 +97,7 @@
     <Compile Include="AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="ExtensionMethods.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -112,6 +110,12 @@
     <Compile Include="OpenDatabase.Designer.cs">
       <DependentUpon>OpenDatabase.cs</DependentUpon>
     </Compile>
+    <Compile Include="PasswordForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PasswordForm.Designer.cs">
+      <DependentUpon>PasswordForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AboutBox.resx">
@@ -123,16 +127,9 @@
     <EmbeddedResource Include="OpenDatabase.resx">
       <DependentUpon>OpenDatabase.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
+    <EmbeddedResource Include="PasswordForm.resx">
+      <DependentUpon>PasswordForm.cs</DependentUpon>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <None Include="App.config" />
     <None Include="CodeGenGUI.snk" />
     <None Include="Properties\Settings.settings">
@@ -194,6 +191,62 @@
     </Content>
     <Content Include="..\Depdendencies\NUnit\nunit.util.dll">
       <Link>NUnit\nunit.util.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Depdendencies\xUnit\xunit.console.clr4.exe">
+      <Link>xUnit\xunit.console.clr4.exe</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Depdendencies\xUnit\xunit.console.clr4.x86.exe">
+      <Link>xUnit\xunit.console.clr4.x86.exe</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Depdendencies\xUnit\xunit.console.exe">
+      <Link>xUnit\xunit.console.exe</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Depdendencies\xUnit\xunit.console.x86.exe">
+      <Link>xUnit\xunit.console.x86.exe</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Depdendencies\xUnit\xunit.dll">
+      <Link>xUnit\xunit.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Depdendencies\xUnit\xunit.extensions.dll">
+      <Link>xUnit\xunit.extensions.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Depdendencies\xUnit\xunit.gui.clr4.exe">
+      <Link>xUnit\xunit.gui.clr4.exe</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Depdendencies\xUnit\xunit.gui.clr4.x86.exe">
+      <Link>xUnit\xunit.gui.clr4.x86.exe</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Depdendencies\xUnit\xunit.gui.exe">
+      <Link>xUnit\xunit.gui.exe</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Depdendencies\xUnit\xunit.gui.x86.exe">
+      <Link>xUnit\xunit.gui.x86.exe</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Depdendencies\xUnit\xunit.installer.exe">
+      <Link>xUnit\xunit.installer.exe</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Depdendencies\xUnit\xunit.runner.msbuild.dll">
+      <Link>xUnit\xunit.runner.msbuild.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Depdendencies\xUnit\xunit.runner.tdnet.dll">
+      <Link>xUnit\xunit.runner.tdnet.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Depdendencies\xUnit\xunit.runner.utility.dll">
+      <Link>xUnit\xunit.runner.utility.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
