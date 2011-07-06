@@ -509,14 +509,14 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             foreach (var column in table.Columns)
             {
                 if (!hasPrimaryKey)
-                    code.AppendLine("\t\t\t\t\t\tcommand.Parameters[\"@" + column.Value.FieldName + "\"].Value = item." + column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value;");
+                    code.AppendLine("\t\t\t\t\tcommand.Parameters[\"@" + column.Value.FieldName + "\"].Value = item." + column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value;");
                 else if (column.Value.IsPrimaryKey)
                 {
-                    code.AppendLine("\t\t\t\t\t\tcommand.Parameters[\"@" + column.Value.FieldName + "\"].Value = item." + column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value;");
+                    code.AppendLine("\t\t\t\t\tcommand.Parameters[\"@" + column.Value.FieldName + "\"].Value = item." + column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value;");
                     break;
                 }
-                code.AppendLine("\t\t\t\t\tcommand.ExecuteNonQuery();");
             }
+            code.AppendLine("\t\t\t\t\tcommand.ExecuteNonQuery();");
             code.AppendLine("\t\t\t\t}");
             code.AppendLine("\t\t\t}");
             code.AppendLine("\t\t}");

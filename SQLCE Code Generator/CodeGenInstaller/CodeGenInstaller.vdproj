@@ -41,13 +41,13 @@
         "Entry"
         {
         "MsmKey" = "8:_3C86A5DCA19F41A394425AC0AC940B3A"
-        "OwnerKey" = "8:_4395836EA0D648CB24C23F63C6532F82"
+        "OwnerKey" = "8:_BD15A8B2B11C4915B73B72893637AAB2"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_3C86A5DCA19F41A394425AC0AC940B3A"
-        "OwnerKey" = "8:_BD15A8B2B11C4915B73B72893637AAB2"
+        "OwnerKey" = "8:_4395836EA0D648CB24C23F63C6532F82"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -137,13 +137,13 @@
         "Entry"
         {
         "MsmKey" = "8:_D2CAE20C2F2D2C7B74DE716F7D0F7194"
-        "OwnerKey" = "8:_D7433304903DE4D477567C20B5E10B09"
+        "OwnerKey" = "8:_BD15A8B2B11C4915B73B72893637AAB2"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_D2CAE20C2F2D2C7B74DE716F7D0F7194"
-        "OwnerKey" = "8:_BD15A8B2B11C4915B73B72893637AAB2"
+        "OwnerKey" = "8:_D7433304903DE4D477567C20B5E10B09"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -179,19 +179,19 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_3C86A5DCA19F41A394425AC0AC940B3A"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_D2CAE20C2F2D2C7B74DE716F7D0F7194"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_9E75E708FC8BC8FB47EB5FB6608121F5"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_3C86A5DCA19F41A394425AC0AC940B3A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -210,12 +210,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_D7433304903DE4D477567C20B5E10B09"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_D2CAE20C2F2D2C7B74DE716F7D0F7194"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -240,6 +234,12 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_7F8B7256E5C5AE4BB019E0E039A400EB"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
     }
@@ -513,14 +513,9 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:CodeGenCore, Version=1.1.0.19914, Culture=neutral, PublicKeyToken=bb748fcfacf21f9b, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:CodeGenCore, Version=1.1.0.37426, Culture=neutral, PublicKeyToken=bb748fcfacf21f9b, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
-                    "_4395836EA0D648CB24C23F63C6532F82"
-                    {
-                    "Name" = "8:CodeGenCore.dll"
-                    "Attributes" = "3:512"
-                    }
                 }
             "SourcePath" = "8:CodeGenCore.dll"
             "TargetName" = "8:"
@@ -914,7 +909,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:SQL Compact Code Generator"
         "ProductCode" = "8:{7062A6C2-9172-4624-9408-2B19A7078B5F}"
-        "PackageCode" = "8:{7973C734-38BD-4A70-B1BC-73F003B5D0AD}"
+        "PackageCode" = "8:{6EB712B2-3BB2-4C29-8677-E3CB6E07960C}"
         "UpgradeCode" = "8:{CCC6BAAE-44C4-4AC9-81D0-6908A6914681}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -2101,7 +2096,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_2E790EAD63A049DF84EE097B9931045E"
             {
-            "SourcePath" = "8:..\\CodeGenCustomTool\\obj\\Release\\CodeGenCustomTool.dll"
+            "SourcePath" = "8:..\\CodeGenCustomTool\\obj\\Debug\\CodeGenCustomTool.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C296FF3876624722BFD513FAD7C82829"
@@ -2157,7 +2152,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_BD15A8B2B11C4915B73B72893637AAB2"
             {
-            "SourcePath" = "8:..\\CodeGenGUI\\obj\\Release\\CodeGenGUI.exe"
+            "SourcePath" = "8:..\\CodeGenGUI\\obj\\Debug\\CodeGenGUI.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C296FF3876624722BFD513FAD7C82829"
