@@ -2,6 +2,8 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Globalization;
 using System;
+using System.Data.SqlServerCe;
+using System.IO;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
@@ -58,6 +60,15 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t{");
             code.AppendLine("\t\tprivate static System.Data.SqlServerCe.SqlCeConnection connectionInstance = null;");
             code.AppendLine("\t\tprivate static readonly object syncLock = new object();");
+            code.AppendLine();
+
+            var connStr = new SqlCeConnectionStringBuilder(Database.ConnectionString);
+            var dataSource = new FileInfo(connStr.DataSource);
+
+            code.AppendLine("\t\tstatic EntityBase()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tConnectionString = \"Data Source='" + dataSource.Name + "'\";");
+            code.AppendLine("\t\t}");
             code.AppendLine();
 
             GenerateXmlDoc(2, "Gets or sets the global SQL CE Connection String to be used");
@@ -367,7 +378,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t{");
             code.AppendLine("\t\tprivate System.Data.SqlServerCe.SqlCeTransaction transaction = null;");
             code.AppendLine();
-            
+
             GenerateXmlDoc(2, "Creates an instance of DataRepository");
             code.AppendLine("\t\tpublic DataRepository()");
             code.AppendLine("\t\t{");
@@ -384,6 +395,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine();
             }
 
+            GenerateXmlDoc(2, "Creates an instance of DataRepository", new KeyValuePair<string, string>("connectionString", "Connection string to use"));
+            code.AppendLine("\t\tpublic DataRepository(string connectionString) : this()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tEntityBase.ConnectionString = connectionString;");
+            code.AppendLine("\t\t}");
+
             GenerateXmlDoc(2, "Starts a SqlCeTransaction using the global SQL CE Conection instance");
             code.AppendLine("\t\tpublic System.Data.SqlServerCe.SqlCeTransaction BeginTransaction()");
             code.AppendLine("\t\t{");
@@ -391,11 +408,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\t\tthrow new System.InvalidOperationException(\"A transaction has already been started. Only one transaction is allowed\");");
             code.AppendLine("\t\t\ttransaction = EntityBase.Connection.BeginTransaction();");
             foreach (var table in Database.Tables)
-                code.AppendLine("\t\t\t"+table.ClassName + ".Transaction = transaction;");
+                code.AppendLine("\t\t\t" + table.ClassName + ".Transaction = transaction;");
             code.AppendLine("\t\t\treturn transaction;");
             code.AppendLine("\t\t}");
             code.AppendLine();
-            
+
             GenerateXmlDoc(2, "Commits the transaction");
             code.AppendLine("\t\tpublic void Commit()");
             code.AppendLine("\t\t{");
@@ -431,7 +448,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\t{");
             code.AppendLine("\t\t\t\ttransaction.Dispose();");
             code.AppendLine("\t\t\t\ttransaction = null;");
-            code.AppendLine("\t\t\t}");            
+            code.AppendLine("\t\t\t}");
             code.AppendLine("\t\t\tdisposed = true;");
             code.AppendLine("\t\t}");
             code.AppendLine();
@@ -444,7 +461,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\tDispose(false);");
             code.AppendLine("\t\t}");
             code.AppendLine();
-            
+
             code.AppendLine("\t}");
             code.AppendLine();
             code.AppendLine("\t#endregion");

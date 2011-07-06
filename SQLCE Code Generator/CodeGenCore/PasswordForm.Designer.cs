@@ -1,4 +1,4 @@
-﻿namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
+﻿namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
     partial class PasswordForm
     {
