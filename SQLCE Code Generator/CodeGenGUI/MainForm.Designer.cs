@@ -57,6 +57,7 @@
             this.testFrameworkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nUnitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mSTestToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.xUnitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.codeGenerationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.entityUnitTestsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataAccessUnitTestsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -86,7 +87,6 @@
             this.rtbCompilerOutput = new System.Windows.Forms.TextBox();
             this.tabPageTestResults = new System.Windows.Forms.TabPage();
             this.rtbUnitTestOutput = new System.Windows.Forms.TextBox();
-            this.xUnitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -315,7 +315,7 @@
             this.testFrameworkToolStripMenuItem,
             this.codeGenerationToolStripMenuItem});
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.optionsToolStripMenuItem.Text = "&Options";
             // 
             // testFrameworkToolStripMenuItem
@@ -333,16 +333,23 @@
             this.nUnitToolStripMenuItem.Checked = true;
             this.nUnitToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.nUnitToolStripMenuItem.Name = "nUnitToolStripMenuItem";
-            this.nUnitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.nUnitToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.nUnitToolStripMenuItem.Text = "NUnit";
             this.nUnitToolStripMenuItem.Click += new System.EventHandler(this.nUnitToolStripMenuItem_Click);
             // 
             // mSTestToolStripMenuItem
             // 
             this.mSTestToolStripMenuItem.Name = "mSTestToolStripMenuItem";
-            this.mSTestToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.mSTestToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.mSTestToolStripMenuItem.Text = "MSTest";
             this.mSTestToolStripMenuItem.Click += new System.EventHandler(this.mSTestToolStripMenuItem_Click);
+            // 
+            // xUnitToolStripMenuItem
+            // 
+            this.xUnitToolStripMenuItem.Name = "xUnitToolStripMenuItem";
+            this.xUnitToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.xUnitToolStripMenuItem.Text = "xUnit";
+            this.xUnitToolStripMenuItem.Click += new System.EventHandler(this.xUnitToolStripMenuItem_Click);
             // 
             // codeGenerationToolStripMenuItem
             // 
@@ -374,7 +381,7 @@
             // customizeToolStripMenuItem
             // 
             this.customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-            this.customizeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.customizeToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
             this.customizeToolStripMenuItem.Text = "&Customize";
             this.customizeToolStripMenuItem.Visible = false;
             // 
@@ -669,13 +676,6 @@
             this.rtbUnitTestOutput.Size = new System.Drawing.Size(770, 79);
             this.rtbUnitTestOutput.TabIndex = 0;
             // 
-            // xUnitToolStripMenuItem
-            // 
-            this.xUnitToolStripMenuItem.Name = "xUnitToolStripMenuItem";
-            this.xUnitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.xUnitToolStripMenuItem.Text = "xUnit";
-            this.xUnitToolStripMenuItem.Click += new System.EventHandler(this.xUnitToolStripMenuItem_Click);
-            // 
             // MainForm
             // 
             this.AllowDrop = true;
@@ -685,6 +685,7 @@
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.menuStrip);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip;
             this.Name = "MainForm";
             this.Text = "SQL Compact Code Generator";
