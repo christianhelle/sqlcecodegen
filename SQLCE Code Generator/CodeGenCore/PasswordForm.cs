@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
+namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
     public partial class PasswordForm : Form
     {
