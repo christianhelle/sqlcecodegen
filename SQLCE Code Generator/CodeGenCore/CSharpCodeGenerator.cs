@@ -388,18 +388,20 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             }
             code.AppendLine("\t\t}");
             code.AppendLine();
+            
+            GenerateXmlDoc(2, "Creates an instance of DataRepository", new KeyValuePair<string, string>("connectionString", "Connection string to use"));
+            code.AppendLine("\t\tpublic DataRepository(string connectionString) : this()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tEntityBase.ConnectionString = connectionString;");
+            code.AppendLine("\t\t}");
+            code.AppendLine();
+
             foreach (var table in Database.Tables)
             {
                 GenerateXmlDoc(2, "Gets an instance of the I" + table.ClassName + "Repository");
                 code.AppendLine("\t\tpublic I" + table.ClassName + "Repository " + table.ClassName + " { get; private set; }");
                 code.AppendLine();
             }
-
-            GenerateXmlDoc(2, "Creates an instance of DataRepository", new KeyValuePair<string, string>("connectionString", "Connection string to use"));
-            code.AppendLine("\t\tpublic DataRepository(string connectionString) : this()");
-            code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tEntityBase.ConnectionString = connectionString;");
-            code.AppendLine("\t\t}");
 
             GenerateXmlDoc(2, "Starts a SqlCeTransaction using the global SQL CE Conection instance");
             code.AppendLine("\t\tpublic System.Data.SqlServerCe.SqlCeTransaction BeginTransaction()");
@@ -443,11 +445,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\tif (disposed) return;");
             code.AppendLine("\t\t\tif (disposing)");
             code.AppendLine("\t\t\t{");
-            code.AppendLine("\t\t\t}");
-            code.AppendLine("\t\t\tif (transaction != null)");
-            code.AppendLine("\t\t\t{");
-            code.AppendLine("\t\t\t\ttransaction.Dispose();");
-            code.AppendLine("\t\t\t\ttransaction = null;");
+            code.AppendLine("\t\t\t\tif (transaction != null)");
+            code.AppendLine("\t\t\t\t{");
+            code.AppendLine("\t\t\t\t\ttransaction.Dispose();");
+            code.AppendLine("\t\t\t\t\ttransaction = null;");
+            code.AppendLine("\t\t\t\t}");
             code.AppendLine("\t\t\t}");
             code.AppendLine("\t\t\tdisposed = true;");
             code.AppendLine("\t\t}");
