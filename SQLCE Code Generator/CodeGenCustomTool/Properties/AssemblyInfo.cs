@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("SQL Compact Code Generator Custom Tool")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyDescription("SQL Compact Code Generator Custom Tool for Visual Studio 2008 and 2010")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Christian Resma Helle")]
 [assembly: AssemblyProduct("SQL Compact Code Generator Custom Tool")]
