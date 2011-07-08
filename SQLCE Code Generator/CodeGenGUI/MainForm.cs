@@ -235,7 +235,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                 return null;
 
             WriteToOutputWindow("Generating Data Access Unit Tests Code");
-            var unitTestGenerator = UnitTestCodeGeneratorFactory.Create(codeGenerator.Database, Settings.Default.TestFramework);
+            var unitTestGenerator = UnitTestCodeGeneratorFactory.Create(codeGenerator.Database, Settings.Default.TestFramework, Settings.Default.Target);
             unitTestGenerator.WriteHeaderInformation();
             unitTestGenerator.GenerateDataAccessLayer();
             var code = unitTestGenerator.GetCode();
@@ -248,7 +248,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                 return null;
 
             WriteToOutputWindow("Generating Entity Unit Tests Code");
-            var unitTestGenerator = UnitTestCodeGeneratorFactory.Create(codeGenerator.Database, Settings.Default.TestFramework);
+            var unitTestGenerator = UnitTestCodeGeneratorFactory.Create(codeGenerator.Database, Settings.Default.TestFramework, Settings.Default.Target);
             unitTestGenerator.WriteHeaderInformation();
             unitTestGenerator.GenerateEntities();
             var code = unitTestGenerator.GetCode();
