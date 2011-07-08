@@ -27,6 +27,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
 
         protected static void AssertCSharpCompile(params string[] sourceCode)
         {
+            foreach (var code in sourceCode)
+                Trace.WriteLine(code);
+
             var actual = CodeCompiler.CompileCSharpSource(sourceCode);
 
             foreach (var error in actual.Errors)
@@ -37,6 +40,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
 
         protected static void AssertVisualBasicCompile(params string[] sourceCode)
         {
+            foreach (var code in sourceCode)
+                Trace.WriteLine(code);
+
             var actual = CodeCompiler.CompileVisualBasicSource(sourceCode);
 
             foreach (var error in actual.Errors)

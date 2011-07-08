@@ -86,6 +86,7 @@
     <Compile Include="CodeGenFile.cs" />
     <Compile Include="CSharpCodeGenerator.cs" />
     <Compile Include="CSharpDataAccessLayerGenerator.cs" />
+    <Compile Include="CSharpMangoLinqToSqlCodeGenerator.cs" />
     <Compile Include="DataAccessLayerGenerator.cs" />
     <Compile Include="MsTestUnitTestCodeGenerator.cs" />
     <Compile Include="NUnitTestCodeGenerator.cs" />

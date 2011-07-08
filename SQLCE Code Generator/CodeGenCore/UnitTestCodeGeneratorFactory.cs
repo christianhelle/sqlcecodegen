@@ -11,22 +11,23 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             this.database = database;
         }
 
-        public CodeGenerator Create(string testfx)
+        public CodeGenerator Create(string testfx, string target = null)
         {
-            return Create(database, testfx);
+            return Create(database, testfx, target);
         }
 
-        public static CodeGenerator Create(SqlCeDatabase database, string testfx)
+        public static CodeGenerator Create(SqlCeDatabase database, string testfx, string target = null)
         {
-            switch (testfx.ToLower())
-            {
-                case "mstest":
-                    return new MsTestUnitTestCodeGenerator(database);
-                case "nunit":
-                    return new NUnitTestCodeGenerator(database);
-                case "xunit":
-                    return new xUnitTestCodeGenerator(database);
-            }
+            if (string.IsNullOrEmpty(target))
+                switch (testfx.ToLower())
+                {
+                    case "mstest":
+                        return new MsTestUnitTestCodeGenerator(database);
+                    case "nunit":
+                        return new NUnitTestCodeGenerator(database);
+                    case "xunit":
+                        return new xUnitTestCodeGenerator(database);
+                }
 
             throw new NotSupportedException("Unit Test Framework not supported");
         }

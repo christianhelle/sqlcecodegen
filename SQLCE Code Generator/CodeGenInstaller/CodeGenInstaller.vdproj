@@ -179,6 +179,12 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_4395836EA0D648CB24C23F63C6532F82"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_D2CAE20C2F2D2C7B74DE716F7D0F7194"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -222,12 +228,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_D6E141695CE26A412A3303A9BC37C318"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_4395836EA0D648CB24C23F63C6532F82"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -513,9 +513,14 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:CodeGenCore, Version=1.1.0.37426, Culture=neutral, PublicKeyToken=bb748fcfacf21f9b, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:CodeGenCore, Version=1.2.0.0, Culture=neutral, PublicKeyToken=bb748fcfacf21f9b, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_4395836EA0D648CB24C23F63C6532F82"
+                    {
+                    "Name" = "8:CodeGenCore.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:CodeGenCore.dll"
             "TargetName" = "8:"
@@ -909,7 +914,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:SQL Compact Code Generator"
         "ProductCode" = "8:{7062A6C2-9172-4624-9408-2B19A7078B5F}"
-        "PackageCode" = "8:{6EB712B2-3BB2-4C29-8677-E3CB6E07960C}"
+        "PackageCode" = "8:{B208BCD8-754E-4ACC-A9A5-8438D782327A}"
         "UpgradeCode" = "8:{CCC6BAAE-44C4-4AC9-81D0-6908A6914681}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -1013,7 +1018,7 @@
                                                                             "Condition" = "8:"
                                                                             "Transitive" = "11:FALSE"
                                                                             "ValueTypes" = "3:1"
-                                                                            "Value" = "8:7690FAC3-0662-49AB-BA02-E65A9F0974A6"
+                                                                            "Value" = "8:{7690FAC3-0662-49AB-BA02-E65A9F0974A6}"
                                                                             }
                                                                             "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_504B56FA65E64B0E9A428232B2E0B40E"
                                                                             {
@@ -1030,6 +1035,44 @@
                                                                             "Transitive" = "11:FALSE"
                                                                             "ValueTypes" = "3:3"
                                                                             "Value" = "3:1"
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                    "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_5460B601766D4DE99BFC0E91C321A94F"
+                                                                    {
+                                                                    "Name" = "8:SQLCEMangoCodeGenerator"
+                                                                    "Condition" = "8:"
+                                                                    "AlwaysCreate" = "11:FALSE"
+                                                                    "DeleteAtUninstall" = "11:FALSE"
+                                                                    "Transitive" = "11:FALSE"
+                                                                        "Keys"
+                                                                        {
+                                                                        }
+                                                                        "Values"
+                                                                        {
+                                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_672F132BBC3647D78CB52C0FBBE1F10A"
+                                                                            {
+                                                                            "Name" = "8:GeneratesDesignTimeSource"
+                                                                            "Condition" = "8:"
+                                                                            "Transitive" = "11:FALSE"
+                                                                            "ValueTypes" = "3:3"
+                                                                            "Value" = "3:1"
+                                                                            }
+                                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_977766E056124865A9366B6219DDAF45"
+                                                                            {
+                                                                            "Name" = "8:CLSID"
+                                                                            "Condition" = "8:"
+                                                                            "Transitive" = "11:FALSE"
+                                                                            "ValueTypes" = "3:1"
+                                                                            "Value" = "8:{5716BE0C-EEE4-418C-99A9-1DD56765F83B}"
+                                                                            }
+                                                                            "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_DA30E11CAFFB415D9D7A12EEF4867BBD"
+                                                                            {
+                                                                            "Name" = "8:"
+                                                                            "Condition" = "8:"
+                                                                            "Transitive" = "11:FALSE"
+                                                                            "ValueTypes" = "3:1"
+                                                                            "Value" = "8:Windows Phone 7 \"Mango\" SQLCE Data Access Layer Code Generator"
                                                                             }
                                                                         }
                                                                     }
@@ -1089,7 +1132,7 @@
                                                                             "Condition" = "8:"
                                                                             "Transitive" = "11:FALSE"
                                                                             "ValueTypes" = "3:1"
-                                                                            "Value" = "8:CEE56EE5-9FF2-4504-AB85-3548E4CEDCBD"
+                                                                            "Value" = "8:{CEE56EE5-9FF2-4504-AB85-3548E4CEDCBD}"
                                                                             }
                                                                             "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_7152B6395A6A4E7A9C2C874B4865E7B4"
                                                                             {
@@ -1417,6 +1460,44 @@
                                                                                     "Transitive" = "11:FALSE"
                                                                                     "ValueTypes" = "3:1"
                                                                                     "Value" = "8:SQLCE Data Access Layer Unit Test Code Generator (NUnit)"
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                            "{60EA8692-D2D5-43EB-80DC-7906BF13D6EF}:_B7AB1020E67A4555B068776CFE745559"
+                                                                            {
+                                                                            "Name" = "8:SQLCEMangoCodeGenerator"
+                                                                            "Condition" = "8:"
+                                                                            "AlwaysCreate" = "11:FALSE"
+                                                                            "DeleteAtUninstall" = "11:FALSE"
+                                                                            "Transitive" = "11:FALSE"
+                                                                                "Keys"
+                                                                                {
+                                                                                }
+                                                                                "Values"
+                                                                                {
+                                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_250A56571D134957BA962EC8A66F9B4C"
+                                                                                    {
+                                                                                    "Name" = "8:GeneratesDesignTimeSource"
+                                                                                    "Condition" = "8:"
+                                                                                    "Transitive" = "11:FALSE"
+                                                                                    "ValueTypes" = "3:3"
+                                                                                    "Value" = "3:1"
+                                                                                    }
+                                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_CC5087207EDC4F4EA0D25AC11952C4E5"
+                                                                                    {
+                                                                                    "Name" = "8:CLSID"
+                                                                                    "Condition" = "8:"
+                                                                                    "Transitive" = "11:FALSE"
+                                                                                    "ValueTypes" = "3:1"
+                                                                                    "Value" = "8:{5716BE0C-EEE4-418C-99A9-1DD56765F83B}"
+                                                                                    }
+                                                                                    "{ADCFDA98-8FDD-45E4-90BC-E3D20B029870}:_E9EBF7D95ED148879DB8ACCEB9B9E26C"
+                                                                                    {
+                                                                                    "Name" = "8:"
+                                                                                    "Condition" = "8:"
+                                                                                    "Transitive" = "11:FALSE"
+                                                                                    "ValueTypes" = "3:1"
+                                                                                    "Value" = "8:Windows Phone 7 \"Mango\" SQLCE Data Access Layer Code Generator"
                                                                                     }
                                                                                 }
                                                                             }
@@ -2096,7 +2177,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_2E790EAD63A049DF84EE097B9931045E"
             {
-            "SourcePath" = "8:..\\CodeGenCustomTool\\obj\\Debug\\CodeGenCustomTool.dll"
+            "SourcePath" = "8:..\\CodeGenCustomTool\\obj\\Release\\CodeGenCustomTool.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C296FF3876624722BFD513FAD7C82829"
@@ -2152,7 +2233,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_BD15A8B2B11C4915B73B72893637AAB2"
             {
-            "SourcePath" = "8:..\\CodeGenGUI\\obj\\Debug\\CodeGenGUI.exe"
+            "SourcePath" = "8:..\\CodeGenGUI\\obj\\Release\\CodeGenGUI.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C296FF3876624722BFD513FAD7C82829"

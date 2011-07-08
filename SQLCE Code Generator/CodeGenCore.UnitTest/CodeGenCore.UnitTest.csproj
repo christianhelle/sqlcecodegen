@@ -81,6 +81,8 @@
     <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq">
     </Reference>
@@ -93,6 +95,7 @@
     <Compile Include="CodeGeneratorFactoryTest.cs" />
     <Compile Include="CodeGenFileSerializerTest.cs" />
     <Compile Include="CodeGenTest.cs" />
+    <Compile Include="CSharpMangoLinqToSqlCodeGeneratorTest.cs" />
     <Compile Include="GeneratedCSharpCodeNUnitTest.cs" />
     <Compile Include="UnitTestCodeGeneratorFactoryTests.cs" />
     <Compile Include="GeneratedCSharpCodeXUnitTest.cs" />
