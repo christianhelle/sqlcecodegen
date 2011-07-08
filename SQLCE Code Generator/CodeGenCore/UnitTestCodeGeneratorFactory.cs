@@ -18,7 +18,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         public static CodeGenerator Create(SqlCeDatabase database, string testfx, string target = null)
         {
-            if (string.IsNullOrEmpty(target))
+            if (target != "Mango")
                 switch (testfx.ToLower())
                 {
                     case "mstest":
