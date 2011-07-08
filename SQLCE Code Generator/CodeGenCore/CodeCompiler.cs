@@ -81,6 +81,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             compilerParameters.ReferencedAssemblies.Add("System.dll");
             compilerParameters.ReferencedAssemblies.Add("System.Core.dll");
             compilerParameters.ReferencedAssemblies.Add("System.Data.dll");
+            compilerParameters.ReferencedAssemblies.Add("System.Data.Linq.dll");
             compilerParameters.ReferencedAssemblies.Add("System.Data.SqlServerCe.dll");
             compilerParameters.ReferencedAssemblies.Add("Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll");
             compilerParameters.ReferencedAssemblies.Add("nunit.framework.dll");

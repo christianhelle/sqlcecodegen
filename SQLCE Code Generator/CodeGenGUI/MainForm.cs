@@ -25,6 +25,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         private const string MSTEST = "MSTest";
         private const string NUNIT = "NUnit";
         private const string XUNIT = "xUnit";
+        private const string NETCF = "NETCF";
+        private const string WP7 = "Mango";
 
         public MainForm(string[] args)
         {
@@ -185,8 +187,18 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
             var entitiesCode = GenerateEntitiesCode(codeGenerator);
             var dataAccessCode = GenerateDataAccessCode(codeGenerator);
-            var entityUnitTestsCode = GenerateEntityUnitTestsCode(codeGenerator);
-            var dataAccessUnitTestsCode = GenerateDataAccessUnitTestsCode(codeGenerator);
+
+            string entityUnitTestsCode, dataAccessUnitTestsCode;
+            try
+            {
+                entityUnitTestsCode = GenerateEntityUnitTestsCode(codeGenerator);
+                dataAccessUnitTestsCode = GenerateDataAccessUnitTestsCode(codeGenerator);
+            }
+            catch (NotSupportedException)
+            {
+                entityUnitTestsCode = string.Empty;
+                dataAccessUnitTestsCode = string.Empty;
+            }
 
             var lineCount = 0;
             lineCount += entitiesCode.GetLineCount();
@@ -278,7 +290,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             PopulateTables(database.Tables);
 
             var factory = new CodeGeneratorFactory(database);
-            var codeGenerator = factory.Create();
+            var codeGenerator = factory.Create("C#", Settings.Default.Target);
             return codeGenerator;
         }
 
@@ -893,6 +905,22 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                     break;
             }
 
+            switch (Settings.Default.Target)
+            {
+                case NETCF:
+                    nETCompactFrameworkCompatibleToolStripMenuItem.Checked = true;
+                    windowsPhone7MangoToolStripMenuItem.Checked = false;
+                    break;
+                case WP7:
+                    nETCompactFrameworkCompatibleToolStripMenuItem.Checked = false;
+                    windowsPhone7MangoToolStripMenuItem.Checked = true;
+                    break;
+                default:
+                    nETCompactFrameworkCompatibleToolStripMenuItem.Checked = true;
+                    windowsPhone7MangoToolStripMenuItem.Checked = false;
+                    break;
+            }
+
             entityUnitTestsToolStripMenuItem.Checked = Settings.Default.GenerateEntityUnitTests;
             dataAccessUnitTestsToolStripMenuItem.Checked = Settings.Default.GenerateDataAccessUnitTests;
         }
@@ -969,6 +997,32 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             {
                 dataAccessUnitTestsToolStripMenuItem.Checked = !dataAccessUnitTestsToolStripMenuItem.Checked;
                 Settings.Default.GenerateDataAccessUnitTests = !Settings.Default.GenerateDataAccessUnitTests;
+                Settings.Default.Save();
+
+                PromptToRegenerateCode();
+            });
+        }
+
+        private void nETCompactFrameworkCompatibleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SafeOperation(() =>
+            {
+                nETCompactFrameworkCompatibleToolStripMenuItem.Checked = true;
+                windowsPhone7MangoToolStripMenuItem.Checked = false;
+                Settings.Default.Target = NETCF;
+                Settings.Default.Save();
+
+                PromptToRegenerateCode();
+            });
+        }
+
+        private void windowsPhone7MangoToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SafeOperation(() =>
+            {
+                nETCompactFrameworkCompatibleToolStripMenuItem.Checked = false;
+                windowsPhone7MangoToolStripMenuItem.Checked = true;
+                Settings.Default.Target = WP7;
                 Settings.Default.Save();
 
                 PromptToRegenerateCode();

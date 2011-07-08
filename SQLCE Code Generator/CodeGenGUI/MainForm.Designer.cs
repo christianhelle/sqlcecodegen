@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Database Tables");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Database Tables");
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -87,6 +87,9 @@
             this.rtbCompilerOutput = new System.Windows.Forms.TextBox();
             this.tabPageTestResults = new System.Windows.Forms.TabPage();
             this.rtbUnitTestOutput = new System.Windows.Forms.TextBox();
+            this.targetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.nETCompactFrameworkCompatibleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.windowsPhone7MangoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -313,9 +316,10 @@
             // 
             this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.testFrameworkToolStripMenuItem,
-            this.codeGenerationToolStripMenuItem});
+            this.codeGenerationToolStripMenuItem,
+            this.targetToolStripMenuItem});
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
+            this.optionsToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.optionsToolStripMenuItem.Text = "&Options";
             // 
             // testFrameworkToolStripMenuItem
@@ -333,21 +337,21 @@
             this.nUnitToolStripMenuItem.Checked = true;
             this.nUnitToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.nUnitToolStripMenuItem.Name = "nUnitToolStripMenuItem";
-            this.nUnitToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.nUnitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.nUnitToolStripMenuItem.Text = "NUnit";
             this.nUnitToolStripMenuItem.Click += new System.EventHandler(this.nUnitToolStripMenuItem_Click);
             // 
             // mSTestToolStripMenuItem
             // 
             this.mSTestToolStripMenuItem.Name = "mSTestToolStripMenuItem";
-            this.mSTestToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.mSTestToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.mSTestToolStripMenuItem.Text = "MSTest";
             this.mSTestToolStripMenuItem.Click += new System.EventHandler(this.mSTestToolStripMenuItem_Click);
             // 
             // xUnitToolStripMenuItem
             // 
             this.xUnitToolStripMenuItem.Name = "xUnitToolStripMenuItem";
-            this.xUnitToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.xUnitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.xUnitToolStripMenuItem.Text = "xUnit";
             this.xUnitToolStripMenuItem.Click += new System.EventHandler(this.xUnitToolStripMenuItem_Click);
             // 
@@ -381,7 +385,7 @@
             // customizeToolStripMenuItem
             // 
             this.customizeToolStripMenuItem.Name = "customizeToolStripMenuItem";
-            this.customizeToolStripMenuItem.Size = new System.Drawing.Size(130, 22);
+            this.customizeToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.customizeToolStripMenuItem.Text = "&Customize";
             this.customizeToolStripMenuItem.Visible = false;
             // 
@@ -454,10 +458,10 @@
             this.treeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView.Location = new System.Drawing.Point(0, 0);
             this.treeView.Name = "treeView";
-            treeNode1.Name = "nodeTables";
-            treeNode1.Text = "Database Tables";
+            treeNode2.Name = "nodeTables";
+            treeNode2.Text = "Database Tables";
             this.treeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1});
+            treeNode2});
             this.treeView.Size = new System.Drawing.Size(202, 401);
             this.treeView.TabIndex = 0;
             this.treeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_AfterSelect);
@@ -676,6 +680,31 @@
             this.rtbUnitTestOutput.Size = new System.Drawing.Size(770, 79);
             this.rtbUnitTestOutput.TabIndex = 0;
             // 
+            // targetToolStripMenuItem
+            // 
+            this.targetToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.nETCompactFrameworkCompatibleToolStripMenuItem,
+            this.windowsPhone7MangoToolStripMenuItem});
+            this.targetToolStripMenuItem.Name = "targetToolStripMenuItem";
+            this.targetToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.targetToolStripMenuItem.Text = "Target";
+            // 
+            // nETCompactFrameworkCompatibleToolStripMenuItem
+            // 
+            this.nETCompactFrameworkCompatibleToolStripMenuItem.Checked = true;
+            this.nETCompactFrameworkCompatibleToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.nETCompactFrameworkCompatibleToolStripMenuItem.Name = "nETCompactFrameworkCompatibleToolStripMenuItem";
+            this.nETCompactFrameworkCompatibleToolStripMenuItem.Size = new System.Drawing.Size(278, 22);
+            this.nETCompactFrameworkCompatibleToolStripMenuItem.Text = ".NET Compact Framework Compatible";
+            this.nETCompactFrameworkCompatibleToolStripMenuItem.Click += new System.EventHandler(this.nETCompactFrameworkCompatibleToolStripMenuItem_Click);
+            // 
+            // windowsPhone7MangoToolStripMenuItem
+            // 
+            this.windowsPhone7MangoToolStripMenuItem.Name = "windowsPhone7MangoToolStripMenuItem";
+            this.windowsPhone7MangoToolStripMenuItem.Size = new System.Drawing.Size(278, 22);
+            this.windowsPhone7MangoToolStripMenuItem.Text = "Windows Phone 7 \"Mango\"";
+            this.windowsPhone7MangoToolStripMenuItem.Click += new System.EventHandler(this.windowsPhone7MangoToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AllowDrop = true;
@@ -779,6 +808,9 @@
         private System.Windows.Forms.ToolStripMenuItem entityUnitTestsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem dataAccessUnitTestsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem xUnitToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem targetToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem nETCompactFrameworkCompatibleToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem windowsPhone7MangoToolStripMenuItem;
 
     }
 }

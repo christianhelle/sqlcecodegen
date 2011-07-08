@@ -34,7 +34,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
         //    return database;
         //}
 
-        private static SqlCeDatabase GetDatabase(string fileNameSpace, string inputFileName, string password = null)
+        public static SqlCeDatabase GetDatabase(string fileNameSpace, string inputFileName, string password = null)
         {
             try
             {
@@ -72,7 +72,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
             return string.Format("Data Source={0}; Password={1}", inputFileName, password);
         }
 
-        private static byte[] GetData(CodeGenerator codeGenerator)
+        public static byte[] GetData(CodeGenerator codeGenerator)
         {
             codeGenerator.WriteHeaderInformation();
             codeGenerator.GenerateEntities();
