@@ -22,20 +22,14 @@
         }
         "Entry"
         {
-        "MsmKey" = "8:_3C86A5DCA19F41A394425AC0AC940B3A"
-        "OwnerKey" = "8:_BD15A8B2B11C4915B73B72893637AAB2"
+        "MsmKey" = "8:_368BBC34AA8E409D89402E127114F8B2"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
         {
-        "MsmKey" = "8:_3C86A5DCA19F41A394425AC0AC940B3A"
-        "OwnerKey" = "8:_4395836EA0D648CB24C23F63C6532F82"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_3C86A5DCA19F41A394425AC0AC940B3A"
-        "OwnerKey" = "8:_2E790EAD63A049DF84EE097B9931045E"
+        "MsmKey" = "8:_40BA881532834291970FCF5F9FBAC4BC"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -48,6 +42,30 @@
         {
         "MsmKey" = "8:_4395836EA0D648CB24C23F63C6532F82"
         "OwnerKey" = "8:_BD15A8B2B11C4915B73B72893637AAB2"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_5DD178ED25AD488B946468DA789C997B"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_637315D258024A30A20E07F304EC5A02"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_6EA05FC83C53454FB477E0EB0FE2E83D"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_798BB581BD354B9E8EDB3D76D55EBA22"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -82,8 +100,38 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_A12FB6C2AB0C4F59862348DD7BEE5A7C"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_A2DE43C33ADF408BA8BA40C2818B47F2"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_A7C102570AE944FF9F509D3025272575"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_B2BBD7E31C7204C4D512F0D8B95AEDA8"
         "OwnerKey" = "8:_BD15A8B2B11C4915B73B72893637AAB2"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B6A9D273BA784DC793C3012F96742023"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_B9483B7E0CD3481384A615E600CA8045"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -94,8 +142,32 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_BF60FC26DAA46A622DDA16F67DFA91A4"
+        "OwnerKey" = "8:_2E790EAD63A049DF84EE097B9931045E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_BF60FC26DAA46A622DDA16F67DFA91A4"
+        "OwnerKey" = "8:_4395836EA0D648CB24C23F63C6532F82"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_BF60FC26DAA46A622DDA16F67DFA91A4"
+        "OwnerKey" = "8:_BD15A8B2B11C4915B73B72893637AAB2"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_C107DE6AF7105828DBB5FB1F503A2D1D"
         "OwnerKey" = "8:_2E790EAD63A049DF84EE097B9931045E"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D0CBE2CDD01E46B792F97DB3A146D4A8"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -108,6 +180,12 @@
         {
         "MsmKey" = "8:_D2CAE20C2F2D2C7B74DE716F7D0F7194"
         "OwnerKey" = "8:_D7433304903DE4D477567C20B5E10B09"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_D30352541262448DAA2190306C73DA03"
+        "OwnerKey" = "8:_UNDEFINED"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -130,6 +208,24 @@
         }
         "Entry"
         {
+        "MsmKey" = "8:_D7B58C5C196B45AD9B24673FAF8EF68F"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_E488443AA3884FA2963225B80AE505F0"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_E879040ACBD84118A0A31DAFFC4F99DA"
+        "OwnerKey" = "8:_UNDEFINED"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_2E790EAD63A049DF84EE097B9931045E"
         "MsmSig" = "8:_UNDEFINED"
@@ -143,6 +239,12 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_BF60FC26DAA46A622DDA16F67DFA91A4"
+        "MsmSig" = "8:_UNDEFINED"
+        }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_D2CAE20C2F2D2C7B74DE716F7D0F7194"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -150,12 +252,6 @@
         {
         "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_9E75E708FC8BC8FB47EB5FB6608121F5"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_3C86A5DCA19F41A394425AC0AC940B3A"
         "MsmSig" = "8:_UNDEFINED"
         }
         "Entry"
@@ -376,23 +472,32 @@
         }
         "File"
         {
-            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_3C86A5DCA19F41A394425AC0AC940B3A"
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_368BBC34AA8E409D89402E127114F8B2"
             {
-            "AssemblyRegister" = "3:1"
-            "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL"
-                "ScatterAssemblies"
-                {
-                    "_3C86A5DCA19F41A394425AC0AC940B3A"
-                    {
-                    "Name" = "8:System.Data.SqlServerCe.dll"
-                    "Attributes" = "3:512"
-                    }
-                }
-            "SourcePath" = "8:..\\Depdendencies\\SQLCE 4.0 Libraries\\System.Data.SqlServerCe.dll"
-            "TargetName" = "8:"
+            "SourcePath" = "8:..\\packages\\SqlServerCompact.4.0.8482.1\\NativeBinaries\\amd64\\sqlcecompact40.dll"
+            "TargetName" = "8:sqlcecompact40.dll"
             "Tag" = "8:"
-            "Folder" = "8:_C296FF3876624722BFD513FAD7C82829"
+            "Folder" = "8:_45B562E378C14A6E98AA7BF7CE286A68"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_40BA881532834291970FCF5F9FBAC4BC"
+            {
+            "SourcePath" = "8:..\\packages\\SqlServerCompact.4.0.8482.1\\NativeBinaries\\amd64\\sqlceqp40.dll"
+            "TargetName" = "8:sqlceqp40.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_45B562E378C14A6E98AA7BF7CE286A68"
             "Condition" = "8:"
             "Transitive" = "11:FALSE"
             "Vital" = "11:TRUE"
@@ -411,9 +516,14 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:CodeGenCore, Version=1.2.0.0, Culture=neutral, PublicKeyToken=bb748fcfacf21f9b, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:CodeGenCore, Version=1.2.0.1, Culture=neutral, PublicKeyToken=bb748fcfacf21f9b, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_4395836EA0D648CB24C23F63C6532F82"
+                    {
+                    "Name" = "8:CodeGenCore.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:CodeGenCore.dll"
             "TargetName" = "8:"
@@ -431,6 +541,86 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_5DD178ED25AD488B946468DA789C997B"
+            {
+            "SourcePath" = "8:..\\packages\\SqlServerCompact.4.0.8482.1\\NativeBinaries\\amd64\\sqlcese40.dll"
+            "TargetName" = "8:sqlcese40.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_45B562E378C14A6E98AA7BF7CE286A68"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_637315D258024A30A20E07F304EC5A02"
+            {
+            "SourcePath" = "8:..\\packages\\SqlServerCompact.4.0.8482.1\\NativeBinaries\\x86\\Microsoft.VC90.CRT\\msvcr90.dll"
+            "TargetName" = "8:msvcr90.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_5C18C4C843914C4187064DF481EF0E44"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_6EA05FC83C53454FB477E0EB0FE2E83D"
+            {
+            "SourcePath" = "8:..\\packages\\SqlServerCompact.4.0.8482.1\\NativeBinaries\\amd64\\Microsoft.VC90.CRT\\msvcr90.dll"
+            "TargetName" = "8:msvcr90.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_3B3E73B9141D4B24AF3E2D7D0A8D9BF5"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_798BB581BD354B9E8EDB3D76D55EBA22"
+            {
+            "SourcePath" = "8:..\\packages\\SqlServerCompact.4.0.8482.1\\NativeBinaries\\x86\\sqlcecompact40.dll"
+            "TargetName" = "8:sqlcecompact40.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_5357F1E92BC646808F51C51746873428"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_7F8B7256E5C5AE4BB019E0E039A400EB"
@@ -515,6 +705,66 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A12FB6C2AB0C4F59862348DD7BEE5A7C"
+            {
+            "SourcePath" = "8:..\\packages\\SqlServerCompact.4.0.8482.1\\NativeBinaries\\x86\\sqlcese40.dll"
+            "TargetName" = "8:sqlcese40.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_5357F1E92BC646808F51C51746873428"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A2DE43C33ADF408BA8BA40C2818B47F2"
+            {
+            "SourcePath" = "8:..\\packages\\SqlServerCompact.4.0.8482.1\\NativeBinaries\\x86\\sqlceme40.dll"
+            "TargetName" = "8:sqlceme40.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_5357F1E92BC646808F51C51746873428"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_A7C102570AE944FF9F509D3025272575"
+            {
+            "SourcePath" = "8:..\\packages\\SqlServerCompact.4.0.8482.1\\NativeBinaries\\amd64\\sqlceer40EN.dll"
+            "TargetName" = "8:sqlceer40EN.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_45B562E378C14A6E98AA7BF7CE286A68"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_B2BBD7E31C7204C4D512F0D8B95AEDA8"
             {
             "AssemblyRegister" = "3:1"
@@ -529,6 +779,77 @@
                     }
                 }
             "SourcePath" = "8:ICSharpCode.TextEditor.dll"
+            "TargetName" = "8:"
+            "Tag" = "8:"
+            "Folder" = "8:_C296FF3876624722BFD513FAD7C82829"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B6A9D273BA784DC793C3012F96742023"
+            {
+            "SourcePath" = "8:..\\packages\\SqlServerCompact.4.0.8482.1\\NativeBinaries\\x86\\sqlceer40EN.dll"
+            "TargetName" = "8:sqlceer40EN.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_5357F1E92BC646808F51C51746873428"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_B9483B7E0CD3481384A615E600CA8045"
+            {
+            "SourcePath" = "8:..\\packages\\SqlServerCompact.4.0.8482.1\\NativeBinaries\\x86\\sqlceqp40.dll"
+            "TargetName" = "8:sqlceqp40.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_5357F1E92BC646808F51C51746873428"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_BF60FC26DAA46A622DDA16F67DFA91A4"
+            {
+            "AssemblyRegister" = "3:1"
+            "AssemblyIsInGAC" = "11:FALSE"
+            "AssemblyAsmDisplayName" = "8:System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL"
+                "ScatterAssemblies"
+                {
+                    "_BF60FC26DAA46A622DDA16F67DFA91A4"
+                    {
+                    "Name" = "8:System.Data.SqlServerCe.dll"
+                    "Attributes" = "3:512"
+                    }
+                }
+            "SourcePath" = "8:System.Data.SqlServerCe.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C296FF3876624722BFD513FAD7C82829"
@@ -577,6 +898,26 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D0CBE2CDD01E46B792F97DB3A146D4A8"
+            {
+            "SourcePath" = "8:..\\packages\\SqlServerCompact.4.0.8482.1\\NativeBinaries\\amd64\\Microsoft.VC90.CRT\\Microsoft.VC90.CRT.manifest"
+            "TargetName" = "8:Microsoft.VC90.CRT.manifest"
+            "Tag" = "8:"
+            "Folder" = "8:_3B3E73B9141D4B24AF3E2D7D0A8D9BF5"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_D2CAE20C2F2D2C7B74DE716F7D0F7194"
             {
             "AssemblyRegister" = "3:1"
@@ -606,6 +947,26 @@
             "Register" = "3:1"
             "Exclude" = "11:FALSE"
             "IsDependency" = "11:TRUE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D30352541262448DAA2190306C73DA03"
+            {
+            "SourcePath" = "8:..\\packages\\SqlServerCompact.4.0.8482.1\\NativeBinaries\\amd64\\Microsoft.VC90.CRT\\README_ENU.txt"
+            "TargetName" = "8:README_ENU.txt"
+            "Tag" = "8:"
+            "Folder" = "8:_3B3E73B9141D4B24AF3E2D7D0A8D9BF5"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
             "IsolateTo" = "8:"
             }
             "{9F6F8455-1EF1-4B85-886A-4223BCC8E7F7}:_D6E141695CE26A412A3303A9BC37C318"
@@ -670,6 +1031,66 @@
             "IsDependency" = "11:TRUE"
             "IsolateTo" = "8:"
             }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_D7B58C5C196B45AD9B24673FAF8EF68F"
+            {
+            "SourcePath" = "8:..\\packages\\SqlServerCompact.4.0.8482.1\\NativeBinaries\\x86\\Microsoft.VC90.CRT\\README_ENU.txt"
+            "TargetName" = "8:README_ENU.txt"
+            "Tag" = "8:"
+            "Folder" = "8:_5C18C4C843914C4187064DF481EF0E44"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E488443AA3884FA2963225B80AE505F0"
+            {
+            "SourcePath" = "8:..\\packages\\SqlServerCompact.4.0.8482.1\\NativeBinaries\\amd64\\sqlceme40.dll"
+            "TargetName" = "8:sqlceme40.dll"
+            "Tag" = "8:"
+            "Folder" = "8:_45B562E378C14A6E98AA7BF7CE286A68"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
+            "{1FB2D0AE-D3B9-43D4-B9DD-F88EC61E35DE}:_E879040ACBD84118A0A31DAFFC4F99DA"
+            {
+            "SourcePath" = "8:..\\packages\\SqlServerCompact.4.0.8482.1\\NativeBinaries\\x86\\Microsoft.VC90.CRT\\Microsoft.VC90.CRT.manifest"
+            "TargetName" = "8:Microsoft.VC90.CRT.manifest"
+            "Tag" = "8:"
+            "Folder" = "8:_5C18C4C843914C4187064DF481EF0E44"
+            "Condition" = "8:"
+            "Transitive" = "11:FALSE"
+            "Vital" = "11:TRUE"
+            "ReadOnly" = "11:FALSE"
+            "Hidden" = "11:FALSE"
+            "System" = "11:FALSE"
+            "Permanent" = "11:FALSE"
+            "SharedLegacy" = "11:FALSE"
+            "PackageAs" = "3:1"
+            "Register" = "3:1"
+            "Exclude" = "11:FALSE"
+            "IsDependency" = "11:FALSE"
+            "IsolateTo" = "8:"
+            }
         }
         "FileType"
         {
@@ -708,6 +1129,50 @@
             "Property" = "8:TARGETDIR"
                 "Folders"
                 {
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_45B562E378C14A6E98AA7BF7CE286A68"
+                    {
+                    "Name" = "8:amd64"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_AF2F988678C54F74959259369FAC8DC0"
+                        "Folders"
+                        {
+                            "{9EF0B969-E518-4E46-987F-47570745A589}:_3B3E73B9141D4B24AF3E2D7D0A8D9BF5"
+                            {
+                            "Name" = "8:Microsoft.VC90.CRT"
+                            "AlwaysCreate" = "11:FALSE"
+                            "Condition" = "8:"
+                            "Transitive" = "11:FALSE"
+                            "Property" = "8:_8FEA9918E4E040B4BE07F027951E41C0"
+                                "Folders"
+                                {
+                                }
+                            }
+                        }
+                    }
+                    "{9EF0B969-E518-4E46-987F-47570745A589}:_5357F1E92BC646808F51C51746873428"
+                    {
+                    "Name" = "8:x86"
+                    "AlwaysCreate" = "11:FALSE"
+                    "Condition" = "8:"
+                    "Transitive" = "11:FALSE"
+                    "Property" = "8:_289297F37E6D4F4DB2B3B72952DBB8EA"
+                        "Folders"
+                        {
+                            "{9EF0B969-E518-4E46-987F-47570745A589}:_5C18C4C843914C4187064DF481EF0E44"
+                            {
+                            "Name" = "8:Microsoft.VC90.CRT"
+                            "AlwaysCreate" = "11:FALSE"
+                            "Condition" = "8:"
+                            "Transitive" = "11:FALSE"
+                            "Property" = "8:_A9FC6802C9EC48A395B7A64BAC67860B"
+                                "Folders"
+                                {
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -727,7 +1192,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:SQL Compact Code Generator"
         "ProductCode" = "8:{7062A6C2-9172-4624-9408-2B19A7078B5F}"
-        "PackageCode" = "8:{03B1D5F2-9F2B-449E-AA05-132DFEAD57FB}"
+        "PackageCode" = "8:{B265EF5C-76E3-4071-B77F-24FDE0940BA3}"
         "UpgradeCode" = "8:{CCC6BAAE-44C4-4AC9-81D0-6908A6914681}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
