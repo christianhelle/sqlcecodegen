@@ -16,7 +16,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         public void WriteHeaderInformationTest()
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
-            const string connectionString = "Data Source=TestDatabase.sdf";
+            const string connectionString = "Data Source=Northwind.sdf";
             var database = GetDatabase(defaultNamespace, connectionString);
             var codeGenerator = CodeGeneratorFactory.Create<CSharpMangoLinqToSqlCodeGenerator>(database);
             codeGenerator.WriteHeaderInformation();
@@ -29,7 +29,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         public void GenerateEntitiesTest()
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
-            const string connectionString = "Data Source=TestDatabase.sdf";
+            const string connectionString = "Data Source=Northwind.sdf";
             var database = GetDatabase(defaultNamespace, connectionString);
             var codeGenerator = CodeGeneratorFactory.Create<CSharpMangoLinqToSqlCodeGenerator>(database);
             codeGenerator.GenerateEntities();
@@ -43,7 +43,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         public void GenerateEntitiesCanCompileTest()
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
-            const string connectionString = "Data Source=TestDatabase.sdf";
+            const string connectionString = "Data Source=Northwind.sdf";
             var database = GetDatabase(defaultNamespace, connectionString);
             var codeGenerator = CodeGeneratorFactory.Create<CSharpMangoLinqToSqlCodeGenerator>(database);
             codeGenerator.GenerateEntities();
@@ -59,7 +59,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         public void GenerateDataAccessLayerTest()
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
-            const string connectionString = "Data Source=TestDatabase.sdf";
+            const string connectionString = "Data Source=Northwind.sdf";
             var database = GetDatabase(defaultNamespace, connectionString);
             var codeGenerator = CodeGeneratorFactory.Create<CSharpMangoLinqToSqlCodeGenerator>(database);
             codeGenerator.GenerateDataAccessLayer();
@@ -73,7 +73,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         public void GenerateDataAccessLayerCanCompileTest()
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
-            const string connectionString = "Data Source=TestDatabase.sdf";
+            const string connectionString = "Data Source=Northwind.sdf";
             var database = GetDatabase(defaultNamespace, connectionString);
             var codeGenerator = CodeGeneratorFactory.Create<CSharpMangoLinqToSqlCodeGenerator>(database);
             codeGenerator.GenerateEntities();

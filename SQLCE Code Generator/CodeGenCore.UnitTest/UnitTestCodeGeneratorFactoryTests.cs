@@ -9,7 +9,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         public void UnitTestCodeGeneratorFactoryCreateTest()
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
-            const string connectionString = "Data Source=TestDatabase.sdf";
+            const string connectionString = "Data Source=Northwind.sdf";
             var database = new SqlCeDatabase(defaultNamespace, connectionString);
             var factory = new UnitTestCodeGeneratorFactory(database);
             var codeGenerator = factory.Create();
@@ -25,7 +25,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         public void UnitTestCodeGeneratorFactoryStaticCreateTest()
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
-            const string connectionString = "Data Source=TestDatabase.sdf";
+            const string connectionString = "Data Source=Northwind.sdf";
             var database = new SqlCeDatabase(defaultNamespace, connectionString);
             var codeGenerator = UnitTestCodeGeneratorFactory.Create(database);
 
@@ -40,7 +40,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         public void UnitTestCodeGeneratorFactoryCreateMSTestTest()
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
-            const string connectionString = "Data Source=TestDatabase.sdf";
+            const string connectionString = "Data Source=Northwind.sdf";
             var database = new SqlCeDatabase(defaultNamespace, connectionString);
             var factory = new UnitTestCodeGeneratorFactory(database);
             var codeGenerator = factory.Create("MSTest");
@@ -56,7 +56,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         public void UnitTestCodeGeneratorFactoryStaticCreateMSTestTest()
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
-            const string connectionString = "Data Source=TestDatabase.sdf";
+            const string connectionString = "Data Source=Northwind.sdf";
             var database = new SqlCeDatabase(defaultNamespace, connectionString);
             var codeGenerator = UnitTestCodeGeneratorFactory.Create(database, "MSTest");
 
@@ -71,7 +71,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         public void UnitTestCodeGeneratorFactoryStaticCreateNUnitTest()
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
-            const string connectionString = "Data Source=TestDatabase.sdf";
+            const string connectionString = "Data Source=Northwind.sdf";
             var database = new SqlCeDatabase(defaultNamespace, connectionString);
             var codeGenerator = UnitTestCodeGeneratorFactory.Create(database, "NUnit");
 
@@ -86,7 +86,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         public void UnitTestCodeGeneratorFactoryCreateNUnitTest()
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
-            const string connectionString = "Data Source=TestDatabase.sdf";
+            const string connectionString = "Data Source=Northwind.sdf";
             var database = new SqlCeDatabase(defaultNamespace, connectionString);
             var factory = new UnitTestCodeGeneratorFactory(database);
             var codeGenerator = factory.Create("NUnit");
@@ -102,7 +102,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         public void UnitTestCodeGeneratorFactoryStaticCreateXUnitTest()
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
-            const string connectionString = "Data Source=TestDatabase.sdf";
+            const string connectionString = "Data Source=Northwind.sdf";
             var database = new SqlCeDatabase(defaultNamespace, connectionString);
             var codeGenerator = UnitTestCodeGeneratorFactory.Create(database, "xUnit");
 
@@ -117,7 +117,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         public void UnitTestCodeGeneratorFactoryCreateXUnitTest()
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
-            const string connectionString = "Data Source=TestDatabase.sdf";
+            const string connectionString = "Data Source=Northwind.sdf";
             var database = new SqlCeDatabase(defaultNamespace, connectionString);
             var factory = new UnitTestCodeGeneratorFactory(database);
             var codeGenerator = factory.Create("xUnit");

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlServerCe;
@@ -133,20 +134,54 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             if (tables == null) return;
 
             var tableList = GetTableInformation(ConnectionString, tables);
-            FetchPrimaryKeys(tableList, ConnectionString);
+            Tables = new List<Table>(tableList.Values);
+            FetchPrimaryKeys();
+            FetchIndexes();
         }
 
-        private void FetchPrimaryKeys(Dictionary<string, Table> tableList, string connectionString)
+        private void FetchIndexes()
         {
-            Tables = new List<Table>(tableList.Values);
             foreach (var table in Tables)
             {
-                using (var conn = new SqlCeConnection(connectionString))
+                using (var conn = new SqlCeConnection(ConnectionString))
+                using (var cmd = conn.CreateCommand())
+                {
+                    conn.Open();
+                    cmd.CommandText = @"SELECT COLUMN_NAME, INDEX_NAME, [UNIQUE], [CLUSTERED] FROM INFORMATION_SCHEMA.INDEXES WHERE PRIMARY_KEY = 0 AND TABLE_NAME='" + table.DisplayName + "' ORDER BY TABLE_NAME, COLUMN_NAME, INDEX_NAME";
+
+                    var dataTable = new DataTable();
+                    using (var adapter = new SqlCeDataAdapter(cmd))
+                        adapter.Fill(dataTable);
+
+                    if (dataTable.Rows.Count == 0)
+                        continue;
+
+                    table.Indexes = new List<Index>(dataTable.Rows.Count);
+                    foreach (DataRow row in dataTable.Rows)
+                    {
+                        var index = new Index
+                        {
+                            Name = row.Field<string>("INDEX_NAME"),
+                            Unique = row.Field<bool>("UNIQUE"),
+                            Clustered = row.Field<bool>("CLUSTERED"),
+                            Column = table.Columns.Values.Where(c => c.DisplayName == row.Field<string>("COLUMN_NAME")).FirstOrDefault()
+                        };
+                        table.Indexes.Add(index);
+                    }
+                }
+            }
+        }
+
+        private void FetchPrimaryKeys()
+        {
+            foreach (var table in Tables)
+            {
+                using (var conn = new SqlCeConnection(ConnectionString))
                 using (var cmd = conn.CreateCommand())
                 {
                     conn.Open();
                     cmd.CommandText = @"SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.INDEXES WHERE TABLE_NAME=@Name AND PRIMARY_KEY=1";
-                    cmd.Parameters.AddWithValue("@Name", table.Name);
+                    cmd.Parameters.AddWithValue("@Name", table.DisplayName);
                     var primaryKeyColumnName = cmd.ExecuteScalar() as string;
                     if (primaryKeyColumnName != null)
                     {

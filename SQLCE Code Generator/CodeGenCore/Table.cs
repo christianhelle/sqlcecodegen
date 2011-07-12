@@ -11,6 +11,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe
         public string DisplayName { get; set; }
         public string ClassName { get; set; }
         public Dictionary<string, Column> Columns { get; set; }
+        public List<Index> Indexes { get; set; }
         public string PrimaryKeyColumnName { get; set; }
 
         public override string ToString()
@@ -38,5 +39,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe
         {
             return ManagedType.ToString();
         }
+    }
+
+    public class Index
+    {
+        public Column Column { get; set; }
+        public string Name { get; set; }
+        public bool Unique { get; set; }
+        public bool Clustered { get; set; }
     }
 }
