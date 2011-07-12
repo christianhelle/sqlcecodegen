@@ -516,9 +516,14 @@
             {
             "AssemblyRegister" = "3:1"
             "AssemblyIsInGAC" = "11:FALSE"
-            "AssemblyAsmDisplayName" = "8:CodeGenCore, Version=1.2.0.2, Culture=neutral, PublicKeyToken=bb748fcfacf21f9b, processorArchitecture=MSIL"
+            "AssemblyAsmDisplayName" = "8:CodeGenCore, Version=1.2.0.3, Culture=neutral, PublicKeyToken=bb748fcfacf21f9b, processorArchitecture=MSIL"
                 "ScatterAssemblies"
                 {
+                    "_4395836EA0D648CB24C23F63C6532F82"
+                    {
+                    "Name" = "8:CodeGenCore.dll"
+                    "Attributes" = "3:512"
+                    }
                 }
             "SourcePath" = "8:CodeGenCore.dll"
             "TargetName" = "8:"
@@ -1187,7 +1192,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:SQL Compact Code Generator"
         "ProductCode" = "8:{7062A6C2-9172-4624-9408-2B19A7078B5F}"
-        "PackageCode" = "8:{AB560E92-225C-48DF-9337-6CEFD184C8BA}"
+        "PackageCode" = "8:{2B50213D-619E-4A4B-8CE7-9AFECCB60BE4}"
         "UpgradeCode" = "8:{CCC6BAAE-44C4-4AC9-81D0-6908A6914681}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -2450,7 +2455,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_2E790EAD63A049DF84EE097B9931045E"
             {
-            "SourcePath" = "8:..\\CodeGenCustomTool\\obj\\Debug\\CodeGenCustomTool.dll"
+            "SourcePath" = "8:..\\CodeGenCustomTool\\obj\\Release\\CodeGenCustomTool.dll"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C296FF3876624722BFD513FAD7C82829"
@@ -2506,7 +2511,7 @@
             }
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_BD15A8B2B11C4915B73B72893637AAB2"
             {
-            "SourcePath" = "8:..\\CodeGenGUI\\obj\\Debug\\CodeGenGUI.exe"
+            "SourcePath" = "8:..\\CodeGenGUI\\obj\\Release\\CodeGenGUI.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_C296FF3876624722BFD513FAD7C82829"

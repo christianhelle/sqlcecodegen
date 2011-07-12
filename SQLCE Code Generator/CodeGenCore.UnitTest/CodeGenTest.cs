@@ -16,7 +16,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         public void DatabaseConstructorTest()
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
-            //var connectionString = "Data Source=TestDatabase.sdf";
+            //var connectionString = "Data Source=Northwind.sdf";
             var target = GetDatabase();
 
             Assert.AreEqual(defaultNamespace, target.Namespace);
@@ -26,7 +26,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         public void WriteHeaderInformationTest()
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
-            const string connectionString = "Data Source=TestDatabase.sdf";
+            const string connectionString = "Data Source=Northwind.sdf";
             var database = GetDatabase(defaultNamespace, connectionString);
             var factory = new CodeGeneratorFactory(database);
             var codeGenerator = factory.Create();
@@ -40,7 +40,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         public void GenerateEntitiesTest()
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
-            const string connectionString = "Data Source=TestDatabase.sdf";
+            const string connectionString = "Data Source=Northwind.sdf";
             var database = GetDatabase(defaultNamespace, connectionString);
             var factory = new CodeGeneratorFactory(database);
             var codeGenerator = factory.Create();
@@ -55,7 +55,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         public void GenerateEntitiesCanCompileTest()
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
-            const string connectionString = "Data Source=TestDatabase.sdf";
+            const string connectionString = "Data Source=Northwind.sdf";
             var database = GetDatabase(defaultNamespace, connectionString);
             var factory = new CodeGeneratorFactory(database);
             var codeGenerator = factory.Create();
@@ -72,7 +72,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         public void GenerateDataAccessLayerTest()
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
-            const string connectionString = "Data Source=TestDatabase.sdf";
+            const string connectionString = "Data Source=Northwind.sdf";
             var database = GetDatabase(defaultNamespace, connectionString);
             var factory = new CodeGeneratorFactory(database);
             var codeGenerator = factory.Create();
@@ -87,7 +87,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         public void GenerateDataAccessLayerCanCompileTest()
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
-            const string connectionString = "Data Source=TestDatabase.sdf";
+            const string connectionString = "Data Source=Northwind.sdf";
             var database = GetDatabase(defaultNamespace, connectionString);
             var factory = new CodeGeneratorFactory(database);
             var codeGenerator = factory.Create();

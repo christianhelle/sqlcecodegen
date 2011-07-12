@@ -5,10 +5,10 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
 {
     [TestClass]
     [DeploymentItem("app.config")]
-    [DeploymentItem("TestDatabase.sdf")]
-    public class ISqlCeDatabaseTest
+    [DeploymentItem("Northwind.sdf")]
+    public class SqlCeDatabaseTest
     {
-        private readonly string connectionString = "Data Source=TestDatabase.sdf";
+        private readonly string connectionString = "Data Source=Northwind.sdf";
 
         [TestMethod]
         public void AnalyzeDatabaseTest()
@@ -107,6 +107,30 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             foreach (var table in target.Tables)
                 foreach (var column in table.Columns)
                     Assert.IsFalse(string.IsNullOrEmpty(column.Value.DatabaseType));
+        }
+
+        [TestMethod]
+        public void IndexesNotNullTest()
+        {
+            var target = new SqlCeDatabase(connectionString);
+            target.AnalyzeDatabase();
+
+            foreach (var table in target.Tables)
+            {
+                Assert.IsNotNull(table.Indexes);
+                CollectionAssert.AllItemsAreNotNull(table.Indexes);
+            }                
+        }
+
+        [TestMethod]
+        public void IndexColumnNotNullTest()
+        {
+            var target = new SqlCeDatabase(connectionString);
+            target.AnalyzeDatabase();
+
+            foreach (var table in target.Tables)
+                foreach (var index in table.Indexes)
+                    Assert.IsNotNull(index.Column);
         }
     }
 }
