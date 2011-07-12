@@ -788,17 +788,20 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                     testRunner = Environment.ExpandEnvironmentVariables(@"%VS90COMNTOOLS%\..\IDE\mstest.exe");
                     if (!File.Exists(testRunner))
                         testRunner = Environment.ExpandEnvironmentVariables(@"%VS100COMNTOOLS%\..\IDE\mstest.exe");
-                    args = string.Format(@"/testcontainer:""{0}\DataAccess.dll""", appDataPath);
+                    var testResult = string.Format("{0}\\MSTestResult.trx", appDataPath);
+                    if (File.Exists(testResult))
+                        File.Delete(testResult);
+                    args = string.Format(@"/resultsfile:""{1}"" /testcontainer:""{0}\DataAccess.dll""", appDataPath, testResult);
                     break;
 
                 case NUNIT:
                     testRunner = Path.Combine(Environment.CurrentDirectory, "NUnit\\nunit-console.exe");
-                    args = string.Format(@" /nodots ""{0}\DataAccess.dll""", appDataPath);
+                    args = string.Format(@"/xml=""{0}\NUnitTestResult.xml"" /nodots ""{0}\DataAccess.dll""", appDataPath);
                     break;
 
                 case XUNIT:
                     testRunner = Path.Combine(Environment.CurrentDirectory, "xUnit\\xunit.console.exe");
-                    args = string.Format(@" ""{0}\DataAccess.dll"" /silent", appDataPath);
+                    args = string.Format(@"""{0}\DataAccess.dll"" /silent /xml ""{0}\xUnitTestResult.xml""", appDataPath);
                     break;
 
                 default:

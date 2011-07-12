@@ -21,7 +21,7 @@ namespace CodeGenWPF.ViewModels
     public class MainViewModel : ViewModelBase
     {
         private string dataSource;
-        private bool launchedWithArgument;
+        //private bool launchedWithArgument;
         private SqlCeDatabase database;
         private readonly string path;
 
