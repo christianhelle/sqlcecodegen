@@ -2,31 +2,31 @@
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
-    public class NUnitTestCodeGenerator : CSharpUnitTestCodeGenerator
+    public class MSTestUnitTestCodeGenerator : CSharpUnitTestCodeGenerator
     {
-        public NUnitTestCodeGenerator(SqlCeDatabase tableDetails)
+        public MSTestUnitTestCodeGenerator(SqlCeDatabase tableDetails)
             : base(tableDetails)
         {
         }
 
         protected override void IncludeUnitTestNamespaces(StringBuilder code)
         {
-            code.AppendLine("\tusing NUnit.Framework;");
+            code.AppendLine("\tusing Microsoft.VisualStudio.TestTools.UnitTesting;");
         }
 
         protected override string GetTestClassAttribute()
         {
-            return "[TestFixture]";
+            return "[TestClass]";
         }
 
         protected override string GetTestMethodAttribute()
         {
-            return "[Test]";
+            return "[TestMethod]";
         }
 
         protected override string GetTestInitializeAttribute()
         {
-            return "[SetUp]";
+            return "[TestInitialize]";
         }
     }
 }

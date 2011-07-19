@@ -17,7 +17,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             var codeGenerator = factory.Create();
             codeGenerator.GenerateEntities();
 
-            var unitTestCodeGenerator = new MsTestUnitTestCodeGenerator(database);
+            var unitTestCodeGenerator = new MSTestUnitTestCodeGenerator(database);
             unitTestCodeGenerator.WriteHeaderInformation();
             unitTestCodeGenerator.GenerateEntities();
 
@@ -34,7 +34,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             codeGenerator.GenerateEntities();
             codeGenerator.GenerateDataAccessLayer();
 
-            var unitTestCodeGenerator = new MsTestUnitTestCodeGenerator(database);
+            var unitTestCodeGenerator = new MSTestUnitTestCodeGenerator(database);
             unitTestCodeGenerator.WriteHeaderInformation();
             unitTestCodeGenerator.GenerateDataAccessLayer();
 
@@ -52,7 +52,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             codeGenerator.GenerateEntities();
             codeGenerator.GenerateDataAccessLayer();
 
-            var unitTestCodeGenerator = new MsTestUnitTestCodeGenerator(database);
+            var unitTestCodeGenerator = new MSTestUnitTestCodeGenerator(database);
             unitTestCodeGenerator.WriteHeaderInformation();
             unitTestCodeGenerator.GenerateEntities();
             unitTestCodeGenerator.GenerateDataAccessLayer();

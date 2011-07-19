@@ -32,9 +32,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             foreach (var error in actual.Errors)
                 Trace.WriteLine(error, "ERROR");
 
-            if (actual.Errors.Count > 0)
-                foreach (var code in sourceCode)
-                    Trace.WriteLine(code);
+            //if (actual.Errors.Count > 0)
+            //    foreach (var code in sourceCode)
+            //        Trace.WriteLine(code);
 
             Assert.AreEqual(0, actual.Errors.Count);
         }
@@ -46,9 +46,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             foreach (var error in actual.Errors)
                 Trace.WriteLine(error, "ERROR");
 
-            if (actual.Errors.Count > 0)
-                foreach (var code in sourceCode)
-                    Trace.WriteLine(code);
+            //if (actual.Errors.Count > 0)
+            //    foreach (var code in sourceCode)
+            //        Trace.WriteLine(code);
 
             Assert.AreEqual(0, actual.Errors.Count);
         }

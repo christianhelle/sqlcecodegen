@@ -18,7 +18,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             Assert.IsInstanceOfType(codeGenerator, typeof(CodeGenerator));
             Assert.IsInstanceOfType(codeGenerator, typeof(CSharpCodeGenerator));
             Assert.IsInstanceOfType(codeGenerator, typeof(CSharpUnitTestCodeGenerator));
-            Assert.IsInstanceOfType(codeGenerator, typeof(MsTestUnitTestCodeGenerator));
+            Assert.IsInstanceOfType(codeGenerator, typeof(MSTestUnitTestCodeGenerator));
         }
 
         [TestMethod]
@@ -33,7 +33,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             Assert.IsInstanceOfType(codeGenerator, typeof(CodeGenerator));
             Assert.IsInstanceOfType(codeGenerator, typeof(CSharpCodeGenerator));
             Assert.IsInstanceOfType(codeGenerator, typeof(CSharpUnitTestCodeGenerator));
-            Assert.IsInstanceOfType(codeGenerator, typeof(MsTestUnitTestCodeGenerator));
+            Assert.IsInstanceOfType(codeGenerator, typeof(MSTestUnitTestCodeGenerator));
         }
 
         [TestMethod]
@@ -49,7 +49,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             Assert.IsInstanceOfType(codeGenerator, typeof(CodeGenerator));
             Assert.IsInstanceOfType(codeGenerator, typeof(CSharpCodeGenerator));
             Assert.IsInstanceOfType(codeGenerator, typeof(CSharpUnitTestCodeGenerator));
-            Assert.IsInstanceOfType(codeGenerator, typeof(MsTestUnitTestCodeGenerator));
+            Assert.IsInstanceOfType(codeGenerator, typeof(MSTestUnitTestCodeGenerator));
         }
 
         [TestMethod]
@@ -64,7 +64,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             Assert.IsInstanceOfType(codeGenerator, typeof(CodeGenerator));
             Assert.IsInstanceOfType(codeGenerator, typeof(CSharpCodeGenerator));
             Assert.IsInstanceOfType(codeGenerator, typeof(CSharpUnitTestCodeGenerator));
-            Assert.IsInstanceOfType(codeGenerator, typeof(MsTestUnitTestCodeGenerator));
+            Assert.IsInstanceOfType(codeGenerator, typeof(MSTestUnitTestCodeGenerator));
         }
 
         [TestMethod]
@@ -110,7 +110,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             Assert.IsInstanceOfType(codeGenerator, typeof(CodeGenerator));
             Assert.IsInstanceOfType(codeGenerator, typeof(CSharpCodeGenerator));
             Assert.IsInstanceOfType(codeGenerator, typeof(CSharpUnitTestCodeGenerator));
-            Assert.IsInstanceOfType(codeGenerator, typeof(xUnitTestCodeGenerator));
+            Assert.IsInstanceOfType(codeGenerator, typeof(XUnitTestCodeGenerator));
         }
 
         [TestMethod]
@@ -126,7 +126,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             Assert.IsInstanceOfType(codeGenerator, typeof(CodeGenerator));
             Assert.IsInstanceOfType(codeGenerator, typeof(CSharpCodeGenerator));
             Assert.IsInstanceOfType(codeGenerator, typeof(CSharpUnitTestCodeGenerator));
-            Assert.IsInstanceOfType(codeGenerator, typeof(xUnitTestCodeGenerator));
+            Assert.IsInstanceOfType(codeGenerator, typeof(XUnitTestCodeGenerator));
         }
     }
 }

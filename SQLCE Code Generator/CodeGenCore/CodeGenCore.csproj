@@ -89,7 +89,7 @@
     <Compile Include="CSharpDataAccessLayerGenerator.cs" />
     <Compile Include="CSharpMangoLinqToSqlCodeGenerator.cs" />
     <Compile Include="DataAccessLayerGenerator.cs" />
-    <Compile Include="MsTestUnitTestCodeGenerator.cs" />
+    <Compile Include="MSTestUnitTestCodeGenerator.cs" />
     <Compile Include="NUnitTestCodeGenerator.cs" />
     <Compile Include="PasswordForm.cs">
       <SubType>Form</SubType>

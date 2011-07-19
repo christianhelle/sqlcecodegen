@@ -1,4 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using System.Collections.Generic;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
 {
@@ -84,6 +86,74 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             Assert.IsFalse(string.IsNullOrEmpty(actual));
 
             AssertCSharpCompile(actual);
+        }
+
+        [TestMethod]
+        public void GenerateMultiFileEntitiesTest()
+        {
+            var defaultNamespace = typeof(CodeGenTest).Namespace;
+            const string connectionString = "Data Source=Northwind.sdf";
+            var database = GetDatabase(defaultNamespace, connectionString);
+            var codeGenerator = CodeGeneratorFactory.Create<CSharpMangoLinqToSqlCodeGenerator>(database);
+            codeGenerator.GenerateEntities();
+
+            CollectionAssert.AllItemsAreNotNull(codeGenerator.CodeFiles);
+            foreach (var codeFile in codeGenerator.CodeFiles)
+            {
+                Assert.IsNotNull(codeFile);
+                Assert.IsFalse(string.IsNullOrEmpty(codeFile.Key));
+                Assert.IsNotNull(codeFile.Value);
+                Assert.IsFalse(string.IsNullOrEmpty(codeFile.Value.ToString()));
+            }
+        }
+
+        [TestMethod]
+        public void GenerateMultiFileDataAccessTest()
+        {
+            var defaultNamespace = typeof(CodeGenTest).Namespace;
+            const string connectionString = "Data Source=Northwind.sdf";
+            var database = GetDatabase(defaultNamespace, connectionString);
+            var codeGenerator = CodeGeneratorFactory.Create<CSharpMangoLinqToSqlCodeGenerator>(database);
+            codeGenerator.GenerateEntities();
+            codeGenerator.GenerateDataAccessLayer();
+
+            CollectionAssert.AllItemsAreNotNull(codeGenerator.CodeFiles);
+            foreach (var codeFile in codeGenerator.CodeFiles)
+            {
+                Assert.IsNotNull(codeFile);
+                Assert.IsFalse(string.IsNullOrEmpty(codeFile.Key));
+                Assert.IsNotNull(codeFile.Value);
+                Assert.IsFalse(string.IsNullOrEmpty(codeFile.Value.ToString()));
+            }
+        }
+
+        [TestMethod]
+        public void GenerateMultiFileEntitiesCanCompileTest()
+        {
+            var defaultNamespace = typeof(CodeGenTest).Namespace;
+            const string connectionString = "Data Source=Northwind.sdf";
+            var database = GetDatabase(defaultNamespace, connectionString);
+            var codeGenerator = CodeGeneratorFactory.Create<CSharpMangoLinqToSqlCodeGenerator>(database);
+            codeGenerator.GenerateEntities();
+
+            var code = new List<string>();
+            codeGenerator.CodeFiles.Values.ToList().ForEach(c => code.Add(c.ToString()));
+            AssertCSharpCompile(code.ToArray());
+        }
+
+        [TestMethod]
+        public void GenerateMultiFileDataAccessCanCompileTest()
+        {
+            var defaultNamespace = typeof(CodeGenTest).Namespace;
+            const string connectionString = "Data Source=Northwind.sdf";
+            var database = GetDatabase(defaultNamespace, connectionString);
+            var codeGenerator = CodeGeneratorFactory.Create<CSharpMangoLinqToSqlCodeGenerator>(database);
+            codeGenerator.GenerateEntities();
+            codeGenerator.GenerateDataAccessLayer();
+
+            var code = new List<string>();
+            codeGenerator.CodeFiles.Values.ToList().ForEach(c => code.Add(c.ToString()));
+            AssertCSharpCompile(code.ToArray());
         }
     }
 }

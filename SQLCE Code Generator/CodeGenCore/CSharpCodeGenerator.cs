@@ -1,9 +1,7 @@
 using System.Collections.Generic;
-using System.Reflection;
-using System.Globalization;
-using System;
 using System.Data.SqlServerCe;
 using System.IO;
+using System.Text;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
@@ -16,10 +14,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         private void GenerateEntityBase()
         {
-            code.AppendLine("\t#region EntityBase");
-            code.AppendLine();
+            var code = new StringBuilder();
 
-            GenerateXmlDoc(1, "Base class for all data access repositories");
+            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("{");
+            GenerateXmlDoc(code, 1, "Base class for all data access repositories");
             code.AppendLine("\tpublic static class EntityBase");
             code.AppendLine("\t{");
             code.AppendLine("\t\tprivate static System.Data.SqlServerCe.SqlCeConnection connectionInstance = null;");
@@ -35,11 +34,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t}");
             code.AppendLine();
 
-            GenerateXmlDoc(2, "Gets or sets the global SQL CE Connection String to be used");
+            GenerateXmlDoc(code, 2, "Gets or sets the global SQL CE Connection String to be used");
             code.AppendLine("\t\tpublic static System.String ConnectionString { get; set; }");
             code.AppendLine();
 
-            GenerateXmlDoc(2, "Gets or sets the global SQL CE Connection instance");
+            GenerateXmlDoc(code, 2, "Gets or sets the global SQL CE Connection instance");
             code.AppendLine("\t\tpublic static System.Data.SqlServerCe.SqlCeConnection Connection");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tget");
@@ -61,35 +60,36 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t}");
             code.AppendLine();
 
-            GenerateXmlDoc(2, "Create a SqlCeCommand instance using the global SQL CE Conection instance");
+            GenerateXmlDoc(code, 2, "Create a SqlCeCommand instance using the global SQL CE Conection instance");
             code.AppendLine("\t\tpublic static System.Data.SqlServerCe.SqlCeCommand CreateCommand()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\treturn CreateCommand(null);");
             code.AppendLine("\t\t}");
             code.AppendLine();
 
-            GenerateXmlDoc(2, "Create a SqlCeCommand instance using the global SQL CE Conection instance and associate this with a transaction", new KeyValuePair<string, string>("transaction", "SqlCeTransaction to be used for the SqlCeCommand"));
+            GenerateXmlDoc(code, 2, "Create a SqlCeCommand instance using the global SQL CE Conection instance and associate this with a transaction", new KeyValuePair<string, string>("transaction", "SqlCeTransaction to be used for the SqlCeCommand"));
             code.AppendLine("\t\tpublic static System.Data.SqlServerCe.SqlCeCommand CreateCommand(System.Data.SqlServerCe.SqlCeTransaction transaction)");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tvar command = Connection.CreateCommand();");
             code.AppendLine("\t\t\tcommand.Transaction = transaction;");
             code.AppendLine("\t\t\treturn command;");
             code.AppendLine("\t\t}");
-            code.AppendLine();
-
             code.AppendLine("\t}");
-            code.AppendLine("\t#endregion");
-            code.AppendLine();
+            code.AppendLine("}");
+
+            AppendCode("EntityBase", code);
         }
 
         private void GenerateCreateDatabase()
         {
-            code.AppendLine("\t#region DatabaseFile");
-            code.AppendLine();
-            GenerateXmlDoc(1, "Helper class for generating the database file in runtime");
+            var code = new StringBuilder();
+
+            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("{");
+            GenerateXmlDoc(code, 1, "Helper class for generating the database file in runtime");
             code.AppendLine("\tpublic static class DatabaseFile");
             code.AppendLine("\t{");
-            GenerateXmlDoc(2, "Creates the database");
+            GenerateXmlDoc(code, 2, "Creates the database");
             code.AppendLine("\t\tpublic static int CreateDatabase()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tint resultCount = 0;");
@@ -137,9 +137,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\treturn resultCount;");
             code.AppendLine("\t\t}");
             code.AppendLine("\t}");
-            code.AppendLine();
-            code.AppendLine("\t#endregion");
-            code.AppendLine();
+            code.AppendLine("}");
+
+            AppendCode("DatabaseFile", code);
         }
 
         public override void GenerateEntities()
@@ -149,13 +149,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         public override void GenerateEntities(EntityGeneratorOptions options)
         {
-            code.AppendLine("\nnamespace " + Database.Namespace);
-            code.AppendLine("{");
+            //Code.AppendLine("\nnamespace " + Database.Namespace);
+            //Code.AppendLine("{");
 
             foreach (var table in Database.Tables)
                 GenerateEntity(table, options);
 
-            code.AppendLine("}");
+            //Code.AppendLine("}");
         }
 
         public override void GenerateDataAccessLayer()
@@ -165,32 +165,30 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         public override void GenerateDataAccessLayer(DataAccessLayerGeneratorOptions options)
         {
-            code.AppendLine("\nnamespace " + Database.Namespace);
-            code.AppendLine("{");
-
             GenerateEntityBase();
             GenerateCreateDatabase();
             GenerateIRepository();
             GenerateIDataRepository();
+            GenerateDataRepository();
 
             foreach (var table in Database.Tables)
             {
                 GenerateITableRepository(table);
                 GenerateTableRepository(table);
             }
-
-            code.AppendLine("}");
         }
 
         private void GenerateTableRepository(Table table)
         {
-            code.AppendLine("\t#region " + table.ClassName + " Repository");
-            code.AppendLine();
+            var code = new StringBuilder();
 
-            GenerateXmlDoc(1, "Default I" + table.ClassName + "Repository implementation ");
+            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("{");
+            GenerateXmlDoc(code, 1, "Default I" + table.ClassName + "Repository implementation ");
             code.AppendLine("\tpublic partial class " + table.ClassName + "Repository : I" + table.ClassName + "Repository");
             code.AppendLine("\t{");
             code.AppendLine("\t\tpublic System.Data.SqlServerCe.SqlCeTransaction Transaction { get; set; }");
+            code.AppendLine();
 
             DataAccessLayerGenerator generator = new CSharpDataAccessLayerGenerator(code, table);
             generator.GenerateSelectAll();
@@ -208,20 +206,21 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             generator.GenerateCount();
 
             code.AppendLine("\t}");
-            code.AppendLine();
-            code.AppendLine("\t#endregion");
-            code.AppendLine();
+            code.AppendLine("}");
+
+            AppendCode(table.ClassName + "Repository", code);
         }
 
         private void GenerateITableRepository(Table table)
         {
-            code.AppendLine("\t#region I" + table.ClassName + " Repository");
-            code.AppendLine();
+            var code = new StringBuilder();
 
-            GenerateXmlDoc(1, "Represents the " + table.ClassName + " repository");
+            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("{");
+            GenerateXmlDoc(code, 1, "Represents the " + table.ClassName + " repository");
             code.AppendLine("\tpublic partial interface I" + table.ClassName + "Repository : IRepository<" + table.ClassName + ">");
             code.AppendLine("\t{");
-            GenerateXmlDoc(2, "Transaction instance created from <see=\"IDataRepository\">");
+            GenerateXmlDoc(code, 2, "Transaction instance created from <see cref=\"IDataRepository\" />");
             code.AppendLine("\t\tSystem.Data.SqlServerCe.SqlCeTransaction Transaction { get; set; }");
             code.AppendLine();
 
@@ -232,20 +231,20 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
                 if (column.Value.ManagedType.IsValueType)
                 {
-                    GenerateXmlDoc(2, "Retrieves a collection of items by " + column.Value.FieldName, new KeyValuePair<string, string>(column.Value.FieldName, column.Value.FieldName + " value"));
+                    GenerateXmlDoc(code, 2, "Retrieves a collection of items by " + column.Value.FieldName, new KeyValuePair<string, string>(column.Value.FieldName, column.Value.FieldName + " value"));
                     code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1}? {2});", table.ClassName, column.Value.ManagedType, column.Value.FieldName);
                     code.AppendLine("\n");
-                    GenerateXmlDoc(2, "Retrieves the first set of items specified by count by " + column.Value.FieldName,
+                    GenerateXmlDoc(code, 2, "Retrieves the first set of items specified by count by " + column.Value.FieldName,
                         new KeyValuePair<string, string>(column.Value.FieldName, column.Value.FieldName + " value"),
                         new KeyValuePair<string, string>("count", "the number of records to be retrieved"));
                     code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1}? {2}, int count);", table.ClassName, column.Value.ManagedType, column.Value.FieldName);
                 }
                 else
                 {
-                    GenerateXmlDoc(2, "Retrieves a collection of items by " + column.Value.FieldName, new KeyValuePair<string, string>(column.Value.FieldName, column.Value.FieldName + " value"));
+                    GenerateXmlDoc(code, 2, "Retrieves a collection of items by " + column.Value.FieldName, new KeyValuePair<string, string>(column.Value.FieldName, column.Value.FieldName + " value"));
                     code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1} {2});", table.ClassName, column.Value.ManagedType, column.Value.FieldName);
                     code.AppendLine("\n");
-                    GenerateXmlDoc(2, "Retrieves the first set of items specified by count by " + column.Value.FieldName,
+                    GenerateXmlDoc(code, 2, "Retrieves the first set of items specified by count by " + column.Value.FieldName,
                         new KeyValuePair<string, string>(column.Value.FieldName, column.Value.FieldName + " value"),
                         new KeyValuePair<string, string>("count", "the number of records to be retrieved"));
                     code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1} {2}, int count);", table.ClassName, column.Value.ManagedType, column.Value.FieldName);
@@ -258,7 +257,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 if (string.Compare(column.Value.DatabaseType, "ntext", true) == 0 || string.Compare(column.Value.DatabaseType, "image", true) == 0)
                     continue;
 
-                GenerateXmlDoc(2, "Delete records by " + column.Value.FieldName, new KeyValuePair<string, string>(column.Value.FieldName, column.Value.FieldName + " value"));
+                GenerateXmlDoc(code, 2, "Delete records by " + column.Value.FieldName, new KeyValuePair<string, string>(column.Value.FieldName, column.Value.FieldName + " value"));
                 if (column.Value.ManagedType.IsValueType)
                 {
                     code.AppendFormat("\t\tint DeleteBy{1}({0}? {1});", column.Value.ManagedType, column.Value.FieldName);
@@ -274,7 +273,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             if (!string.IsNullOrEmpty(table.PrimaryKeyColumnName))
             {
-                GenerateXmlDoc(2, "Create new record without specifying a primary key");
+                GenerateXmlDoc(code, 2, "Create new record without specifying a primary key");
                 code.Append("\t\tvoid Create(");
                 foreach (var column in table.Columns)
                 {
@@ -290,7 +289,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine();
             }
 
-            GenerateXmlDoc(2, "Create new record specifying all fields");
+            GenerateXmlDoc(code, 2, "Create new record specifying all fields");
             code.Append("\t\tvoid Create(");
             foreach (var column in table.Columns)
             {
@@ -303,47 +302,55 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.Append(");\n");
 
             code.AppendLine("\t}");
-            code.AppendLine();
-            code.AppendLine("\t#endregion");
-            code.AppendLine();
+            code.AppendLine("}");
+
+            AppendCode("I" + table.ClassName + "Repository", code);
         }
 
         private void GenerateIDataRepository()
         {
-            code.AppendLine("\t#region IDataRepository");
-            code.AppendLine();
-            GenerateXmlDoc(1, "Main Data Repository interface containing all table repositories");
+            var code = new StringBuilder();
+
+            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("{");
+            GenerateXmlDoc(code, 1, "Main Data Repository interface containing all table repositories");
             code.AppendLine("\tpublic partial interface IDataRepository : System.IDisposable");
             code.AppendLine("\t{");
             foreach (var table in Database.Tables)
             {
-                GenerateXmlDoc(2, "Gets an instance of the I" + table.ClassName + "Repository");
+                GenerateXmlDoc(code, 2, "Gets an instance of the I" + table.ClassName + "Repository");
                 code.AppendLine("\t\tI" + table.ClassName + "Repository " + table.ClassName + " { get; }");
                 code.AppendLine();
             }
-            GenerateXmlDoc(2, "Starts a SqlCeTransaction using the global SQL CE Conection instance");
+            GenerateXmlDoc(code, 2, "Starts a SqlCeTransaction using the global SQL CE Conection instance");
             code.AppendLine("\t\tSystem.Data.SqlServerCe.SqlCeTransaction BeginTransaction();");
             code.AppendLine();
 
-            GenerateXmlDoc(2, "Commits the transaction");
+            GenerateXmlDoc(code, 2, "Commits the transaction");
             code.AppendLine("\t\tvoid Commit();");
             code.AppendLine();
 
-            GenerateXmlDoc(2, "Rollbacks the transaction");
+            GenerateXmlDoc(code, 2, "Rollbacks the transaction");
             code.AppendLine("\t\tvoid Rollback();");
             code.AppendLine("\t}");
-            code.AppendLine("\t#endregion");
-            code.AppendLine();
+            code.AppendLine("}");
 
-            code.AppendLine("\t#region DataRepository");
-            code.AppendLine();
-            GenerateXmlDoc(1, "Main Data Repository implementation containing all default table repositories implementations");
+            AppendCode("IDataRepository", code);
+        }
+
+        private void GenerateDataRepository()
+        {
+            var code = new StringBuilder();
+
+            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("{");
+            GenerateXmlDoc(code, 1, "Main Data Repository implementation containing all default table repositories implementations");
             code.AppendLine("\tpublic partial class DataRepository : IDataRepository");
             code.AppendLine("\t{");
             code.AppendLine("\t\tprivate System.Data.SqlServerCe.SqlCeTransaction transaction = null;");
             code.AppendLine();
 
-            GenerateXmlDoc(2, "Creates an instance of DataRepository");
+            GenerateXmlDoc(code, 2, "Creates an instance of DataRepository");
             code.AppendLine("\t\tpublic DataRepository()");
             code.AppendLine("\t\t{");
             foreach (var table in Database.Tables)
@@ -352,8 +359,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             }
             code.AppendLine("\t\t}");
             code.AppendLine();
-            
-            GenerateXmlDoc(2, "Creates an instance of DataRepository", new KeyValuePair<string, string>("connectionString", "Connection string to use"));
+
+            GenerateXmlDoc(code, 2, "Creates an instance of DataRepository",
+                           new KeyValuePair<string, string>("connectionString", "Connection string to use"));
             code.AppendLine("\t\tpublic DataRepository(string connectionString) : this()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tEntityBase.ConnectionString = connectionString;");
@@ -362,16 +370,17 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             foreach (var table in Database.Tables)
             {
-                GenerateXmlDoc(2, "Gets an instance of the I" + table.ClassName + "Repository");
+                GenerateXmlDoc(code, 2, "Gets an instance of the I" + table.ClassName + "Repository");
                 code.AppendLine("\t\tpublic I" + table.ClassName + "Repository " + table.ClassName + " { get; private set; }");
                 code.AppendLine();
             }
 
-            GenerateXmlDoc(2, "Starts a SqlCeTransaction using the global SQL CE Conection instance");
+            GenerateXmlDoc(code, 2, "Starts a SqlCeTransaction using the global SQL CE Conection instance");
             code.AppendLine("\t\tpublic System.Data.SqlServerCe.SqlCeTransaction BeginTransaction()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tif (transaction != null)");
-            code.AppendLine("\t\t\t\tthrow new System.InvalidOperationException(\"A transaction has already been started. Only one transaction is allowed\");");
+            code.AppendLine(
+                "\t\t\t\tthrow new System.InvalidOperationException(\"A transaction has already been started. Only one transaction is allowed\");");
             code.AppendLine("\t\t\ttransaction = EntityBase.Connection.BeginTransaction();");
             foreach (var table in Database.Tables)
                 code.AppendLine("\t\t\t" + table.ClassName + ".Transaction = transaction;");
@@ -379,7 +388,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t}");
             code.AppendLine();
 
-            GenerateXmlDoc(2, "Commits the transaction");
+            GenerateXmlDoc(code, 2, "Commits the transaction");
             code.AppendLine("\t\tpublic void Commit()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tif (transaction == null)");
@@ -388,7 +397,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t}");
             code.AppendLine();
 
-            GenerateXmlDoc(2, "Rollbacks the transaction");
+            GenerateXmlDoc(code, 2, "Rollbacks the transaction");
             code.AppendLine("\t\tpublic void Rollback()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tif (transaction == null)");
@@ -397,7 +406,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t}");
             code.AppendLine();
 
-            GenerateXmlDoc(2, "Releases the resources used. All uncommitted transactions are rolled back");
+            GenerateXmlDoc(code, 2, "Releases the resources used. All uncommitted transactions are rolled back");
             code.AppendLine("\t\tpublic void Dispose()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tDispose(true);");
@@ -426,69 +435,71 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tDispose(false);");
             code.AppendLine("\t\t}");
-            code.AppendLine();
-
             code.AppendLine("\t}");
-            code.AppendLine();
-            code.AppendLine("\t#endregion");
-            code.AppendLine();
+            code.AppendLine("}");
+
+            AppendCode("DataRepository", code);
         }
 
         private void GenerateIRepository()
         {
-            code.AppendLine("\t#region Repository Interface");
-            code.AppendLine();
-            GenerateXmlDoc(1, "Base Repository interface defining the basic and commonly used data access methods");
+            var code = new StringBuilder();
+
+            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("{");
+            GenerateXmlDoc(code, 1, "Base Repository interface defining the basic and commonly used data access methods");
             code.AppendLine("\tpublic partial interface IRepository<T>");
             code.AppendLine("\t{");
-            GenerateXmlDoc(2, "Retrieves all items as a generic collection");
+            GenerateXmlDoc(code, 2, "Retrieves all items as a generic collection");
             code.AppendLine("\t\tSystem.Collections.Generic.List<T> ToList();");
             code.AppendLine();
-            GenerateXmlDoc(2, "Retrieves the first set of items specified by count as a generic collection", new KeyValuePair<string, string>("count", "Number of records to be retrieved"));
+            GenerateXmlDoc(code, 2, "Retrieves the first set of items specified by count as a generic collection", new KeyValuePair<string, string>("count", "Number of records to be retrieved"));
             code.AppendLine("\t\tSystem.Collections.Generic.List<T> ToList(int count);");
             code.AppendLine();
-            GenerateXmlDoc(2, "Retrieves all items as an array of T");
+            GenerateXmlDoc(code, 2, "Retrieves all items as an array of T");
             code.AppendLine("\t\tT[] ToArray();");
             code.AppendLine();
-            GenerateXmlDoc(2, "Retrieves the first set of items specific by count as an array of T", new KeyValuePair<string, string>("count", "Number of records to be retrieved"));
+            GenerateXmlDoc(code, 2, "Retrieves the first set of items specific by count as an array of T", new KeyValuePair<string, string>("count", "Number of records to be retrieved"));
             code.AppendLine("\t\tT[] ToArray(int count);");
             code.AppendLine();
-            GenerateXmlDoc(2, "Inserts the item to the table", new KeyValuePair<string, string>("item", "Item to be inserted to the database"));
+            GenerateXmlDoc(code, 2, "Inserts the item to the table", new KeyValuePair<string, string>("item", "Item to be inserted to the database"));
             code.AppendLine("\t\tvoid Create(T item);");
             code.AppendLine();
-            GenerateXmlDoc(2, "Populates the table with a collection of items", new KeyValuePair<string, string>("items", "Items to be inserted to the database"));
+            GenerateXmlDoc(code, 2, "Populates the table with a collection of items", new KeyValuePair<string, string>("items", "Items to be inserted to the database"));
             code.AppendLine("\t\tvoid Create(System.Collections.Generic.IEnumerable<T> items);");
             code.AppendLine();
-            GenerateXmlDoc(2, "Updates the item", new KeyValuePair<string, string>("item", "Item to be updated on the database"));
+            GenerateXmlDoc(code, 2, "Updates the item", new KeyValuePair<string, string>("item", "Item to be updated on the database"));
             code.AppendLine("\t\tvoid Update(T item);");
             code.AppendLine();
-            GenerateXmlDoc(2, "Updates a collection items", new KeyValuePair<string, string>("items", "Items to be updated on the database"));
+            GenerateXmlDoc(code, 2, "Updates a collection items", new KeyValuePair<string, string>("items", "Items to be updated on the database"));
             code.AppendLine("\t\tvoid Update(System.Collections.Generic.IEnumerable<T> items);");
             code.AppendLine();
-            GenerateXmlDoc(2, "Deletes the item", new KeyValuePair<string, string>("item", "Item to be deleted from the database"));
+            GenerateXmlDoc(code, 2, "Deletes the item", new KeyValuePair<string, string>("item", "Item to be deleted from the database"));
             code.AppendLine("\t\tvoid Delete(T item);");
             code.AppendLine();
-            GenerateXmlDoc(2, "Deletes a collection of item", new KeyValuePair<string, string>("items", "Items to be deleted from the database"));
+            GenerateXmlDoc(code, 2, "Deletes a collection of item", new KeyValuePair<string, string>("items", "Items to be deleted from the database"));
             code.AppendLine("\t\tvoid Delete(System.Collections.Generic.IEnumerable<T> items);");
             code.AppendLine();
-            GenerateXmlDoc(2, "Purges the contents of the table");
+            GenerateXmlDoc(code, 2, "Purges the contents of the table");
             code.AppendLine("\t\tint Purge();");
             code.AppendLine();
-            GenerateXmlDoc(2, "Gets the number of records in the table");
+            GenerateXmlDoc(code, 2, "Gets the number of records in the table");
             code.AppendLine("\t\tint Count();");
             code.AppendLine("\t}");
-            code.AppendLine("\t#endregion");
-            code.AppendLine();
+            code.AppendLine("}");
+
+            AppendCode("IRepository", code);
         }
 
         #region Generate Entities
 
         private void GenerateEntity(Table table, EntityGeneratorOptions options)
         {
-            code.AppendLine("\t#region " + table.ClassName);
-            code.AppendLine();
+            var code = new StringBuilder();
 
-            GenerateXmlDoc(1, "Represents the " + table.ClassName + " table");
+            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("{");
+            GenerateXmlDoc(code, 1, "Represents the " + table.ClassName + " table");
             code.AppendLine("\tpublic partial class " + table.ClassName);
             code.AppendLine("\t{");
 
@@ -498,11 +509,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
                 if (column.Value.MaxLength > 0 && column.Value.ManagedType.Equals(typeof(string)))
                 {
-                    GenerateXmlDoc(2, "The Maximum Length the " + column.Value.FieldName + " field allows");
+                    GenerateXmlDoc(code, 2, "The Maximum Length the " + column.Value.FieldName + " field allows");
                     code.AppendLine("\t\tpublic const int " + column.Value.FieldName + "_Max_Length = " + column.Value.MaxLength + ";");
                 }
 
-                GenerateXmlDoc(2, "Gets or sets the value of " + column.Value.FieldName);
+                GenerateXmlDoc(code, 2, "Gets or sets the value of " + column.Value.FieldName);
                 code.AppendLine("\t\tpublic " + column.Value.ManagedType + (column.Value.ManagedType.IsValueType ? "? " : " ") + column.Value.FieldName);
                 code.AppendLine("\t\t{");
                 code.AppendLine("\t\t\tget { return _" + column.Value.FieldName + "; }");
@@ -520,10 +531,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\t\t}");
             }
             code.AppendLine("\t}");
-            code.AppendLine();
+            code.AppendLine("}");
 
-            code.AppendLine("\t#endregion");
-            code.AppendLine();
+            AppendCode(table.ClassName, code);
         }
 
         #endregion

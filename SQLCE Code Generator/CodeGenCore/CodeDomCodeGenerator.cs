@@ -29,9 +29,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         public override string GetCode()
         {
-            using (var writer = new StringWriter(code))
+            using (var writer = new StringWriter(Code))
                 provider.GenerateCodeFromCompileUnit(compileUnit, writer, new CodeGeneratorOptions());
-            return code.ToString();
+            return Code.ToString();
         }
 
         public override void ClearCode()
@@ -427,9 +427,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             var options = new CodeGeneratorOptions();
             options.BracingStyle = "C";
 
-            using (var writer = new StringWriter(code))
+            using (var writer = new StringWriter(Code))
                 provider.GenerateCodeFromCompileUnit(compileUnit, writer, options);
-            return code.ToString();
+            return Code.ToString();
         }
     }
 
