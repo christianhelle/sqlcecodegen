@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Data.SqlServerCe;
+using System.Text;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
@@ -21,36 +21,40 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             Trace.WriteLine("Generating Entity Unit Tests");
 
-            code.AppendLine("\nnamespace " + Database.Namespace);
-            code.AppendLine("{");
-
-            IncludeUnitTestNamespaces();
-            code.AppendLine();
-
             foreach (var table in Database.Tables)
             {
+                var code = new StringBuilder();
+
+                code.AppendLine("namespace " + Database.Namespace);
+                code.AppendLine("{");
+
+                IncludeUnitTestNamespaces(code);
+                code.AppendLine();
+
                 code.AppendLine("\t" + GetTestClassAttribute());
                 code.AppendLine("\tpublic class " + table.ClassName + "EntityTest");
                 code.AppendLine("\t{");
 
                 foreach (var column in table.Columns)
                 {
-                    GeneratePropertyTest(table, column);
+                    GeneratePropertyTest(code, table, column);
 
                     if (column.Value.ManagedType.Equals(typeof(string)))
-                        GenerateStringMaxLengthTest(table, column);
+                        GenerateStringMaxLengthTest(code, table, column);
                 }
 
                 code.AppendLine("\t}");
+                code.AppendLine("}");
                 code.AppendLine();
+
+                AppendCode(table.ClassName + "EntityTest", code);
             }
 
             GenerateRandomGenerator();
-            code.AppendLine("}");
         }
 
         protected virtual void GenerateHelperClasses() { }
-        protected abstract void IncludeUnitTestNamespaces();
+        protected abstract void IncludeUnitTestNamespaces(StringBuilder code);
         protected abstract string GetTestClassAttribute();
         protected abstract string GetTestMethodAttribute();
         protected abstract string GetTestInitializeAttribute();
@@ -82,6 +86,10 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         private void GenerateRandomGenerator()
         {
+            var code = new StringBuilder();
+
+            code.AppendLine("namespace " + Database.Namespace);
+            code.AppendLine("{");
             code.AppendLine(@"
     internal static class RandomGenerator
     {
@@ -106,9 +114,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             }
         }
     }");
+            code.AppendLine("}");
+            code.AppendLine();
+
+            AppendCode("RandomGenerator", code);
         }
 
-        private void GeneratePropertyTest(Table table, KeyValuePair<string, Column> column)
+        private void GeneratePropertyTest(StringBuilder code, Table table, KeyValuePair<string, Column> column)
         {
             Trace.WriteLine("Generating " + column.Value.FieldName + "Test()");
 
@@ -143,9 +155,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine();
         }
 
-        private void GenerateStringMaxLengthTest(Table table, KeyValuePair<string, Column> column)
+        private void GenerateStringMaxLengthTest(StringBuilder code, Table table, KeyValuePair<string, Column> column)
         {
-            if (!column.Value.ManagedType.Equals(typeof(string)))
+            if (!column.Value.ManagedType.Equals(typeof(string)) || !column.Value.MaxLength.HasValue)
                 return;
 
             Trace.WriteLine("Generating " + column.Value.FieldName + "MaxLengthTest()");
@@ -196,10 +208,119 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             Trace.WriteLine("Generating Data Access Tests");
 
+            GenerateDataAccessTestBase();
+            GenerateEntityBaseTest();
+            GenerateDatabaseFileTest();
+
+            foreach (var table in Database.Tables)
+            {
+                var code = new StringBuilder();
+
+                code.AppendLine("\nnamespace " + Database.Namespace);
+                code.AppendLine("{");
+
+                IncludeUnitTestNamespaces(code);
+                code.AppendLine();
+
+                code.AppendLine("\t" + GetTestClassAttribute());
+                code.AppendLine("\tpublic class " + table.ClassName + "DataAccessTest : DataAccessTestBase");
+                code.AppendLine("\t{");
+
+                GenerateCreateTest(code, table);
+                GenerateCreateWithParametersTest(code, table);
+                GenerateSelectAllTest(code, table);
+                GenerateSelectAllWithTopTest(code, table);
+                GenerateSelectByTest(code, table);
+                GenerateSelectByWithTopTest(code, table);
+                GenerateDelete(code, table);
+                GenerateDeleteBy(code, table);
+                GenerateDeleteAll(code, table);
+                GenerateSaveChanges(code, table);
+                GeneratePopulate(code, table);
+                GenerateCount(code, table);
+
+                code.AppendLine("\t}");
+                code.AppendLine("}");
+
+                AppendCode(table.ClassName + "DataAccessTest", code);
+            }
+
+            GenerateHelperClasses();
+        }
+
+        private void GenerateDatabaseFileTest()
+        {
+            var code = new StringBuilder();
+
             code.AppendLine("\nnamespace " + Database.Namespace);
             code.AppendLine("{");
 
-            IncludeUnitTestNamespaces();
+            IncludeUnitTestNamespaces(code);
+            code.AppendLine();
+
+            code.AppendLine("\t" + GetTestClassAttribute());
+            code.AppendLine("\tpublic class DatabaseFileTest : DataAccessTestBase");
+            code.AppendLine("\t{");
+            code.AppendLine("\t\t" + GetTestMethodAttribute());
+            code.AppendLine("\t\tpublic void CreateDatabaseTest()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tEntityBase.ConnectionString = @\"Data Source='" +
+                            new SqlCeConnectionStringBuilder(Database.ConnectionString).DataSource +
+                            "_\" + RandomGenerator.GenerateString(10) + \".sdf'\";");
+            code.AppendLine("\t\t\tEntityBase.Connection.Dispose();");
+            code.AppendLine("\t\t\tEntityBase.Connection = null;");
+            code.AppendLine();
+            code.AppendLine("\t\t\tvar actual = DatabaseFile.CreateDatabase();");
+            code.AppendLine("\t\t\t" + GetAssertAreNotEqualMethod() + "(0, actual);");
+            code.AppendLine();
+            code.AppendLine("\t\t\tEntityBase.ConnectionString = @\"" + Database.ConnectionString + "\";");
+            code.AppendLine("\t\t\tEntityBase.Connection.Dispose();");
+            code.AppendLine("\t\t\tEntityBase.Connection = null;");
+            code.AppendLine("\t\t}");
+            code.AppendLine("\t}");
+            code.AppendLine("}");
+
+            AppendCode("DatabaseFileTest", code);
+        }
+
+        private void GenerateEntityBaseTest()
+        {
+            var code = new StringBuilder();
+
+            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("{");
+
+            IncludeUnitTestNamespaces(code);
+            code.AppendLine();
+            code.AppendLine("\t" + GetTestClassAttribute());
+            code.AppendLine("\tpublic class EntityBaseTest : DataAccessTestBase");
+            code.AppendLine("\t{");
+            code.AppendLine("\t\t" + GetTestMethodAttribute());
+            code.AppendLine("\t\tpublic void CreateCommandTest()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\t" + GetAssertIsNotNullMethod() + "(EntityBase.CreateCommand());");
+            code.AppendLine("\t\t}");
+            code.AppendLine();
+            code.AppendLine("\t\t" + GetTestMethodAttribute());
+            code.AppendLine("\t\tpublic void ConnectionIsOpenTest()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tvar expected = System.Data.ConnectionState.Open;");
+            code.AppendLine("\t\t\tvar actual = EntityBase.Connection.State;");
+            code.AppendLine("\t\t\t" + GetAssertAreEqualMethod() + "(expected, actual);");
+            code.AppendLine("\t\t}");
+            code.AppendLine("\t}");
+            code.AppendLine("}");
+
+            AppendCode("EntityBaseTest", code);
+        }
+
+        private void GenerateDataAccessTestBase()
+        {
+            var code = new StringBuilder();
+            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("{");
+
+            IncludeUnitTestNamespaces(code);
             code.AppendLine();
 
             code.AppendLine("\t" + GetTestClassAttribute());
@@ -209,7 +330,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tEntityBase.ConnectionString = @\"" + Database.ConnectionString + "\";");
             code.AppendLine("\t\t}");
-            code.AppendLine(@"
+            code.AppendLine(
+                @"
         protected static DataAccessRandomGenerator RandomGenerator = new DataAccessRandomGenerator();
 
         protected class DataAccessRandomGenerator
@@ -236,76 +358,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             }
         }");
             code.AppendLine("\t}");
-            code.AppendLine();
-
-            code.AppendLine("\t" + GetTestClassAttribute());
-            code.AppendLine("\tpublic class EntityBaseTest : DataAccessTestBase");
-            code.AppendLine("\t{");
-            code.AppendLine("\t\t" + GetTestMethodAttribute());
-            code.AppendLine("\t\tpublic void CreateCommandTest()");
-            code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\t" + GetAssertIsNotNullMethod() + "(EntityBase.CreateCommand());");
-            code.AppendLine("\t\t}");
-            code.AppendLine();
-            code.AppendLine("\t\t" + GetTestMethodAttribute());
-            code.AppendLine("\t\tpublic void ConnectionIsOpenTest()");
-            code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tvar expected = System.Data.ConnectionState.Open;");
-            code.AppendLine("\t\t\tvar actual = EntityBase.Connection.State;");
-            code.AppendLine("\t\t\t" + GetAssertAreEqualMethod() + "(expected, actual);");
-            code.AppendLine("\t\t}");
-            code.AppendLine("\t}");
-            code.AppendLine();
-
-            code.AppendLine("\t" + GetTestClassAttribute());
-            code.AppendLine("\tpublic class DatabaseFileTest : DataAccessTestBase");
-            code.AppendLine("\t{");
-            code.AppendLine("\t\t" + GetTestMethodAttribute());
-            code.AppendLine("\t\tpublic void CreateDatabaseTest()");
-            code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tEntityBase.ConnectionString = @\"Data Source='" + new SqlCeConnectionStringBuilder(Database.ConnectionString).DataSource + "_\" + RandomGenerator.GenerateString(10) + \".sdf'\";");
-            code.AppendLine("\t\t\tEntityBase.Connection.Dispose();");
-            code.AppendLine("\t\t\tEntityBase.Connection = null;");
-            code.AppendLine();
-            code.AppendLine("\t\t\tvar actual = DatabaseFile.CreateDatabase();");
-            code.AppendLine("\t\t\t" + GetAssertAreNotEqualMethod() + "(0, actual);");
-            code.AppendLine();
-            code.AppendLine("\t\t\tEntityBase.ConnectionString = @\"" + Database.ConnectionString + "\";");
-            code.AppendLine("\t\t\tEntityBase.Connection.Dispose();");
-            code.AppendLine("\t\t\tEntityBase.Connection = null;");
-            code.AppendLine("\t\t}");
-            code.AppendLine("\t}");
-            code.AppendLine();
-
-            foreach (var table in Database.Tables)
-            {
-                code.AppendLine("\t" + GetTestClassAttribute());
-                code.AppendLine("\tpublic class " + table.ClassName + "DataAccessTest : DataAccessTestBase");
-                code.AppendLine("\t{");
-
-                GenerateCreateTest(table);
-                GenerateCreateWithParametersTest(table);
-                GenerateSelectAllTest(table);
-                GenerateSelectAllWithTopTest(table);
-                GenerateSelectByTest(table);
-                GenerateSelectByWithTopTest(table);
-                GenerateDelete(table);
-                GenerateDeleteBy(table);
-                GenerateDeleteAll(table);
-                GenerateSaveChanges(table);
-                GeneratePopulate(table);
-                GenerateCount(table);
-
-                code.AppendLine("\t}");
-                code.AppendLine();
-            }
-
-            GenerateHelperClasses();
             code.AppendLine("}");
-            code.AppendLine();
+
+            AppendCode("DataAccessTestBase", code);
         }
 
-        private void GenerateCount(Table table)
+        private void GenerateCount(StringBuilder code, Table table)
         {
             Trace.WriteLine("Generating CountTest()");
 
@@ -320,7 +378,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine();
         }
 
-        private void GeneratePopulate(Table table)
+        private void GeneratePopulate(StringBuilder code, Table table)
         {
             Trace.WriteLine("Generating PopulateTest()");
 
@@ -354,7 +412,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine();
         }
 
-        private void GenerateSaveChanges(Table table)
+        private void GenerateSaveChanges(StringBuilder code, Table table)
         {
             code.AppendLine("\t\t" + GetTestMethodAttribute());
             code.AppendLine("\t\tpublic void UpdateTest()");
@@ -377,7 +435,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine();
         }
 
-        private void GenerateDeleteAll(Table table)
+        private void GenerateDeleteAll(StringBuilder code, Table table)
         {
             code.AppendLine("\t\t" + GetTestMethodAttribute());
             code.AppendLine("\t\tpublic void PurgeTest()");
@@ -390,7 +448,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine();
         }
 
-        private void GenerateDeleteBy(Table table)
+        private void GenerateDeleteBy(StringBuilder code, Table table)
         {
             foreach (var column in table.Columns)
             {
@@ -426,7 +484,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             }
         }
 
-        private void GenerateDelete(Table table)
+        private void GenerateDelete(StringBuilder code, Table table)
         {
             code.AppendLine("\t\t" + GetTestMethodAttribute());
             code.AppendLine("\t\tpublic void DeleteTest()");
@@ -466,7 +524,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine();
         }
 
-        private void GenerateSelectByWithTopTest(Table table)
+        private void GenerateSelectByWithTopTest(StringBuilder code, Table table)
         {
             foreach (var column in table.Columns)
             {
@@ -493,7 +551,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             }
         }
 
-        private void GenerateSelectByTest(Table table)
+        private void GenerateSelectByTest(StringBuilder code, Table table)
         {
             foreach (var column in table.Columns)
             {
@@ -520,7 +578,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             }
         }
 
-        private void GenerateSelectAllWithTopTest(Table table)
+        private void GenerateSelectAllWithTopTest(StringBuilder code, Table table)
         {
             Trace.WriteLine("Generating ToListWithTopTest()");
 
@@ -549,7 +607,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine();
         }
 
-        private void GenerateSelectAllTest(Table table)
+        private void GenerateSelectAllTest(StringBuilder code, Table table)
         {
             Trace.WriteLine("Generating ToListTest()");
 
@@ -578,7 +636,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine();
         }
 
-        private void GenerateCreateWithParametersTest(Table table)
+        private void GenerateCreateWithParametersTest(StringBuilder code, Table table)
         {
             Trace.WriteLine("Generating CreateWithParametersTest()");
 
@@ -611,7 +669,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine();
         }
 
-        private void GenerateCreateTest(Table table)
+        private void GenerateCreateTest(StringBuilder code, Table table)
         {
             Trace.WriteLine("Generating CreateTest()");
 

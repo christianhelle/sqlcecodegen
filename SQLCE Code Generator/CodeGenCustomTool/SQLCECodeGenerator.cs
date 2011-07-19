@@ -1,42 +1,47 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using Microsoft.CustomTool;
+using System.Text;
+using ChristianHelle.DatabaseTools.SqlCe.CodeGenCore;
 using Microsoft.SqlServer.MessageBox;
+using IVsGeneratorProgress = Microsoft.CustomTool.IVsGeneratorProgress;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
 {
     [Guid("64264FF6-2DD0-489a-A8C2-8FD7855FE3BF")]
     [ComVisible(true)]
-    public class SQLCECodeGenerator : IVsSingleFileGenerator
+    public class SQLCECodeGenerator : MultipleFileGenerator
     {
-        #region IVsSingleFileGenerator Members
-
-        public string GetDefaultExtension()
-        {
-            return ".cs";
-        }
-
-        public void Generate(string wszInputFilePath,
-                             string bstrInputFileContents,
-                             string wszDefaultNamespace,
-                             out IntPtr rgbOutputFileContents,
-                             out int pcbOutput,
-                             IVsGeneratorProgress pGenerateProgress)
+        public override void Generate(string wszInputFilePath,
+                                      string bstrInputFileContents,
+                                      string wszDefaultNamespace,
+                                      out IntPtr rgbOutputFileContents,
+                                      out int pcbOutput,
+                                      IVsGeneratorProgress pGenerateProgress)
         {
             try
             {
-                var data = CodeGeneratorCustomTool.GenerateCode(wszDefaultNamespace, wszInputFilePath, "CSharp");
-                if (data == null)
-                {
-                    rgbOutputFileContents = IntPtr.Zero;
-                    pcbOutput = 0;
-                }
-                else
-                {
-                    rgbOutputFileContents = Marshal.AllocCoTaskMem(data.Length);
-                    Marshal.Copy(data, 0, rgbOutputFileContents, data.Length);
-                    pcbOutput = data.Length;
-                }
+                var database = CodeGeneratorCustomTool.GetDatabase(wszDefaultNamespace, wszInputFilePath);
+                var factory = new CodeGeneratorFactory(database);
+                var codeGenerator = factory.Create();
+                codeGenerator.GenerateEntities();
+                codeGenerator.GenerateDataAccessLayer();
+
+                var header = new StringBuilder();
+                codeGenerator.WriteHeaderInformation(header);
+
+                var files = new Dictionary<string, StringBuilder>(codeGenerator.CodeFiles.Count);
+                foreach (var codeFile in codeGenerator.CodeFiles)
+                    files.Add(codeFile.Key + GetDefaultExtension(), codeFile.Value);
+
+                AddOutputToProject(wszInputFilePath, files, header);
+
+                base.Generate(wszInputFilePath,
+                              bstrInputFileContents,
+                              wszDefaultNamespace,
+                              out rgbOutputFileContents,
+                              out pcbOutput,
+                              pGenerateProgress);
             }
             catch (Exception e)
             {
@@ -46,7 +51,5 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
                 throw;
             }
         }
-
-        #endregion
     }
 }

@@ -1,13 +1,15 @@
-﻿namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
+﻿using System.Text;
+
+namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
-    public class xUnitTestCodeGenerator : CSharpUnitTestCodeGenerator
+    public class XUnitTestCodeGenerator : CSharpUnitTestCodeGenerator
     {
-        public xUnitTestCodeGenerator(SqlCeDatabase tableDetails)
+        public XUnitTestCodeGenerator(SqlCeDatabase tableDetails)
             : base(tableDetails)
         {
         }
 
-        protected override void IncludeUnitTestNamespaces()
+        protected override void IncludeUnitTestNamespaces(StringBuilder code)
         {
             code.AppendLine("\tusing Xunit;");
         }
@@ -54,16 +56,26 @@
 
         protected override void GenerateHelperClasses()
         {
+            var code = new StringBuilder();
+
+            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("{");
+
+            IncludeUnitTestNamespaces(code);
+            code.AppendLine();
+
             code.AppendLine(@"
-    public static class CollectionAssert
+    internal static class CollectionAssert
     {
-        public static void AllItemsAreNotNull<T>(System.Collections.Generic.IEnumerable<T> items)
+        internal static void AllItemsAreNotNull<T>(System.Collections.Generic.IEnumerable<T> items)
         {
             foreach (var item in items) 
                 Assert.NotNull(item);
         }
-    }"
-                );
+    }");
+            code.AppendLine("}");
+
+            AppendCode("CollectionAssert", code);
         }
     }
 }

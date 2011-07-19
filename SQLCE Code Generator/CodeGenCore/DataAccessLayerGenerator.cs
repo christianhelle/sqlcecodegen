@@ -5,18 +5,18 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
     public abstract class DataAccessLayerGenerator
     {
-        protected StringBuilder code;
-        protected Table table;
+        protected StringBuilder Code;
+        protected Table Table;
 
         protected DataAccessLayerGenerator(StringBuilder code, Table table)
         {
-            this.code = code;
-            this.table = table;
+            this.Code = code;
+            this.Table = table;
         }
 
         public string GetCode()
         {
-            return code.ToString();
+            return Code.ToString();
         }
 
         public abstract void GenerateSelectAll();
@@ -36,23 +36,23 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         protected void GenerateXmlDoc(int tabPrefixCount, string summary, params KeyValuePair<string, string>[] parameters)
         {
             for (int i = 0; i < tabPrefixCount; i++)
-                code.Append("\t");
-            code.AppendLine("/// <summary>");
+                Code.Append("\t");
+            Code.AppendLine("/// <summary>");
 
             for (int i = 0; i < tabPrefixCount; i++)
-                code.Append("\t");
-            code.AppendLine("/// " + summary);
+                Code.Append("\t");
+            Code.AppendLine("/// " + summary);
 
             for (int i = 0; i < tabPrefixCount; i++)
-                code.Append("\t");
-            code.AppendLine("/// </summary>");
+                Code.Append("\t");
+            Code.AppendLine("/// </summary>");
 
             foreach (var parameter in parameters)
             {
                 for (int i = 0; i < tabPrefixCount; i++)
-                    code.Append("\t");
-                code.AppendFormat("/// <param name=\"{0}\">{1}</param>", parameter.Key, parameter.Value);
-                code.AppendLine();
+                    Code.Append("\t");
+                Code.AppendFormat("/// <param name=\"{0}\">{1}</param>", parameter.Key, parameter.Value);
+                Code.AppendLine();
             }
         }
     }

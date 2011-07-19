@@ -52,6 +52,47 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         }
 
         [TestMethod]
+        public void GenerateMultiFileEntitiesTest()
+        {
+            var defaultNamespace = typeof(CodeGenTest).Namespace;
+            const string connectionString = "Data Source=Northwind.sdf";
+            var database = GetDatabase(defaultNamespace, connectionString);
+            var factory = new CodeGeneratorFactory(database);
+            var codeGenerator = factory.Create();
+            codeGenerator.GenerateEntities();
+
+            CollectionAssert.AllItemsAreNotNull(codeGenerator.CodeFiles);
+            foreach (var codeFile in codeGenerator.CodeFiles)
+            {
+                Assert.IsNotNull(codeFile);
+                Assert.IsFalse(string.IsNullOrEmpty(codeFile.Key));
+                Assert.IsNotNull(codeFile.Value);
+                Assert.IsFalse(string.IsNullOrEmpty(codeFile.Value.ToString()));
+            }
+        }
+
+        [TestMethod]
+        public void GenerateMultiFileDataAccessTest()
+        {
+            var defaultNamespace = typeof(CodeGenTest).Namespace;
+            const string connectionString = "Data Source=Northwind.sdf";
+            var database = GetDatabase(defaultNamespace, connectionString);
+            var factory = new CodeGeneratorFactory(database);
+            var codeGenerator = factory.Create();
+            codeGenerator.GenerateEntities();
+            codeGenerator.GenerateDataAccessLayer();
+
+            CollectionAssert.AllItemsAreNotNull(codeGenerator.CodeFiles);
+            foreach (var codeFile in codeGenerator.CodeFiles)
+            {
+                Assert.IsNotNull(codeFile);
+                Assert.IsFalse(string.IsNullOrEmpty(codeFile.Key));
+                Assert.IsNotNull(codeFile.Value);
+                Assert.IsFalse(string.IsNullOrEmpty(codeFile.Value.ToString()));
+            }
+        }
+
+        [TestMethod]
         public void GenerateEntitiesCanCompileTest()
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;

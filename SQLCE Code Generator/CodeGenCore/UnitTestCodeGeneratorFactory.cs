@@ -22,11 +22,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 switch (testfx.ToLower())
                 {
                     case "mstest":
-                        return new MsTestUnitTestCodeGenerator(database);
+                        return new MSTestUnitTestCodeGenerator(database);
                     case "nunit":
                         return new NUnitTestCodeGenerator(database);
                     case "xunit":
-                        return new xUnitTestCodeGenerator(database);
+                        return new XUnitTestCodeGenerator(database);
                 }
 
             throw new NotSupportedException("Unit Test Framework not supported");
@@ -39,7 +39,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         public static CodeGenerator Create(SqlCeDatabase database)
         {
-            return new MsTestUnitTestCodeGenerator(database);
+            return new MSTestUnitTestCodeGenerator(database);
         }
     }
 }
