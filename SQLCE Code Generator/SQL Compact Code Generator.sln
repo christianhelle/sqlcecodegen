@@ -72,6 +72,24 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "xUnit", "xUnit", "{D85BC3E9
 		Depdendencies\xUnit\xunit.xml = Depdendencies\xUnit\xunit.xml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Visual Studio", "Visual Studio", "{A2FBD79A-1E79-4AD4-B714-AA0290972A36}"
+	ProjectSection(SolutionItems) = preProject
+		Depdendencies\Visual Studio\envdte.dll = Depdendencies\Visual Studio\envdte.dll
+		Depdendencies\Visual Studio\envdte.xml = Depdendencies\Visual Studio\envdte.xml
+		Depdendencies\Visual Studio\Microsoft.VisualStudio.OLE.Interop.dll = Depdendencies\Visual Studio\Microsoft.VisualStudio.OLE.Interop.dll
+		Depdendencies\Visual Studio\Microsoft.VisualStudio.OLE.Interop.xml = Depdendencies\Visual Studio\Microsoft.VisualStudio.OLE.Interop.xml
+		Depdendencies\Visual Studio\Microsoft.VisualStudio.Shell.dll = Depdendencies\Visual Studio\Microsoft.VisualStudio.Shell.dll
+		Depdendencies\Visual Studio\Microsoft.VisualStudio.Shell.Interop.10.0.dll = Depdendencies\Visual Studio\Microsoft.VisualStudio.Shell.Interop.10.0.dll
+		Depdendencies\Visual Studio\Microsoft.VisualStudio.Shell.Interop.10.0.xml = Depdendencies\Visual Studio\Microsoft.VisualStudio.Shell.Interop.10.0.xml
+		Depdendencies\Visual Studio\Microsoft.VisualStudio.Shell.Interop.8.0.dll = Depdendencies\Visual Studio\Microsoft.VisualStudio.Shell.Interop.8.0.dll
+		Depdendencies\Visual Studio\Microsoft.VisualStudio.Shell.Interop.8.0.xml = Depdendencies\Visual Studio\Microsoft.VisualStudio.Shell.Interop.8.0.xml
+		Depdendencies\Visual Studio\Microsoft.VisualStudio.Shell.Interop.9.0.dll = Depdendencies\Visual Studio\Microsoft.VisualStudio.Shell.Interop.9.0.dll
+		Depdendencies\Visual Studio\Microsoft.VisualStudio.Shell.Interop.9.0.xml = Depdendencies\Visual Studio\Microsoft.VisualStudio.Shell.Interop.9.0.xml
+		Depdendencies\Visual Studio\Microsoft.VisualStudio.Shell.Interop.dll = Depdendencies\Visual Studio\Microsoft.VisualStudio.Shell.Interop.dll
+		Depdendencies\Visual Studio\Microsoft.VisualStudio.Shell.Interop.xml = Depdendencies\Visual Studio\Microsoft.VisualStudio.Shell.Interop.xml
+		Depdendencies\Visual Studio\Microsoft.VisualStudio.Shell.xml = Depdendencies\Visual Studio\Microsoft.VisualStudio.Shell.xml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(TeamFoundationVersionControl) = preSolution
 		SccNumberOfProjects = 8
@@ -194,6 +212,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{CBE24E71-C017-4122-B48C-03114D2DE1CA} = {8E05C125-6658-4A6C-A4EC-848EA7C24CB1}
 		{D85BC3E9-B1CB-428A-9D75-E5F5D5531BF8} = {8E05C125-6658-4A6C-A4EC-848EA7C24CB1}
+		{A2FBD79A-1E79-4AD4-B714-AA0290972A36} = {8E05C125-6658-4A6C-A4EC-848EA7C24CB1}
 		{C7FFB52B-D5AF-41C5-9D80-DC9DB75BA0C3} = {CAB4AD78-B9B2-4408-A73D-209386387FEA}
 		{0788ECDE-7366-4484-9EE5-FF944CE316C5} = {CAB4AD78-B9B2-4408-A73D-209386387FEA}
 		{CE1B35D2-02CC-4195-A4E6-07FDE2915E99} = {CAB4AD78-B9B2-4408-A73D-209386387FEA}
