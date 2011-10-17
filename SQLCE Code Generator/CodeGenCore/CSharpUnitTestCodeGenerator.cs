@@ -248,7 +248,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t{");
             foreach (var table in Database.Tables)
             {
-                code.AppendLine("\t\t\t" + table.ClassName + " = new " + table.ClassName + "Repository();");
+                code.AppendLine("\t\t\t" + table.ClassName + " = new Mock" + table.ClassName + "Repository();");
             }
             code.AppendLine("\t\t}");
             code.AppendLine();
@@ -261,19 +261,17 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             code.AppendLine("\t\tpublic System.Data.SqlServerCe.SqlCeTransaction BeginTransaction()");
             code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tthrow new System.NotSupportedException();");
+            code.AppendLine("\t\t\treturn null;");
             code.AppendLine("\t\t}");
             code.AppendLine();
 
             code.AppendLine("\t\tpublic void Commit()");
             code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tthrow new System.NotSupportedException();");
             code.AppendLine("\t\t}");
             code.AppendLine();
 
             code.AppendLine("\t\tpublic void Rollback()");
             code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tthrow new System.NotSupportedException();");
             code.AppendLine("\t\t}");
             code.AppendLine();
 

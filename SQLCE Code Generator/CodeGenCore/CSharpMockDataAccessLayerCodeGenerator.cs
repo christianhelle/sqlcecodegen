@@ -109,6 +109,16 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             Code.Append(")");
             Code.AppendLine();
             Code.AppendLine("\t\t{");
+            Code.AppendLine("\t\t\tCreate(new " + Table.ClassName);
+            Code.AppendLine("\t\t\t{");
+            foreach (var column in Table.Columns)
+            {
+                if (column.Value.Name == Table.PrimaryKeyColumnName)
+                    continue;
+                Code.AppendLine("\t\t\t\t" + column.Value.FieldName + " = " + column.Value.FieldName + ", ");
+            }
+            Code.Remove(Code.Length - 2, 2);
+            Code.AppendLine("\n\t\t\t});");
             Code.AppendLine("\t\t}");
             Code.AppendLine();
         }
@@ -126,6 +136,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             Code.Remove(Code.Length - 2, 2);
             Code.Append(")\n");
             Code.AppendLine("\t\t{");
+            Code.AppendLine("\t\t\tCreate(new " + Table.ClassName);
+            Code.AppendLine("\t\t\t{");
+            foreach (var column in Table.Columns)
+                Code.AppendLine("\t\t\t\t" + column.Value.FieldName + " = " + column.Value.FieldName + ", ");
+            Code.Remove(Code.Length - 2, 2);
+            Code.AppendLine("\n\t\t\t});");
             Code.AppendLine("\t\t}");
             Code.AppendLine();
         }
@@ -140,7 +156,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             Code.AppendLine("\t\tpublic void Delete(System.Collections.Generic.IEnumerable<" + Table.ClassName + "> items)");
             Code.AppendLine("\t\t{");
-            Code.AppendLine("\t\t\tforeach (var item in items) mockDataSource.Remove(item);");
+            Code.AppendLine("\t\t\tforeach (var item in new System.Collections.Generic.List<" + Table.ClassName + ">(items)) mockDataSource.Remove(item);");
             Code.AppendLine("\t\t}");
             Code.AppendLine();
         }
@@ -159,7 +175,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 Code.AppendLine("\t\t{");
                 Code.AppendLine("\t\t\tvar items = mockDataSource.Where(c => c." + column.Value.FieldName + " == " + column.Value.FieldName + ");");
                 Code.AppendLine("\t\t\tvar count = 0;");
-                Code.AppendLine("\t\t\tforeach (var item in items)");
+                Code.AppendLine("\t\t\tforeach (var item in new System.Collections.Generic.List<" + Table.ClassName + ">(items))");
                 Code.AppendLine("\t\t\t{");
                 Code.AppendLine("\t\t\t\tmockDataSource.Remove(item);");
                 Code.AppendLine("\t\t\t\tcount++;");
