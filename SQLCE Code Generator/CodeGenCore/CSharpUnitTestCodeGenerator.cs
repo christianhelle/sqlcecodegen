@@ -214,38 +214,144 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             foreach (var table in Database.Tables)
             {
-                var code = new StringBuilder();
-
-                code.AppendLine("\nnamespace " + Database.Namespace);
-                code.AppendLine("{");
-
-                IncludeUnitTestNamespaces(code);
-                code.AppendLine();
-
-                code.AppendLine("\t" + GetTestClassAttribute());
-                code.AppendLine("\tpublic class " + table.ClassName + "DataAccessTest : DataAccessTestBase");
-                code.AppendLine("\t{");
-
-                GenerateCreateTest(code, table);
-                GenerateCreateWithParametersTest(code, table);
-                GenerateSelectAllTest(code, table);
-                GenerateSelectAllWithTopTest(code, table);
-                GenerateSelectByTest(code, table);
-                GenerateSelectByWithTopTest(code, table);
-                GenerateDelete(code, table);
-                GenerateDeleteBy(code, table);
-                GenerateDeleteAll(code, table);
-                GenerateSaveChanges(code, table);
-                GeneratePopulate(code, table);
-                GenerateCount(code, table);
-
-                code.AppendLine("\t}");
-                code.AppendLine("}");
-
-                AppendCode(table.ClassName + "DataAccessTest", code);
+                var dataAccessTest = GenerateDataAccessTest(table);
+                AppendCode(table.ClassName + "DataAccessTest", dataAccessTest);
             }
 
+            GenerateMockImplementation();
+
             GenerateHelperClasses();
+        }
+
+        private void GenerateMockImplementation()
+        {
+            GenerateMockDataRepository();
+
+            foreach (var table in Database.Tables)
+            {
+                var mockRepositories = GenerateMockRepositories(table);
+                AppendCode("Mock" + table.ClassName + "Repository", mockRepositories);
+            }
+        }
+
+        private void GenerateMockDataRepository()
+        {
+            var code = new StringBuilder();
+
+            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("{");
+            code.AppendLine("\tpublic partial class MockDataRepository : IDataRepository");
+            code.AppendLine("\t{");
+            code.AppendLine();
+
+            code.AppendLine("\t\tpublic MockDataRepository()");
+            code.AppendLine("\t\t{");
+            foreach (var table in Database.Tables)
+            {
+                code.AppendLine("\t\t\t" + table.ClassName + " = new " + table.ClassName + "Repository();");
+            }
+            code.AppendLine("\t\t}");
+            code.AppendLine();
+
+            foreach (var table in Database.Tables)
+            {
+                code.AppendLine("\t\tpublic I" + table.ClassName + "Repository " + table.ClassName + " { get; private set; }");
+                code.AppendLine();
+            }
+
+            code.AppendLine("\t\tpublic System.Data.SqlServerCe.SqlCeTransaction BeginTransaction()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tthrow new System.NotSupportedException();");
+            code.AppendLine("\t\t}");
+            code.AppendLine();
+
+            code.AppendLine("\t\tpublic void Commit()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tthrow new System.NotSupportedException();");
+            code.AppendLine("\t\t}");
+            code.AppendLine();
+
+            code.AppendLine("\t\tpublic void Rollback()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tthrow new System.NotSupportedException();");
+            code.AppendLine("\t\t}");
+            code.AppendLine();
+
+            code.AppendLine("\t\tpublic void Dispose()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t}");
+            code.AppendLine();
+
+            code.AppendLine("\t}");
+            code.AppendLine("}");
+
+            AppendCode("MockDataRepository", code);
+        }
+
+        private StringBuilder GenerateMockRepositories(Table table)
+        {
+            var code = new StringBuilder();
+
+            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("{");
+            code.AppendLine("\tusing System.Linq;");
+            code.AppendLine();
+            code.AppendLine("\tpublic partial class Mock" + table.ClassName + "Repository : I" + table.ClassName + "Repository");
+            code.AppendLine("\t{");
+            code.AppendLine();
+
+            DataAccessLayerGenerator generator = new CSharpMockDataAccessLayerCodeGenerator(code, table);
+            generator.GenerateSelectAll();
+            generator.GenerateSelectWithTop();
+            generator.GenerateSelectBy();
+            generator.GenerateSelectByWithTop();
+            generator.GenerateCreate();
+            generator.GenerateCreateIgnoringPrimaryKey();
+            generator.GenerateCreateUsingAllColumns();
+            generator.GeneratePopulate();
+            generator.GenerateDelete();
+            generator.GenerateDeleteBy();
+            generator.GenerateDeleteAll();
+            generator.GenerateUpdate();
+            generator.GenerateCount();
+
+            code.AppendLine("\t}");
+            code.AppendLine("}");
+
+            return code;
+        }
+
+        private StringBuilder GenerateDataAccessTest(Table table)
+        {
+            var code = new StringBuilder();
+
+            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("{");
+
+            IncludeUnitTestNamespaces(code);
+            code.AppendLine();
+
+            code.AppendLine("\t" + GetTestClassAttribute());
+            code.AppendLine("\tpublic class " + table.ClassName + "DataAccessTest : DataAccessTestBase");
+            code.AppendLine("\t{");
+
+            GenerateCreateTest(code, table);
+            GenerateCreateWithParametersTest(code, table);
+            GenerateSelectAllTest(code, table);
+            GenerateSelectAllWithTopTest(code, table);
+            GenerateSelectByTest(code, table);
+            GenerateSelectByWithTopTest(code, table);
+            GenerateDelete(code, table);
+            GenerateDeleteBy(code, table);
+            GenerateDeleteAll(code, table);
+            GenerateSaveChanges(code, table);
+            GeneratePopulate(code, table);
+            GenerateCount(code, table);
+
+            code.AppendLine("\t}");
+            code.AppendLine("}");
+
+            return code;
         }
 
         private void GenerateDatabaseFileTest()

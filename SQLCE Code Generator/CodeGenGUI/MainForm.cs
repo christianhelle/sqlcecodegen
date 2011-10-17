@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Linq;
+using System.Text;
 using System.Threading;
 using System.Windows.Forms;
 using ChristianHelle.DatabaseTools.SqlCe.CodeGenCore;
@@ -37,6 +39,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             rtbGeneratedCodeDataAccess.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy(LANGUAGE);
             rtbGeneratedCodeEntityUnitTests.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy(LANGUAGE);
             rtbGeneratedCodeDataAccessUnitTests.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy(LANGUAGE);
+            rtbGeneratedMockDataAccessCode.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy(LANGUAGE);
             appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), TITLE);
 
             LoadSettings();
@@ -123,6 +126,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             lineCount += rtbGeneratedCodeDataAccess.Text.GetLineCount();
             lineCount += rtbGeneratedCodeEntityUnitTests.Text.GetLineCount();
             lineCount += rtbGeneratedCodeDataAccessUnitTests.Text.GetLineCount();
+            lineCount += rtbGeneratedMockDataAccessCode.Text.GetLineCount();
 
             WriteToOutputWindow(string.Format("{0}Loaded {1} lines of code in {2}{0}", Environment.NewLine, lineCount, sw.Elapsed));
         }
@@ -167,6 +171,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             rtbGeneratedCodeEntities.ResetText();
             rtbGeneratedCodeDataAccessUnitTests.ResetText();
             rtbGeneratedCodeDataAccess.ResetText();
+            rtbGeneratedMockDataAccessCode.ResetText();
             rtbCompilerOutput.ResetText();
             treeView.Nodes.Clear();
 
@@ -188,16 +193,18 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             var entitiesCode = GenerateEntitiesCode(codeGenerator);
             var dataAccessCode = GenerateDataAccessCode(codeGenerator);
 
-            string entityUnitTestsCode, dataAccessUnitTestsCode;
+            string entityUnitTestsCode, dataAccessUnitTestsCode, mockDataAccessCode;
             try
             {
                 entityUnitTestsCode = GenerateEntityUnitTestsCode(codeGenerator);
                 dataAccessUnitTestsCode = GenerateDataAccessUnitTestsCode(codeGenerator);
+                mockDataAccessCode = GeneratedMockDataAccessCode(codeGenerator);
             }
             catch (NotSupportedException)
             {
                 entityUnitTestsCode = string.Empty;
                 dataAccessUnitTestsCode = string.Empty;
+                mockDataAccessCode = string.Empty;
             }
 
             var lineCount = 0;
@@ -226,20 +233,51 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                 rtbGeneratedCodeDataAccessUnitTests.Text = dataAccessUnitTestsCode;
             }
 
+            if (!string.IsNullOrEmpty(mockDataAccessCode))
+            {
+                WriteToOutputWindow("Loading Generated Mock Data Access Code");
+                rtbGeneratedMockDataAccessCode.Text = mockDataAccessCode;
+            }
+
             WriteToOutputWindow(string.Format("{0}Executed in {1}", Environment.NewLine, sw.Elapsed));
+        }
+
+        private string GeneratedMockDataAccessCode(CodeGenerator codeGenerator)
+        {
+            if (!Convert.ToBoolean(Settings.Default.GenerateDataAccessUnitTests))
+                return null;
+
+            WriteToOutputWindow("Generating Mock Data Access Code");
+
+            var code = new StringBuilder();
+            var unitTestGenerator = UnitTestCodeGeneratorFactory.Create(codeGenerator.Database, Settings.Default.TestFramework, Settings.Default.Target);
+            unitTestGenerator.WriteHeaderInformation();
+            code.Append(unitTestGenerator.GetCode());
+
+            unitTestGenerator.GenerateDataAccessLayer();
+            foreach (var keyValue in unitTestGenerator.CodeFiles.Where(keyValue => keyValue.Key.StartsWith("Mock")))
+                code.Append(keyValue.Value);
+
+            return code.ToString();
         }
 
         private string GenerateDataAccessUnitTestsCode(CodeGenerator codeGenerator)
         {
             if (!Convert.ToBoolean(Settings.Default.GenerateDataAccessUnitTests))
                 return null;
-
+            
             WriteToOutputWindow("Generating Data Access Unit Tests Code");
+
+            var code = new StringBuilder();
             var unitTestGenerator = UnitTestCodeGeneratorFactory.Create(codeGenerator.Database, Settings.Default.TestFramework, Settings.Default.Target);
             unitTestGenerator.WriteHeaderInformation();
+            code.Append(unitTestGenerator.GetCode());
+
             unitTestGenerator.GenerateDataAccessLayer();
-            var code = unitTestGenerator.GetCode();
-            return code;
+            foreach (var keyValue in unitTestGenerator.CodeFiles.Where(keyValue => !keyValue.Key.StartsWith("Mock")))
+                code.Append(keyValue.Value);
+
+            return code.ToString();
         }
 
         private string GenerateEntityUnitTestsCode(CodeGenerator codeGenerator)
@@ -483,7 +521,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
         #region Clipboard Handling
 
-        int currentCodeViewTab;
+        private int currentCodeViewTab;
 
         private void tabGeneratedCode_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -503,6 +541,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
             if (currentCodeViewTab == 3)
                 rtbGeneratedCodeDataAccessUnitTests.Undo();
+
+            if (currentCodeViewTab == 4)
+                rtbGeneratedMockDataAccessCode.Undo();
         }
 
         private void redoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -518,6 +559,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
             if (currentCodeViewTab == 3)
                 rtbGeneratedCodeDataAccessUnitTests.Redo();
+
+            if (currentCodeViewTab == 4)
+                rtbGeneratedMockDataAccessCode.Redo();
         }
 
         private void cutToolStripMenuItem_Click(object sender, EventArgs e)
@@ -533,6 +577,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
             if (currentCodeViewTab == 3)
                 rtbGeneratedCodeDataAccessUnitTests.ActiveTextAreaControl.TextArea.ClipboardHandler.Cut(sender, e);
+
+            if (currentCodeViewTab == 4)
+                rtbGeneratedMockDataAccessCode.ActiveTextAreaControl.TextArea.ClipboardHandler.Cut(sender, e);
         }
 
         private void copyToolStripMenuItem_Click(object sender, EventArgs e)
@@ -548,6 +595,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
             if (currentCodeViewTab == 3)
                 rtbGeneratedCodeDataAccessUnitTests.ActiveTextAreaControl.TextArea.ClipboardHandler.Copy(sender, e);
+
+            if (currentCodeViewTab == 4)
+                rtbGeneratedMockDataAccessCode.ActiveTextAreaControl.TextArea.ClipboardHandler.Copy(sender, e);
         }
 
         private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
@@ -563,6 +613,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
             if (currentCodeViewTab == 3)
                 rtbGeneratedCodeDataAccessUnitTests.ActiveTextAreaControl.TextArea.ClipboardHandler.Paste(sender, e);
+
+            if (currentCodeViewTab == 4)
+                rtbGeneratedMockDataAccessCode.ActiveTextAreaControl.TextArea.ClipboardHandler.Paste(sender, e);
         }
 
         private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
@@ -578,6 +631,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
             if (currentCodeViewTab == 3)
                 rtbGeneratedCodeDataAccessUnitTests.ActiveTextAreaControl.TextArea.ClipboardHandler.SelectAll(sender, e);
+
+            if (currentCodeViewTab == 4)
+                rtbGeneratedMockDataAccessCode.ActiveTextAreaControl.TextArea.ClipboardHandler.SelectAll(sender, e);
         }
         #endregion
 
@@ -851,6 +907,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             rtbGeneratedCodeEntities.ResetText();
             rtbGeneratedCodeDataAccess.ResetText();
             rtbGeneratedCodeEntityUnitTests.ResetText();
+            rtbGeneratedMockDataAccessCode.ResetText();
             tabGeneratedCode.Refresh();
 
             GenerateCode();
