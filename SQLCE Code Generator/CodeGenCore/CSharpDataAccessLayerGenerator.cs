@@ -170,7 +170,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 Code.AppendLine("\t\t\tif (" + column.Value.FieldName + " != null)");
                 Code.AppendLine("\t\t\t{");
                 Code.AppendFormat("\t\t\t\tcommand.CommandText = \"SELECT TOP(\" + count + \") * FROM {0} WHERE {1}=@{1}\";", Table.ClassName, column.Value.FieldName);
-                Code.AppendFormat("\t\t\t\t\tcommand.CommandText = \"SELECT * FROM {0} WHERE {1}=@{1}\";", Table.ClassName, column.Value.FieldName);
                 Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
                 Code.AppendFormat("\n\t\t\t\tcommand.Parameters[\"@{0}\"].Value = {1};", column.Value.FieldName, column.Value.FieldName + " != null ? (object)" + column.Value.FieldName + " : System.DBNull.Value");
                 //code.AppendFormat("\n\t\t\t\tcommand.Parameters.AddWithValue(\"@{0}\", {0});", column.Value.FieldName);
