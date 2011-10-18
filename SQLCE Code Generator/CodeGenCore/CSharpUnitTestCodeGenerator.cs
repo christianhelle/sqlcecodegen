@@ -25,7 +25,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             {
                 var code = new StringBuilder();
 
-                code.AppendLine("namespace " + Database.Namespace);
+                code.AppendLine("\nnamespace " + Database.Namespace);
                 code.AppendLine("{");
 
                 IncludeUnitTestNamespaces(code);
