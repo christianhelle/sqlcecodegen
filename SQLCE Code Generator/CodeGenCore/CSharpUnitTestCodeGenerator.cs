@@ -368,9 +368,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t" + GetTestMethodAttribute());
             code.AppendLine("\t\tpublic void CreateDatabaseTest()");
             code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tEntityBase.ConnectionString = @\"Data Source='" +
-                            new SqlCeConnectionStringBuilder(Database.ConnectionString).DataSource +
-                            "_\" + RandomGenerator.GenerateString(10) + \".sdf'\";");
+            code.AppendLine("\t\t\tvar databaseFile = @\"" + new SqlCeConnectionStringBuilder(Database.ConnectionString).DataSource +
+                            "_\" + System.Guid.NewGuid().ToString().Replace(\"{\", string.Empty).Replace(\"}\", string.Empty) + \".sdf\";");
+            code.AppendLine("\t\t\tEntityBase.ConnectionString = \"Data Source='\" + databaseFile + \"'\";");
             code.AppendLine("\t\t\tEntityBase.Connection.Dispose();");
             code.AppendLine("\t\t\tEntityBase.Connection = null;");
             code.AppendLine();
@@ -432,7 +432,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t{");
             code.AppendLine("\t\tpublic DataAccessTestBase()");
             code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tEntityBase.ConnectionString = @\"" + Database.ConnectionString + "\";");
+            code.AppendLine("\t\t\tvar databaseFile = @\"" + new SqlCeConnectionStringBuilder(Database.ConnectionString).DataSource +
+                            "_\" + System.Guid.NewGuid().ToString().Replace(\"{\", string.Empty).Replace(\"}\", string.Empty) + \".sdf\";");
+            code.AppendLine("\t\t\tEntityBase.ConnectionString = \"Data Source='\" + databaseFile + \"'\";");
+            code.AppendLine("\t\t\tif (System.IO.File.Exists(databaseFile)) return;");
+            code.AppendLine("\t\t\ttry { DatabaseFile.CreateDatabase(); } catch {}");
             code.AppendLine("\t\t}");
             code.AppendLine(
                 @"
