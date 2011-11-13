@@ -611,7 +611,10 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             Code.AppendLine("\t\t\t\tcommand.CommandText = " + query);
             foreach (var column in Table.Columns)
             {
-                Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                if (string.Compare(column.Value.DatabaseType, "ntext", true) == 0)
+                    Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.NText);", column.Value.FieldName);
+                else
+                    Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
                 Code.AppendFormat("\n\t\t\t\tcommand.Parameters[\"@{0}\"].Value = item.{1};", column.Value.FieldName, column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value");
                 //code.AppendLine("\t\t\t\tcommand.Parameters.AddWithValue(\"@" + column.Value.FieldName + "\", item." + column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value);");
             }
@@ -658,8 +661,14 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             Code.AppendLine("\t\t\t\tcommand.CommandText = " + query);
             foreach (var column in Table.Columns)
-                //code.AppendLine("\t\t\t\tcommand.Parameters.Add(\"@" + column.Value.FieldName + "\", typeof(" + column.Value.ManagedType + "));");
-                Code.AppendLine("\t\t\t\tcommand.Parameters.Add(\"@" + column.Value.FieldName + "\", System.Data.SqlDbType." + GetSqlDbType(column.Value.ManagedType) + ");");
+            {
+                //Code.AppendLine("\t\t\t\tcommand.Parameters.Add(\"@" + column.Value.FieldName + "\", System.Data.SqlDbType." + GetSqlDbType(column.Value.ManagedType) + ");");
+
+                if (string.Compare(column.Value.DatabaseType, "ntext", true) == 0)
+                    Code.AppendFormat("\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.NText);", column.Value.FieldName);
+                else
+                    Code.AppendFormat("\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+            }
             Code.AppendLine("\t\t\t\tcommand.Prepare();");
             Code.AppendLine();
 

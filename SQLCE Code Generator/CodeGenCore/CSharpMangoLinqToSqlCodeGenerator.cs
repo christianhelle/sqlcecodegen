@@ -68,7 +68,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     code.AppendLine("\t\t\t{");
                     code.AppendLine("\t\t\t\tif (_" + column.Value.FieldName + " != value)");
                     code.AppendLine("\t\t\t\t{");
-                    code.AppendLine("\t\t\t\tif (PropertyChanging != null)");
+                    code.AppendLine("\t\t\t\t\tif (PropertyChanging != null)");
                     code.AppendLine("\t\t\t\t\t\tPropertyChanging.Invoke(this, new PropertyChangingEventArgs(\"" + column.Value.FieldName + "\"));");
                     code.AppendLine("\t\t\t\t\t_" + column.Value.FieldName + " = value;");
                     code.AppendLine("\t\t\t\t\tif (PropertyChanged != null)");
