@@ -212,6 +212,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             lineCount += dataAccessCode.GetLineCount();
             lineCount += entityUnitTestsCode.GetLineCount();
             lineCount += dataAccessUnitTestsCode.GetLineCount();
+            lineCount += mockDataAccessCode.GetLineCount();
 
             WriteToOutputWindow(string.Format("{0}Generated {1} lines of code in {2}{0}", Environment.NewLine, lineCount, sw.Elapsed));
 
