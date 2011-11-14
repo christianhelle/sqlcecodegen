@@ -19,21 +19,25 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
     {
         private const string TITLE = "SQL Compact Code Generator";
         private const string LANGUAGE = "C#";
-
-        private string dataSource;
-        private readonly bool launchedWithArgument;
-        private SqlCeDatabase database;
-        private readonly string appDataPath;
         private const string MSTEST = "MSTest";
         private const string NUNIT = "NUnit";
         private const string XUNIT = "xUnit";
         private const string NETCF = "NETCF";
         private const string WP7 = "Mango";
 
+        private string dataSource;
+        private SqlCeDatabase database;
+        private Dictionary<string, StringBuilder> generatedCodeFiles;
+        private Dictionary<string, StringBuilder> generatedUnitTestFiles;
+        private readonly bool launchedWithArgument;
+        private readonly string appDataPath;
+
         public MainForm(string[] args)
         {
             InitializeComponent();
             dataGridView.DoubleBuffered(true);
+            generatedCodeFiles = new Dictionary<string, StringBuilder>();
+            generatedUnitTestFiles = new Dictionary<string, StringBuilder>();
 
             rtbGeneratedCodeEntities.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy(LANGUAGE);
             rtbGeneratedCodeDataAccess.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy(LANGUAGE);
@@ -177,6 +181,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
             tabOutput.SelectedTab = tabPageOutput;
 
+            generatedCodeFiles.Clear();
+            generatedUnitTestFiles.Clear();
+
             Refresh();
         }
 
@@ -243,6 +250,26 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             WriteToOutputWindow(string.Format("{0}Executed in {1}", Environment.NewLine, sw.Elapsed));
         }
 
+        private void AddToCodeFiles(CodeGenerator codeGenerator)
+        {
+            var header = new StringBuilder();
+            codeGenerator.WriteHeaderInformation(header);
+            header.AppendLine();
+
+            foreach (var code in codeGenerator.CodeFiles)
+                generatedCodeFiles.Add(code.Key, code.Value.Insert(0, header.ToString()));
+        }
+
+        private void AddToUnitTestFiles(CodeGenerator codeGenerator)
+        {
+            var header = new StringBuilder();
+            codeGenerator.WriteHeaderInformation(header);
+            header.AppendLine();
+
+            foreach (var code in codeGenerator.CodeFiles)
+                generatedUnitTestFiles.Add(code.Key, code.Value.Insert(0, header.ToString()));
+        }
+
         private string GeneratedMockDataAccessCode(CodeGenerator codeGenerator)
         {
             if (!Convert.ToBoolean(Settings.Default.GenerateDataAccessUnitTests))
@@ -266,7 +293,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         {
             if (!Convert.ToBoolean(Settings.Default.GenerateDataAccessUnitTests))
                 return null;
-            
+
             WriteToOutputWindow("Generating Data Access Unit Tests Code");
 
             var code = new StringBuilder();
@@ -278,6 +305,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             foreach (var keyValue in unitTestGenerator.CodeFiles.Where(keyValue => !keyValue.Key.StartsWith("Mock")))
                 code.Append(keyValue.Value);
 
+            AddToUnitTestFiles(unitTestGenerator);
             return code.ToString();
         }
 
@@ -290,6 +318,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             var unitTestGenerator = UnitTestCodeGeneratorFactory.Create(codeGenerator.Database, Settings.Default.TestFramework, Settings.Default.Target);
             unitTestGenerator.WriteHeaderInformation();
             unitTestGenerator.GenerateEntities();
+            AddToUnitTestFiles(unitTestGenerator);
             var code = unitTestGenerator.GetCode();
             return code;
         }
@@ -310,6 +339,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             codeGenerator.ClearCode();
             codeGenerator.WriteHeaderInformation();
             codeGenerator.GenerateDataAccessLayer();
+            AddToCodeFiles(codeGenerator);
             var generatedCode = codeGenerator.GetCode();
             return generatedCode;
         }
@@ -1091,5 +1121,45 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         }
 
         #endregion
+
+        private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SafeOperation(() =>
+            {
+                string path;
+                using (var dialog = new FolderBrowserDialog())
+                {
+                    var dialogResult = dialog.ShowDialog();
+                    if (dialogResult != DialogResult.OK)
+                        return;
+
+                    path = dialog.SelectedPath;
+                }
+
+                var sourcePath = Path.Combine(path, "Source\\");
+                if (Directory.Exists(sourcePath))
+                    Directory.Delete(sourcePath, true);
+                Directory.CreateDirectory(sourcePath);
+
+                var testPath = Path.Combine(path, "Tests\\");
+                if (Directory.Exists(testPath))
+                    Directory.Delete(testPath, true);
+                Directory.CreateDirectory(testPath);
+
+                if (generatedCodeFiles.Count > 0)
+                {
+                    foreach (var code in generatedCodeFiles)
+                        using (var stream = File.CreateText(sourcePath + code.Key + ".cs"))
+                            stream.WriteLine(code.Value);
+                }
+
+                if (generatedUnitTestFiles.Count > 0)
+                {
+                    foreach (var code in generatedUnitTestFiles)
+                        using (var stream = File.CreateText(testPath + code.Key + ".cs"))
+                            stream.WriteLine(code.Value);
+                }
+            });
+        }
     }
 }

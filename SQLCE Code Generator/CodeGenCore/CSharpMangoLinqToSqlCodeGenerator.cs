@@ -43,8 +43,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\t\tprivate Binary version;");
                 code.AppendLine();
 
-                code.AppendLine("\t\tpublic event PropertyChangedEventHandler PropertyChanged;");
+                GenerateXmlDoc(code, 2, "Notifies clients that a property value is changing.");
                 code.AppendLine("\t\tpublic event PropertyChangingEventHandler PropertyChanging;");
+
+                GenerateXmlDoc(code, 2, "Notifies clients that a property value has changed.");
+                code.AppendLine("\t\tpublic event PropertyChangedEventHandler PropertyChanged;");
+                
                 code.AppendLine();
 
                 foreach (var column in table.Columns)
