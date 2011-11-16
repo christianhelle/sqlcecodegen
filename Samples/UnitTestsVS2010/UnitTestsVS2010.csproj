@@ -1,0 +1,123 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{76934F50-3BDE-4EE1-8648-36E9B71B15D7}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UnitTestsVS2010</RootNamespace>
+    <AssemblyName>UnitTestsVS2010</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.5.10.11092\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.mocks">
+      <HintPath>..\packages\NUnit.2.5.10.11092\lib\nunit.mocks.dll</HintPath>
+    </Reference>
+    <Reference Include="pnunit.framework">
+      <HintPath>..\packages\NUnit.2.5.10.11092\lib\pnunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SqlServerCe, Version=3.5.1.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="xunit">
+      <HintPath>..\packages\xunit.1.8.0.1549\lib\xunit.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="XUnitSingleFileDemo.cs">
+      <DependentUpon>XUnitSingleFileDemo.sdf</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="NUnitSingleFileDemo.cs">
+      <DependentUpon>NUnitSingleFileDemo.sdf</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="MSTestSingleFileDemo.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MSTestSingleFileDemo.sdf</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="XUnitMultipleFileDemo.sdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Generator>SQLCEXUnitCodeGenerator</Generator>
+    </Content>
+    <Content Include="XUnitSingleFileDemo.sdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Generator>SQLCEXUnitCodeGeneratorSingle</Generator>
+      <LastGenOutput>XUnitSingleFileDemo.cs</LastGenOutput>
+    </Content>
+    <Content Include="NUnitMultipleFileDemo.sdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Generator>SQLCENUnitCodeGenerator</Generator>
+    </Content>
+    <Content Include="NUnitSingleFileDemo.sdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Generator>SQLCENUnitCodeGeneratorSingle</Generator>
+      <LastGenOutput>NUnitSingleFileDemo.cs</LastGenOutput>
+    </Content>
+    <Content Include="MSTestMultipleFileDemo.sdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Generator>SQLCEMSTestCodeGenerator</Generator>
+    </Content>
+    <Content Include="MSTestSingleFileDemo.sdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Generator>SQLCEMSTestCodeGeneratorSingle</Generator>
+      <LastGenOutput>MSTestSingleFileDemo.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SampleAppVS2010\SampleAppVS2010.csproj">
+      <Project>{4D34FC2F-3B2A-4FAC-9CD2-F8D3E6B71518}</Project>
+      <Name>SampleAppVS2010</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
