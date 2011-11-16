@@ -45,10 +45,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
             }
             catch (Exception e)
             {
-                var applicationException = new ApplicationException("Unable to generate code", e);
-                var messageBox = new ExceptionMessageBox(applicationException);
-                messageBox.Show(null);
-                throw;
+                var codeGen = new SQLCEMSTestCodeGeneratorSingle();
+                codeGen.Generate(wszInputFilePath, bstrInputFileContents, wszDefaultNamespace, out rgbOutputFileContents, out pcbOutput, pGenerateProgress);
+
+                //var applicationException = new ApplicationException("Unable to generate code", e);
+                //var messageBox = new ExceptionMessageBox(applicationException);
+                //messageBox.Show(null);
+                //throw;
             }
         }
     }

@@ -3,27 +3,27 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using System.Text;
 using ChristianHelle.DatabaseTools.SqlCe.CodeGenCore;
+using Microsoft.CustomTool;
 using Microsoft.SqlServer.MessageBox;
-using IVsGeneratorProgress = Microsoft.CustomTool.IVsGeneratorProgress;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
 {
-    [Guid("64264FF6-2DD0-489a-A8C2-8FD7855FE3BF")]
+    [Guid("2A70A634-C234-46B8-B484-96FB9C74CF69")]
     [ComVisible(true)]
-    public class SQLCECodeGenerator : MultipleFileGenerator
+    public class SQLCEXUnitCodeGenerator : MultipleFileGenerator
     {
         public override void Generate(string wszInputFilePath,
-                                      string bstrInputFileContents,
-                                      string wszDefaultNamespace,
-                                      out IntPtr rgbOutputFileContents,
-                                      out int pcbOutput,
-                                      IVsGeneratorProgress pGenerateProgress)
+                                     string bstrInputFileContents,
+                                     string wszDefaultNamespace,
+                                     out IntPtr rgbOutputFileContents,
+                                     out int pcbOutput,
+                                     IVsGeneratorProgress pGenerateProgress)
         {
             try
             {
                 var database = CodeGeneratorCustomTool.GetDatabase(wszDefaultNamespace, wszInputFilePath);
-                var factory = new CodeGeneratorFactory(database);
-                var codeGenerator = factory.Create();
+                var factory = new UnitTestCodeGeneratorFactory(database);
+                var codeGenerator = factory.Create("xUnit");
                 codeGenerator.GenerateEntities();
                 codeGenerator.GenerateDataAccessLayer();
 
@@ -45,7 +45,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
             }
             catch (Exception e)
             {
-                var codeGen = new SQLCECodeGeneratorSingle();
+                var codeGen = new SQLCEXUnitCodeGeneratorSingle();
                 codeGen.Generate(wszInputFilePath, bstrInputFileContents, wszDefaultNamespace, out rgbOutputFileContents, out pcbOutput, pGenerateProgress);
 
                 //var applicationException = new ApplicationException("Unable to generate code", e);
