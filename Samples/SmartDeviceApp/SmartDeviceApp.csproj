@@ -1,0 +1,154 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{714BF719-0CB6-44E9-9376-03353E7B44B8}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SmartDeviceApp</RootNamespace>
+    <AssemblyName>SmartDeviceApp</AssemblyName>
+    <ProjectTypeGuids>{4D628B5B-2FBC-4AA6-8C16-197242AEB884};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <PlatformFamilyName>PocketPC</PlatformFamilyName>
+    <PlatformID>4118C335-430C-497f-BE48-11C3316B135E</PlatformID>
+    <OSVersion>5.1</OSVersion>
+    <DeployDirSuffix>SmartDeviceApp</DeployDirSuffix>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <NativePlatformName>Windows Mobile 5.0 Pocket PC SDK</NativePlatformName>
+    <FormFactorID>
+    </FormFactorID>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;$(PlatformFamilyName)</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <FileAlignment>512</FileAlignment>
+    <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;$(PlatformFamilyName)</DefineConstants>
+    <NoStdLib>true</NoStdLib>
+    <NoConfig>true</NoConfig>
+    <ErrorReport>prompt</ErrorReport>
+    <FileAlignment>512</FileAlignment>
+    <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Off</GenerateSerializationAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="mscorlib" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SqlServerCe, Version=3.5.1.0, Culture=neutral, PublicKeyToken=3be235df1c8d2ad3, processorArchitecture=MSIL" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Contact.cs">
+      <DependentUpon>TestDatabaseMultiple.sdf</DependentUpon>
+    </Compile>
+    <Compile Include="ContactRepository.cs">
+      <DependentUpon>TestDatabaseMultiple.sdf</DependentUpon>
+    </Compile>
+    <Compile Include="Customer.cs">
+      <DependentUpon>TestDatabaseMultiple.sdf</DependentUpon>
+    </Compile>
+    <Compile Include="CustomerRepository.cs">
+      <DependentUpon>TestDatabaseMultiple.sdf</DependentUpon>
+    </Compile>
+    <Compile Include="DatabaseFile.cs">
+      <DependentUpon>TestDatabaseMultiple.sdf</DependentUpon>
+    </Compile>
+    <Compile Include="DataRepository.cs">
+      <DependentUpon>TestDatabaseMultiple.sdf</DependentUpon>
+    </Compile>
+    <Compile Include="EntityBase.cs">
+      <DependentUpon>TestDatabaseMultiple.sdf</DependentUpon>
+    </Compile>
+    <Compile Include="IContactRepository.cs">
+      <DependentUpon>TestDatabaseMultiple.sdf</DependentUpon>
+    </Compile>
+    <Compile Include="ICustomerRepository.cs">
+      <DependentUpon>TestDatabaseMultiple.sdf</DependentUpon>
+    </Compile>
+    <Compile Include="IDataRepository.cs">
+      <DependentUpon>TestDatabaseMultiple.sdf</DependentUpon>
+    </Compile>
+    <Compile Include="IProductRepository.cs">
+      <DependentUpon>TestDatabaseMultiple.sdf</DependentUpon>
+    </Compile>
+    <Compile Include="IRepository.cs">
+      <DependentUpon>TestDatabaseMultiple.sdf</DependentUpon>
+    </Compile>
+    <Compile Include="IStockRepository.cs">
+      <DependentUpon>TestDatabaseMultiple.sdf</DependentUpon>
+    </Compile>
+    <Compile Include="Product.cs">
+      <DependentUpon>TestDatabaseMultiple.sdf</DependentUpon>
+    </Compile>
+    <Compile Include="ProductRepository.cs">
+      <DependentUpon>TestDatabaseMultiple.sdf</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Stock.cs">
+      <DependentUpon>TestDatabaseMultiple.sdf</DependentUpon>
+    </Compile>
+    <Compile Include="StockRepository.cs">
+      <DependentUpon>TestDatabaseMultiple.sdf</DependentUpon>
+    </Compile>
+    <Compile Include="TestDatabaseMultiple.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>TestDatabaseMultiple.sdf</DependentUpon>
+    </Compile>
+    <Compile Include="TestDatabaseSingle.cs">
+      <DependentUpon>TestDatabaseSingle.sdf</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestDatabaseMultiple.sdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <Generator>SQLCECodeGenerator</Generator>
+      <LastGenOutput>TestDatabaseMultiple.cs</LastGenOutput>
+    </Content>
+    <Content Include="TestDatabaseSingle.sdf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <Generator>SQLCECodeGeneratorSingle</Generator>
+      <LastGenOutput>TestDatabaseSingle.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CompactFramework.CSharp.targets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}">
+        <HostingProcess disable="1" />
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
