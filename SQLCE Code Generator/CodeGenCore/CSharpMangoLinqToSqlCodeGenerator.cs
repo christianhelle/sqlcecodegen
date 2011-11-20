@@ -40,12 +40,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine();
 
                 code.AppendLine("\t\t[Column(IsVersion = true)]");
-                code.AppendLine("\t\tprivate Binary version;");
+                code.AppendLine("\t\tpublic Binary Version;");
                 code.AppendLine();
 
                 GenerateXmlDoc(code, 2, "Notifies clients that a property value is changing.");
                 code.AppendLine("\t\tpublic event PropertyChangingEventHandler PropertyChanging;");
-
+                code.AppendLine();
                 GenerateXmlDoc(code, 2, "Notifies clients that a property value has changed.");
                 code.AppendLine("\t\tpublic event PropertyChangedEventHandler PropertyChanged;");
                 
@@ -70,14 +70,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     code.AppendLine("\t\t\tget { return _" + column.Value.FieldName + "; }");
                     code.AppendLine("\t\t\tset");
                     code.AppendLine("\t\t\t{");
-                    code.AppendLine("\t\t\t\tif (_" + column.Value.FieldName + " != value)");
-                    code.AppendLine("\t\t\t\t{");
-                    code.AppendLine("\t\t\t\t\tif (PropertyChanging != null)");
-                    code.AppendLine("\t\t\t\t\t\tPropertyChanging.Invoke(this, new PropertyChangingEventArgs(\"" + column.Value.FieldName + "\"));");
-                    code.AppendLine("\t\t\t\t\t_" + column.Value.FieldName + " = value;");
-                    code.AppendLine("\t\t\t\t\tif (PropertyChanged != null)");
-                    code.AppendLine("\t\t\t\t\t\tPropertyChanged.Invoke(this, new PropertyChangedEventArgs(\"" + column.Value.FieldName + "\"));");
-                    code.AppendLine("\t\t\t\t}");
+                    code.AppendLine("\t\t\t\tif (_" + column.Value.FieldName + " == value) return;");
+                    code.AppendLine("\t\t\t\tif (PropertyChanging != null)");
+                    code.AppendLine("\t\t\t\t\tPropertyChanging.Invoke(this, new PropertyChangingEventArgs(\"" + column.Value.FieldName + "\"));");
+                    code.AppendLine("\t\t\t\t_" + column.Value.FieldName + " = value;");
+                    code.AppendLine("\t\t\t\tif (PropertyChanged != null)");
+                    code.AppendLine("\t\t\t\t\tPropertyChanged.Invoke(this, new PropertyChangedEventArgs(\"" + column.Value.FieldName + "\"));");
                     code.AppendLine("\t\t\t}");
                     code.AppendLine("\t\t}");
                     code.AppendLine();
