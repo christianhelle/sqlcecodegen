@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data.SqlServerCe;
 using System.IO;
+using System.Linq;
 using System.Text;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
@@ -39,8 +40,17 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     code.AppendLine("\t\tprivate " + column.Value.ManagedType + (column.Value.ManagedType.IsValueType ? "? _" : " _") + column.Value.FieldName + ";");
                 code.AppendLine();
 
+                foreach (var column in table.Columns.Where(column => column.Value.MaxLength > 0 && column.Value.ManagedType.Equals(typeof(string))))
+                {
+                    GenerateXmlDoc(code, 2, "The Maximum Length the " + column.Value.FieldName + " field allows");
+                    code.AppendLine("\t\tpublic const int " + column.Value.FieldName + "_Max_Length = " + column.Value.MaxLength + ";");
+                    code.AppendLine();
+                }
+
+                code.AppendLine("#pragma warning disable");
                 code.AppendLine("\t\t[Column(IsVersion = true)]");
-                code.AppendLine("\t\tpublic Binary Version;");
+                code.AppendLine("\t\tinternal Binary Version;");
+                code.AppendLine("#pragma warning restore");
                 code.AppendLine();
 
                 GenerateXmlDoc(code, 2, "Notifies clients that a property value is changing.");
@@ -48,22 +58,21 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine();
                 GenerateXmlDoc(code, 2, "Notifies clients that a property value has changed.");
                 code.AppendLine("\t\tpublic event PropertyChangedEventHandler PropertyChanged;");
-                
+
                 code.AppendLine();
 
                 foreach (var column in table.Columns)
                 {
                     GenerateXmlDoc(code, 2, "Gets or sets the value of " + column.Value.Name);
+
                     code.Append("\t\t[Column(Name = \"" + column.Value.DisplayName + "\"");
                     if (column.Value.IsPrimaryKey)
                         code.Append(", IsPrimaryKey = true");
                     if (column.Value.AutoIncrement.HasValue)
                         code.Append(", IsDbGenerated = true");
-                    if (column.Value.AllowsNull)
-                        code.Append(", CanBeNull = true");
-                    if (code.ToString().EndsWith(", "))
-                        code.Remove(code.Length - 2, 2);
+                    code.Append(", CanBeNull = " + column.Value.AllowsNull.ToString().ToLower());
                     code.Append(")]");
+
                     code.AppendLine();
                     code.AppendLine("\t\tpublic " + column.Value.ManagedType + (column.Value.ManagedType.IsValueType ? "? " : " ") + column.Value.FieldName);
                     code.AppendLine("\t\t{");
@@ -97,20 +106,19 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             GenerateDataContext();
 
-            // TODO:  Complete the repository pattern generator for WP7 mango
-            //var repositoryPatternGenerator = new RepositoryPatternGenerator(Database, false);
-            //repositoryPatternGenerator.GenerateIRepository();
-            //repositoryPatternGenerator.GenerateIDataRepository();
-            //repositoryPatternGenerator.GenerateDataRepository();
+            var repositoryPatternGenerator = new RepositoryPatternGenerator(Database, false, true);
+            repositoryPatternGenerator.GenerateIRepository();
+            repositoryPatternGenerator.GenerateIDataRepository();
+            repositoryPatternGenerator.GenerateDataRepository();
 
-            //foreach (var table in Database.Tables)
-            //{
-            //    repositoryPatternGenerator.GenerateITableRepository(table);
-            //    repositoryPatternGenerator.GenerateTableRepository<CSharpMangoLinqToSqlDataAccessLayerGenerator>(table);
-            //}
+            foreach (var table in Database.Tables)
+            {
+                repositoryPatternGenerator.GenerateITableRepository(table);
+                repositoryPatternGenerator.GenerateTableRepository<CSharpMangoLinqToSqlDataAccessLayerGenerator>(table);
+            }
 
-            //foreach (var codeFile in repositoryPatternGenerator.CodeFiles)
-            //    AppendCode(codeFile.Key, codeFile.Value);
+            foreach (var codeFile in repositoryPatternGenerator.CodeFiles)
+                AppendCode(codeFile.Key, codeFile.Value);
         }
 
         private void GenerateDataContext()
@@ -140,13 +148,26 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t}");
             code.AppendLine();
 
-            GenerateXmlDoc(code, 2, "Creates an instance of the " + className + " data context",
+            GenerateXmlDoc(code, 2, "Creates an instance of the entity data context",
                            new KeyValuePair<string, string>("connectionString", "connection string to be used for this instance"));
             code.AppendLine("\t\tpublic EntityDataContext(string connectionString) : base(connectionString)");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tif (!DatabaseExists())");
             code.AppendLine("\t\t\t\tCreateDatabase();");
             code.AppendLine("\t\t}");
+
+            //GenerateXmlDoc(code, 2, "Factory method that creates an instance of the entity data context");
+            //code.AppendLine("\t\tpublic static EntityDataContext Create()");
+            //code.AppendLine("\t\t{");
+            //code.AppendLine("\t\t\treturn Create(ConnectionString);");
+            //code.AppendLine("\t\t}");
+
+            //GenerateXmlDoc(code, 2, "Factory method that creates an instance of the entity data context",
+            //               new KeyValuePair<string, string>("connectionString", "connection string to be used for this instance"));
+            //code.AppendLine("\t\tpublic static EntityDataContext Create(string connectionString)");
+            //code.AppendLine("\t\t{");
+            //code.AppendLine("\t\t\treturn new EntityDataContext(connectionString);");
+            //code.AppendLine("\t\t}");
 
             foreach (var table in Database.Tables)
             {
