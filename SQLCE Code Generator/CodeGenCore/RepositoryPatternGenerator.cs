@@ -7,16 +7,18 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
     public class RepositoryPatternGenerator : CodeGenerator
     {
         private readonly bool supportSqlCeTransactions;
+        private readonly bool usesLinqToSql;
 
         public RepositoryPatternGenerator(SqlCeDatabase database)
             : this(database, false)
         {
         }
 
-        public RepositoryPatternGenerator(SqlCeDatabase database, bool supportSqlCeTransactions)
+        public RepositoryPatternGenerator(SqlCeDatabase database, bool supportSqlCeTransactions = true, bool usesLinqToSql = false)
             : base(database)
         {
             this.supportSqlCeTransactions = supportSqlCeTransactions;
+            this.usesLinqToSql = usesLinqToSql;
         }
 
         public void GenerateTableRepository<T>(Table table) where T : DataAccessLayerGenerator
@@ -25,15 +27,41 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             code.AppendLine("\nnamespace " + Database.Namespace);
             code.AppendLine("{");
+            code.AppendLine("\tusing System.Linq;");
             code.AppendLine("\tusing System.Data.Linq;");
             code.AppendLine();
             GenerateXmlDoc(code, 1, "Default I" + table.ClassName + "Repository implementation ");
             code.AppendLine("\tpublic partial class " + table.ClassName + "Repository : I" + table.ClassName + "Repository");
             code.AppendLine("\t{");
 
+            if (usesLinqToSql)
+            {
+                GenerateXmlDoc(code, 2, "Creates an instance of " + table.ClassName + "Repository");
+                code.AppendLine("\t\tpublic " + table.ClassName + "Repository() : this(new EntityDataContext())");
+                code.AppendLine("\t\t{");
+                code.AppendLine("\t\t}");
+                code.AppendLine();
+
+                GenerateXmlDoc(code, 2,
+                               "Creates an instance of " + table.ClassName +
+                               "Repository using the specified DataContext",
+                               new KeyValuePair<string, string>("context", "The data context in use"));
+                code.AppendLine("\t\tpublic " + table.ClassName + "Repository(EntityDataContext context)");
+                code.AppendLine("\t\t{");
+                code.AppendLine("\t\t\tDataContext = context;");
+                code.AppendLine("\t\t}");
+            }
+
             if (supportSqlCeTransactions)
             {
                 code.AppendLine("\t\tpublic System.Data.SqlServerCe.SqlCeTransaction Transaction { get; set; }");
+                code.AppendLine();
+            }
+
+            if (usesLinqToSql)
+            {
+                GenerateXmlDoc(code, 2, "Gets the DataContext in use");
+                code.AppendLine("\t\tpublic EntityDataContext DataContext { get; private set; }");
                 code.AppendLine();
             }
 
@@ -72,6 +100,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             {
                 GenerateXmlDoc(code, 2, "Transaction instance created from <see cref=\"IDataRepository\" />");
                 code.AppendLine("\t\tSystem.Data.SqlServerCe.SqlCeTransaction Transaction { get; set; }");
+                code.AppendLine();
+            }
+
+            if (usesLinqToSql)
+            {
+                GenerateXmlDoc(code, 2, "Gets the DataContext in use");
+                code.AppendLine("\t\tEntityDataContext DataContext { get; }");
                 code.AppendLine();
             }
 
@@ -174,21 +209,24 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine();
             }
 
+            if (usesLinqToSql)
+            {
+                code.AppendLine("\t\tprivate EntityDataContext context;");
+                code.AppendLine();
+            }
+
             GenerateXmlDoc(code, 2, "Creates an instance of DataRepository");
             code.AppendLine("\t\tpublic DataRepository()");
             code.AppendLine("\t\t{");
+            if (usesLinqToSql)
+                code.AppendLine("\t\t\tcontext = new EntityDataContext();");
             foreach (var table in Database.Tables)
             {
-                code.AppendLine("\t\t\t" + table.ClassName + " = new " + table.ClassName + "Repository();");
+                if (usesLinqToSql)
+                    code.AppendLine("\t\t\t" + table.ClassName + " = new " + table.ClassName + "Repository(context);");
+                else
+                    code.AppendLine("\t\t\t" + table.ClassName + " = new " + table.ClassName + "Repository();");
             }
-            code.AppendLine("\t\t}");
-            code.AppendLine();
-
-            GenerateXmlDoc(code, 2, "Creates an instance of DataRepository",
-                           new KeyValuePair<string, string>("connectionString", "Connection string to use"));
-            code.AppendLine("\t\tpublic DataRepository(string connectionString) : this()");
-            code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tEntityBase.ConnectionString = connectionString;");
             code.AppendLine("\t\t}");
             code.AppendLine();
 
@@ -233,37 +271,55 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\t\t\ttransaction.Rollback();");
                 code.AppendLine("\t\t}");
                 code.AppendLine();
+            }
 
-                GenerateXmlDoc(code, 2, "Releases the resources used. All uncommitted transactions are rolled back");
-                code.AppendLine("\t\tpublic void Dispose()");
+            if (usesLinqToSql)
+            {
+                GenerateXmlDoc(code, 2, "Persists the pending changes to the database");
+                code.AppendLine("\t\tpublic void SubmitChanges()");
                 code.AppendLine("\t\t{");
-                code.AppendLine("\t\t\tDispose(true);");
+                code.AppendLine("\t\t\tcontext.SubmitChanges();");
                 code.AppendLine("\t\t}");
                 code.AppendLine();
+            }
 
-                code.AppendLine("\t\tprotected void Dispose(bool disposing)");
-                code.AppendLine("\t\t{");
-                code.AppendLine("\t\t\tif (disposed) return;");
-                code.AppendLine("\t\t\tif (disposing)");
-                code.AppendLine("\t\t\t{");
+            GenerateXmlDoc(code, 2, "Releases the resources used. All uncommitted transactions are rolled back");
+            code.AppendLine("\t\tpublic void Dispose()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tDispose(true);");
+            code.AppendLine("\t\t}");
+            code.AppendLine();
+
+            code.AppendLine("\t\tprotected void Dispose(bool disposing)");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tif (disposed) return;");
+            code.AppendLine("\t\t\tif (disposing)");
+            code.AppendLine("\t\t\t{");
+            if (usesLinqToSql)
+            {
+                code.AppendLine("\t\t\t\tcontext.Dispose();");
+                code.AppendLine("\t\t\t\tcontext = null;");
+            }
+            if (supportSqlCeTransactions)
+            {
                 code.AppendLine("\t\t\t\tif (transaction != null)");
                 code.AppendLine("\t\t\t\t{");
                 code.AppendLine("\t\t\t\t\ttransaction.Dispose();");
                 code.AppendLine("\t\t\t\t\ttransaction = null;");
                 code.AppendLine("\t\t\t\t}");
-                code.AppendLine("\t\t\t}");
-                code.AppendLine("\t\t\tdisposed = true;");
-                code.AppendLine("\t\t}");
-                code.AppendLine();
-
-                code.AppendLine("\t\tprivate bool disposed = false;");
-                code.AppendLine();
-
-                code.AppendLine("\t\t~DataRepository()");
-                code.AppendLine("\t\t{");
-                code.AppendLine("\t\t\tDispose(false);");
-                code.AppendLine("\t\t}");
             }
+            code.AppendLine("\t\t\t}");
+            code.AppendLine("\t\t\tdisposed = true;");
+            code.AppendLine("\t\t}");
+            code.AppendLine();
+
+            code.AppendLine("\t\tprivate bool disposed = false;");
+            code.AppendLine();
+
+            code.AppendLine("\t\t~DataRepository()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tDispose(false);");
+            code.AppendLine("\t\t}");
 
             code.AppendLine("\t}");
             code.AppendLine("}");
