@@ -88,6 +88,7 @@
     <Compile Include="CSharpCodeGenerator.cs" />
     <Compile Include="CSharpDataAccessLayerGenerator.cs" />
     <Compile Include="CSharpMangoLinqToSqlCodeGenerator.cs" />
+    <Compile Include="CSharpMangoLinqToSqlDataAccessLayerGenerator.cs" />
     <Compile Include="CSharpMockDataAccessLayerCodeGenerator.cs" />
     <Compile Include="DataAccessLayerGenerator.cs" />
     <Compile Include="MSTestUnitTestCodeGenerator.cs" />
@@ -100,6 +101,7 @@
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CSharpUnitTestCodeGenerator.cs" />
+    <Compile Include="RepositoryPatternGenerator.cs" />
     <Compile Include="SqlCeDatabase.cs" />
     <Compile Include="SqlCeEngineExtensions.cs" />
     <Compile Include="Table.cs" />

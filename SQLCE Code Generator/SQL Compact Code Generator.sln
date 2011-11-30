@@ -80,7 +80,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Visual Studio", "Visual Stu
 		Depdendencies\Visual Studio\Microsoft.VisualStudio.OLE.Interop.xml = Depdendencies\Visual Studio\Microsoft.VisualStudio.OLE.Interop.xml
 		Depdendencies\Visual Studio\Microsoft.VisualStudio.Shell.dll = Depdendencies\Visual Studio\Microsoft.VisualStudio.Shell.dll
 		Depdendencies\Visual Studio\Microsoft.VisualStudio.Shell.Interop.10.0.dll = Depdendencies\Visual Studio\Microsoft.VisualStudio.Shell.Interop.10.0.dll
-		Depdendencies\Visual Studio\Microsoft.VisualStudio.Shell.Interop.10.0.xml = Depdendencies\Visual Studio\Microsoft.VisualStudio.Shell.Interop.10.0.xml
 		Depdendencies\Visual Studio\Microsoft.VisualStudio.Shell.Interop.8.0.dll = Depdendencies\Visual Studio\Microsoft.VisualStudio.Shell.Interop.8.0.dll
 		Depdendencies\Visual Studio\Microsoft.VisualStudio.Shell.Interop.8.0.xml = Depdendencies\Visual Studio\Microsoft.VisualStudio.Shell.Interop.8.0.xml
 		Depdendencies\Visual Studio\Microsoft.VisualStudio.Shell.Interop.9.0.dll = Depdendencies\Visual Studio\Microsoft.VisualStudio.Shell.Interop.9.0.dll

@@ -95,6 +95,26 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         public override void GenerateDataAccessLayer(DataAccessLayerGeneratorOptions options)
         {
+            GenerateDataContext();
+
+            // TODO:  Complete the repository pattern generator for WP7 mango
+            //var repositoryPatternGenerator = new RepositoryPatternGenerator(Database, false);
+            //repositoryPatternGenerator.GenerateIRepository();
+            //repositoryPatternGenerator.GenerateIDataRepository();
+            //repositoryPatternGenerator.GenerateDataRepository();
+
+            //foreach (var table in Database.Tables)
+            //{
+            //    repositoryPatternGenerator.GenerateITableRepository(table);
+            //    repositoryPatternGenerator.GenerateTableRepository<CSharpMangoLinqToSqlDataAccessLayerGenerator>(table);
+            //}
+
+            //foreach (var codeFile in repositoryPatternGenerator.CodeFiles)
+            //    AppendCode(codeFile.Key, codeFile.Value);
+        }
+
+        private void GenerateDataContext()
+        {
             var code = new StringBuilder();
 
             code.AppendLine("\nnamespace " + Database.Namespace);
@@ -106,8 +126,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             var dataSource = new FileInfo(connStr.DataSource);
             var className = dataSource.Name.Trim(' ').Replace(dataSource.Extension, string.Empty);
 
-            GenerateXmlDoc(code, 1, "Represents the " + className + " data context");
-            code.AppendLine("\tpublic partial class " + className + "DataContext : DataContext");
+            GenerateXmlDoc(code, 1, "Represents the entity data context");
+            code.AppendLine("\tpublic partial class EntityDataContext : DataContext");
             code.AppendLine("\t{");
 
             GenerateXmlDoc(code, 2, "Global Connection String");
@@ -115,13 +135,14 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine();
 
             GenerateXmlDoc(code, 2, "Creates an instance of the " + className + " data context");
-            code.AppendLine("\t\tpublic " + className + "DataContext () : this(ConnectionString)");
+            code.AppendLine("\t\tpublic EntityDataContext() : this(ConnectionString)");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t}");
             code.AppendLine();
 
-            GenerateXmlDoc(code, 2, "Creates an instance of the " + className + " data context", new KeyValuePair<string, string>("connectionString", "connection string to be used for this instance"));
-            code.AppendLine("\t\tpublic " + className + "DataContext (string connectionString) : base(connectionString)");
+            GenerateXmlDoc(code, 2, "Creates an instance of the " + className + " data context",
+                           new KeyValuePair<string, string>("connectionString", "connection string to be used for this instance"));
+            code.AppendLine("\t\tpublic EntityDataContext(string connectionString) : base(connectionString)");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tif (!DatabaseExists())");
             code.AppendLine("\t\t\t\tCreateDatabase();");

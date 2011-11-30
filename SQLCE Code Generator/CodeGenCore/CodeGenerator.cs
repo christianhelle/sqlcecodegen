@@ -17,15 +17,15 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             Code = new StringBuilder();
             Code.AppendLine();
         }
-        
+
         public SqlCeDatabase Database { get; set; }
         public Dictionary<string, StringBuilder> CodeFiles { get; protected set; }
 
-        public abstract void GenerateEntities();
-        public abstract void GenerateEntities(EntityGeneratorOptions options);
-        public abstract void GenerateDataAccessLayer();
-        public abstract void GenerateDataAccessLayer(DataAccessLayerGeneratorOptions options);
-        
+        public virtual void GenerateEntities() { }
+        public virtual void GenerateEntities(EntityGeneratorOptions options) { }
+        public virtual void GenerateDataAccessLayer() { }
+        public virtual void GenerateDataAccessLayer(DataAccessLayerGeneratorOptions options) { }
+
         public virtual void WriteHeaderInformation()
         {
             WriteHeaderInformation(Code);
