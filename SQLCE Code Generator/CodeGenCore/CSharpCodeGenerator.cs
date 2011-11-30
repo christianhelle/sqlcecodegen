@@ -167,17 +167,23 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             GenerateEntityBase();
             GenerateCreateDatabase();
-            GenerateIRepository();
-            GenerateIDataRepository();
-            GenerateDataRepository();
+
+            var repositoryPatternGenerator = new RepositoryPatternGenerator(Database, true);
+            repositoryPatternGenerator.GenerateIRepository();
+            repositoryPatternGenerator.GenerateIDataRepository();
+            repositoryPatternGenerator.GenerateDataRepository();
 
             foreach (var table in Database.Tables)
             {
-                GenerateITableRepository(table);
-                GenerateTableRepository(table);
+                repositoryPatternGenerator.GenerateITableRepository(table);
+                repositoryPatternGenerator.GenerateTableRepository<CSharpDataAccessLayerGenerator>(table);
             }
+
+            foreach (var codeFile in repositoryPatternGenerator.CodeFiles)
+                AppendCode(codeFile.Key, codeFile.Value);
         }
 
+/*
         private void GenerateTableRepository(Table table)
         {
             var code = new StringBuilder();
@@ -210,7 +216,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             AppendCode(table.ClassName + "Repository", code);
         }
+*/
 
+/*
         private void GenerateITableRepository(Table table)
         {
             var code = new StringBuilder();
@@ -306,7 +314,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             AppendCode("I" + table.ClassName + "Repository", code);
         }
+*/
 
+/*
         private void GenerateIDataRepository()
         {
             var code = new StringBuilder();
@@ -337,7 +347,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             AppendCode("IDataRepository", code);
         }
+*/
 
+/*
         private void GenerateDataRepository()
         {
             var code = new StringBuilder();
@@ -440,7 +452,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             AppendCode("DataRepository", code);
         }
+*/
 
+/*
         private void GenerateIRepository()
         {
             var code = new StringBuilder();
@@ -490,6 +504,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             AppendCode("IRepository", code);
         }
+*/
 
         #region Generate Entities
 
