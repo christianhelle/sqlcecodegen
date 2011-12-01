@@ -7,7 +7,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
     public class CSharpMangoLinqToSqlDataAccessLayerGenerator : DataAccessLayerGenerator
     {
-        public CSharpMangoLinqToSqlDataAccessLayerGenerator(StringBuilder code, Table table) : base(code, table)
+        public CSharpMangoLinqToSqlDataAccessLayerGenerator(StringBuilder code, Table table)
+            : base(code, table)
         {
         }
 
@@ -52,7 +53,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
                 Code.AppendLine();
                 Code.AppendLine("\t\t{");
-                Code.AppendLine("\t\t\tthrow new System.NotImplementedException();");
+                Code.AppendLine("\t\t\treturn DataContext." + Table.ClassName + ".Where(c => c." + column.Value.FieldName + "== " + column.Value.FieldName + ").ToList();");
                 Code.AppendLine("\t\t}");
                 Code.AppendLine();
                 Code.AppendLine("\t\t#endregion");
@@ -67,13 +68,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             GenerateXmlDoc(2, "Retrieves the first set of items specified by count as a generic collection", new KeyValuePair<string, string>("count", "Number of records to be retrieved"));
             Code.AppendLine("\t\tpublic System.Collections.Generic.List<" + Table.ClassName + "> ToList(int count)");
             Code.AppendLine("\t\t{");
-            Code.AppendLine("\t\t\tthrow new System.NotImplementedException();");
+            Code.AppendLine("\t\t\treturn DataContext." + Table.ClassName + ".Take(count).ToList();");
             Code.AppendLine("\t\t}");
             Code.AppendLine();
             Code.AppendLine("\t\tpublic " + Table.ClassName + "[] ToArray(int count)");
             Code.AppendLine("\t\t{");
-            Code.AppendLine("\t\t\tvar list = ToList(count);");
-            Code.AppendLine("\t\t\treturn list != null ? list.ToArray() : null;");
+            Code.AppendLine("\t\t\treturn DataContext." + Table.ClassName + ".Take(count).ToArray();");
             Code.AppendLine("\t\t}");
             Code.AppendLine();
             Code.AppendLine("\t\t#endregion");
@@ -99,7 +99,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
                 Code.AppendLine();
                 Code.AppendLine("\t\t{");
-                Code.AppendLine("\t\t\tthrow new System.NotImplementedException();");
+                Code.AppendLine("\t\t\treturn DataContext." + Table.ClassName + ".Where(c => c." + column.Value.FieldName + "== " + column.Value.FieldName + ").Take(count).ToList();");
                 Code.AppendLine("\t\t}");
                 Code.AppendLine();
                 Code.AppendLine("\t\t#endregion");
@@ -180,7 +180,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             Code.AppendLine();
 
             Code.AppendLine("\t\t\tthrow new System.NotImplementedException();");
-           
+
             Code.AppendLine("\t\t}");
             Code.AppendLine();
             Code.AppendLine("\t\t#endregion");
@@ -194,7 +194,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             GenerateXmlDoc(2, "Deletes the item", new KeyValuePair<string, string>("item", "Item to delete"));
             Code.AppendLine("\t\tpublic void Delete(" + Table.ClassName + " item)");
             Code.AppendLine("\t\t{");
-            Code.AppendLine("\t\t\tthrow new System.NotImplementedException();");
+            Code.AppendLine("\t\t\tDataContext." + Table.ClassName + ".DeleteOnSubmit(item);");
             Code.AppendLine("\t\t}");
             Code.AppendLine();
             Code.AppendLine("\t\t#endregion");
@@ -210,7 +210,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             GenerateXmlDoc(2, "Deletes a collection of item", new KeyValuePair<string, string>("items", "Items to delete"));
             Code.AppendLine("\t\tpublic void Delete(System.Collections.Generic.IEnumerable<" + Table.ClassName + "> items)");
             Code.AppendLine("\t\t{");
-            Code.AppendLine("\t\t\tthrow new System.NotImplementedException();");
+            Code.AppendLine("\t\t\tDataContext." + Table.ClassName + ".DeleteAllOnSubmit(items);");
             Code.AppendLine("\t\t}");
             Code.AppendLine();
             Code.AppendLine("\t\t#endregion");
@@ -245,7 +245,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             GenerateXmlDoc(2, "Purges the contents of the table");
             Code.AppendLine("\t\tpublic int Purge()");
             Code.AppendLine("\t\t{");
-            Code.AppendLine("\t\t\tthrow new System.NotImplementedException();");
+            Code.AppendLine("\t\t\tvar count = Count();");
+            Code.AppendLine("\t\t\tDataContext." + Table.ClassName + ".DeleteAllOnSubmit(DataContext." + Table.ClassName + ".ToList());");
+            Code.AppendLine("\t\t\treturn count;");
             Code.AppendLine("\t\t}");
             Code.AppendLine();
             Code.AppendLine("\t\t#endregion");
@@ -289,7 +291,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             GenerateXmlDoc(2, "Populates the table with a collection of items");
             Code.AppendLine("\t\tpublic void Create(System.Collections.Generic.IEnumerable<" + Table.ClassName + "> items)");
             Code.AppendLine("\t\t{");
-            Code.AppendLine("\t\t\tthrow new System.NotImplementedException();");
+            Code.AppendLine("\t\t\tDataContext." + Table.ClassName + ".InsertAllOnSubmit(items);");
             Code.AppendLine("\t\t}");
             Code.AppendLine();
             Code.AppendLine("\t\t#endregion");
@@ -303,7 +305,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             GenerateXmlDoc(2, "Inserts the item to the table", new KeyValuePair<string, string>("item", "Item to insert to the database"));
             Code.AppendLine("\t\tpublic void Create(" + Table.ClassName + " item)");
             Code.AppendLine("\t\t{");
-            Code.AppendLine("\t\t\tthrow new System.NotImplementedException();");
+            Code.AppendLine("\t\t\tDataContext." + Table.ClassName + ".InsertOnSubmit(item);");
             Code.AppendLine("\t\t}");
             Code.AppendLine();
             Code.AppendLine("\t\t#endregion");
@@ -317,7 +319,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             GenerateXmlDoc(2, "Gets the number of records in the table");
             Code.AppendLine("\t\tpublic int Count()");
             Code.AppendLine("\t\t{");
-            Code.AppendLine("\t\t\tthrow new System.NotImplementedException();");
+            Code.AppendLine("\t\t\treturn DataContext." + Table.ClassName + ".Count();");
             Code.AppendLine("\t\t}");
             Code.AppendLine();
             Code.AppendLine("\t\t#endregion");
