@@ -358,6 +358,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\t\tvoid Rollback();");
             }
 
+            if (usesLinqToSql)
+            {
+                GenerateXmlDoc(code, 2, "Persists the pending changes to the database");
+                code.AppendLine("\t\tvoid SubmitChanges();");
+                code.AppendLine();
+            }
+
             code.AppendLine("\t}");
             code.AppendLine("}");
 

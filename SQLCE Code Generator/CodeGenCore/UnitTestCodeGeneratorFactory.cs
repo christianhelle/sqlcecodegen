@@ -18,16 +18,18 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         public static CodeGenerator Create(SqlCeDatabase database, string testfx, string target = null)
         {
-            if (target != "Mango")
-                switch (testfx.ToLower())
-                {
-                    case "mstest":
-                        return new MSTestUnitTestCodeGenerator(database);
-                    case "nunit":
-                        return new NUnitTestCodeGenerator(database);
-                    case "xunit":
-                        return new XUnitTestCodeGenerator(database);
-                }
+            if (!string.IsNullOrEmpty(target) && target == "Mango")
+                return new CSharpMangoMockDataAccessLayerCodeGenerator(database);
+
+            switch (testfx.ToLower())
+            {
+                case "mstest":
+                    return new MSTestUnitTestCodeGenerator(database);
+                case "nunit":
+                    return new NUnitTestCodeGenerator(database);
+                case "xunit":
+                    return new XUnitTestCodeGenerator(database);
+            }
 
             throw new NotSupportedException("Unit Test Framework not supported");
         }
