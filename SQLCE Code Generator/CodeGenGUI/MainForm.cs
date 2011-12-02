@@ -752,6 +752,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             File.Delete(string.Format("{0}\\DataAccess.cs", appDataPath));
             File.Delete(string.Format("{0}\\EntityUnitTests.cs", appDataPath));
             File.Delete(string.Format("{0}\\DataAccessUnitTests.cs", appDataPath));
+            File.Delete(string.Format("{0}\\MockDataAccess.cs", appDataPath));
 
             WriteToCompilerOutputWindow("Executed in " + sw.Elapsed);
         }
@@ -779,6 +780,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             using (var stream = File.CreateText(Path.Combine(appDataPath, "DataAccessUnitTests.cs")))
             {
                 stream.Write(rtbGeneratedCodeDataAccessUnitTests.Text);
+                stream.WriteLine();
+            }
+            using (var stream = File.CreateText(Path.Combine(appDataPath,"MockDataAccess.cs")))
+            {
+                stream.Write(rtbGeneratedMockDataAccessCode.Text);
                 stream.WriteLine();
             }
 
