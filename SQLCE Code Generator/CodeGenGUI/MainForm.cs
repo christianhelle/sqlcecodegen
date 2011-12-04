@@ -726,6 +726,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         private void CompileCSharp30()
         {
             rtbCompilerOutput.ResetText();
+
+            if (Settings.Default.Target == "Mango")
+            {
+                WriteToCompilerOutputWindow("Compiling the for the Target Windows Phone 7 Mango is currently not supported");
+                return;
+            }
             CreateOutputFiles();
 
             var sw = Stopwatch.StartNew();
@@ -782,7 +788,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                 stream.Write(rtbGeneratedCodeDataAccessUnitTests.Text);
                 stream.WriteLine();
             }
-            using (var stream = File.CreateText(Path.Combine(appDataPath,"MockDataAccess.cs")))
+            using (var stream = File.CreateText(Path.Combine(appDataPath, "MockDataAccess.cs")))
             {
                 stream.Write(rtbGeneratedMockDataAccessCode.Text);
                 stream.WriteLine();
@@ -1007,14 +1013,26 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                 case NETCF:
                     nETCompactFrameworkCompatibleToolStripMenuItem.Checked = true;
                     windowsPhone7MangoToolStripMenuItem.Checked = false;
+                    if (!tabGeneratedCode.TabPages.Contains(tabPageEntityUnitTests))
+                        tabGeneratedCode.TabPages.Add(tabPageEntityUnitTests);
+                    if (!tabGeneratedCode.TabPages.Contains(tabPageDataAccessUnitTests))
+                        tabGeneratedCode.TabPages.Add(tabPageDataAccessUnitTests);
                     break;
                 case WP7:
                     nETCompactFrameworkCompatibleToolStripMenuItem.Checked = false;
                     windowsPhone7MangoToolStripMenuItem.Checked = true;
+                    if (tabGeneratedCode.TabPages.Contains(tabPageEntityUnitTests))
+                        tabGeneratedCode.TabPages.Remove(tabPageEntityUnitTests);
+                    if (tabGeneratedCode.TabPages.Contains(tabPageDataAccessUnitTests))
+                        tabGeneratedCode.TabPages.Remove(tabPageDataAccessUnitTests);
                     break;
                 default:
                     nETCompactFrameworkCompatibleToolStripMenuItem.Checked = true;
                     windowsPhone7MangoToolStripMenuItem.Checked = false;
+                    if (!tabGeneratedCode.TabPages.Contains(tabPageEntityUnitTests))
+                        tabGeneratedCode.TabPages.Add(tabPageEntityUnitTests);
+                    if (!tabGeneratedCode.TabPages.Contains(tabPageDataAccessUnitTests))
+                        tabGeneratedCode.TabPages.Add(tabPageDataAccessUnitTests);
                     break;
             }
 
@@ -1108,6 +1126,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                 windowsPhone7MangoToolStripMenuItem.Checked = false;
                 Settings.Default.Target = NETCF;
                 Settings.Default.Save();
+                LoadSettings();
 
                 PromptToRegenerateCode();
             });
@@ -1121,6 +1140,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                 windowsPhone7MangoToolStripMenuItem.Checked = true;
                 Settings.Default.Target = WP7;
                 Settings.Default.Save();
+                LoadSettings();
 
                 PromptToRegenerateCode();
             });
