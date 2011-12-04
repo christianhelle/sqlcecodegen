@@ -29,10 +29,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\tusing System.Data.Linq;");
                 code.AppendLine("\tusing System.Data.Linq.Mapping;");
                 code.AppendLine("\tusing System.ComponentModel;");
+                code.AppendLine("\tusing Microsoft.Phone.Data.Linq.Mapping;");
                 code.AppendLine();
 
                 GenerateXmlDoc(code, 1, "Represents the " + table.DisplayName + " table in the database");
                 code.AppendLine("\t[Table]");
+                foreach (var index in table.Indexes)
+                    code.AppendLine("\t[Index(Columns = \"" + index.Column.Name + "\", IsUnique = " + index.Unique + ", Name = \"" + index.Name + "\")]");
                 code.AppendLine("\tpublic partial class " + table.ClassName + " : INotifyPropertyChanged, INotifyPropertyChanging");
                 code.AppendLine("\t{");
 
