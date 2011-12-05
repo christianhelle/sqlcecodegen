@@ -43,6 +43,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     code.AppendLine("\t\tprivate " + column.Value.ManagedType + (column.Value.ManagedType.IsValueType ? "? _" : " _") + column.Value.FieldName + ";");
                 code.AppendLine();
 
+                foreach (var foreignKeyConstraint in table.ForeignKeyConstraints)
+                    code.AppendLine("private EntityRef<" + foreignKeyConstraint.ReferenceTable.ClassName + "> _" + foreignKeyConstraint.ReferenceTable.ClassName + ";");
+
                 foreach (var column in table.Columns.Where(column => column.Value.MaxLength > 0 && column.Value.ManagedType.Equals(typeof(string))))
                 {
                     GenerateXmlDoc(code, 2, "The Maximum Length the " + column.Value.FieldName + " field allows");
@@ -88,6 +91,34 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     code.AppendLine("\t\t\t\t_" + column.Value.FieldName + " = value;");
                     code.AppendLine("\t\t\t\tif (PropertyChanged != null)");
                     code.AppendLine("\t\t\t\t\tPropertyChanged.Invoke(this, new PropertyChangedEventArgs(\"" + column.Value.FieldName + "\"));");
+                    code.AppendLine("\t\t\t}");
+                    code.AppendLine("\t\t}");
+                    code.AppendLine();
+                }
+
+                foreach (var foreignKeyConstraint in table.ForeignKeyConstraints)
+                {
+                    code.AppendLine("\t\t[Association(ThisKey = \"" + foreignKeyConstraint.Column.FieldName +
+                                    "\", OtherKey = \"" + foreignKeyConstraint.ReferenceColumn.FieldName +
+                                    "\", Storage = \"_" + foreignKeyConstraint.ReferenceTable.ClassName + "\")]");
+                    code.AppendLine("\t\tpublic " + foreignKeyConstraint.ReferenceTable.ClassName + " " + foreignKeyConstraint.ReferenceTable.ClassName);
+                    code.AppendLine("\t\t{");
+                    code.AppendLine("\t\t\tget { return _" + foreignKeyConstraint.ReferenceTable.ClassName + ".Entity; }");
+                    code.AppendLine("\t\t\tset");
+                    code.AppendLine("\t\t\t{");
+                    code.AppendLine("\t\t\t\tif (_" + foreignKeyConstraint.ReferenceTable.ClassName + ".Entity == value) return;");
+                    code.AppendLine("\t\t\t\tif (PropertyChanging != null)");
+                    code.AppendLine("\t\t\t\t\tPropertyChanging.Invoke(this, new PropertyChangingEventArgs(\"" + foreignKeyConstraint.ReferenceTable.ClassName + "\"));");
+                    code.AppendLine("\t\t\t\tif (PropertyChanging != null)");
+                    code.AppendLine("\t\t\t\t\tPropertyChanging.Invoke(this, new PropertyChangingEventArgs(\"" + foreignKeyConstraint.ReferenceColumn.FieldName + "\"));");
+                    code.AppendLine();
+                    code.AppendLine("\t\t\t\t_" + foreignKeyConstraint.ReferenceTable.ClassName + ".Entity = value;");
+                    code.AppendLine("\t\t\t\t_" + foreignKeyConstraint.Column.FieldName + " = value." + foreignKeyConstraint.ReferenceTable.Columns.First(c => c.Value.IsPrimaryKey).Value.FieldName + ";");
+                    code.AppendLine();
+                    code.AppendLine("\t\t\t\tif (PropertyChanged != null)");
+                    code.AppendLine("\t\t\t\t\tPropertyChanged.Invoke(this, new PropertyChangedEventArgs(\"" + foreignKeyConstraint.ReferenceTable.ClassName + "\"));");
+                    code.AppendLine("\t\t\t\tif (PropertyChanged != null)");
+                    code.AppendLine("\t\t\t\t\tPropertyChanged.Invoke(this, new PropertyChangedEventArgs(\"" + foreignKeyConstraint.ReferenceColumn.FieldName + "\"));");
                     code.AppendLine("\t\t\t}");
                     code.AppendLine("\t\t}");
                     code.AppendLine();
