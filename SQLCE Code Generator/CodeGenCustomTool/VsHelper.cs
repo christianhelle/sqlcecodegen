@@ -12,7 +12,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
     {
         public static IVsHierarchy GetCurrentHierarchy(IServiceProvider provider)
         {
-            var vs = (DTE)provider.GetService(typeof(DTE));
+            var vs = (DTE) provider.GetService(typeof (DTE));
             if (vs == null) throw new InvalidOperationException("DTE not found.");
             return ToHierarchy(vs.SelectedItems.Item(1).ProjectItem.ContainingProject);
         }
@@ -21,8 +21,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
         {
             if (project == null) throw new ArgumentNullException("project");
             string projectGuid = null;
-            
-            using (XmlReader projectReader = XmlReader.Create(project.FileName))
+
+            using (var projectReader = XmlReader.Create(project.FileName))
             {
                 projectReader.MoveToContent();
                 if (projectReader.NameTable != null)
@@ -38,7 +38,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
                     }
                 }
             }
-            IServiceProvider serviceProvider = new ServiceProvider(project.DTE as Microsoft.VisualStudio.OLE.Interop.IServiceProvider);
+            IServiceProvider serviceProvider =
+                new ServiceProvider(project.DTE as Microsoft.VisualStudio.OLE.Interop.IServiceProvider);
             return projectGuid != null ? VsShellUtilities.GetHierarchy(serviceProvider, new Guid(projectGuid)) : null;
         }
 
@@ -58,7 +59,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
             if (hierarchy == null) throw new ArgumentNullException("hierarchy");
             object prjObject;
             if (hierarchy.GetProperty(0xfffffffe, -2027, out prjObject) >= 0)
-                return (Project)prjObject;
+                return (Project) prjObject;
             throw new ArgumentException("Hierarchy is not a project.");
         }
 
@@ -76,7 +77,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
 
         public static ProjectItem FindProjectItem(ProjectItems items, string file)
         {
-            string atom = file.Substring(0, file.IndexOf("\\") + 1);
+            var atom = file.Substring(0, file.IndexOf("\\") + 1);
             foreach (ProjectItem item in items)
             {
                 //if ( item
@@ -84,7 +85,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
                 if (atom.StartsWith(item.Name))
                 {
                     // then step in
-                    ProjectItem ritem = FindProjectItem(item.ProjectItems, file.Substring(file.IndexOf("\\") + 1));
+                    var ritem = FindProjectItem(item.ProjectItems, file.Substring(file.IndexOf("\\") + 1));
                     if (ritem != null)
                         return ritem;
                 }
@@ -94,7 +95,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
                 }
                 if (item.ProjectItems.Count > 0)
                 {
-                    ProjectItem ritem = FindProjectItem(item.ProjectItems, file.Substring(file.IndexOf("\\") + 1));
+                    var ritem = FindProjectItem(item.ProjectItems, file.Substring(file.IndexOf("\\") + 1));
                     if (ritem != null)
                         return ritem;
                 }

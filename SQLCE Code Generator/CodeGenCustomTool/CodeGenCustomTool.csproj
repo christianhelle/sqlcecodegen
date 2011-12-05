@@ -120,17 +120,17 @@
     <Compile Include="CodeGeneratorCustomTool.cs" />
     <Compile Include="CSharpFileGenerator.cs" />
     <Compile Include="MultipleFileGenerator.cs" />
-    <Compile Include="SQLCECodeGeneratorSingle.cs" />
-    <Compile Include="SQLCEMangoCodeGenerator.cs" />
-    <Compile Include="SQLCEMangoCodeGeneratorSingle.cs" />
-    <Compile Include="SQLCEMSTestCodeGenerator.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLCECodeGenerator.cs" />
-    <Compile Include="SQLCEMSTestCodeGeneratorSingle.cs" />
+    <Compile Include="SQLCEMangoCodeGeneratorMultiFile.cs" />
+    <Compile Include="SQLCEMangoCodeGenerator.cs" />
+    <Compile Include="SQLCEMSTestCodeGeneratorMultiFile.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SQLCECodeGeneratorMultiFile.cs" />
+    <Compile Include="SQLCEMSTestCodeGenerator.cs" />
+    <Compile Include="SQLCENUnitCodeGeneratorMultiFile.cs" />
     <Compile Include="SQLCENUnitCodeGenerator.cs" />
-    <Compile Include="SQLCENUnitCodeGeneratorSingle.cs" />
+    <Compile Include="SQLCEXUnitCodeGeneratorMultiFile.cs" />
     <Compile Include="SQLCEXUnitCodeGenerator.cs" />
-    <Compile Include="SQLCEXUnitCodeGeneratorSingle.cs" />
     <Compile Include="VsHelper.cs" />
   </ItemGroup>
   <ItemGroup>

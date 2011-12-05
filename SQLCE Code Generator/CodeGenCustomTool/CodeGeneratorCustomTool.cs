@@ -17,7 +17,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
             return GetData(codeGenerator);
         }
 
-        public static byte[] GenerateUnitTestCode(string fileNameSpace, string inputFileName, string fileExtension = "CSharp", string testFramework = "MSTest")
+        public static byte[] GenerateUnitTestCode(string fileNameSpace, string inputFileName,
+                                                  string fileExtension = "CSharp", string testFramework = "MSTest")
         {
             var database = GetDatabase(fileNameSpace, inputFileName);
             var factory = new UnitTestCodeGeneratorFactory(database);
@@ -39,9 +40,10 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
             try
             {
                 var fi = new FileInfo(inputFileName);
-                var generatedNamespace = fileNameSpace + "." + fi.Name.Replace(fi.Extension, string.Empty).Replace(" ", string.Empty);
+                var generatedNamespace = fileNameSpace + "." +
+                                         fi.Name.Replace(fi.Extension, string.Empty).Replace(" ", string.Empty);
                 var connectionString = GetConnectionString(inputFileName, password);
-                var database= new SqlCeDatabase(generatedNamespace, connectionString);
+                var database = new SqlCeDatabase(generatedNamespace, connectionString);
                 database.Verify();
                 database.AnalyzeDatabase();
                 return database;

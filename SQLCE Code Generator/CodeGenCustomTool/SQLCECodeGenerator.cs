@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+using System;
 using System.Runtime.InteropServices;
-using System.Text;
-using ChristianHelle.DatabaseTools.SqlCe.CodeGenCore;
+using Microsoft.CustomTool;
 using Microsoft.SqlServer.MessageBox;
-using IVsGeneratorProgress = Microsoft.CustomTool.IVsGeneratorProgress;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
 {
-    [Guid("64264FF6-2DD0-489a-A8C2-8FD7855FE3BF")]
+    [Guid("C32CAD4D-9E8E-4CB4-B9FD-B1CD3F279346")]
     [ComVisible(true)]
-    public class SQLCECodeGenerator : MultipleFileGenerator
+    public class SQLCECodeGenerator : CSharpFileGenerator
     {
         public override void Generate(string wszInputFilePath,
                                       string bstrInputFileContents,
@@ -21,37 +18,25 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
         {
             try
             {
-                var database = CodeGeneratorCustomTool.GetDatabase(wszDefaultNamespace, wszInputFilePath);
-                var factory = new CodeGeneratorFactory(database);
-                var codeGenerator = factory.Create();
-                codeGenerator.GenerateEntities();
-                codeGenerator.GenerateDataAccessLayer();
-
-                var header = new StringBuilder();
-                codeGenerator.WriteHeaderInformation(header);
-
-                var files = new Dictionary<string, StringBuilder>(codeGenerator.CodeFiles.Count);
-                foreach (var codeFile in codeGenerator.CodeFiles)
-                    files.Add(codeFile.Key + GetDefaultExtension(), codeFile.Value);
-
-                AddOutputToProject(wszInputFilePath, files, header);
-
-                base.Generate(wszInputFilePath,
-                              bstrInputFileContents,
-                              wszDefaultNamespace,
-                              out rgbOutputFileContents,
-                              out pcbOutput,
-                              pGenerateProgress);
+                var data = CodeGeneratorCustomTool.GenerateCode(wszDefaultNamespace, wszInputFilePath);
+                if (data == null)
+                {
+                    rgbOutputFileContents = IntPtr.Zero;
+                    pcbOutput = 0;
+                }
+                else
+                {
+                    rgbOutputFileContents = Marshal.AllocCoTaskMem(data.Length);
+                    Marshal.Copy(data, 0, rgbOutputFileContents, data.Length);
+                    pcbOutput = data.Length;
+                }
             }
             catch (Exception e)
             {
-                var codeGen = new SQLCECodeGeneratorSingle();
-                codeGen.Generate(wszInputFilePath, bstrInputFileContents, wszDefaultNamespace, out rgbOutputFileContents, out pcbOutput, pGenerateProgress);
-
-                //var applicationException = new ApplicationException("Unable to generate code", e);
-                //var messageBox = new ExceptionMessageBox(applicationException);
-                //messageBox.Show(null);
-                //throw;
+                var applicationException = new ApplicationException("Unable to generate code", e);
+                var messageBox = new ExceptionMessageBox(applicationException);
+                messageBox.Show(null);
+                throw;
             }
         }
     }
