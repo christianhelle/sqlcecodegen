@@ -727,27 +727,53 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         {
             rtbCompilerOutput.ResetText();
 
-            if (Settings.Default.Target == "Mango")
-            {
-                WriteToCompilerOutputWindow("Compiling the for the Target Windows Phone 7 Mango is currently not supported");
-                return;
-            }
+            //if (Settings.Default.Target == "Mango")
+            //{
+            //    WriteToCompilerOutputWindow("Compiling the for the Target Windows Phone 7 Mango is currently not supported");
+            //    return;
+            //}
             CreateOutputFiles();
 
             var sw = Stopwatch.StartNew();
 
-            var csc = Environment.ExpandEnvironmentVariables(@"%SystemRoot%\Microsoft.Net\Framework\v3.5\csc.exe");
-            var args = string.Format(@"/target:library /optimize /out:""{0}\DataAccess.dll"" /reference:""{1}\System.Data.SqlServerCe.dll"" /reference:""{1}\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll"" /reference:""{1}\NUnit\nunit.framework.dll"" /reference:""{1}\xUnit\xunit.dll"" ""{0}\*.cs""", appDataPath, Environment.CurrentDirectory);
+            string csc;
+            string args;
+            if (Settings.Default.Target == "Mango")
+            {
+                var mangoSdkPath = Environment.GetEnvironmentVariable("ProgramFiles(x86)") + @"\Reference Assemblies\Microsoft\Framework\Silverlight\v4.0\Profile\WindowsPhone71";
+                if (!Directory.Exists(mangoSdkPath))
+                {
+                    WriteToCompilerOutputWindow("Unable to find Windows Phone 7 Mango Libraries");
+                    return;
+                }
 
-            WriteToCompilerOutputWindow("Compiling using C# 3.0");
+                csc = Environment.ExpandEnvironmentVariables(@"%SystemRoot%\Microsoft.Net\Framework\v4.0.30319\csc.exe");
+                args =
+                    string.Format(
+                        @"/target:library /noconfig /nostdlib+ /optimize /define:DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE /out:""{0}\DataAccess.dll"" /reference:""{1}\mscorlib.dll"" /reference:""{1}\mscorlib.extensions.dll"" /reference:""{1}\System.dll"" /reference:""{1}\System.Core.dll"" /reference:""{1}\System.Data.Linq.dll"" /reference:""{1}\Microsoft.Phone.dll"" ""{0}\*.cs""",
+                        appDataPath, mangoSdkPath);
+
+                WriteToCompilerOutputWindow("Compiling using C# 4.0");
+            }
+            else
+            {
+                csc = Environment.ExpandEnvironmentVariables(@"%SystemRoot%\Microsoft.Net\Framework\v3.5\csc.exe");
+                args =
+                    string.Format(
+                        @"/target:library /optimize /out:""{0}\DataAccess.dll"" /reference:""{1}\System.Data.SqlServerCe.dll"" /reference:""{1}\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll"" /reference:""{1}\NUnit\nunit.framework.dll"" /reference:""{1}\xUnit\xunit.dll"" ""{0}\*.cs""",
+                        appDataPath, Environment.CurrentDirectory);
+
+                WriteToCompilerOutputWindow("Compiling using C# 3.0");
+            }
+
             WriteToCompilerOutputWindow(string.Format(Environment.NewLine + "Executing {0} {1}" + Environment.NewLine, csc, args));
 
             var psi = new ProcessStartInfo(csc, args)
-                          {
-                              RedirectStandardOutput = true,
-                              CreateNoWindow = true,
-                              UseShellExecute = false
-                          };
+            {
+                RedirectStandardOutput = true,
+                CreateNoWindow = true,
+                UseShellExecute = false
+            };
 
             var process = Process.Start(psi);
             var output = process.StandardOutput.ReadToEnd();
@@ -1017,6 +1043,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                         tabGeneratedCode.TabPages.Add(tabPageEntityUnitTests);
                     if (!tabGeneratedCode.TabPages.Contains(tabPageDataAccessUnitTests))
                         tabGeneratedCode.TabPages.Add(tabPageDataAccessUnitTests);
+                    if (!tabGeneratedCode.TabPages.Contains(tabMockDataAccessCode))
+                        tabGeneratedCode.TabPages.Add(tabMockDataAccessCode);
                     break;
                 case WP7:
                     nETCompactFrameworkCompatibleToolStripMenuItem.Checked = false;
@@ -1025,6 +1053,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                         tabGeneratedCode.TabPages.Remove(tabPageEntityUnitTests);
                     if (tabGeneratedCode.TabPages.Contains(tabPageDataAccessUnitTests))
                         tabGeneratedCode.TabPages.Remove(tabPageDataAccessUnitTests);
+                    if (tabGeneratedCode.TabPages.Contains(tabMockDataAccessCode))
+                        tabGeneratedCode.TabPages.Remove(tabMockDataAccessCode);
                     break;
                 default:
                     nETCompactFrameworkCompatibleToolStripMenuItem.Checked = true;
@@ -1033,6 +1063,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                         tabGeneratedCode.TabPages.Add(tabPageEntityUnitTests);
                     if (!tabGeneratedCode.TabPages.Contains(tabPageDataAccessUnitTests))
                         tabGeneratedCode.TabPages.Add(tabPageDataAccessUnitTests);
+                    if (!tabGeneratedCode.TabPages.Contains(tabMockDataAccessCode))
+                        tabGeneratedCode.TabPages.Add(tabMockDataAccessCode);
                     break;
             }
 

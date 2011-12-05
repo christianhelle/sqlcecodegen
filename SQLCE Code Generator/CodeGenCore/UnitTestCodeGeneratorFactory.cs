@@ -19,7 +19,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public static CodeGenerator Create(SqlCeDatabase database, string testfx, string target = null)
         {
             if (!string.IsNullOrEmpty(target) && target == "Mango")
-                return new CSharpMangoMockDataAccessLayerCodeGenerator(database);
+                throw new NotSupportedException("Unit Test Framework not supported"); //return new CSharpMangoMockDataAccessLayerCodeGenerator(database);
 
             switch (testfx.ToLower())
             {

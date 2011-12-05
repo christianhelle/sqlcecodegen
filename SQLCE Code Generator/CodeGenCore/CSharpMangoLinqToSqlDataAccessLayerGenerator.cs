@@ -131,17 +131,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             Code.AppendLine();
             Code.AppendLine("\t\t{");
 
-            foreach (var column in Table.Columns)
-            {
-                if (column.Value.Name == Table.PrimaryKeyColumnName)
-                    continue;
-                if (!column.Value.ManagedType.Equals(typeof(string)))
-                    continue;
-                Code.AppendLine("\t\t\tif (" + column.Value.FieldName + " != null && " + column.Value.FieldName + ".Length > " + column.Value.MaxLength + ")");
-                Code.AppendLine("\t\t\t\tthrow new System.ArgumentException(\"Max length for " + column.Value.FieldName + " is " + column.Value.MaxLength + "\");");
-            }
-            Code.AppendLine();
-
             Code.AppendLine("\t\t\tthrow new System.NotImplementedException();");
 
             Code.AppendLine("\t\t}");
@@ -167,17 +156,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             Code.Remove(Code.Length - 2, 2);
             Code.Append(")\n");
             Code.AppendLine("\t\t{");
-
-            foreach (var column in Table.Columns)
-            {
-                if (column.Value.Name == Table.PrimaryKeyColumnName)
-                    continue;
-                if (!column.Value.ManagedType.Equals(typeof(string)))
-                    continue;
-                Code.AppendLine("\t\t\tif (" + column.Value.FieldName + " != null && " + column.Value.FieldName + ".Length > " + Table.ClassName + "." + column.Value.FieldName + "_Max_Length)");
-                Code.AppendLine("\t\t\t\tthrow new System.ArgumentException(\"Max length for " + column.Value.FieldName + " is " + column.Value.MaxLength + "\");");
-            }
-            Code.AppendLine();
 
             Code.AppendLine("\t\t\tthrow new System.NotImplementedException();");
 

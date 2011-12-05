@@ -90,7 +90,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\tpublic EntityDataContext DataContext { get; private set; }");
             code.AppendLine();
 
-            DataAccessLayerGenerator generator = new CSharpMockDataAccessLayerCodeGenerator(code, table);
+            DataAccessLayerGenerator generator = new CSharpMockDataAccessLayerCodeGenerator(code, table, false);
             generator.GenerateSelectAll();
             generator.GenerateSelectWithTop();
             generator.GenerateSelectBy();

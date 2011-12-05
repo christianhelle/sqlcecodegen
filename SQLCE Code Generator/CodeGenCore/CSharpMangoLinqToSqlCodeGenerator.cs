@@ -35,28 +35,27 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 GenerateXmlDoc(code, 1, "Represents the " + table.DisplayName + " table in the database");
                 code.AppendLine("\t[Table]");
                 foreach (var index in table.Indexes)
-                    code.AppendLine("\t[Index(Columns = \"" + index.Column.Name + "\", IsUnique = " + index.Unique + ", Name = \"" + index.Name + "\")]");
+                    code.AppendLine("\t[Index(Columns = \"" + index.Column.Name + "\", IsUnique = " + index.Unique.ToString().ToLower() + ", Name = \"" + index.Name + "\")]");
                 code.AppendLine("\tpublic partial class " + table.ClassName + " : INotifyPropertyChanged, INotifyPropertyChanging");
                 code.AppendLine("\t{");
 
                 foreach (var column in table.Columns)
                     code.AppendLine("\t\tprivate " + column.Value.ManagedType + (column.Value.ManagedType.IsValueType ? "? _" : " _") + column.Value.FieldName + ";");
+                foreach (var foreignKeyConstraint in table.ForeignKeyConstraints)
+                    code.AppendLine("\t\tprivate EntityRef<" + foreignKeyConstraint.ReferenceTable.ClassName + "> _" + foreignKeyConstraint.ReferenceTable.ClassName + ";");
                 code.AppendLine();
 
-                foreach (var foreignKeyConstraint in table.ForeignKeyConstraints)
-                    code.AppendLine("private EntityRef<" + foreignKeyConstraint.ReferenceTable.ClassName + "> _" + foreignKeyConstraint.ReferenceTable.ClassName + ";");
+                //foreach (var column in table.Columns.Where(column => column.Value.MaxLength > 0 && column.Value.ManagedType.Equals(typeof(string))))
+                //{
+                //    GenerateXmlDoc(code, 2, "The Maximum Length the " + column.Value.FieldName + " field allows");
+                //    code.AppendLine("\t\tpublic const int " + column.Value.FieldName + "_Max_Length = " + column.Value.MaxLength + ";");
+                //    code.AppendLine();
+                //}
 
-                foreach (var column in table.Columns.Where(column => column.Value.MaxLength > 0 && column.Value.ManagedType.Equals(typeof(string))))
-                {
-                    GenerateXmlDoc(code, 2, "The Maximum Length the " + column.Value.FieldName + " field allows");
-                    code.AppendLine("\t\tpublic const int " + column.Value.FieldName + "_Max_Length = " + column.Value.MaxLength + ";");
-                    code.AppendLine();
-                }
-
-                code.AppendLine("#pragma warning disable");
+                code.AppendLine("\t\t#pragma warning disable");
                 code.AppendLine("\t\t[Column(IsVersion = true)]");
                 code.AppendLine("\t\tinternal Binary Version;");
-                code.AppendLine("#pragma warning restore");
+                code.AppendLine("\t\t#pragma warning restore");
                 code.AppendLine();
 
                 GenerateXmlDoc(code, 2, "Notifies clients that a property value is changing.");
@@ -65,6 +64,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 GenerateXmlDoc(code, 2, "Notifies clients that a property value has changed.");
                 code.AppendLine("\t\tpublic event PropertyChangedEventHandler PropertyChanged;");
 
+                code.AppendLine();
+
+                code.AppendLine("\t\t#region Fields");
                 code.AppendLine();
 
                 foreach (var column in table.Columns)
@@ -96,6 +98,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     code.AppendLine();
                 }
 
+                code.AppendLine("\t\t#endregion");
+                code.AppendLine();
+
+                code.AppendLine("\t\t#region References");
+                code.AppendLine();
+
                 foreach (var foreignKeyConstraint in table.ForeignKeyConstraints)
                 {
                     code.AppendLine("\t\t[Association(ThisKey = \"" + foreignKeyConstraint.Column.FieldName +
@@ -124,6 +132,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     code.AppendLine();
                 }
 
+                code.AppendLine("\t\t#endregion");
+                code.AppendLine();
+
                 code.AppendLine("\t}");
                 code.AppendLine("}");
 
@@ -140,19 +151,19 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             GenerateDataContext();
 
-            var repositoryPatternGenerator = new RepositoryPatternGenerator(Database, false, true);
-            repositoryPatternGenerator.GenerateIRepository();
-            repositoryPatternGenerator.GenerateIDataRepository();
-            repositoryPatternGenerator.GenerateDataRepository();
+            //var repositoryPatternGenerator = new RepositoryPatternGenerator(Database, false, true);
+            //repositoryPatternGenerator.GenerateIRepository();
+            //repositoryPatternGenerator.GenerateIDataRepository();
+            //repositoryPatternGenerator.GenerateDataRepository();
 
-            foreach (var table in Database.Tables)
-            {
-                repositoryPatternGenerator.GenerateITableRepository(table);
-                repositoryPatternGenerator.GenerateTableRepository<CSharpMangoLinqToSqlDataAccessLayerGenerator>(table);
-            }
+            //foreach (var table in Database.Tables)
+            //{
+            //    repositoryPatternGenerator.GenerateITableRepository(table);
+            //    repositoryPatternGenerator.GenerateTableRepository<CSharpMangoLinqToSqlDataAccessLayerGenerator>(table);
+            //}
 
-            foreach (var codeFile in repositoryPatternGenerator.CodeFiles)
-                AppendCode(codeFile.Key, codeFile.Value);
+            //foreach (var codeFile in repositoryPatternGenerator.CodeFiles)
+            //    AppendCode(codeFile.Key, codeFile.Value);
         }
 
         private void GenerateDataContext()
