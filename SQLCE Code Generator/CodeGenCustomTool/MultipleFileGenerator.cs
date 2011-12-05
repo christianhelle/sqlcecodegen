@@ -11,7 +11,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
 {
     public abstract class MultipleFileGenerator : CSharpFileGenerator
     {
-        protected void AddOutputToProject(string wszInputFilePath, Dictionary<string, StringBuilder> files, StringBuilder header)
+        protected void AddOutputToProject(string wszInputFilePath, Dictionary<string, StringBuilder> files,
+                                          StringBuilder header)
         {
             int iFound;
             uint itemId;
@@ -19,11 +20,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
             var pdwPriority = new VSDOCUMENTPRIORITY[1];
 
             Project project = null;
-            var dte = (DTE)Package.GetGlobalService(typeof(DTE));
-            var ary = (Array)dte.ActiveSolutionProjects;
+            var dte = (DTE) Package.GetGlobalService(typeof (DTE));
+            var ary = (Array) dte.ActiveSolutionProjects;
             if (ary.Length > 0)
-                project = (Project)ary.GetValue(0);
-            IVsProject vsProject = VsHelper.ToVsProject(project);
+                project = (Project) ary.GetValue(0);
+            var vsProject = VsHelper.ToVsProject(project);
 
             vsProject.IsDocumentInProject(wszInputFilePath, out iFound, pdwPriority, out itemId);
 
@@ -34,7 +35,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
                 if (oleSp != null)
                 {
                     var sp = new ServiceProvider(oleSp);
-                    item = sp.GetService(typeof(ProjectItem)) as ProjectItem;
+                    item = sp.GetService(typeof (ProjectItem)) as ProjectItem;
                 }
                 else
                     throw new ApplicationException("Unable to retrieve Visual Studio ProjectItem");
@@ -44,8 +45,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
 
             foreach (var codeFile in files)
             {
-                string path = wszInputFilePath.Substring(0, wszInputFilePath.LastIndexOf(Path.DirectorySeparatorChar));
-                string strFile = Path.Combine(path, codeFile.Key);
+                var path = wszInputFilePath.Substring(0, wszInputFilePath.LastIndexOf(Path.DirectorySeparatorChar));
+                var strFile = Path.Combine(path, codeFile.Key);
 
                 using (var stream = new StreamWriter(strFile, false))
                 {

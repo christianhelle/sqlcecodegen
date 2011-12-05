@@ -1,8 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
-using IVsGeneratorProgress = Microsoft.CustomTool.IVsGeneratorProgress;
-using IVsSingleFileGenerator = Microsoft.CustomTool.IVsSingleFileGenerator;
+using Microsoft.CustomTool;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
 {
@@ -34,7 +33,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
 
         protected virtual string GetDocumentation()
         {
-            return @"
+            return
+                @"
 /*
 The Generated Code
 Entity classes representing each table in the database are generated. The max length of string fields are checked and exceptions are thrown 
@@ -85,7 +85,7 @@ using (var repository = new DataRepository(""Data Source=TestDatabase.sdf""))
 {
     var contact = new Contact
     {
-		Name = ""Christian Helle"",
+        Name = ""Christian Helle"",
         Address = ""Somewhere"",
         City = ""Over"",
         PostalCode = ""The"",
@@ -125,7 +125,7 @@ using (IDataRepository repository = new DataRepository(""Data Source=TestDatabas
 
     var contact = new Contact
     {
-		Name = ""Christian Helle"",
+        Name = ""Christian Helle"",
         Address = ""Somewhere"",
         City = ""Over"",
         PostalCode = ""The"",
@@ -154,7 +154,7 @@ using (IDataRepository repository = new DataRepository(""Data Source=TestDatabas
     repository.Contact.Delete(contact);
     repository.Contact.Purge();
 
-	// Commits the transaction
+    // Commits the transaction
     repository.Commit();
 }
 */";
