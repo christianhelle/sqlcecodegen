@@ -5,14 +5,17 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
     public class CSharpMockDataAccessLayerCodeGenerator : DataAccessLayerGenerator
     {
-        public CSharpMockDataAccessLayerCodeGenerator(StringBuilder code, Table table)
+        public CSharpMockDataAccessLayerCodeGenerator(StringBuilder code, Table table, bool supportSqlCeTransactions = true)
             : base(code, table)
         {
             Code.AppendLine("\t\tprivate readonly System.Collections.Generic.List<" + Table.ClassName + "> mockDataSource = new System.Collections.Generic.List<" + Table.ClassName + ">();");
             Code.AppendLine();
 
-            Code.AppendLine("\t\tpublic System.Data.SqlServerCe.SqlCeTransaction Transaction { get; set; }");
-            Code.AppendLine();
+            if (supportSqlCeTransactions)
+            {
+                Code.AppendLine("\t\tpublic System.Data.SqlServerCe.SqlCeTransaction Transaction { get; set; }");
+                Code.AppendLine();
+            }
         }
 
         #region Overrides of DataAccessLayerGenerator
