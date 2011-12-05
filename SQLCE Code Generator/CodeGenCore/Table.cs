@@ -5,11 +5,19 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
     public class Table
     {
+        public Table()
+        {
+            Columns = new Dictionary<string, Column>();
+            Indexes = new List<Index>();
+            ForeignKeyConstraints = new List<ForeignKeyConstraint>();
+        }
+
         public string Name { get; set; }
         public string DisplayName { get; set; }
         public string ClassName { get; set; }
         public Dictionary<string, Column> Columns { get; set; }
         public List<Index> Indexes { get; set; }
+        public List<ForeignKeyConstraint> ForeignKeyConstraints { get; set; }
         public string PrimaryKeyColumnName { get; set; }
 
         public override string ToString()
@@ -45,5 +53,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public string Name { get; set; }
         public bool Unique { get; set; }
         public bool Clustered { get; set; }
+    }
+
+    public class ForeignKeyConstraint
+    {
+        public Column Column { get; set; }
+        public string Name { get; set; }
+        public Table ReferenceTable { get; set; }
+        public Column ReferenceColumn { get; set; }
     }
 }

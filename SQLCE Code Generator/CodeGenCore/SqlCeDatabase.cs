@@ -137,6 +137,45 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             Tables = new List<Table>(tableList.Values);
             FetchPrimaryKeys();
             FetchIndexes();
+            FetchReferentialConstraints();
+        }
+
+        private void FetchReferentialConstraints()
+        {
+            foreach (var table in Tables)
+            {
+                using (var conn = new SqlCeConnection(ConnectionString))
+                using (var cmd = conn.CreateCommand())
+                {
+                    conn.Open();
+                    cmd.CommandText = @"SELECT CONSTRAINT_NAME, UNIQUE_CONSTRAINT_TABLE_NAME, UNIQUE_CONSTRAINT_NAME 
+                                        FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS 
+                                        WHERE CONSTRAINT_TABLE_NAME='" + table.DisplayName + "'";
+
+                    var dataTable = new DataTable();
+                    using (var adapter = new SqlCeDataAdapter(cmd))
+                        adapter.Fill(dataTable);
+
+                    if (dataTable.Rows.Count == 0)
+                        continue;
+
+                    table.ForeignKeyConstraints = new List<ForeignKeyConstraint>(dataTable.Rows.Count);
+                    foreach (DataRow row in dataTable.Rows)
+                    {
+                        var foreignKeyConstraint = new ForeignKeyConstraint
+                        {
+                            Name = row.Field<string>("CONSTRAINT_NAME"),
+                            ReferenceTable = Tables.Where(c => c.DisplayName == row.Field<string>("UNIQUE_CONSTRAINT_TABLE_NAME")).FirstOrDefault(),
+                        };
+
+                        cmd.CommandText = @"SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE CONSTRAINT_NAME='" + foreignKeyConstraint.Name + "'";
+                        foreignKeyConstraint.Column = table.Columns.Values.Where(c => c.DisplayName == cmd.ExecuteScalar() as string).FirstOrDefault();
+                        foreignKeyConstraint.ReferenceColumn = foreignKeyConstraint.ReferenceTable.Columns.Values.Where(c => c.IsPrimaryKey).FirstOrDefault();
+
+                        table.ForeignKeyConstraints.Add(foreignKeyConstraint);
+                    }
+                }
+            }
         }
 
         private void FetchIndexes()
