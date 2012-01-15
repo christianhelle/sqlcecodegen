@@ -750,7 +750,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                 csc = Environment.ExpandEnvironmentVariables(@"%SystemRoot%\Microsoft.Net\Framework\v4.0.30319\csc.exe");
                 args =
                     string.Format(
-                        @"/target:library /noconfig /nostdlib+ /optimize /define:DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE /out:""{0}\DataAccess.dll"" /reference:""{1}\mscorlib.dll"" /reference:""{1}\mscorlib.extensions.dll"" /reference:""{1}\System.dll"" /reference:""{1}\System.Core.dll"" /reference:""{1}\System.Data.Linq.dll"" /reference:""{1}\Microsoft.Phone.dll"" ""{0}\*.cs""",
+                        @"/target:library /noconfig /nostdlib+ /optimize /define:DEBUG;TRACE;SILVERLIGHT;WINDOWS_PHONE /out:""{0}\DataAccess.dll"" /reference:""{1}\mscorlib.dll"" /reference:""{1}\mscorlib.extensions.dll"" /reference:""{1}\System.dll"" /reference:""{1}\System.Windows.dll"" /reference:""{1}\System.Core.dll"" /reference:""{1}\System.Data.Linq.dll"" /reference:""{1}\Microsoft.Phone.dll"" ""{0}\*.cs""",
                         appDataPath, mangoSdkPath);
 
                 WriteToCompilerOutputWindow("Compiling using C# 4.0");

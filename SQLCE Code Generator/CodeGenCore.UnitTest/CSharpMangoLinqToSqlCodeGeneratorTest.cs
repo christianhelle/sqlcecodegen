@@ -200,6 +200,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             compilerParameters.ReferencedAssemblies.Add(string.Format("{0}\\" + "Mscorlib.dll", mangoSdkPath));
             compilerParameters.ReferencedAssemblies.Add(string.Format("{0}\\" + "Mscorlib.Extensions.dll", mangoSdkPath));
             compilerParameters.ReferencedAssemblies.Add(string.Format("{0}\\" + "System.dll", mangoSdkPath));
+            compilerParameters.ReferencedAssemblies.Add(string.Format("{0}\\" + "System.Windows.dll", mangoSdkPath));
             compilerParameters.ReferencedAssemblies.Add(string.Format("{0}\\" + "System.Core.dll", mangoSdkPath));
             compilerParameters.ReferencedAssemblies.Add(string.Format("{0}\\" + "System.Data.Linq.dll", mangoSdkPath));
             compilerParameters.ReferencedAssemblies.Add(string.Format("{0}\\" + "Microsoft.Phone.dll", mangoSdkPath));

@@ -9,7 +9,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             Columns = new Dictionary<string, Column>();
             Indexes = new List<Index>();
-            ForeignKeyConstraints = new List<ForeignKeyConstraint>();
+            References = new List<ForeignKeyConstraint>();
+            ReferencedBy = new List<ForeignKeyConstraint>();
         }
 
         public string Name { get; set; }
@@ -17,7 +18,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public string ClassName { get; set; }
         public Dictionary<string, Column> Columns { get; set; }
         public List<Index> Indexes { get; set; }
-        public List<ForeignKeyConstraint> ForeignKeyConstraints { get; set; }
+        public List<ForeignKeyConstraint> References { get; set; }
+        public List<ForeignKeyConstraint> ReferencedBy { get; set; }
         public string PrimaryKeyColumnName { get; set; }
 
         public override string ToString()
