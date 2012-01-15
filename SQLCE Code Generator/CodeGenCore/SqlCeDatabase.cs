@@ -79,16 +79,15 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public void Upgrade()
         {
             var file = new FileInfo(new SqlConnectionStringBuilder(ConnectionString).DataSource);
-            var appData = Path.Combine(Environment.GetFolderPath(System.Environment.SpecialFolder.LocalApplicationData), "SQLCE Code Generator");
+            var appData = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SQLCE Code Generator");
             if (!Directory.Exists(appData))
                 Directory.CreateDirectory(appData);
             var newFile = file.CopyTo(Path.Combine(appData, file.Name), true);
 
-            var newConnString = new SqlConnectionStringBuilder(ConnectionString);
-            newConnString.DataSource = newFile.FullName;
+            var newConnString = new SqlConnectionStringBuilder(ConnectionString) {DataSource = newFile.FullName};
 
-            var firstIdx = newConnString.ToString().IndexOf("\"", 0);
-            var lastIdx = newConnString.ToString().LastIndexOf("\"");
+            var firstIdx = newConnString.ToString().IndexOf("\"", 0, StringComparison.Ordinal);
+            var lastIdx = newConnString.ToString().LastIndexOf("\"", StringComparison.Ordinal);
             var connStr = new StringBuilder(newConnString.ToString());
             connStr[firstIdx] = '\'';
             connStr[lastIdx] = '\'';
@@ -137,10 +136,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             Tables = new List<Table>(tableList.Values);
             FetchPrimaryKeys();
             FetchIndexes();
-            FetchReferentialConstraints();
+            FetchReferences();
+            FetchReferencedBy();
         }
 
-        private void FetchReferentialConstraints()
+        private void FetchReferences()
         {
             foreach (var table in Tables)
             {
@@ -148,7 +148,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 using (var cmd = conn.CreateCommand())
                 {
                     conn.Open();
-                    cmd.CommandText = @"SELECT CONSTRAINT_NAME, UNIQUE_CONSTRAINT_TABLE_NAME, UNIQUE_CONSTRAINT_NAME 
+                    cmd.CommandText = @"SELECT CONSTRAINT_NAME, CONSTRAINT_TABLE_NAME, UNIQUE_CONSTRAINT_TABLE_NAME, UNIQUE_CONSTRAINT_NAME
                                         FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS 
                                         WHERE CONSTRAINT_TABLE_NAME='" + table.DisplayName + "'";
 
@@ -159,20 +159,58 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     if (dataTable.Rows.Count == 0)
                         continue;
 
-                    table.ForeignKeyConstraints = new List<ForeignKeyConstraint>(dataTable.Rows.Count);
+                    table.References = new List<ForeignKeyConstraint>(dataTable.Rows.Count);
                     foreach (DataRow row in dataTable.Rows)
                     {
                         var foreignKeyConstraint = new ForeignKeyConstraint
                         {
                             Name = row.Field<string>("CONSTRAINT_NAME"),
-                            ReferenceTable = Tables.Where(c => c.DisplayName == row.Field<string>("UNIQUE_CONSTRAINT_TABLE_NAME")).FirstOrDefault(),
+                            ReferenceTable = Tables.FirstOrDefault(c => c.DisplayName == row.Field<string>("UNIQUE_CONSTRAINT_TABLE_NAME")),
                         };
 
                         cmd.CommandText = @"SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE CONSTRAINT_NAME='" + foreignKeyConstraint.Name + "'";
-                        foreignKeyConstraint.Column = table.Columns.Values.Where(c => c.DisplayName == cmd.ExecuteScalar() as string).FirstOrDefault();
-                        foreignKeyConstraint.ReferenceColumn = foreignKeyConstraint.ReferenceTable.Columns.Values.Where(c => c.IsPrimaryKey).FirstOrDefault();
+                        foreignKeyConstraint.Column = table.Columns.Values.FirstOrDefault(c => c.DisplayName == cmd.ExecuteScalar() as string);
+                        foreignKeyConstraint.ReferenceColumn = foreignKeyConstraint.ReferenceTable.Columns.Values.FirstOrDefault(c => c.IsPrimaryKey);
 
-                        table.ForeignKeyConstraints.Add(foreignKeyConstraint);
+                        table.References.Add(foreignKeyConstraint);
+                    }
+                }
+            }
+        }
+
+        private void FetchReferencedBy()
+        {
+            foreach (var table in Tables)
+            {
+                using (var conn = new SqlCeConnection(ConnectionString))
+                using (var cmd = conn.CreateCommand())
+                {
+                    conn.Open();
+                    cmd.CommandText = @"SELECT CONSTRAINT_NAME, CONSTRAINT_TABLE_NAME, UNIQUE_CONSTRAINT_TABLE_NAME, UNIQUE_CONSTRAINT_NAME
+                                        FROM INFORMATION_SCHEMA.REFERENTIAL_CONSTRAINTS 
+                                        WHERE UNIQUE_CONSTRAINT_TABLE_NAME='" + table.DisplayName + "'";
+
+                    var dataTable = new DataTable();
+                    using (var adapter = new SqlCeDataAdapter(cmd))
+                        adapter.Fill(dataTable);
+
+                    if (dataTable.Rows.Count == 0)
+                        continue;
+
+                    table.References = new List<ForeignKeyConstraint>(dataTable.Rows.Count);
+                    foreach (DataRow row in dataTable.Rows)
+                    {
+                        var foreignKeyConstraint = new ForeignKeyConstraint
+                        {
+                            Name = row.Field<string>("CONSTRAINT_NAME"),
+                            ReferenceTable = Tables.FirstOrDefault(c => c.DisplayName == row.Field<string>("CONSTRAINT_TABLE_NAME")),
+                        };
+
+                        cmd.CommandText = @"SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE CONSTRAINT_NAME='" + foreignKeyConstraint.Name + "'";
+                        foreignKeyConstraint.Column = table.Columns.Values.FirstOrDefault(c => c.DisplayName == cmd.ExecuteScalar() as string);
+                        foreignKeyConstraint.ReferenceColumn = foreignKeyConstraint.ReferenceTable.Columns.Values.FirstOrDefault(c => c.IsPrimaryKey);
+
+                        table.ReferencedBy.Add(foreignKeyConstraint);
                     }
                 }
             }
@@ -198,12 +236,16 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     table.Indexes = new List<Index>(dataTable.Rows.Count);
                     foreach (DataRow row in dataTable.Rows)
                     {
+                        var indexName = row.Field<string>("INDEX_NAME");
+                        if (indexName.Contains(" "))
+                            indexName = string.Format("[{0}]", indexName);
+
                         var index = new Index
                         {
-                            Name = row.Field<string>("INDEX_NAME"),
+                            Name = indexName,
                             Unique = row.Field<bool>("UNIQUE"),
                             Clustered = row.Field<bool>("CLUSTERED"),
-                            Column = table.Columns.Values.Where(c => c.DisplayName == row.Field<string>("COLUMN_NAME")).FirstOrDefault()
+                            Column = table.Columns.Values.FirstOrDefault(c => c.DisplayName == row.Field<string>("COLUMN_NAME"))
                         };
                         table.Indexes.Add(index);
                     }
@@ -303,7 +345,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                             DatabaseType = row.Field<string>("DATA_TYPE"),
                             MaxLength = row.Field<int?>("CHARACTER_MAXIMUM_LENGTH"),
                             ManagedType = columnDescriptions.Columns[displayName].DataType,
-                            AllowsNull = (string.Compare(row.Field<string>("IS_NULLABLE"), "YES", true) == 0),
+                            AllowsNull = (String.Compare(row.Field<string>("IS_NULLABLE"), "YES", StringComparison.OrdinalIgnoreCase) == 0),
                             AutoIncrement = row.Field<long?>("AUTOINC_INCREMENT"),
                             AutoIncrementSeed = row.Field<long?>("AUTOINC_SEED"),
                             Ordinal = row.Field<int>("ORDINAL_POSITION")
@@ -319,11 +361,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         public string GenerateCreateScript()
         {
-            foreach (var table in Tables)
-            {
-
-            }
-
+            // TODO
             throw new NotImplementedException();
         }
     }

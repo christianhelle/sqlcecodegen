@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data.SqlServerCe;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -35,14 +36,19 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 GenerateXmlDoc(code, 1, "Represents the " + table.DisplayName + " table in the database");
                 code.AppendLine("\t[Table]");
                 foreach (var index in table.Indexes)
-                    code.AppendLine("\t[Index(Columns = \"" + index.Column.Name + "\", IsUnique = " + index.Unique.ToString().ToLower() + ", Name = \"" + index.Name + "\")]");
+                    code.AppendLine("\t[Index(Columns = \"" + index.Column.Name + "\", IsUnique = " + index.Unique.ToString(CultureInfo.InvariantCulture).ToLower() + ", Name = \"" + index.Name + "\")]");
                 code.AppendLine("\tpublic partial class " + table.ClassName + " : INotifyPropertyChanged, INotifyPropertyChanging");
                 code.AppendLine("\t{");
 
                 foreach (var column in table.Columns)
                     code.AppendLine("\t\tprivate " + column.Value.ManagedType + (column.Value.ManagedType.IsValueType ? "? _" : " _") + column.Value.FieldName + ";");
-                foreach (var foreignKeyConstraint in table.ForeignKeyConstraints)
-                    code.AppendLine("\t\tprivate EntityRef<" + foreignKeyConstraint.ReferenceTable.ClassName + "> _" + foreignKeyConstraint.ReferenceTable.ClassName + ";");
+
+                foreach (var reference in table.References)
+                    code.AppendLine("\t\tprivate EntityRef<" + reference.ReferenceTable.ClassName + "> _" + reference.ReferenceTable.ClassName + ";");
+
+                foreach (var referencedBy in table.ReferencedBy)
+                    code.AppendLine("\t\tprivate readonly EntitySet<" + referencedBy.ReferenceTable.ClassName + "> _Associated" + referencedBy.ReferenceTable.ClassName + " = new EntitySet<" + referencedBy.ReferenceTable.ClassName + ">();");
+
                 code.AppendLine();
 
                 //foreach (var column in table.Columns.Where(column => column.Value.MaxLength > 0 && column.Value.ManagedType.Equals(typeof(string))))
@@ -73,12 +79,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 {
                     GenerateXmlDoc(code, 2, "Gets or sets the value of " + column.Value.Name);
 
-                    code.Append("\t\t[Column(Name = \"" + column.Value.DisplayName + "\"");
+                    code.Append("\t\t[Column(Name = \"" + column.Value.Name + "\"");
                     if (column.Value.IsPrimaryKey)
                         code.Append(", IsPrimaryKey = true");
                     if (column.Value.AutoIncrement.HasValue)
                         code.Append(", IsDbGenerated = true");
-                    code.Append(", CanBeNull = " + column.Value.AllowsNull.ToString().ToLower());
+                    code.Append(", CanBeNull = " + column.Value.AllowsNull.ToString(CultureInfo.InvariantCulture).ToLower());
                     code.Append(")]");
 
                     code.AppendLine();
@@ -104,7 +110,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\t\t#region References");
                 code.AppendLine();
 
-                foreach (var foreignKeyConstraint in table.ForeignKeyConstraints)
+                foreach (var foreignKeyConstraint in table.References)
                 {
                     code.AppendLine("\t\t[Association(ThisKey = \"" + foreignKeyConstraint.Column.FieldName +
                                     "\", OtherKey = \"" + foreignKeyConstraint.ReferenceColumn.FieldName +
@@ -128,6 +134,19 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     code.AppendLine("\t\t\t\tif (PropertyChanged != null)");
                     code.AppendLine("\t\t\t\t\tPropertyChanged.Invoke(this, new PropertyChangedEventArgs(\"" + foreignKeyConstraint.ReferenceColumn.FieldName + "\"));");
                     code.AppendLine("\t\t\t}");
+                    code.AppendLine("\t\t}");
+                    code.AppendLine();
+                }
+
+                foreach (var foreignKeyConstraint in table.ReferencedBy)
+                {
+                    code.AppendLine("\t\t[Association(ThisKey = \"" + table.PrimaryKeyColumnName +
+                                    "\", OtherKey = \"" + foreignKeyConstraint.ReferenceColumn.Name +
+                                    "\", Storage = \"_Associated" + foreignKeyConstraint.ReferenceTable.ClassName + "\")]");
+                    code.AppendLine("\t\tpublic EntitySet<" + foreignKeyConstraint.ReferenceTable.ClassName + "> Associated" + foreignKeyConstraint.ReferenceTable.ClassName);
+                    code.AppendLine("\t\t{");
+                    code.AppendLine("\t\t\tget { return _Associated" + foreignKeyConstraint.ReferenceTable.ClassName + "; }");
+                    code.AppendLine("\t\t\tset { _Associated" + foreignKeyConstraint.ReferenceTable.ClassName + ".Assign(value); }");
                     code.AppendLine("\t\t}");
                     code.AppendLine();
                 }
