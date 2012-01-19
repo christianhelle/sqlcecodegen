@@ -156,6 +156,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
                 code.AppendLine("\t}");
                 code.AppendLine("}");
+                code.AppendLine();
 
                 AppendCode(table.DisplayName, code);
             }
