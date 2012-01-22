@@ -84,7 +84,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 Directory.CreateDirectory(appData);
             var newFile = file.CopyTo(Path.Combine(appData, file.Name), true);
 
-            var newConnString = new SqlConnectionStringBuilder(ConnectionString) {DataSource = newFile.FullName};
+            var newConnString = new SqlConnectionStringBuilder(ConnectionString) { DataSource = newFile.FullName };
 
             var firstIdx = newConnString.ToString().IndexOf("\"", 0, StringComparison.Ordinal);
             var lastIdx = newConnString.ToString().LastIndexOf("\"", StringComparison.Ordinal);
@@ -268,7 +268,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     {
                         table.PrimaryKeyColumnName = primaryKeyColumnName;
                         if (primaryKeyColumnName.Contains(" "))
+                        {
                             table.PrimaryKeyColumnName = string.Format("[{0}]", primaryKeyColumnName);
+                            table.PrimaryKeyColumnFieldName = primaryKeyColumnName.Replace(" ", string.Empty);
+                            table.PrimaryKeyColumnDisplayName = primaryKeyColumnName;
+                        }
                         if (table.Columns.ContainsKey(table.PrimaryKeyColumnName))
                             table.Columns[table.PrimaryKeyColumnName].IsPrimaryKey = true;
                     }
