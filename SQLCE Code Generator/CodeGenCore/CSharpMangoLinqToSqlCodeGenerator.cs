@@ -34,9 +34,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine();
 
                 GenerateXmlDoc(code, 1, "Represents the " + table.DisplayName + " table in the database");
-                code.AppendLine("\t[Table]");
+                code.AppendLine("\t[Table(Name = \"" + table.DisplayName + "\")]");
                 foreach (var index in table.Indexes)
-                    code.AppendLine("\t[Index(Columns = \"" + index.Column.Name + "\", IsUnique = " + index.Unique.ToString(CultureInfo.InvariantCulture).ToLower() + ", Name = \"" + index.Name + "\")]");
+                    code.AppendLine("\t[Index(Columns = \"" + index.Column.FieldName + "\", IsUnique = " + index.Unique.ToString(CultureInfo.InvariantCulture).ToLower() + ", Name = \"" + index.Name + "\")]");
                 code.AppendLine("\tpublic partial class " + table.ClassName + " : INotifyPropertyChanged, INotifyPropertyChanging");
                 code.AppendLine("\t{");
 
@@ -47,7 +47,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     code.AppendLine("\t\tprivate EntityRef<" + reference.ReferenceTable.ClassName + "> _" + reference.ReferenceTable.ClassName + ";");
 
                 foreach (var referencedBy in table.ReferencedBy)
-                    code.AppendLine("\t\tprivate readonly EntitySet<" + referencedBy.ReferenceTable.ClassName + "> _Associated" + referencedBy.ReferenceTable.ClassName + " = new EntitySet<" + referencedBy.ReferenceTable.ClassName + ">();");
+                    code.AppendLine("\t\tprivate readonly EntitySet<" + referencedBy.ReferenceTable.ClassName + "> _Associated" + referencedBy.ReferenceTable.ClassName + ";");
 
                 code.AppendLine();
 
@@ -58,11 +58,18 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 //    code.AppendLine();
                 //}
 
-                code.AppendLine("\t\t#pragma warning disable");
-                code.AppendLine("\t\t[Column(IsVersion = true)]");
-                code.AppendLine("\t\tinternal Binary Version;");
-                code.AppendLine("\t\t#pragma warning restore");
-                code.AppendLine();
+                //code.AppendLine("\t\t#pragma warning disable");
+                //code.AppendLine("\t\t[Column(IsVersion = true)]");
+                //code.AppendLine("\t\tinternal Binary Version;");
+                //code.AppendLine("\t\t#pragma warning restore");
+                //code.AppendLine();
+
+                GenerateXmlDoc(code, 2, "Creates an instance of " + table.ClassName);
+                code.AppendLine("\t\tpublic " + table.ClassName + "()");
+                code.AppendLine("\t\t{");
+                foreach (var referencedBy in table.ReferencedBy)
+                    code.AppendLine("\t\t\t_Associated" + referencedBy.ReferenceTable.ClassName + " = new EntitySet<" + referencedBy.ReferenceTable.ClassName + ">();");
+                code.AppendLine("\t\t}");
 
                 GenerateXmlDoc(code, 2, "Notifies clients that a property value is changing.");
                 code.AppendLine("\t\tpublic event PropertyChangingEventHandler PropertyChanging;");
@@ -140,8 +147,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
                 foreach (var foreignKeyConstraint in table.ReferencedBy)
                 {
-                    code.AppendLine("\t\t[Association(ThisKey = \"" + table.PrimaryKeyColumnName +
-                                    "\", OtherKey = \"" + foreignKeyConstraint.ReferenceColumn.Name +
+                    code.AppendLine("\t\t[Association(ThisKey = \"" + table.PrimaryKeyColumnFieldName +
+                                    "\", OtherKey = \"" + foreignKeyConstraint.ReferenceColumn.FieldName +
                                     "\", Storage = \"_Associated" + foreignKeyConstraint.ReferenceTable.ClassName + "\")]");
                     code.AppendLine("\t\tpublic EntitySet<" + foreignKeyConstraint.ReferenceTable.ClassName + "> Associated" + foreignKeyConstraint.ReferenceTable.ClassName);
                     code.AppendLine("\t\t{");

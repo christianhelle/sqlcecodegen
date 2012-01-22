@@ -21,6 +21,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public List<ForeignKeyConstraint> References { get; set; }
         public List<ForeignKeyConstraint> ReferencedBy { get; set; }
         public string PrimaryKeyColumnName { get; set; }
+        public string PrimaryKeyColumnFieldName { get; set; }
+        public string PrimaryKeyColumnDisplayName { get; set; }
 
         public override string ToString()
         {
