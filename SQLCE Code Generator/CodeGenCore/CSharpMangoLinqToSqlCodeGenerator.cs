@@ -84,9 +84,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
                 foreach (var column in table.Columns)
                 {
-                    GenerateXmlDoc(code, 2, "Gets or sets the value of " + column.Value.Name);
+                    GenerateXmlDoc(code, 2, "Gets or sets the value of " + column.Value.DisplayName);
 
-                    code.Append("\t\t[Column(Name = \"" + column.Value.Name + "\"");
+                    code.Append("\t\t[Column(Name = \"" + column.Value.DisplayName + "\"");
                     if (column.Value.IsPrimaryKey)
                         code.Append(", IsPrimaryKey = true");
                     if (column.Value.AutoIncrement.HasValue)
