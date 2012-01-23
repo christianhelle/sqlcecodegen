@@ -42,7 +42,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
                               out pcbOutput,
                               pGenerateProgress);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 var codeGen = new SQLCECodeGenerator();
                 codeGen.Generate(wszInputFilePath, bstrInputFileContents, wszDefaultNamespace, out rgbOutputFileContents,

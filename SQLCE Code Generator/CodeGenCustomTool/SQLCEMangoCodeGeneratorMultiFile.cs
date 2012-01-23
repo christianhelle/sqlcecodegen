@@ -41,7 +41,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
                               out pcbOutput,
                               pGenerateProgress);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 var codeGen = new SQLCEMangoCodeGenerator();
                 codeGen.Generate(wszInputFilePath, bstrInputFileContents, wszDefaultNamespace, out rgbOutputFileContents,
@@ -68,7 +68,7 @@ using (var dataContext = new TestDatabaseDataContext())
 {
     var contact = new Contact
     {
-    Name = ""Christian Helle"",
+        Name = ""Christian Helle"",
         Address = ""Somewhere"",
         City = ""Over"",
         PostalCode = ""The"",
