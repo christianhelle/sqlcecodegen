@@ -236,13 +236,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     table.Indexes = new List<Index>(dataTable.Rows.Count);
                     foreach (DataRow row in dataTable.Rows)
                     {
-                        var indexName = row.Field<string>("INDEX_NAME");
-                        if (indexName.Contains(" "))
-                            indexName = string.Format("[{0}]", indexName);
+                        //var indexName = row.Field<string>("INDEX_NAME");
+                        //if (indexName.Contains(" "))
+                        //    indexName = string.Format("[{0}]", indexName);
 
                         var index = new Index
                         {
-                            Name = indexName,
+                            Name = row.Field<string>("INDEX_NAME"),
                             Unique = row.Field<bool>("UNIQUE"),
                             Clustered = row.Field<bool>("CLUSTERED"),
                             Column = table.Columns.Values.FirstOrDefault(c => c.DisplayName == row.Field<string>("COLUMN_NAME"))
