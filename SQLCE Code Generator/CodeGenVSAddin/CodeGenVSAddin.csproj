@@ -12,10 +12,14 @@
     <NoStandardLibraries>false</NoStandardLibraries>
     <AssemblyName>CodeGenVSAddin</AssemblyName>
     <RootNamespace>ChristianHelle.DatabaseTools.SqlCe.VisualStudio.Addin</RootNamespace>
-    <SccProjectName>SAK</SccProjectName>
-    <SccLocalPath>SAK</SccLocalPath>
-    <SccAuxPath>SAK</SccAuxPath>
-    <SccProvider>SAK</SccProvider>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>CodeGenVSAddin.snk</AssemblyOriginatorKeyFile>

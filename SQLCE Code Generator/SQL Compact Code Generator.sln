@@ -90,40 +90,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Visual Studio", "Visual Stu
 	EndProjectSection
 EndProject
 Global
-	GlobalSection(TeamFoundationVersionControl) = preSolution
-		SccNumberOfProjects = 8
-		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
-		SccTeamFoundationServer = https://tfs.codeplex.com/tfs/tfs02
-		SccLocalPath0 = .
-		SccProjectUniqueName1 = CodeGenCore\\CodeGenCore.csproj
-		SccProjectTopLevelParentUniqueName1 = SQL\u0020Compact\u0020Code\u0020Generator.sln
-		SccProjectName1 = CodeGenCore
-		SccLocalPath1 = CodeGenCore
-		SccProjectUniqueName2 = CodeGenCustomTool\\CodeGenCustomTool.csproj
-		SccProjectTopLevelParentUniqueName2 = SQL\u0020Compact\u0020Code\u0020Generator.sln
-		SccProjectName2 = CodeGenCustomTool
-		SccLocalPath2 = CodeGenCustomTool
-		SccProjectUniqueName3 = CodeGenInstaller\\CodeGenInstaller.vdproj
-		SccProjectTopLevelParentUniqueName3 = SQL\u0020Compact\u0020Code\u0020Generator.sln
-		SccProjectName3 = CodeGenInstaller
-		SccLocalPath3 = CodeGenInstaller
-		SccProjectUniqueName4 = CodeGenCore.UnitTest\\CodeGenCore.UnitTest.csproj
-		SccProjectTopLevelParentUniqueName4 = SQL\u0020Compact\u0020Code\u0020Generator.sln
-		SccProjectName4 = CodeGenCore.UnitTest
-		SccLocalPath4 = CodeGenCore.UnitTest
-		SccProjectUniqueName5 = CodeGenGUI\\CodeGenGUI.csproj
-		SccProjectTopLevelParentUniqueName5 = SQL\u0020Compact\u0020Code\u0020Generator.sln
-		SccProjectName5 = CodeGenGUI
-		SccLocalPath5 = CodeGenGUI
-		SccProjectUniqueName6 = CodeGenVSAddin\\CodeGenVSAddin.csproj
-		SccProjectTopLevelParentUniqueName6 = SQL\u0020Compact\u0020Code\u0020Generator.sln
-		SccProjectName6 = CodeGenVSAddin
-		SccLocalPath6 = CodeGenVSAddin
-		SccProjectUniqueName7 = CodeGenWPF\\CodeGenWPF.csproj
-		SccProjectTopLevelParentUniqueName7 = SQL\u0020Compact\u0020Code\u0020Generator.sln
-		SccProjectName7 = CodeGenWPF
-		SccLocalPath7 = CodeGenWPF
-	EndGlobalSection
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = SQLCE Code Generator.vsmdi
 	EndGlobalSection
