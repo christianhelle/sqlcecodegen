@@ -24,6 +24,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         private const string XUNIT = "xUnit";
         private const string NETCF = "NETCF";
         private const string WP7 = "Mango";
+        private const string LINQTOSQL = "LinqToSql";
 
         private string dataSource;
         private SqlCeDatabase database;
@@ -272,7 +273,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
         private string GeneratedMockDataAccessCode(CodeGenerator codeGenerator)
         {
-            if (!Convert.ToBoolean(Settings.Default.GenerateDataAccessUnitTests))
+            if (!Convert.ToBoolean(Settings.Default.GenerateDataAccessUnitTests) || Settings.Default.Target == LINQTOSQL)
                 return null;
 
             WriteToOutputWindow("Generating Mock Data Access Code");
@@ -291,7 +292,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
         private string GenerateDataAccessUnitTestsCode(CodeGenerator codeGenerator)
         {
-            if (!Convert.ToBoolean(Settings.Default.GenerateDataAccessUnitTests))
+            if (!Convert.ToBoolean(Settings.Default.GenerateDataAccessUnitTests) || Settings.Default.Target == LINQTOSQL)
                 return null;
 
             WriteToOutputWindow("Generating Data Access Unit Tests Code");
@@ -311,7 +312,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
         private string GenerateEntityUnitTestsCode(CodeGenerator codeGenerator)
         {
-            if (!Convert.ToBoolean(Settings.Default.GenerateEntityUnitTests))
+            if (!Convert.ToBoolean(Settings.Default.GenerateEntityUnitTests) || Settings.Default.Target == LINQTOSQL)
                 return null;
 
             WriteToOutputWindow("Generating Entity Unit Tests Code");
@@ -368,6 +369,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             try
             {
                 database = new SqlCeDatabase(generatedNamespace, connectionString);
+                database.DatabaseFilename = dataSource;
             }
             catch (SqlCeException e)
             {
@@ -1039,26 +1041,46 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                 case NETCF:
                     nETCompactFrameworkCompatibleToolStripMenuItem.Checked = true;
                     windowsPhone7MangoToolStripMenuItem.Checked = false;
+                    lINQToSQLDataContextToolStripMenuItem.Checked = false;
                     if (!tabGeneratedCode.TabPages.Contains(tabPageEntityUnitTests))
                         tabGeneratedCode.TabPages.Add(tabPageEntityUnitTests);
                     if (!tabGeneratedCode.TabPages.Contains(tabPageDataAccessUnitTests))
                         tabGeneratedCode.TabPages.Add(tabPageDataAccessUnitTests);
                     if (!tabGeneratedCode.TabPages.Contains(tabMockDataAccessCode))
                         tabGeneratedCode.TabPages.Add(tabMockDataAccessCode);
+                    if (!tabGeneratedCode.TabPages.Contains(tabPageEntities))
+                        tabGeneratedCode.TabPages.Add(tabPageEntities);
                     break;
                 case WP7:
                     nETCompactFrameworkCompatibleToolStripMenuItem.Checked = false;
                     windowsPhone7MangoToolStripMenuItem.Checked = true;
+                    lINQToSQLDataContextToolStripMenuItem.Checked = false;
                     if (tabGeneratedCode.TabPages.Contains(tabPageEntityUnitTests))
                         tabGeneratedCode.TabPages.Remove(tabPageEntityUnitTests);
                     if (tabGeneratedCode.TabPages.Contains(tabPageDataAccessUnitTests))
                         tabGeneratedCode.TabPages.Remove(tabPageDataAccessUnitTests);
                     if (tabGeneratedCode.TabPages.Contains(tabMockDataAccessCode))
                         tabGeneratedCode.TabPages.Remove(tabMockDataAccessCode);
+                    if (!tabGeneratedCode.TabPages.Contains(tabPageEntities))
+                        tabGeneratedCode.TabPages.Add(tabPageEntities);
+                    break;
+                case LINQTOSQL:
+                    nETCompactFrameworkCompatibleToolStripMenuItem.Checked = false;
+                    windowsPhone7MangoToolStripMenuItem.Checked = false;
+                    lINQToSQLDataContextToolStripMenuItem.Checked = true;
+                    if (tabGeneratedCode.TabPages.Contains(tabPageEntityUnitTests))
+                        tabGeneratedCode.TabPages.Remove(tabPageEntityUnitTests);
+                    if (tabGeneratedCode.TabPages.Contains(tabPageDataAccessUnitTests))
+                        tabGeneratedCode.TabPages.Remove(tabPageDataAccessUnitTests);
+                    if (tabGeneratedCode.TabPages.Contains(tabMockDataAccessCode))
+                        tabGeneratedCode.TabPages.Remove(tabMockDataAccessCode);
+                    if (tabGeneratedCode.TabPages.Contains(tabPageEntities))
+                        tabGeneratedCode.TabPages.Remove(tabPageEntities);
                     break;
                 default:
                     nETCompactFrameworkCompatibleToolStripMenuItem.Checked = true;
                     windowsPhone7MangoToolStripMenuItem.Checked = false;
+                    lINQToSQLDataContextToolStripMenuItem.Checked = false;
                     if (!tabGeneratedCode.TabPages.Contains(tabPageEntityUnitTests))
                         tabGeneratedCode.TabPages.Add(tabPageEntityUnitTests);
                     if (!tabGeneratedCode.TabPages.Contains(tabPageDataAccessUnitTests))
@@ -1156,6 +1178,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             {
                 nETCompactFrameworkCompatibleToolStripMenuItem.Checked = true;
                 windowsPhone7MangoToolStripMenuItem.Checked = false;
+                lINQToSQLDataContextToolStripMenuItem.Checked = false;
                 Settings.Default.Target = NETCF;
                 Settings.Default.Save();
                 LoadSettings();
@@ -1170,7 +1193,23 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             {
                 nETCompactFrameworkCompatibleToolStripMenuItem.Checked = false;
                 windowsPhone7MangoToolStripMenuItem.Checked = true;
+                lINQToSQLDataContextToolStripMenuItem.Checked = false;
                 Settings.Default.Target = WP7;
+                Settings.Default.Save();
+                LoadSettings();
+
+                PromptToRegenerateCode();
+            });
+        }
+
+        private void lINQToSQLDataContextToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SafeOperation(() =>
+            {
+                nETCompactFrameworkCompatibleToolStripMenuItem.Checked = false;
+                windowsPhone7MangoToolStripMenuItem.Checked = false;
+                lINQToSQLDataContextToolStripMenuItem.Checked = true;
+                Settings.Default.Target = LINQTOSQL;
                 Settings.Default.Save();
                 LoadSettings();
 

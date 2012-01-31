@@ -77,12 +77,12 @@
             this.rtbGeneratedCodeEntities = new ICSharpCode.TextEditor.TextEditorControl();
             this.tabPageDataAccess = new System.Windows.Forms.TabPage();
             this.rtbGeneratedCodeDataAccess = new ICSharpCode.TextEditor.TextEditorControl();
+            this.tabMockDataAccessCode = new System.Windows.Forms.TabPage();
+            this.rtbGeneratedMockDataAccessCode = new ICSharpCode.TextEditor.TextEditorControl();
             this.tabPageEntityUnitTests = new System.Windows.Forms.TabPage();
             this.rtbGeneratedCodeEntityUnitTests = new ICSharpCode.TextEditor.TextEditorControl();
             this.tabPageDataAccessUnitTests = new System.Windows.Forms.TabPage();
             this.rtbGeneratedCodeDataAccessUnitTests = new ICSharpCode.TextEditor.TextEditorControl();
-            this.tabMockDataAccessCode = new System.Windows.Forms.TabPage();
-            this.rtbGeneratedMockDataAccessCode = new ICSharpCode.TextEditor.TextEditorControl();
             this.tabOutput = new System.Windows.Forms.TabControl();
             this.tabPageOutput = new System.Windows.Forms.TabPage();
             this.rtbOutput = new System.Windows.Forms.TextBox();
@@ -92,6 +92,7 @@
             this.rtbCompilerOutput = new System.Windows.Forms.TextBox();
             this.tabPageTestResults = new System.Windows.Forms.TabPage();
             this.rtbUnitTestOutput = new System.Windows.Forms.TextBox();
+            this.lINQToSQLDataContextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -102,9 +103,9 @@
             this.tabGeneratedCode.SuspendLayout();
             this.tabPageEntities.SuspendLayout();
             this.tabPageDataAccess.SuspendLayout();
+            this.tabMockDataAccessCode.SuspendLayout();
             this.tabPageEntityUnitTests.SuspendLayout();
             this.tabPageDataAccessUnitTests.SuspendLayout();
-            this.tabMockDataAccessCode.SuspendLayout();
             this.tabOutput.SuspendLayout();
             this.tabPageOutput.SuspendLayout();
             this.tabTableData.SuspendLayout();
@@ -389,7 +390,8 @@
             // 
             this.targetToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.nETCompactFrameworkCompatibleToolStripMenuItem,
-            this.windowsPhone7MangoToolStripMenuItem});
+            this.windowsPhone7MangoToolStripMenuItem,
+            this.lINQToSQLDataContextToolStripMenuItem});
             this.targetToolStripMenuItem.Name = "targetToolStripMenuItem";
             this.targetToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
             this.targetToolStripMenuItem.Text = "Target";
@@ -554,6 +556,28 @@
             this.rtbGeneratedCodeDataAccess.Size = new System.Drawing.Size(564, 369);
             this.rtbGeneratedCodeDataAccess.TabIndex = 3;
             // 
+            // tabMockDataAccessCode
+            // 
+            this.tabMockDataAccessCode.Controls.Add(this.rtbGeneratedMockDataAccessCode);
+            this.tabMockDataAccessCode.Location = new System.Drawing.Point(4, 22);
+            this.tabMockDataAccessCode.Name = "tabMockDataAccessCode";
+            this.tabMockDataAccessCode.Padding = new System.Windows.Forms.Padding(3);
+            this.tabMockDataAccessCode.Size = new System.Drawing.Size(570, 375);
+            this.tabMockDataAccessCode.TabIndex = 4;
+            this.tabMockDataAccessCode.Text = "Mock Data Access Code";
+            this.tabMockDataAccessCode.UseVisualStyleBackColor = true;
+            // 
+            // rtbGeneratedMockDataAccessCode
+            // 
+            this.rtbGeneratedMockDataAccessCode.AllowDrop = true;
+            this.rtbGeneratedMockDataAccessCode.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.rtbGeneratedMockDataAccessCode.IsReadOnly = false;
+            this.rtbGeneratedMockDataAccessCode.Location = new System.Drawing.Point(3, 3);
+            this.rtbGeneratedMockDataAccessCode.Name = "rtbGeneratedMockDataAccessCode";
+            this.rtbGeneratedMockDataAccessCode.ShowVRuler = false;
+            this.rtbGeneratedMockDataAccessCode.Size = new System.Drawing.Size(564, 369);
+            this.rtbGeneratedMockDataAccessCode.TabIndex = 5;
+            // 
             // tabPageEntityUnitTests
             // 
             this.tabPageEntityUnitTests.Controls.Add(this.rtbGeneratedCodeEntityUnitTests);
@@ -597,28 +621,6 @@
             this.rtbGeneratedCodeDataAccessUnitTests.ShowVRuler = false;
             this.rtbGeneratedCodeDataAccessUnitTests.Size = new System.Drawing.Size(564, 369);
             this.rtbGeneratedCodeDataAccessUnitTests.TabIndex = 4;
-            // 
-            // tabMockDataAccessCode
-            // 
-            this.tabMockDataAccessCode.Controls.Add(this.rtbGeneratedMockDataAccessCode);
-            this.tabMockDataAccessCode.Location = new System.Drawing.Point(4, 22);
-            this.tabMockDataAccessCode.Name = "tabMockDataAccessCode";
-            this.tabMockDataAccessCode.Padding = new System.Windows.Forms.Padding(3);
-            this.tabMockDataAccessCode.Size = new System.Drawing.Size(570, 375);
-            this.tabMockDataAccessCode.TabIndex = 4;
-            this.tabMockDataAccessCode.Text = "Mock Data Access Code";
-            this.tabMockDataAccessCode.UseVisualStyleBackColor = true;
-            // 
-            // rtbGeneratedMockDataAccessCode
-            // 
-            this.rtbGeneratedMockDataAccessCode.AllowDrop = true;
-            this.rtbGeneratedMockDataAccessCode.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rtbGeneratedMockDataAccessCode.IsReadOnly = false;
-            this.rtbGeneratedMockDataAccessCode.Location = new System.Drawing.Point(3, 3);
-            this.rtbGeneratedMockDataAccessCode.Name = "rtbGeneratedMockDataAccessCode";
-            this.rtbGeneratedMockDataAccessCode.ShowVRuler = false;
-            this.rtbGeneratedMockDataAccessCode.Size = new System.Drawing.Size(564, 369);
-            this.rtbGeneratedMockDataAccessCode.TabIndex = 5;
             // 
             // tabOutput
             // 
@@ -732,6 +734,13 @@
             this.rtbUnitTestOutput.Size = new System.Drawing.Size(770, 79);
             this.rtbUnitTestOutput.TabIndex = 0;
             // 
+            // lINQToSQLDataContextToolStripMenuItem
+            // 
+            this.lINQToSQLDataContextToolStripMenuItem.Name = "lINQToSQLDataContextToolStripMenuItem";
+            this.lINQToSQLDataContextToolStripMenuItem.Size = new System.Drawing.Size(278, 22);
+            this.lINQToSQLDataContextToolStripMenuItem.Text = "LINQ to SQL Data Context";
+            this.lINQToSQLDataContextToolStripMenuItem.Click += new System.EventHandler(this.lINQToSQLDataContextToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AllowDrop = true;
@@ -760,9 +769,9 @@
             this.tabGeneratedCode.ResumeLayout(false);
             this.tabPageEntities.ResumeLayout(false);
             this.tabPageDataAccess.ResumeLayout(false);
+            this.tabMockDataAccessCode.ResumeLayout(false);
             this.tabPageEntityUnitTests.ResumeLayout(false);
             this.tabPageDataAccessUnitTests.ResumeLayout(false);
-            this.tabMockDataAccessCode.ResumeLayout(false);
             this.tabOutput.ResumeLayout(false);
             this.tabPageOutput.ResumeLayout(false);
             this.tabPageOutput.PerformLayout();
@@ -841,6 +850,7 @@
         private System.Windows.Forms.ToolStripMenuItem windowsPhone7MangoToolStripMenuItem;
         private System.Windows.Forms.TabPage tabMockDataAccessCode;
         private ICSharpCode.TextEditor.TextEditorControl rtbGeneratedMockDataAccessCode;
+        private System.Windows.Forms.ToolStripMenuItem lINQToSQLDataContextToolStripMenuItem;
 
     }
 }
