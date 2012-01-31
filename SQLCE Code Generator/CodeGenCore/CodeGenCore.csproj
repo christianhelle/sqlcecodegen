@@ -94,6 +94,7 @@
     <Compile Include="CSharpMangoLinqToSqlCodeGenerator.cs" />
     <Compile Include="CSharpMangoLinqToSqlDataAccessLayerGenerator.cs" />
     <Compile Include="CSharpMangoMockDataAccessLayerCodeGenerator.cs" />
+    <Compile Include="CSharpMangoSqlMetalCodeGenerator.cs" />
     <Compile Include="CSharpMockDataAccessLayerCodeGenerator.cs" />
     <Compile Include="DataAccessLayerGenerator.cs" />
     <Compile Include="MSTestUnitTestCodeGenerator.cs" />

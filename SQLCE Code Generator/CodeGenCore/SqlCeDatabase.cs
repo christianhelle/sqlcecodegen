@@ -125,6 +125,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public string Namespace { get; set; }
         public List<Table> Tables { get; set; }
         public string ConnectionString { get; set; }
+        public string DatabaseFilename { get; set; }
 
         public void AnalyzeDatabase()
         {

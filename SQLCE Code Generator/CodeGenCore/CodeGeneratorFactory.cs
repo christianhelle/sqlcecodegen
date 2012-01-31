@@ -1,4 +1,5 @@
 using System;
+
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
     public class CodeGeneratorFactory
@@ -17,20 +18,22 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         public static CodeGenerator Create(SqlCeDatabase database, string language, string target = null)
         {
-            if (string.Compare(language, "C#", true) == 0 ||
-                string.Compare(language, "CSharp", true) == 0 ||
-                string.Compare(language, "CS", true) == 0)
+            if (String.Compare(language, "C#", StringComparison.OrdinalIgnoreCase) == 0 ||
+                String.Compare(language, "CSharp", StringComparison.OrdinalIgnoreCase) == 0 ||
+                String.Compare(language, "CS", StringComparison.OrdinalIgnoreCase) == 0)
             {
                 if (!string.IsNullOrEmpty(target) && target == "Mango")
                     return new CSharpMangoLinqToSqlCodeGenerator(database);
+                if (!string.IsNullOrEmpty(target) && target == "LinqToSql")
+                    return new CSharpMangoSqlMetalCodeGenerator(database);
 
                 return new CSharpCodeGenerator(database);
             }
 
-            if (string.Compare(language, "VB.NET", true) == 0 ||
-                string.Compare(language, "Visual Basic", true) == 0 ||
-                string.Compare(language, "VisualBasic", true) == 0 ||
-                string.Compare(language, "VB", true) == 0)
+            if (String.Compare(language, "VB.NET", StringComparison.OrdinalIgnoreCase) == 0 ||
+                String.Compare(language, "Visual Basic", StringComparison.OrdinalIgnoreCase) == 0 ||
+                String.Compare(language, "VisualBasic", StringComparison.OrdinalIgnoreCase) == 0 ||
+                String.Compare(language, "VB", StringComparison.OrdinalIgnoreCase) == 0)
             {
                 if (!string.IsNullOrEmpty(target) && target == "Mango")
                     throw new NotSupportedException("Visual Basic Code Generation for Windows Phone \"Mango\" is not supported");
@@ -43,7 +46,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         public static CodeGenerator Create<T>(SqlCeDatabase database) where T : CodeGenerator
         {
-            return Activator.CreateInstance(typeof(T), database) as T;
+            return Activator.CreateInstance(typeof (T), database) as T;
         }
 
         public CodeGenerator Create()
