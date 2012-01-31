@@ -133,6 +133,7 @@
     <Compile Include="SQLCEMSTestCodeGenerator.cs" />
     <Compile Include="SQLCENUnitCodeGeneratorMultiFile.cs" />
     <Compile Include="SQLCENUnitCodeGenerator.cs" />
+    <Compile Include="SQLCESqlMetalMangoCodeGenerator.cs" />
     <Compile Include="SQLCEXUnitCodeGeneratorMultiFile.cs" />
     <Compile Include="SQLCEXUnitCodeGenerator.cs" />
     <Compile Include="VsHelper.cs" />

@@ -44,6 +44,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
                                          fi.Name.Replace(fi.Extension, string.Empty).Replace(" ", string.Empty);
                 var connectionString = GetConnectionString(inputFileName, password);
                 var database = new SqlCeDatabase(generatedNamespace, connectionString);
+                database.DatabaseFilename = inputFileName;
                 database.Verify();
                 database.AnalyzeDatabase();
                 return database;
