@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Database Tables");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Database Tables");
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -64,6 +64,7 @@
             this.targetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nETCompactFrameworkCompatibleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.windowsPhone7MangoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lINQToSQLDataContextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
@@ -92,7 +93,6 @@
             this.rtbCompilerOutput = new System.Windows.Forms.TextBox();
             this.tabPageTestResults = new System.Windows.Forms.TabPage();
             this.rtbUnitTestOutput = new System.Windows.Forms.TextBox();
-            this.lINQToSQLDataContextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -148,9 +148,9 @@
             this.newToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
             this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.newToolStripMenuItem.Text = "&New";
-            this.newToolStripMenuItem.Click += new System.EventHandler(this.newToolStripMenuItem_Click);
+            this.newToolStripMenuItem.Click += new System.EventHandler(this.NewToolStripMenuItemClick);
             // 
             // openToolStripMenuItem
             // 
@@ -160,7 +160,7 @@
             this.openToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
             this.openToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.openToolStripMenuItem.Text = "&Open";
-            this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            this.openToolStripMenuItem.Click += new System.EventHandler(this.OpenToolStripMenuItemClick);
             // 
             // toolStripSeparator
             // 
@@ -175,14 +175,14 @@
             this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
             this.saveToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.saveToolStripMenuItem.Text = "&Save";
-            this.saveToolStripMenuItem.Click += new System.EventHandler(this.saveToolStripMenuItem_Click);
+            this.saveToolStripMenuItem.Click += new System.EventHandler(this.SaveToolStripMenuItemClick);
             // 
             // saveAsToolStripMenuItem
             // 
             this.saveAsToolStripMenuItem.Name = "saveAsToolStripMenuItem";
             this.saveAsToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.saveAsToolStripMenuItem.Text = "Save &As";
-            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.saveAsToolStripMenuItem_Click);
+            this.saveAsToolStripMenuItem.Click += new System.EventHandler(this.SaveAsToolStripMenuItemClick);
             // 
             // toolStripSeparator1
             // 
@@ -194,7 +194,7 @@
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
             this.exitToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.ExitToolStripMenuItemClick);
             // 
             // editToolStripMenuItem
             // 
@@ -217,7 +217,7 @@
             this.undoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
             this.undoToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.undoToolStripMenuItem.Text = "&Undo";
-            this.undoToolStripMenuItem.Click += new System.EventHandler(this.undoToolStripMenuItem_Click);
+            this.undoToolStripMenuItem.Click += new System.EventHandler(this.UndoToolStripMenuItemClick);
             // 
             // redoToolStripMenuItem
             // 
@@ -225,7 +225,7 @@
             this.redoToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Y)));
             this.redoToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.redoToolStripMenuItem.Text = "&Redo";
-            this.redoToolStripMenuItem.Click += new System.EventHandler(this.redoToolStripMenuItem_Click);
+            this.redoToolStripMenuItem.Click += new System.EventHandler(this.RedoToolStripMenuItemClick);
             // 
             // toolStripSeparator3
             // 
@@ -240,7 +240,7 @@
             this.cutToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
             this.cutToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.cutToolStripMenuItem.Text = "Cu&t";
-            this.cutToolStripMenuItem.Click += new System.EventHandler(this.cutToolStripMenuItem_Click);
+            this.cutToolStripMenuItem.Click += new System.EventHandler(this.CutToolStripMenuItemClick);
             // 
             // copyToolStripMenuItem
             // 
@@ -250,7 +250,7 @@
             this.copyToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
             this.copyToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.copyToolStripMenuItem.Text = "&Copy";
-            this.copyToolStripMenuItem.Click += new System.EventHandler(this.copyToolStripMenuItem_Click);
+            this.copyToolStripMenuItem.Click += new System.EventHandler(this.CopyToolStripMenuItemClick);
             // 
             // pasteToolStripMenuItem
             // 
@@ -260,7 +260,7 @@
             this.pasteToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
             this.pasteToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.pasteToolStripMenuItem.Text = "&Paste";
-            this.pasteToolStripMenuItem.Click += new System.EventHandler(this.pasteToolStripMenuItem_Click);
+            this.pasteToolStripMenuItem.Click += new System.EventHandler(this.PasteToolStripMenuItemClick);
             // 
             // toolStripSeparator4
             // 
@@ -272,7 +272,7 @@
             this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
             this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(144, 22);
             this.selectAllToolStripMenuItem.Text = "Select &All";
-            this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.selectAllToolStripMenuItem_Click);
+            this.selectAllToolStripMenuItem.Click += new System.EventHandler(this.SelectAllToolStripMenuItemClick);
             // 
             // codeToolStripMenuItem
             // 
@@ -290,7 +290,7 @@
             this.buildToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F6;
             this.buildToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.buildToolStripMenuItem.Text = "Build";
-            this.buildToolStripMenuItem.Click += new System.EventHandler(this.compileToolStripMenuItem_Click);
+            this.buildToolStripMenuItem.Click += new System.EventHandler(this.CompileToolStripMenuItemClick);
             // 
             // runUnitTestsToolStripMenuItem
             // 
@@ -298,14 +298,14 @@
             this.runUnitTestsToolStripMenuItem.ShortcutKeys = System.Windows.Forms.Keys.F5;
             this.runUnitTestsToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.runUnitTestsToolStripMenuItem.Text = "Run Unit Tests";
-            this.runUnitTestsToolStripMenuItem.Click += new System.EventHandler(this.runUnitTestsToolStripMenuItem_Click);
+            this.runUnitTestsToolStripMenuItem.Click += new System.EventHandler(this.RunUnitTestsToolStripMenuItemClick);
             // 
             // regenerateCodeToolStripMenuItem
             // 
             this.regenerateCodeToolStripMenuItem.Name = "regenerateCodeToolStripMenuItem";
             this.regenerateCodeToolStripMenuItem.Size = new System.Drawing.Size(169, 22);
             this.regenerateCodeToolStripMenuItem.Text = "Re-generate Code";
-            this.regenerateCodeToolStripMenuItem.Click += new System.EventHandler(this.regenerateCodeToolStripMenuItem_Click);
+            this.regenerateCodeToolStripMenuItem.Click += new System.EventHandler(this.RegenerateCodeToolStripMenuItemClick);
             // 
             // toolsToolStripMenuItem
             // 
@@ -343,21 +343,21 @@
             this.nUnitToolStripMenuItem.Name = "nUnitToolStripMenuItem";
             this.nUnitToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.nUnitToolStripMenuItem.Text = "NUnit";
-            this.nUnitToolStripMenuItem.Click += new System.EventHandler(this.nUnitToolStripMenuItem_Click);
+            this.nUnitToolStripMenuItem.Click += new System.EventHandler(this.NUnitToolStripMenuItemClick);
             // 
             // mSTestToolStripMenuItem
             // 
             this.mSTestToolStripMenuItem.Name = "mSTestToolStripMenuItem";
             this.mSTestToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.mSTestToolStripMenuItem.Text = "MSTest";
-            this.mSTestToolStripMenuItem.Click += new System.EventHandler(this.mSTestToolStripMenuItem_Click);
+            this.mSTestToolStripMenuItem.Click += new System.EventHandler(this.MSTestToolStripMenuItemClick);
             // 
             // xUnitToolStripMenuItem
             // 
             this.xUnitToolStripMenuItem.Name = "xUnitToolStripMenuItem";
             this.xUnitToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
             this.xUnitToolStripMenuItem.Text = "xUnit";
-            this.xUnitToolStripMenuItem.Click += new System.EventHandler(this.xUnitToolStripMenuItem_Click);
+            this.xUnitToolStripMenuItem.Click += new System.EventHandler(this.XUnitToolStripMenuItemClick);
             // 
             // codeGenerationToolStripMenuItem
             // 
@@ -375,7 +375,7 @@
             this.entityUnitTestsToolStripMenuItem.Name = "entityUnitTestsToolStripMenuItem";
             this.entityUnitTestsToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
             this.entityUnitTestsToolStripMenuItem.Text = "Entity Unit Tests";
-            this.entityUnitTestsToolStripMenuItem.Click += new System.EventHandler(this.entityUnitTestsToolStripMenuItem_Click);
+            this.entityUnitTestsToolStripMenuItem.Click += new System.EventHandler(this.EntityUnitTestsToolStripMenuItemClick);
             // 
             // dataAccessUnitTestsToolStripMenuItem
             // 
@@ -384,7 +384,7 @@
             this.dataAccessUnitTestsToolStripMenuItem.Name = "dataAccessUnitTestsToolStripMenuItem";
             this.dataAccessUnitTestsToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
             this.dataAccessUnitTestsToolStripMenuItem.Text = "Data Access Unit Tests";
-            this.dataAccessUnitTestsToolStripMenuItem.Click += new System.EventHandler(this.dataAccessUnitTestsToolStripMenuItem_Click);
+            this.dataAccessUnitTestsToolStripMenuItem.Click += new System.EventHandler(this.DataAccessUnitTestsToolStripMenuItemClick);
             // 
             // targetToolStripMenuItem
             // 
@@ -401,16 +401,24 @@
             this.nETCompactFrameworkCompatibleToolStripMenuItem.Checked = true;
             this.nETCompactFrameworkCompatibleToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.nETCompactFrameworkCompatibleToolStripMenuItem.Name = "nETCompactFrameworkCompatibleToolStripMenuItem";
-            this.nETCompactFrameworkCompatibleToolStripMenuItem.Size = new System.Drawing.Size(278, 22);
+            this.nETCompactFrameworkCompatibleToolStripMenuItem.Size = new System.Drawing.Size(299, 22);
             this.nETCompactFrameworkCompatibleToolStripMenuItem.Text = ".NET Compact Framework Compatible";
-            this.nETCompactFrameworkCompatibleToolStripMenuItem.Click += new System.EventHandler(this.nETCompactFrameworkCompatibleToolStripMenuItem_Click);
+            this.nETCompactFrameworkCompatibleToolStripMenuItem.Click += new System.EventHandler(this.NEtCompactFrameworkCompatibleToolStripMenuItemClick);
             // 
             // windowsPhone7MangoToolStripMenuItem
             // 
             this.windowsPhone7MangoToolStripMenuItem.Name = "windowsPhone7MangoToolStripMenuItem";
-            this.windowsPhone7MangoToolStripMenuItem.Size = new System.Drawing.Size(278, 22);
-            this.windowsPhone7MangoToolStripMenuItem.Text = "Windows Phone 7 \"Mango\"";
-            this.windowsPhone7MangoToolStripMenuItem.Click += new System.EventHandler(this.windowsPhone7MangoToolStripMenuItem_Click);
+            this.windowsPhone7MangoToolStripMenuItem.Size = new System.Drawing.Size(299, 22);
+            this.windowsPhone7MangoToolStripMenuItem.Text = "Windows Phone LINQ to SQL Data Context";
+            this.windowsPhone7MangoToolStripMenuItem.Click += new System.EventHandler(this.WindowsPhone7MangoToolStripMenuItemClick);
+            // 
+            // lINQToSQLDataContextToolStripMenuItem
+            // 
+            this.lINQToSQLDataContextToolStripMenuItem.Name = "lINQToSQLDataContextToolStripMenuItem";
+            this.lINQToSQLDataContextToolStripMenuItem.Size = new System.Drawing.Size(299, 22);
+            this.lINQToSQLDataContextToolStripMenuItem.Text = "LINQ to SQL Data Context";
+            this.lINQToSQLDataContextToolStripMenuItem.Visible = false;
+            this.lINQToSQLDataContextToolStripMenuItem.Click += new System.EventHandler(this.LInqtoSqlDataContextToolStripMenuItemClick);
             // 
             // exportToolStripMenuItem
             // 
@@ -418,7 +426,7 @@
             this.exportToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.E)));
             this.exportToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.exportToolStripMenuItem.Text = "&Export Files";
-            this.exportToolStripMenuItem.Click += new System.EventHandler(this.exportToolStripMenuItem_Click);
+            this.exportToolStripMenuItem.Click += new System.EventHandler(this.ExportToolStripMenuItemClick);
             // 
             // helpToolStripMenuItem
             // 
@@ -439,7 +447,7 @@
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
             this.aboutToolStripMenuItem.Text = "&About...";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.AboutToolStripMenuItemClick);
             // 
             // statusStrip
             // 
@@ -489,13 +497,13 @@
             this.treeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView.Location = new System.Drawing.Point(0, 0);
             this.treeView.Name = "treeView";
-            treeNode1.Name = "nodeTables";
-            treeNode1.Text = "Database Tables";
+            treeNode2.Name = "nodeTables";
+            treeNode2.Text = "Database Tables";
             this.treeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1});
+            treeNode2});
             this.treeView.Size = new System.Drawing.Size(202, 401);
             this.treeView.TabIndex = 0;
-            this.treeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.treeView_AfterSelect);
+            this.treeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeViewAfterSelect);
             // 
             // tabGeneratedCode
             // 
@@ -510,7 +518,7 @@
             this.tabGeneratedCode.SelectedIndex = 0;
             this.tabGeneratedCode.Size = new System.Drawing.Size(578, 401);
             this.tabGeneratedCode.TabIndex = 0;
-            this.tabGeneratedCode.SelectedIndexChanged += new System.EventHandler(this.tabGeneratedCode_SelectedIndexChanged);
+            this.tabGeneratedCode.SelectedIndexChanged += new System.EventHandler(this.TabGeneratedCodeSelectedIndexChanged);
             // 
             // tabPageEntities
             // 
@@ -684,7 +692,7 @@
             this.dataGridView.ReadOnly = true;
             this.dataGridView.Size = new System.Drawing.Size(770, 79);
             this.dataGridView.TabIndex = 0;
-            this.dataGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridView_DataError);
+            this.dataGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.DataGridViewDataError);
             // 
             // tabPageCompilerOutput
             // 
@@ -734,13 +742,6 @@
             this.rtbUnitTestOutput.Size = new System.Drawing.Size(770, 79);
             this.rtbUnitTestOutput.TabIndex = 0;
             // 
-            // lINQToSQLDataContextToolStripMenuItem
-            // 
-            this.lINQToSQLDataContextToolStripMenuItem.Name = "lINQToSQLDataContextToolStripMenuItem";
-            this.lINQToSQLDataContextToolStripMenuItem.Size = new System.Drawing.Size(278, 22);
-            this.lINQToSQLDataContextToolStripMenuItem.Text = "LINQ to SQL Data Context";
-            this.lINQToSQLDataContextToolStripMenuItem.Click += new System.EventHandler(this.lINQToSQLDataContextToolStripMenuItem_Click);
-            // 
             // MainForm
             // 
             this.AllowDrop = true;
@@ -755,9 +756,9 @@
             this.Name = "MainForm";
             this.Text = "SQL Compact Code Generator";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.Load += new System.EventHandler(this.MainForm_Load);
-            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainForm_DragDrop);
-            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainForm_DragEnter);
+            this.Load += new System.EventHandler(this.MainFormLoad);
+            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainFormDragDrop);
+            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainFormDragEnter);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
