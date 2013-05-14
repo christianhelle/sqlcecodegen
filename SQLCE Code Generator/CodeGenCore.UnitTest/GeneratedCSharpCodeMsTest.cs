@@ -64,12 +64,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         public void CustomToolGeneratedCodeCanCompileTest()
         {
             var database = GetDatabase();
-            var generateUnitTestCode = CodeGeneratorCustomTool.GenerateUnitTestCode(database.Namespace, "Northwind.sdf");
+            var generateUnitTestCode = CodeGeneratorCustomTool.GenerateUnitTestCode(database.DefaultNamespace, "Northwind.sdf");
 
             Assert.IsNotNull(generateUnitTestCode);
             Assert.AreNotEqual(0, generateUnitTestCode.Length);
             AssertCSharpCompile(Encoding.Default.GetString(generateUnitTestCode),
-                                Encoding.Default.GetString(CodeGeneratorCustomTool.GenerateCode(database.Namespace, "Northwind.sdf")));
+                                Encoding.Default.GetString(CodeGeneratorCustomTool.GenerateCode(database.DefaultNamespace, "Northwind.sdf")));
         }
     }
 }

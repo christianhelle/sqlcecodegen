@@ -9,7 +9,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
     public class CSharpMangoLinqToSqlCodeGenerator : CodeGenerator
     {
-        public CSharpMangoLinqToSqlCodeGenerator(SqlCeDatabase tableDetails)
+        public CSharpMangoLinqToSqlCodeGenerator(ISqlCeDatabase tableDetails)
             : base(tableDetails)
         {
         }
@@ -25,7 +25,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             {
                 var code = new StringBuilder();
 
-                code.AppendLine("namespace " + Database.Namespace);
+                code.AppendLine("namespace " + Database.DefaultNamespace);
                 code.AppendLine("{");
                 code.AppendLine("\tusing System.Data.Linq;");
                 code.AppendLine("\tusing System.Data.Linq.Mapping;");
@@ -197,7 +197,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             var code = new StringBuilder();
 
-            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("\nnamespace " + Database.DefaultNamespace);
             code.AppendLine("{");
             code.AppendLine("\tusing System.Data.Linq;");
             code.AppendLine();

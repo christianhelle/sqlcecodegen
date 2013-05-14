@@ -143,6 +143,10 @@
       <Project>{CE1B35D2-02CC-4195-A4E6-07FDE2915E99}</Project>
       <Name>CodeGenCore</Name>
     </ProjectReference>
+    <ProjectReference Include="..\SqlCeDatabase\SqlCeDatabase.csproj">
+      <Project>{FEA11D5F-8C5D-4E8A-AD82-579312F47F05}</Project>
+      <Name>SqlCeDatabase</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

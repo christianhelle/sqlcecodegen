@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.IO;
+using System.Threading;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
@@ -6,6 +7,14 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
     [TestClass]
     [DeploymentItem("app.config")]
     [DeploymentItem("Northwind.sdf")]
+    [DeploymentItem("SqlCe40\\SqlCeDatabase.dll", "SqlCe40")]
+    [DeploymentItem("SqlCe40\\SqlCeDatabase40.dll", "SqlCe40")]
+    [DeploymentItem("SqlCe40\\sqlceca40.dll", "SqlCe40")]
+    [DeploymentItem("SqlCe40\\sqlcecompact40.dll", "SqlCe40")]
+    [DeploymentItem("SqlCe40\\sqlceme40.dll", "SqlCe40")]
+    [DeploymentItem("SqlCe40\\sqlceqp40.dll", "SqlCe40")]
+    [DeploymentItem("SqlCe40\\sqlcese40.dll", "SqlCe40")]
+    [DeploymentItem("SqlCe40\\System.Data.SqlServerCe.dll", "SqlCe40")]
     public class SqlCeDatabaseTest
     {
         private readonly string connectionString = "Data Source=Northwind.sdf";
@@ -13,14 +22,14 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         [TestMethod]
         public void AnalyzeDatabaseTest()
         {
-            var target = new SqlCeDatabase(connectionString);
+            var target = SqlCeDatabaseFactory.Create(connectionString);
             target.AnalyzeDatabase();
         }
 
         [TestMethod]
         public void TablesNotNullTest()
         {
-            var target = new SqlCeDatabase(connectionString);
+            var target = SqlCeDatabaseFactory.Create(connectionString);
             target.AnalyzeDatabase();
 
             Assert.IsNotNull(target.Tables);
@@ -30,22 +39,22 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         [TestMethod]
         public void DatabaseConstructorWithConnectionStringTest()
         {
-            var target = new SqlCeDatabase(connectionString);
-            Assert.AreEqual("SqlCeCodeGen", target.Namespace);
+            var target = SqlCeDatabaseFactory.Create(connectionString);
+            Assert.AreEqual("SqlCeCodeGen", target.DefaultNamespace);
         }
 
         [TestMethod]
         public void DatabaseConstructorWithConnectionStringAndNamespaceTest()
         {
             string defaultNamespace = "SqlCeCodeGenTest";
-            var target = new SqlCeDatabase(defaultNamespace, connectionString);
-            Assert.AreEqual(defaultNamespace, target.Namespace);
+            var target = SqlCeDatabaseFactory.Create(defaultNamespace, connectionString);
+            Assert.AreEqual(defaultNamespace, target.DefaultNamespace);
         }
 
         [TestMethod]
         public void TableNameNotNullTest()
         {
-            var target = new SqlCeDatabase(connectionString);
+            var target = SqlCeDatabaseFactory.Create(connectionString);
             target.AnalyzeDatabase();
 
             foreach (var table in target.Tables)
@@ -55,7 +64,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         [TestMethod]
         public void ColumnsNotNullTest()
         {
-            var target = new SqlCeDatabase(connectionString);
+            var target = SqlCeDatabaseFactory.Create(connectionString);
             target.AnalyzeDatabase();
 
             foreach (var table in target.Tables)
@@ -68,7 +77,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         [TestMethod]
         public void ColumnOrdinalTest()
         {
-            var target = new SqlCeDatabase(connectionString);
+            var target = SqlCeDatabaseFactory.Create(connectionString);
             target.AnalyzeDatabase();
 
             foreach (var table in target.Tables)
@@ -79,7 +88,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         [TestMethod]
         public void ColumnNameNotNullTest()
         {
-            var target = new SqlCeDatabase(connectionString);
+            var target = SqlCeDatabaseFactory.Create(connectionString);
             target.AnalyzeDatabase();
 
             foreach (var table in target.Tables)
@@ -90,7 +99,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         [TestMethod]
         public void ColumnManagedTypeNotNullTest()
         {
-            var target = new SqlCeDatabase(connectionString);
+            var target = SqlCeDatabaseFactory.Create(connectionString);
             target.AnalyzeDatabase();
 
             foreach (var table in target.Tables)
@@ -101,7 +110,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         [TestMethod]
         public void ColumnDatabaseTypeNotNullTest()
         {
-            var target = new SqlCeDatabase(connectionString);
+            var target = SqlCeDatabaseFactory.Create(connectionString);
             target.AnalyzeDatabase();
 
             foreach (var table in target.Tables)
@@ -112,7 +121,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         [TestMethod]
         public void IndexesNotNullTest()
         {
-            var target = new SqlCeDatabase(connectionString);
+            var target = SqlCeDatabaseFactory.Create(connectionString);
             target.AnalyzeDatabase();
 
             foreach (var table in target.Tables)
@@ -125,7 +134,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         [TestMethod]
         public void IndexColumnNotNullTest()
         {
-            var target = new SqlCeDatabase(connectionString);
+            var target = SqlCeDatabaseFactory.Create(connectionString);
             target.AnalyzeDatabase();
 
             foreach (var table in target.Tables)

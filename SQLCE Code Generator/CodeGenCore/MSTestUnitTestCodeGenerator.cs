@@ -4,7 +4,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
     public class MSTestUnitTestCodeGenerator : CSharpUnitTestCodeGenerator
     {
-        public MSTestUnitTestCodeGenerator(SqlCeDatabase tableDetails)
+        public MSTestUnitTestCodeGenerator(ISqlCeDatabase tableDetails)
             : base(tableDetails)
         {
         }

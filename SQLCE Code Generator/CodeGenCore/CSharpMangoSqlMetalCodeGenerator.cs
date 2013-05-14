@@ -8,7 +8,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
     {
         private const string SQL_METAL_PATH = "\\Microsoft SDKs\\Windows\\v7.0A\\Bin\\SqlMetal.exe";
 
-        public CSharpMangoSqlMetalCodeGenerator(SqlCeDatabase database)
+        public CSharpMangoSqlMetalCodeGenerator(ISqlCeDatabase database)
             : base(database)
         {
         }
@@ -20,7 +20,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             if (!File.Exists(sqlmetal))
                 sqlmetal = programFiles + " (x86)" + SQL_METAL_PATH;
 
-            var processStartInfo = new ProcessStartInfo(sqlmetal, "/code /namespace:" + Database.Namespace + " \"" + Database.DatabaseFilename + "\"")
+            var processStartInfo = new ProcessStartInfo(sqlmetal, "/code /namespace:" + Database.DefaultNamespace + " \"" + Database.DatabaseFilename + "\"")
             {
                 RedirectStandardOutput = true,
                 CreateNoWindow = true,

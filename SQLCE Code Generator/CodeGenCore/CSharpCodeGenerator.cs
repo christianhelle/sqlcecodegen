@@ -7,7 +7,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
     public class CSharpCodeGenerator : CodeGenerator
     {
-        public CSharpCodeGenerator(SqlCeDatabase tableDetails)
+        public CSharpCodeGenerator(ISqlCeDatabase tableDetails)
             : base(tableDetails)
         {
         }
@@ -16,7 +16,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             var code = new StringBuilder();
 
-            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("\nnamespace " + Database.DefaultNamespace);
             code.AppendLine("{");
             GenerateXmlDoc(code, 1, "Base class for all data access repositories");
             code.AppendLine("\tpublic static class EntityBase");
@@ -84,7 +84,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             var code = new StringBuilder();
 
-            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("\nnamespace " + Database.DefaultNamespace);
             code.AppendLine("{");
             GenerateXmlDoc(code, 1, "Helper class for generating the database file in runtime");
             code.AppendLine("\tpublic static class DatabaseFile");
@@ -149,7 +149,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         public override void GenerateEntities(EntityGeneratorOptions options)
         {
-            //Code.AppendLine("\nnamespace " + Database.Namespace);
+            //Code.AppendLine("\nnamespace " + Database.DefaultNamespace);
             //Code.AppendLine("{");
 
             foreach (var table in Database.Tables)
@@ -188,7 +188,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             var code = new StringBuilder();
 
-            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("\nnamespace " + Database.DefaultNamespace);
             code.AppendLine("{");
             GenerateXmlDoc(code, 1, "Default I" + table.ClassName + "Repository implementation ");
             code.AppendLine("\tpublic partial class " + table.ClassName + "Repository : I" + table.ClassName + "Repository");
@@ -223,7 +223,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             var code = new StringBuilder();
 
-            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("\nnamespace " + Database.DefaultNamespace);
             code.AppendLine("{");
             GenerateXmlDoc(code, 1, "Represents the " + table.ClassName + " repository");
             code.AppendLine("\tpublic partial interface I" + table.ClassName + "Repository : IRepository<" + table.ClassName + ">");
@@ -321,7 +321,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             var code = new StringBuilder();
 
-            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("\nnamespace " + Database.DefaultNamespace);
             code.AppendLine("{");
             GenerateXmlDoc(code, 1, "Main Data Repository interface containing all table repositories");
             code.AppendLine("\tpublic partial interface IDataRepository : System.IDisposable");
@@ -354,7 +354,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             var code = new StringBuilder();
 
-            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("\nnamespace " + Database.DefaultNamespace);
             code.AppendLine("{");
             GenerateXmlDoc(code, 1, "Main Data Repository implementation containing all default table repositories implementations");
             code.AppendLine("\tpublic partial class DataRepository : IDataRepository");
@@ -459,7 +459,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             var code = new StringBuilder();
 
-            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("\nnamespace " + Database.DefaultNamespace);
             code.AppendLine("{");
             GenerateXmlDoc(code, 1, "Base Repository interface defining the basic and commonly used data access methods");
             code.AppendLine("\tpublic partial interface IRepository<T>");
@@ -512,7 +512,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             var code = new StringBuilder();
 
-            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("\nnamespace " + Database.DefaultNamespace);
             code.AppendLine("{");
             GenerateXmlDoc(code, 1, "Represents the " + table.ClassName + " table");
             code.AppendLine("\tpublic partial class " + table.ClassName);

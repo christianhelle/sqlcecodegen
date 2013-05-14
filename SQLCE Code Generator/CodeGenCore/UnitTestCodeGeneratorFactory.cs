@@ -4,9 +4,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
     public class UnitTestCodeGeneratorFactory
     {
-        private readonly SqlCeDatabase database;
+        private readonly ISqlCeDatabase database;
 
-        public UnitTestCodeGeneratorFactory(SqlCeDatabase database)
+        public UnitTestCodeGeneratorFactory(ISqlCeDatabase database)
         {
             this.database = database;
         }
@@ -16,7 +16,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             return Create(database, testfx, target);
         }
 
-        public static CodeGenerator Create(SqlCeDatabase database, string testfx, string target = null)
+        public static CodeGenerator Create(ISqlCeDatabase database, string testfx, string target = null)
         {
             if (!string.IsNullOrEmpty(target) && target == "Mango")
                 throw new NotSupportedException("Unit Test Framework not supported"); //return new CSharpMangoMockDataAccessLayerCodeGenerator(database);
@@ -39,7 +39,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             return Create(database);
         }
 
-        public static CodeGenerator Create(SqlCeDatabase database)
+        public static CodeGenerator Create(ISqlCeDatabase database)
         {
             return new MSTestUnitTestCodeGenerator(database);
         }
