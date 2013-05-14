@@ -135,12 +135,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             WriteToOutputWindow(string.Format("{0}Loaded {1} lines of code in {2}{0}", Environment.NewLine, lineCount, sw.Elapsed));
         }
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ExitToolStripMenuItemClick(object sender, EventArgs e)
         {
             Application.Exit();
         }
 
-        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        private void NewToolStripMenuItemClick(object sender, EventArgs e)
         {
             SafeOperation(NewFile);
         }
@@ -432,7 +432,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                         columnNode.Nodes.Add("Foreign Key");
                     columnNode.Nodes.Add("Database Type - " + column.Value.DatabaseType);
                     columnNode.Nodes.Add("Managed Type - " + column.Value.ManagedType);
-                    if (column.Value.ManagedType.Equals(typeof(string)))
+                    if (column.Value.ManagedType == typeof(string))
                         columnNode.Nodes.Add("Max Length - " + column.Value.MaxLength);
                     columnNode.Nodes.Add("Allows Null - " + column.Value.AllowsNull);
                     columns.Nodes.Add(columnNode);
@@ -446,13 +446,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             Refresh();
         }
 
-        private void MainForm_Load(object sender, EventArgs e)
+        private void MainFormLoad(object sender, EventArgs e)
         {
             if (!launchedWithArgument)
                 SafeOperation(NewFile);
         }
 
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OpenToolStripMenuItemClick(object sender, EventArgs e)
         {
             SafeOperation(OpenFile);
         }
@@ -485,7 +485,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             }
         }
 
-        private void saveToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SaveToolStripMenuItemClick(object sender, EventArgs e)
         {
             SafeOperation(SaveFile);
         }
@@ -540,12 +540,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             }
         }
 
-        private void saveAsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SaveAsToolStripMenuItemClick(object sender, EventArgs e)
         {
             SafeOperation(SaveFile);
         }
 
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        private void AboutToolStripMenuItemClick(object sender, EventArgs e)
         {
             using (var about = new AboutBox())
                 about.ShowDialog();
@@ -555,12 +555,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
         private int currentCodeViewTab;
 
-        private void tabGeneratedCode_SelectedIndexChanged(object sender, EventArgs e)
+        private void TabGeneratedCodeSelectedIndexChanged(object sender, EventArgs e)
         {
             currentCodeViewTab = tabGeneratedCode.SelectedIndex;
         }
 
-        private void undoToolStripMenuItem_Click(object sender, EventArgs e)
+        private void UndoToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (currentCodeViewTab == 1)
                 rtbGeneratedCodeDataAccess.Undo();
@@ -578,7 +578,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                 rtbGeneratedMockDataAccessCode.Undo();
         }
 
-        private void redoToolStripMenuItem_Click(object sender, EventArgs e)
+        private void RedoToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (currentCodeViewTab == 1)
                 rtbGeneratedCodeDataAccess.Redo();
@@ -596,7 +596,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                 rtbGeneratedMockDataAccessCode.Redo();
         }
 
-        private void cutToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CutToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (currentCodeViewTab == 1)
                 rtbGeneratedCodeDataAccess.ActiveTextAreaControl.TextArea.ClipboardHandler.Cut(sender, e);
@@ -614,7 +614,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                 rtbGeneratedMockDataAccessCode.ActiveTextAreaControl.TextArea.ClipboardHandler.Cut(sender, e);
         }
 
-        private void copyToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CopyToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (currentCodeViewTab == 1)
                 rtbGeneratedCodeDataAccess.ActiveTextAreaControl.TextArea.ClipboardHandler.Copy(sender, e);
@@ -632,7 +632,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                 rtbGeneratedMockDataAccessCode.ActiveTextAreaControl.TextArea.ClipboardHandler.Copy(sender, e);
         }
 
-        private void pasteToolStripMenuItem_Click(object sender, EventArgs e)
+        private void PasteToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (currentCodeViewTab == 1)
                 rtbGeneratedCodeDataAccess.ActiveTextAreaControl.TextArea.ClipboardHandler.Paste(sender, e);
@@ -650,7 +650,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                 rtbGeneratedMockDataAccessCode.ActiveTextAreaControl.TextArea.ClipboardHandler.Paste(sender, e);
         }
 
-        private void selectAllToolStripMenuItem_Click(object sender, EventArgs e)
+        private void SelectAllToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (currentCodeViewTab == 1)
                 rtbGeneratedCodeDataAccess.ActiveTextAreaControl.TextArea.ClipboardHandler.SelectAll(sender, e);
@@ -671,12 +671,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
         #region Drag and Drop handling
 
-        private void MainForm_DragEnter(object sender, DragEventArgs e)
+        private void MainFormDragEnter(object sender, DragEventArgs e)
         {
             e.Effect = e.Data.GetDataPresent(DataFormats.FileDrop) ? DragDropEffects.Copy : DragDropEffects.None;
         }
 
-        private void MainForm_DragDrop(object sender, DragEventArgs e)
+        private void MainFormDragDrop(object sender, DragEventArgs e)
         {
             SafeOperation(delegate
             {
@@ -718,7 +718,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         #endregion
 
         #region Compile Code
-        private void compileToolStripMenuItem_Click(object sender, EventArgs e)
+        private void CompileToolStripMenuItemClick(object sender, EventArgs e)
         {
             tabOutput.SelectedTab = tabPageCompilerOutput;
             SafeOperation(CompileCSharp30);
@@ -836,7 +836,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         #endregion
 
         #region Run Unit Tests
-        private void runUnitTestsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void RunUnitTestsToolStripMenuItemClick(object sender, EventArgs e)
         {
             SafeOperation(ExecuteUnitTests);
         }
@@ -970,7 +970,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         }
         #endregion
 
-        private void regenerateCodeToolStripMenuItem_Click(object sender, EventArgs e)
+        private void RegenerateCodeToolStripMenuItemClick(object sender, EventArgs e)
         {
             treeView.Nodes.Clear();
             treeView.Update();
@@ -983,7 +983,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             GenerateCode();
         }
 
-        private void treeView_AfterSelect(object sender, TreeViewEventArgs e)
+        private void TreeViewAfterSelect(object sender, TreeViewEventArgs e)
         {
             SafeOperation(() =>
             {
@@ -1006,7 +1006,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             "Unable to load table data");
         }
 
-        private void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        private void DataGridViewDataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             e.Cancel = false;
             e.ThrowException = false;
@@ -1105,7 +1105,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                 SafeOperation(GenerateCode);
         }
 
-        private void nUnitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void NUnitToolStripMenuItemClick(object sender, EventArgs e)
         {
             SafeOperation(() =>
             {
@@ -1119,7 +1119,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             });
         }
 
-        private void mSTestToolStripMenuItem_Click(object sender, EventArgs e)
+        private void MSTestToolStripMenuItemClick(object sender, EventArgs e)
         {
             SafeOperation(() =>
             {
@@ -1133,7 +1133,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             });
         }
 
-        private void xUnitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void XUnitToolStripMenuItemClick(object sender, EventArgs e)
         {
             SafeOperation(() =>
             {
@@ -1147,7 +1147,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             });
         }
 
-        private void entityUnitTestsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void EntityUnitTestsToolStripMenuItemClick(object sender, EventArgs e)
         {
             SafeOperation(() =>
             {
@@ -1159,7 +1159,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             });
         }
 
-        private void dataAccessUnitTestsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void DataAccessUnitTestsToolStripMenuItemClick(object sender, EventArgs e)
         {
             SafeOperation(() =>
             {
@@ -1171,7 +1171,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             });
         }
 
-        private void nETCompactFrameworkCompatibleToolStripMenuItem_Click(object sender, EventArgs e)
+        private void NEtCompactFrameworkCompatibleToolStripMenuItemClick(object sender, EventArgs e)
         {
             SafeOperation(() =>
             {
@@ -1186,7 +1186,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             });
         }
 
-        private void windowsPhone7MangoToolStripMenuItem_Click(object sender, EventArgs e)
+        private void WindowsPhone7MangoToolStripMenuItemClick(object sender, EventArgs e)
         {
             SafeOperation(() =>
             {
@@ -1201,7 +1201,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             });
         }
 
-        private void lINQToSQLDataContextToolStripMenuItem_Click(object sender, EventArgs e)
+        private void LInqtoSqlDataContextToolStripMenuItemClick(object sender, EventArgs e)
         {
             SafeOperation(() =>
             {
@@ -1218,7 +1218,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
         #endregion
 
-        private void exportToolStripMenuItem_Click(object sender, EventArgs e)
+        private void ExportToolStripMenuItemClick(object sender, EventArgs e)
         {
             SafeOperation(() =>
             {
