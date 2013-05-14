@@ -108,9 +108,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="CSharpUnitTestCodeGenerator.cs" />
     <Compile Include="RepositoryPatternGenerator.cs" />
-    <Compile Include="SqlCeDatabase.cs" />
+    <None Include="SqlCeDatabase.cs" />
     <Compile Include="SqlCeEngineExtensions.cs" />
-    <Compile Include="Table.cs" />
+    <None Include="Table.cs" />
     <Compile Include="UnitTestCodeGeneratorFactory.cs" />
     <Compile Include="VisualBasicCodeGenerator.cs" />
     <Compile Include="xUnitTestCodeGenerator.cs" />
@@ -143,6 +143,12 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SqlCeDatabase\SqlCeDatabase.csproj">
+      <Project>{FEA11D5F-8C5D-4E8A-AD82-579312F47F05}</Project>
+      <Name>SqlCeDatabase</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -8,7 +8,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
     public class CSharpMangoMockDataAccessLayerCodeGenerator : CodeGenerator
     {
-        public CSharpMangoMockDataAccessLayerCodeGenerator(SqlCeDatabase tableDetails)
+        public CSharpMangoMockDataAccessLayerCodeGenerator(ISqlCeDatabase tableDetails)
             : base(tableDetails)
         {
         }
@@ -40,7 +40,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             var code = new StringBuilder();
 
-            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("\nnamespace " + Database.DefaultNamespace);
             code.AppendLine("{");
             code.AppendLine("\tpublic partial class MockDataRepository : IDataRepository");
             code.AppendLine("\t{");
@@ -81,7 +81,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             var code = new StringBuilder();
 
-            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("\nnamespace " + Database.DefaultNamespace);
             code.AppendLine("{");
             code.AppendLine("\tusing System.Linq;");
             code.AppendLine();

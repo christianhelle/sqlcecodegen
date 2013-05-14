@@ -4,7 +4,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
     public class XUnitTestCodeGenerator : CSharpUnitTestCodeGenerator
     {
-        public XUnitTestCodeGenerator(SqlCeDatabase tableDetails)
+        public XUnitTestCodeGenerator(ISqlCeDatabase tableDetails)
             : base(tableDetails)
         {
         }
@@ -58,7 +58,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             var code = new StringBuilder();
 
-            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("\nnamespace " + Database.DefaultNamespace);
             code.AppendLine("{");
 
             IncludeUnitTestNamespaces(code);

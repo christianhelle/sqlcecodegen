@@ -104,6 +104,7 @@
     <Compile Include="GeneratedCSharpCodeNUnitTest.cs" />
     <Compile Include="UnitTestCodeGeneratorFactoryTests.cs" />
     <Compile Include="GeneratedCSharpCodeXUnitTest.cs" />
+    <None Include="app.config" />
     <None Include="GeneratedCodeDomCodeGeneratorTest.cs" />
     <Compile Include="GeneratedCSharpCodeMsTest.cs" />
     <Compile Include="SqlCeDatabaseTest.cs" />
@@ -111,11 +112,46 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="..\CodeGenConsole\TestDatabase.sdf">
-      <Link>TestDatabase.sdf</Link>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    <Content Include="..\Binaries\Debug\SqlCe40\sqlceca40.dll">
+      <Link>SqlCe40\sqlceca40.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Binaries\Debug\SqlCe40\sqlcecompact40.dll">
+      <Link>SqlCe40\sqlcecompact40.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Binaries\Debug\SqlCe40\SqlCeDatabase.dll">
+      <Link>SqlCe40\SqlCeDatabase.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Binaries\Debug\SqlCe40\SqlCeDatabase40.dll">
+      <Link>SqlCe40\SqlCeDatabase40.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Binaries\Debug\SqlCe40\sqlceer40EN.dll">
+      <Link>SqlCe40\sqlceer40EN.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Binaries\Debug\SqlCe40\sqlceme40.dll">
+      <Link>SqlCe40\sqlceme40.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Binaries\Debug\SqlCe40\sqlceqp40.dll">
+      <Link>SqlCe40\sqlceqp40.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Binaries\Debug\SqlCe40\sqlcese40.dll">
+      <Link>SqlCe40\sqlcese40.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\Binaries\Debug\SqlCe40\System.Data.SqlServerCe.dll">
+      <Link>SqlCe40\System.Data.SqlServerCe.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Northwind.sdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="TestDatabase.sdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -128,11 +164,10 @@
       <Project>{DDFEFB32-623E-49EE-9627-A19B77E29FCA}</Project>
       <Name>CodeGenCustomTool</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\CodeGenConsole\app.config">
-      <Link>app.config</Link>
-    </None>
+    <ProjectReference Include="..\SqlCeDatabase\SqlCeDatabase.csproj">
+      <Project>{FEA11D5F-8C5D-4E8A-AD82-579312F47F05}</Project>
+      <Name>SqlCeDatabase</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
@@ -156,6 +191,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

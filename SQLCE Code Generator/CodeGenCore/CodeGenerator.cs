@@ -10,7 +10,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
     {
         protected readonly StringBuilder Code;
 
-        protected CodeGenerator(SqlCeDatabase database)
+        protected CodeGenerator(ISqlCeDatabase database)
         {
             Database = database;
             CodeFiles = new Dictionary<string, StringBuilder>();
@@ -18,7 +18,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             Code.AppendLine();
         }
 
-        public SqlCeDatabase Database { get; set; }
+        public ISqlCeDatabase Database { get; set; }
         public Dictionary<string, StringBuilder> CodeFiles { get; protected set; }
 
         public virtual void GenerateEntities() { }

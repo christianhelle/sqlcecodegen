@@ -5,9 +5,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
     [TestClass]
     public class CodeGenTest : CodeGenBaseTest
     {
-        private static SqlCeDatabase GetDatabase(string defaultNamespace, string connectionString)
+        private static ISqlCeDatabase GetDatabase(string defaultNamespace, string connectionString)
         {
-            var database = new SqlCeDatabase(defaultNamespace, connectionString);
+            var database = SqlCeDatabaseFactory.Create(defaultNamespace, connectionString);
             database.AnalyzeDatabase();
             return database;
         }
@@ -19,7 +19,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             //var connectionString = "Data Source=Northwind.sdf";
             var target = GetDatabase();
 
-            Assert.AreEqual(defaultNamespace, target.Namespace);
+            Assert.AreEqual(defaultNamespace, target.DefaultNamespace);
         }
 
         [TestMethod]

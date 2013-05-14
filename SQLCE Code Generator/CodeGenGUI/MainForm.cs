@@ -11,7 +11,6 @@ using ChristianHelle.DatabaseTools.SqlCe.CodeGenCore;
 using ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI.Properties;
 using ICSharpCode.TextEditor.Document;
 using Microsoft.SqlServer.MessageBox;
-using System.Data.SqlServerCe;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 {
@@ -27,9 +26,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         private const string LINQTOSQL = "LinqToSql";
 
         private string dataSource;
-        private SqlCeDatabase database;
-        private Dictionary<string, StringBuilder> generatedCodeFiles;
-        private Dictionary<string, StringBuilder> generatedUnitTestFiles;
+        private ISqlCeDatabase database;
+        private readonly Dictionary<string, StringBuilder> generatedCodeFiles;
+        private readonly Dictionary<string, StringBuilder> generatedUnitTestFiles;
         private readonly bool launchedWithArgument;
         private readonly string appDataPath;
 
@@ -368,10 +367,10 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         {
             try
             {
-                database = new SqlCeDatabase(generatedNamespace, connectionString);
+                database = SqlCeDatabaseFactory.Create(generatedNamespace, connectionString);
                 database.DatabaseFilename = dataSource;
             }
-            catch (SqlCeException e)
+            catch (SqlCeDatabaseException e)
             {
                 if (e.NativeError == 25028 || e.NativeError == 25140 || e.Message.ToLower().Contains("password"))
                 {
@@ -400,7 +399,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
         private static string GetConnectionString(string inputFileName, string password = null)
         {
-            return string.Format("Data Source={0}; Password={1}", inputFileName, password);
+            return string.Format("Data Source={0}; Password={1}", inputFileName, password ?? "'';");
         }
 
         private void PopulateTables(IEnumerable<Table> list)
@@ -477,7 +476,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                 //rtbGeneratedCodeDataAccessUnitTests.Text = file.GeneratedCode.DataAccessUnitTests;
 
                 //FileInfo fi = new FileInfo(file.DataSource);
-                //string generatedNamespace = GetType().Namespace + "." + fi.Name.Replace(fi.Extension, string.Empty);
+                //string generatedNamespace = GetType().DefaultNamespace + "." + fi.Name.Replace(fi.Extension, string.Empty);
                 //string connectionString = "Data Source=" + file.DataSource;
                 //database = new SqlCeDatabase(generatedNamespace, connectionString);
                 //PopulateTables(database.Tables);
@@ -710,7 +709,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                         var fi = new FileInfo(file.DataSource);
                         string generatedNamespace = GetType().Namespace + "." + fi.Name.Replace(fi.Extension, string.Empty);
                         string connectionString = "Data Source=" + file.DataSource;
-                        database = new SqlCeDatabase(generatedNamespace, connectionString);
+                        database = SqlCeDatabaseFactory.Create(generatedNamespace, connectionString);
                         PopulateTables(database.Tables);
                         break;
                 }

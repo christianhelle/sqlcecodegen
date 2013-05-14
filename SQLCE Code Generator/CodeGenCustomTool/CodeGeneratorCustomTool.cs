@@ -35,7 +35,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
         //    return database;
         //}
 
-        public static SqlCeDatabase GetDatabase(string fileNameSpace, string inputFileName, string password = null)
+        public static ISqlCeDatabase GetDatabase(string fileNameSpace, string inputFileName, string password = null)
         {
             try
             {
@@ -43,7 +43,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
                 var generatedNamespace = fileNameSpace + "." +
                                          fi.Name.Replace(fi.Extension, string.Empty).Replace(" ", string.Empty);
                 var connectionString = GetConnectionString(inputFileName, password);
-                var database = new SqlCeDatabase(generatedNamespace, connectionString);
+                var database = SqlCeDatabaseFactory.Create(generatedNamespace, connectionString);
                 database.DatabaseFilename = inputFileName;
                 database.Verify();
                 database.AnalyzeDatabase();

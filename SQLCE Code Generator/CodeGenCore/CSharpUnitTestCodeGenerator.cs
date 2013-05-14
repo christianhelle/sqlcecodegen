@@ -7,7 +7,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
     public abstract class CSharpUnitTestCodeGenerator : CSharpCodeGenerator
     {
-        protected CSharpUnitTestCodeGenerator(SqlCeDatabase tableDetails)
+        protected CSharpUnitTestCodeGenerator(ISqlCeDatabase tableDetails)
             : base(tableDetails)
         {
         }
@@ -25,7 +25,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             {
                 var code = new StringBuilder();
 
-                code.AppendLine("\nnamespace " + Database.Namespace);
+                code.AppendLine("\nnamespace " + Database.DefaultNamespace);
                 code.AppendLine("{");
 
                 IncludeUnitTestNamespaces(code);
@@ -88,7 +88,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             var code = new StringBuilder();
 
-            code.AppendLine("namespace " + Database.Namespace);
+            code.AppendLine("namespace " + Database.DefaultNamespace);
             code.AppendLine("{");
             code.AppendLine(@"
     internal static class RandomGenerator
@@ -238,7 +238,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             var code = new StringBuilder();
 
-            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("\nnamespace " + Database.DefaultNamespace);
             code.AppendLine("{");
             code.AppendLine("\tpublic partial class MockDataRepository : IDataRepository");
             code.AppendLine("\t{");
@@ -290,7 +290,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             var code = new StringBuilder();
 
-            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("\nnamespace " + Database.DefaultNamespace);
             code.AppendLine("{");
             code.AppendLine("\tusing System.Linq;");
             code.AppendLine();
@@ -323,7 +323,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             var code = new StringBuilder();
 
-            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("\nnamespace " + Database.DefaultNamespace);
             code.AppendLine("{");
 
             IncludeUnitTestNamespaces(code);
@@ -356,7 +356,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             var code = new StringBuilder();
 
-            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("\nnamespace " + Database.DefaultNamespace);
             code.AppendLine("{");
 
             IncludeUnitTestNamespaces(code);
@@ -391,7 +391,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             var code = new StringBuilder();
 
-            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("\nnamespace " + Database.DefaultNamespace);
             code.AppendLine("{");
 
             IncludeUnitTestNamespaces(code);
@@ -421,7 +421,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         private void GenerateDataAccessTestBase()
         {
             var code = new StringBuilder();
-            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("\nnamespace " + Database.DefaultNamespace);
             code.AppendLine("{");
 
             IncludeUnitTestNamespaces(code);

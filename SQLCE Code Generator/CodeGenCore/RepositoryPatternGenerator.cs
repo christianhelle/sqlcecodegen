@@ -9,12 +9,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         private readonly bool supportSqlCeTransactions;
         private readonly bool usesLinqToSql;
 
-        public RepositoryPatternGenerator(SqlCeDatabase database)
+        public RepositoryPatternGenerator(ISqlCeDatabase database)
             : this(database, false)
         {
         }
 
-        public RepositoryPatternGenerator(SqlCeDatabase database, bool supportSqlCeTransactions = true, bool usesLinqToSql = false)
+        public RepositoryPatternGenerator(ISqlCeDatabase database, bool supportSqlCeTransactions = true, bool usesLinqToSql = false)
             : base(database)
         {
             this.supportSqlCeTransactions = supportSqlCeTransactions;
@@ -25,7 +25,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             var code = new StringBuilder();
 
-            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("\nnamespace " + Database.DefaultNamespace);
             code.AppendLine("{");
             code.AppendLine("\tusing System.Linq;");
             code.AppendLine("\tusing System.Data.Linq;");
@@ -90,7 +90,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             var code = new StringBuilder();
 
-            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("\nnamespace " + Database.DefaultNamespace);
             code.AppendLine("{");
             GenerateXmlDoc(code, 1, "Represents the " + table.ClassName + " repository");
             code.AppendLine("\tpublic partial interface I" + table.ClassName + "Repository : IRepository<" + table.ClassName + ">");
@@ -197,7 +197,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             var code = new StringBuilder();
 
-            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("\nnamespace " + Database.DefaultNamespace);
             code.AppendLine("{");
             GenerateXmlDoc(code, 1, "Main Data Repository implementation containing all default table repositories implementations");
             code.AppendLine("\tpublic partial class DataRepository : IDataRepository");
@@ -331,7 +331,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             var code = new StringBuilder();
 
-            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("\nnamespace " + Database.DefaultNamespace);
             code.AppendLine("{");
             GenerateXmlDoc(code, 1, "Main Data Repository interface containing all table repositories");
             code.AppendLine("\tpublic partial interface IDataRepository : System.IDisposable");
@@ -375,7 +375,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             var code = new StringBuilder();
 
-            code.AppendLine("\nnamespace " + Database.Namespace);
+            code.AppendLine("\nnamespace " + Database.DefaultNamespace);
             code.AppendLine("{");
             GenerateXmlDoc(code, 1, "Base Repository interface defining the basic and commonly used data access methods");
             code.AppendLine("\tpublic partial interface IRepository<T>");

@@ -10,7 +10,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
             const string connectionString = "Data Source=Northwind.sdf";
-            var database = new SqlCeDatabase(defaultNamespace, connectionString);
+            var database = SqlCeDatabaseFactory.Create(defaultNamespace, connectionString);
             var factory = new UnitTestCodeGeneratorFactory(database);
             var codeGenerator = factory.Create();
 
@@ -26,7 +26,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
             const string connectionString = "Data Source=Northwind.sdf";
-            var database = new SqlCeDatabase(defaultNamespace, connectionString);
+            var database = SqlCeDatabaseFactory.Create(defaultNamespace, connectionString);
             var codeGenerator = UnitTestCodeGeneratorFactory.Create(database);
 
             Assert.IsNotNull(codeGenerator);
@@ -41,7 +41,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
             const string connectionString = "Data Source=Northwind.sdf";
-            var database = new SqlCeDatabase(defaultNamespace, connectionString);
+            var database = SqlCeDatabaseFactory.Create(defaultNamespace, connectionString);
             var factory = new UnitTestCodeGeneratorFactory(database);
             var codeGenerator = factory.Create("MSTest");
 
@@ -57,7 +57,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
             const string connectionString = "Data Source=Northwind.sdf";
-            var database = new SqlCeDatabase(defaultNamespace, connectionString);
+            var database = SqlCeDatabaseFactory.Create(defaultNamespace, connectionString);
             var codeGenerator = UnitTestCodeGeneratorFactory.Create(database, "MSTest");
 
             Assert.IsNotNull(codeGenerator);
@@ -72,7 +72,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
             const string connectionString = "Data Source=Northwind.sdf";
-            var database = new SqlCeDatabase(defaultNamespace, connectionString);
+            var database = SqlCeDatabaseFactory.Create(defaultNamespace, connectionString);
             var codeGenerator = UnitTestCodeGeneratorFactory.Create(database, "NUnit");
 
             Assert.IsNotNull(codeGenerator);
@@ -87,7 +87,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
             const string connectionString = "Data Source=Northwind.sdf";
-            var database = new SqlCeDatabase(defaultNamespace, connectionString);
+            var database = SqlCeDatabaseFactory.Create(defaultNamespace, connectionString);
             var factory = new UnitTestCodeGeneratorFactory(database);
             var codeGenerator = factory.Create("NUnit");
 
@@ -103,7 +103,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
             const string connectionString = "Data Source=Northwind.sdf";
-            var database = new SqlCeDatabase(defaultNamespace, connectionString);
+            var database = SqlCeDatabaseFactory.Create(defaultNamespace, connectionString);
             var codeGenerator = UnitTestCodeGeneratorFactory.Create(database, "xUnit");
 
             Assert.IsNotNull(codeGenerator);
@@ -118,7 +118,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
             const string connectionString = "Data Source=Northwind.sdf";
-            var database = new SqlCeDatabase(defaultNamespace, connectionString);
+            var database = SqlCeDatabaseFactory.Create(defaultNamespace, connectionString);
             var factory = new UnitTestCodeGeneratorFactory(database);
             var codeGenerator = factory.Create("xUnit");
 

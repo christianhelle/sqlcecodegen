@@ -18,11 +18,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
             File.SetAttributes("Northwind.sdf", FileAttributes.Normal);
         }
 
-        protected static SqlCeDatabase GetDatabase()
+        protected static ISqlCeDatabase GetDatabase()
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
             const string connectionString = "Data Source=Northwind.sdf";
-            return new SqlCeDatabase(defaultNamespace, connectionString);
+            return SqlCeDatabaseFactory.Create(defaultNamespace, connectionString);
         }
 
         protected static void AssertCSharpCompile(params string[] sourceCode)

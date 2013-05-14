@@ -4,9 +4,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
     public class CodeGeneratorFactory
     {
-        private readonly SqlCeDatabase database;
+        private readonly ISqlCeDatabase database;
 
-        public CodeGeneratorFactory(SqlCeDatabase database)
+        public CodeGeneratorFactory(ISqlCeDatabase database)
         {
             this.database = database;
         }
@@ -16,7 +16,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             return Create(database, language, target);
         }
 
-        public static CodeGenerator Create(SqlCeDatabase database, string language, string target = null)
+        public static CodeGenerator Create(ISqlCeDatabase database, string language, string target = null)
         {
             if (String.Compare(language, "C#", StringComparison.OrdinalIgnoreCase) == 0 ||
                 String.Compare(language, "CSharp", StringComparison.OrdinalIgnoreCase) == 0 ||
@@ -44,7 +44,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             return Create(database);
         }
 
-        public static CodeGenerator Create<T>(SqlCeDatabase database) where T : CodeGenerator
+        public static CodeGenerator Create<T>(ISqlCeDatabase database) where T : CodeGenerator
         {
             return Activator.CreateInstance(typeof (T), database) as T;
         }
@@ -54,7 +54,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             return new CSharpCodeGenerator(database);
         }
 
-        public static CodeGenerator Create(SqlCeDatabase database)
+        public static CodeGenerator Create(ISqlCeDatabase database)
         {
             return new CSharpCodeGenerator(database);
         }

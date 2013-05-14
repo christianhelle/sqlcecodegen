@@ -17,13 +17,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         protected readonly CodeNamespace codeNamespace;
         protected readonly CodeDomProvider provider;
 
-        public CodeDomCodeGenerator(SqlCeDatabase tableDetails, CodeDomProvider provider)
+        public CodeDomCodeGenerator(ISqlCeDatabase tableDetails, CodeDomProvider provider)
             : base(tableDetails)
         {
             this.provider = provider;
 
             compileUnit = new CodeCompileUnit();
-            codeNamespace = new CodeNamespace(Database.Namespace);
+            codeNamespace = new CodeNamespace(Database.DefaultNamespace);
             compileUnit.Namespaces.Add(codeNamespace);
         }
 
@@ -417,7 +417,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
     public class CSharpCodeDomCodeGenerator : CodeDomCodeGenerator
     {
-        public CSharpCodeDomCodeGenerator(SqlCeDatabase database)
+        public CSharpCodeDomCodeGenerator(ISqlCeDatabase database)
             : base(database, new CSharpCodeProvider())
         {
         }
@@ -435,7 +435,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
     public class VisualBasicCodeDomCodeGenerator : CodeDomCodeGenerator
     {
-        public VisualBasicCodeDomCodeGenerator(SqlCeDatabase database)
+        public VisualBasicCodeDomCodeGenerator(ISqlCeDatabase database)
             : base(database, new VBCodeProvider())
         {
         }

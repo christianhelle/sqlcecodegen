@@ -12,9 +12,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
     [TestClass]
     public class CSharpMangoLinqToSqlCodeGeneratorTest : CodeGenBaseTest
     {
-        private static SqlCeDatabase GetDatabase(string defaultNamespace, string connectionString)
+        private static ISqlCeDatabase GetDatabase(string defaultNamespace, string connectionString)
         {
-            var database = new SqlCeDatabase(defaultNamespace, connectionString);
+            var database = SqlCeDatabaseFactory.Create(defaultNamespace, connectionString);
             database.AnalyzeDatabase();
             return database;
         }
