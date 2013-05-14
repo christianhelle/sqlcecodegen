@@ -2,6 +2,8 @@ syntax: glob
 */bin/*
 */obj/*
 */TestResults/*
+*ReSharper*
+*.suo
 */Binaries/*
 */Debug/*
 */Release/*
