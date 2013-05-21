@@ -51,7 +51,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>BasicCorrectnessRules.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -87,7 +88,7 @@
     <Compile Include="CodeDomCodeGenerator.cs" />
     <Compile Include="CodeGenerator.cs" />
     <Compile Include="CodeGeneratorFactory.cs" />
-    <Compile Include="CodeGeneratorOptions.cs" />
+    <Compile Include="DataAccessLayerGeneratorOptions.cs" />
     <Compile Include="CodeGenFile.cs" />
     <Compile Include="CSharpCodeGenerator.cs" />
     <Compile Include="CSharpDataAccessLayerGenerator.cs" />
@@ -97,6 +98,7 @@
     <Compile Include="CSharpMangoSqlMetalCodeGenerator.cs" />
     <Compile Include="CSharpMockDataAccessLayerCodeGenerator.cs" />
     <Compile Include="DataAccessLayerGenerator.cs" />
+    <Compile Include="EntityGeneratorOptions.cs" />
     <Compile Include="MSTestUnitTestCodeGenerator.cs" />
     <Compile Include="NUnitTestCodeGenerator.cs" />
     <Compile Include="PasswordForm.cs">
