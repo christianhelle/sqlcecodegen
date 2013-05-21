@@ -98,7 +98,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             foreach (var column in Table.Columns)
             {
-                if (string.Compare(column.Value.DatabaseType, "ntext", true) == 0 || string.Compare(column.Value.DatabaseType, "image", true) == 0)
+                if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0 || 
+                    String.Compare(column.Value.DatabaseType, "image", StringComparison.OrdinalIgnoreCase) == 0)
                     continue;
 
                 Code.AppendLine("\t\t#region SELECT .... WHERE " + column.Value.FieldName + "=?");
@@ -120,8 +121,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 Code.AppendLine("\t\t\t\t{");
                 Code.AppendFormat("\t\t\t\t\tcommand.CommandText = \"SELECT * FROM {0} WHERE {1}=@{1}\";", Table.ClassName, column.Value.FieldName);
                 Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
-                Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters[\"@{0}\"].Value = {1};", column.Value.FieldName, column.Value.FieldName + " != null ? (object)" + column.Value.FieldName + " : System.DBNull.Value");
-                //code.AppendFormat("\n\t\t\t\tcommand.Parameters.AddWithValue(\"@{0}\", {0});", column.Value.FieldName);
+                //Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters[\"@{0}\"].Value = {1};", column.Value.FieldName, column.Value.FieldName + " != null ? (object)" + column.Value.FieldName + " : System.DBNull.Value");
+                Code.AppendFormat("\n\t\t\t\tcommand.Parameters.AddWithValue(\"@{0}\", {0});", column.Value.FieldName);
                 Code.AppendLine();
                 Code.AppendLine("\t\t\t\t}");
                 Code.AppendLine("\t\t\t\telse");
@@ -149,7 +150,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             foreach (var column in Table.Columns)
             {
-                if (string.Compare(column.Value.DatabaseType, "ntext", true) == 0 || string.Compare(column.Value.DatabaseType, "image", true) == 0)
+                if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0 || String.Compare(column.Value.DatabaseType, "image", StringComparison.OrdinalIgnoreCase) == 0)
                     continue;
 
                 Code.AppendLine("\t\t#region SELECT TOP(?).... WHERE " + column.Value.FieldName + "=?");
@@ -171,8 +172,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 Code.AppendLine("\t\t\t{");
                 Code.AppendFormat("\t\t\t\tcommand.CommandText = \"SELECT TOP(\" + count + \") * FROM {0} WHERE {1}=@{1}\";", Table.ClassName, column.Value.FieldName);
                 Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
-                Code.AppendFormat("\n\t\t\t\tcommand.Parameters[\"@{0}\"].Value = {1};", column.Value.FieldName, column.Value.FieldName + " != null ? (object)" + column.Value.FieldName + " : System.DBNull.Value");
-                //code.AppendFormat("\n\t\t\t\tcommand.Parameters.AddWithValue(\"@{0}\", {0});", column.Value.FieldName);
+                //Code.AppendFormat("\n\t\t\t\tcommand.Parameters[\"@{0}\"].Value = {1};", column.Value.FieldName, column.Value.FieldName + " != null ? (object)" + column.Value.FieldName + " : System.DBNull.Value");
+                Code.AppendFormat("\n\t\t\t\tcommand.Parameters.AddWithValue(\"@{0}\", {0});", column.Value.FieldName);
                 Code.AppendLine();
                 Code.AppendLine("\t\t\t}");
                 Code.AppendLine("\t\t\telse");
@@ -267,7 +268,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             {
                 if (column.Value.Name == Table.PrimaryKeyColumnName)
                     continue;
-                if (!column.Value.ManagedType.Equals(typeof(string)))
+                if (column.Value.ManagedType != typeof(string))
                     continue;
                 Code.AppendLine("\t\t\tif (" + column.Value.FieldName + " != null && " + column.Value.FieldName + ".Length > " + column.Value.MaxLength + ")");
                 Code.AppendLine("\t\t\t\tthrow new System.ArgumentException(\"Max length for " + column.Value.FieldName + " is " + column.Value.MaxLength + "\");");
@@ -337,7 +338,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             {
                 if (column.Value.Name == Table.PrimaryKeyColumnName)
                     continue;
-                if (!column.Value.ManagedType.Equals(typeof(string)))
+                if (column.Value.ManagedType != typeof(string))
                     continue;
                 Code.AppendLine("\t\t\tif (" + column.Value.FieldName + " != null && " + column.Value.FieldName + ".Length > " + Table.ClassName + "." + column.Value.FieldName + "_Max_Length)");
                 Code.AppendLine("\t\t\t\tthrow new System.ArgumentException(\"Max length for " + column.Value.FieldName + " is " + column.Value.MaxLength + "\");");
@@ -536,7 +537,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             foreach (var column in Table.Columns)
             {
-                if (string.Compare(column.Value.DatabaseType, "ntext", true) == 0 || string.Compare(column.Value.DatabaseType, "image", true) == 0)
+                if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0 || String.Compare(column.Value.DatabaseType, "image", StringComparison.OrdinalIgnoreCase) == 0)
                     continue;
 
                 Code.AppendLine("\t\t#region DELETE BY " + column.Value.FieldName);
@@ -611,7 +612,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             Code.AppendLine("\t\t\t\tcommand.CommandText = " + query);
             foreach (var column in Table.Columns)
             {
-                if (string.Compare(column.Value.DatabaseType, "ntext", true) == 0)
+                if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0)
                     Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.NText);", column.Value.FieldName);
                 else
                     Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
@@ -664,7 +665,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             {
                 //Code.AppendLine("\t\t\t\tcommand.Parameters.Add(\"@" + column.Value.FieldName + "\", System.Data.SqlDbType." + GetSqlDbType(column.Value.ManagedType) + ");");
 
-                if (string.Compare(column.Value.DatabaseType, "ntext", true) == 0)
+                if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0)
                     Code.AppendFormat("\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.NText);", column.Value.FieldName);
                 else
                     Code.AppendFormat("\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
@@ -688,17 +689,14 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         private static SqlDbType GetSqlDbType(Type type)
         {
-            if (type == typeof(byte[]))
+            if (type == typeof (byte[]))
                 return SqlDbType.Image;
 
             var parameter = new SqlParameter();
             var typeConverter = TypeDescriptor.GetConverter(parameter.DbType);
-            if (typeConverter != null)
-            {
-                var convertFrom = typeConverter.ConvertFrom(type.Name);
-                if (convertFrom != null)
-                    parameter.DbType = (DbType)convertFrom;
-            }
+            var convertFrom = typeConverter.ConvertFrom(type.Name);
+            if (convertFrom != null)
+                parameter.DbType = (DbType) convertFrom;
             return parameter.SqlDbType;
         }
     }

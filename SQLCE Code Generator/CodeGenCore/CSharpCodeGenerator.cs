@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Data.SqlServerCe;
 using System.IO;
@@ -21,7 +22,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             GenerateXmlDoc(code, 1, "Base class for all data access repositories");
             code.AppendLine("\tpublic static class EntityBase");
             code.AppendLine("\t{");
-            code.AppendLine("\t\tprivate static System.Data.SqlServerCe.SqlCeConnection connectionInstance = null;");
+            code.AppendLine("\t\tprivate static System.Data.SqlServerCe.SqlCeConnection connectionInstance;");
             code.AppendLine("\t\tprivate static readonly object syncLock = new object();");
             code.AppendLine();
 
@@ -108,8 +109,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 foreach (var column in table.Columns)
                 {
                     code.AppendFormat("{0} {1}", column.Value.FieldName, column.Value.DatabaseType.ToUpper());
-                    if (string.Compare(column.Value.DatabaseType, "ntext", true) == 0 ||
-                        string.Compare(column.Value.DatabaseType, "image", true) == 0)
+                    if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0 ||
+                        String.Compare(column.Value.DatabaseType, "image", StringComparison.OrdinalIgnoreCase) == 0)
                     {
                         code.Append(", ");
                         continue;
@@ -518,33 +519,65 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\tpublic partial class " + table.ClassName);
             code.AppendLine("\t{");
 
+            // Create backing fields if the type of the field is a string
             foreach (var column in table.Columns)
             {
+                if (options.AutoPropertiesOnly)
+                    continue;
+                
+                if (!(column.Value.MaxLength > 0) || column.Value.ManagedType != typeof (string)) 
+                    continue;
+                
                 code.AppendLine("\t\tprivate " + column.Value.ManagedType + (column.Value.ManagedType.IsValueType ? "? _" : " _") + column.Value.FieldName + ";");
-
-                if (column.Value.MaxLength > 0 && column.Value.ManagedType.Equals(typeof(string)))
-                {
-                    GenerateXmlDoc(code, 2, "The Maximum Length the " + column.Value.FieldName + " field allows");
-                    code.AppendLine("\t\tpublic const int " + column.Value.FieldName + "_Max_Length = " + column.Value.MaxLength + ";");
-                }
-
-                GenerateXmlDoc(code, 2, "Gets or sets the value of " + column.Value.FieldName);
-                code.AppendLine("\t\tpublic " + column.Value.ManagedType + (column.Value.ManagedType.IsValueType ? "? " : " ") + column.Value.FieldName);
-                code.AppendLine("\t\t{");
-                code.AppendLine("\t\t\tget { return _" + column.Value.FieldName + "; }");
-                code.AppendLine("\t\t\tset");
-                code.AppendLine("\t\t\t{");
-                code.AppendLine("\t\t\t\t_" + column.Value.FieldName + " = value;");
-
-                if (column.Value.MaxLength > 0 && column.Value.ManagedType.Equals(typeof(string)))
-                {
-                    code.AppendLine("\t\t\t\tif (_" + column.Value.FieldName + " != null && " + column.Value.FieldName + ".Length > " + column.Value.FieldName + "_Max_Length)");
-                    code.AppendLine("\t\t\t\t\tthrow new System.ArgumentException(\"Max length for " + column.Value.FieldName + " is " + column.Value.MaxLength + "\");");
-                }
-
-                code.AppendLine("\t\t\t}");
-                code.AppendLine("\t\t}");
             }
+            code.AppendLine();
+
+            // Create public constants describing the max length allowed for each string field
+            foreach (var column in table.Columns)
+            {
+                if (options.AutoPropertiesOnly)
+                    continue;
+
+                if (!(column.Value.MaxLength > 0) || column.Value.ManagedType != typeof(string))
+                    continue;
+
+                GenerateXmlDoc(code, 2, "The Maximum Length the " + column.Value.FieldName + " field allows");
+                code.AppendLine("\t\tpublic const int " + column.Value.FieldName + "_Max_Length = " + column.Value.MaxLength + ";");
+                code.AppendLine();
+            }
+
+            foreach (var column in table.Columns)
+            {
+                GenerateXmlDoc(code, 2, "Gets or sets the value of " + column.Value.FieldName);
+                
+                if (!options.AutoPropertiesOnly && column.Value.MaxLength > 0 && column.Value.ManagedType == typeof (string))
+                {
+                    // Property with backing field
+                    code.AppendLine("\t\tpublic " + column.Value.ManagedType + (column.Value.ManagedType.IsValueType ? "? " : " ") + column.Value.FieldName);
+                    code.AppendLine("\t\t{");
+                    code.AppendLine("\t\t\tget { return _" + column.Value.FieldName + "; }");
+                    code.AppendLine("\t\t\tset");
+                    code.AppendLine("\t\t\t{");
+                    code.AppendLine("\t\t\t\t_" + column.Value.FieldName + " = value;");
+
+                    if (options.ThrowExceptions)
+                    {
+                        code.AppendLine("\t\t\t\tif (_" + column.Value.FieldName + " != null && " + column.Value.FieldName + ".Length > " + column.Value.FieldName + "_Max_Length)");
+                        code.AppendLine("\t\t\t\t\tthrow new System.ArgumentException(\"Max length for " + column.Value.FieldName + " is " + column.Value.MaxLength + "\");"); 
+                    }
+                    
+                    code.AppendLine("\t\t\t}");
+                    code.AppendLine("\t\t}");
+                    code.AppendLine();
+                }
+                else
+                {
+                    // Auto property
+                    code.AppendLine("\t\tpublic " + column.Value.ManagedType + (column.Value.ManagedType.IsValueType ? "? " : " ") + column.Value.FieldName + " { get; set; }");
+                    code.AppendLine();
+                }
+            }
+
             code.AppendLine("\t}");
             code.AppendLine("}");
 
