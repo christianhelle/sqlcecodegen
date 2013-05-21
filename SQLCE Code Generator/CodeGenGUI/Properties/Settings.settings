@@ -14,5 +14,8 @@
     <Setting Name="Target" Type="System.String" Scope="User">
       <Value Profile="(Default)">NETCF</Value>
     </Setting>
+    <Setting Name="DefaultNamespace" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ChristianHelle.DatabaseTools.SqlCe</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
