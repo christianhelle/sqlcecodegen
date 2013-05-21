@@ -383,7 +383,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                 return null;
             }
 
-            var idx = generatedNamespace.LastIndexOf(".", StringComparison.Ordinal) + 1;
+            var idx = generatedNamespace.LastIndexOf(".", StringComparison.Ordinal) - 1;
             Settings.Default.DefaultNamespace = generatedNamespace.Remove(idx);
             Settings.Default.Save();
             return generatedNamespace;
