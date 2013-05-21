@@ -11,6 +11,7 @@ using ChristianHelle.DatabaseTools.SqlCe.CodeGenCore;
 using ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI.Properties;
 using ICSharpCode.TextEditor.Document;
 using Microsoft.SqlServer.MessageBox;
+using Microsoft.VisualBasic;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 {
@@ -347,8 +348,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         private CodeGenerator CreateCodeGenerator(string inputFileName)
         {
             var fi = new FileInfo(inputFileName);
-            var generatedNamespace = "ChristianHelle.DatabaseTools.SqlCe." + fi.Name.Replace(fi.Extension, string.Empty);
+            var defaultNamespace = Settings.Default.DefaultNamespace + "." + fi.Name.Replace(fi.Extension, string.Empty);
             var connectionString = GetConnectionString(inputFileName);
+
+            var generatedNamespace = GetGeneratedNamespace(defaultNamespace);
+            if (string.IsNullOrEmpty(generatedNamespace))
+                return null;
 
             WriteToOutputWindow("Analyzing Database...");
             GetDatabase(inputFileName, generatedNamespace, connectionString);
@@ -361,6 +366,27 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             var factory = new CodeGeneratorFactory(database);
             var codeGenerator = factory.Create("C#", Settings.Default.Target);
             return codeGenerator;
+        }
+
+        private static string GetGeneratedNamespace(string defaultNamespace)
+        {
+            var generatedNamespace = Interaction.InputBox("Enter the namespace to use for the generated code",
+                                                          "Default Namespace",
+                                                          defaultNamespace);
+
+            if (string.IsNullOrEmpty(generatedNamespace))
+                return null;
+
+            if (generatedNamespace.EndsWith("."))
+            {
+                MessageBox.Show("Invalid Namespace", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+
+            var idx = generatedNamespace.LastIndexOf(".", StringComparison.Ordinal) + 1;
+            Settings.Default.DefaultNamespace = generatedNamespace.Remove(idx);
+            Settings.Default.Save();
+            return generatedNamespace;
         }
 
         private void GetDatabase(string inputFileName, string generatedNamespace, string connectionString)
