@@ -27,8 +27,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             code.AppendLine("\nnamespace " + Database.DefaultNamespace);
             code.AppendLine("{");
-            code.AppendLine("\tusing System.Linq;");
-            code.AppendLine("\tusing System.Data.Linq;");
+            //code.AppendLine("\tusing System.Linq;");
+            //code.AppendLine("\tusing System.Data.Linq;");
             code.AppendLine();
             GenerateXmlDoc(code, 1, "Default I" + table.ClassName + "Repository implementation ");
             code.AppendLine("\tpublic partial class " + table.ClassName + "Repository : I" + table.ClassName + "Repository");
@@ -112,7 +112,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             foreach (var column in table.Columns)
             {
-                if (string.Compare(column.Value.DatabaseType, "ntext", true) == 0 || string.Compare(column.Value.DatabaseType, "image", true) == 0)
+                if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0 || 
+                    String.Compare(column.Value.DatabaseType, "image", StringComparison.OrdinalIgnoreCase) == 0)
                     continue;
 
                 if (column.Value.ManagedType.IsValueType)
@@ -140,7 +141,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             foreach (var column in table.Columns)
             {
-                if (string.Compare(column.Value.DatabaseType, "ntext", true) == 0 || string.Compare(column.Value.DatabaseType, "image", true) == 0)
+                if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0 || 
+                    String.Compare(column.Value.DatabaseType, "image", StringComparison.OrdinalIgnoreCase) == 0)
                     continue;
 
                 GenerateXmlDoc(code, 2, "Delete records by " + column.Value.FieldName, new KeyValuePair<string, string>(column.Value.FieldName, column.Value.FieldName + " value"));
@@ -205,7 +207,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             if (supportSqlCeTransactions)
             {
-                code.AppendLine("\t\tprivate System.Data.SqlServerCe.SqlCeTransaction transaction = null;");
+                code.AppendLine("\t\tprivate System.Data.SqlServerCe.SqlCeTransaction transaction;");
                 code.AppendLine();
             }
 
@@ -313,7 +315,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t}");
             code.AppendLine();
 
-            code.AppendLine("\t\tprivate bool disposed = false;");
+            code.AppendLine("\t\tprivate bool disposed;");
             code.AppendLine();
 
             code.AppendLine("\t\t~DataRepository()");
