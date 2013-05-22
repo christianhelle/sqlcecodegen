@@ -292,7 +292,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe
                             DatabaseType = row.Field<string>("DATA_TYPE"),
                             MaxLength = row.Field<int?>("CHARACTER_MAXIMUM_LENGTH"),
                             ManagedType = columnDescriptions.Columns[displayName].DataType,
-                            AllowsNull = (string.Compare(row.Field<string>("IS_NULLABLE"), "YES", true) == 0),
+                            AllowsNull = (String.Compare(row.Field<string>("IS_NULLABLE"), "YES", StringComparison.OrdinalIgnoreCase) == 0),
                             AutoIncrement = row.Field<long?>("AUTOINC_INCREMENT"),
                             AutoIncrementSeed = row.Field<long?>("AUTOINC_SEED"),
                             Ordinal = row.Field<int>("ORDINAL_POSITION")

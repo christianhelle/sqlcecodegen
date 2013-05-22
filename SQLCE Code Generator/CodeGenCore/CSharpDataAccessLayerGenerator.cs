@@ -669,6 +669,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     Code.AppendFormat("\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.NText);", column.Value.FieldName);
                 else
                     Code.AppendFormat("\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+
+                Code.AppendLine();
             }
             Code.AppendLine("\t\t\t\tcommand.Prepare();");
             Code.AppendLine();
