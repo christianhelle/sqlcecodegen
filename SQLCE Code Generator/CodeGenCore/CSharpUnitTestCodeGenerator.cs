@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Data.SqlServerCe;
 using System.Text;
@@ -39,7 +40,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 {
                     GeneratePropertyTest(code, table, column);
 
-                    if (column.Value.ManagedType.Equals(typeof(string)))
+                    if (column.Value.ManagedType == typeof(string))
                         GenerateStringMaxLengthTest(code, table, column);
                 }
 
@@ -128,7 +129,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\tpublic void " + column.Value.FieldName + "Test()");
             code.AppendLine("\t\t{");
 
-            if (column.Value.ManagedType.Equals(typeof(string)))
+            if (column.Value.ManagedType == typeof(string))
                 code.AppendLine("\t\t\tvar value = string.Empty;");
             else if (column.Value.ManagedType.IsArray)
                 code.AppendLine("\t\t\tvar value = new " + column.Value.ManagedType.ToString().Replace("[]", "[1];"));
@@ -157,7 +158,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         private void GenerateStringMaxLengthTest(StringBuilder code, Table table, KeyValuePair<string, Column> column)
         {
-            if (!column.Value.ManagedType.Equals(typeof(string)) || !column.Value.MaxLength.HasValue)
+            if (column.Value.ManagedType != typeof(string) || !column.Value.MaxLength.HasValue)
                 return;
 
             Trace.WriteLine("Generating " + column.Value.FieldName + "MaxLengthTest()");
@@ -173,8 +174,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t}");
             code.AppendLine();
 
-            if (string.Compare(column.Value.DatabaseType, "ntext", true) == 0 ||
-                string.Compare(column.Value.DatabaseType, "text", true) == 0)
+            if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0 ||
+                String.Compare(column.Value.DatabaseType, "text", StringComparison.OrdinalIgnoreCase) == 0)
                 return;
 
             Trace.WriteLine("Generating " + column.Value.FieldName + "MaxLengthArgumentExceptionTest()");
@@ -508,7 +509,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     continue;
                 code.AppendFormat("\t\t\t\t\t{0} = {1},",
                                   column.Value.FieldName,
-                                  column.Value.ManagedType.Equals(typeof(string))
+                                  column.Value.ManagedType == typeof(string)
                                       ? "RandomGenerator.GenerateString(" + column.Value.MaxLength + ")"
                                       : RandomGenerator.GenerateValue(column.Value.DatabaseType));
                 code.AppendLine();
@@ -525,6 +526,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t" + GetTestMethodAttribute());
             code.AppendLine("\t\tpublic void UpdateTest()");
             code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tCreateTest();");
             code.AppendLine("\t\t\tI" + table.ClassName + "Repository target = new " + table.ClassName + "Repository();");
             code.AppendLine("\t\t\tvar actual = target.ToList();");
             code.AppendLine("\t\t\tvar item = actual[0];");
@@ -560,7 +562,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             foreach (var column in table.Columns)
             {
-                if (string.Compare(column.Value.DatabaseType, "ntext", true) == 0 || string.Compare(column.Value.DatabaseType, "image", true) == 0)
+                if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0 || 
+                    String.Compare(column.Value.DatabaseType, "image", StringComparison.OrdinalIgnoreCase) == 0)
                     continue;
 
                 code.AppendLine("\t\t" + GetTestMethodAttribute());
@@ -578,7 +581,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                         continue;
                     code.AppendFormat("\t\t\t\t{0} = {1},",
                                       col.Value.FieldName,
-                                      col.Value.ManagedType.Equals(typeof(string))
+                                      col.Value.ManagedType == typeof(string)
                                           ? "RandomGenerator.GenerateString(" + col.Value.MaxLength + ")"
                                           : RandomGenerator.GenerateValue(col.Value.DatabaseType));
                     code.AppendLine();
@@ -609,7 +612,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     continue;
                 code.AppendFormat("\t\t\t\t{0} = {1},",
                                   column.Value.FieldName,
-                                  column.Value.ManagedType.Equals(typeof(string))
+                                  column.Value.ManagedType == typeof(string)
                                       ? "RandomGenerator.GenerateString(" + column.Value.MaxLength + ")"
                                       : RandomGenerator.GenerateValue(column.Value.DatabaseType));
                 code.AppendLine();
@@ -636,7 +639,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             foreach (var column in table.Columns)
             {
-                if (string.Compare(column.Value.DatabaseType, "ntext", true) == 0 || string.Compare(column.Value.DatabaseType, "image", true) == 0)
+                if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0 || 
+                    String.Compare(column.Value.DatabaseType, "image", StringComparison.OrdinalIgnoreCase) == 0)
                     continue;
 
                 if (column.Value.IsForeignKey)
@@ -663,7 +667,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             foreach (var column in table.Columns)
             {
-                if (string.Compare(column.Value.DatabaseType, "ntext", true) == 0 || string.Compare(column.Value.DatabaseType, "image", true) == 0)
+                if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0 || 
+                    String.Compare(column.Value.DatabaseType, "image", StringComparison.OrdinalIgnoreCase) == 0)
                     continue;
 
                 if (column.Value.IsForeignKey)
@@ -763,7 +768,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     code.Append("null");
                 else
                     code.Append(
-                        column.Value.ManagedType.Equals(typeof(string))
+                        column.Value.ManagedType == typeof(string)
                            ? "RandomGenerator.GenerateString(" + column.Value.MaxLength + ")"
                            : RandomGenerator.GenerateValue(column.Value.DatabaseType));
                 code.Append(", ");
@@ -797,7 +802,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     continue;
                 code.AppendFormat("\t\t\t\t{0} = {1},",
                                   column.Value.FieldName,
-                                  column.Value.ManagedType.Equals(typeof(string))
+                                  column.Value.ManagedType == typeof(string)
                                     ? "RandomGenerator.GenerateString(" + column.Value.MaxLength + ")"
                                     : RandomGenerator.GenerateValue(column.Value.DatabaseType));
                 code.AppendLine();

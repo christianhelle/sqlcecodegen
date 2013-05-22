@@ -347,13 +347,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
         private CodeGenerator CreateCodeGenerator(string inputFileName)
         {
-            var fi = new FileInfo(inputFileName);
-            var defaultNamespace = Settings.Default.DefaultNamespace + "." + fi.Name.Replace(fi.Extension, string.Empty);
-            var connectionString = GetConnectionString(inputFileName);
-
-            var generatedNamespace = GetGeneratedNamespace(defaultNamespace);
+            var generatedNamespace = GetGeneratedNamespace();
             if (string.IsNullOrEmpty(generatedNamespace))
                 return null;
+
+            var connectionString = GetConnectionString(inputFileName);
 
             WriteToOutputWindow("Analyzing Database...");
             GetDatabase(inputFileName, generatedNamespace, connectionString);
@@ -368,11 +366,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             return codeGenerator;
         }
 
-        private static string GetGeneratedNamespace(string defaultNamespace)
+        private static string GetGeneratedNamespace()
         {
             var generatedNamespace = Interaction.InputBox("Enter the namespace to use for the generated code",
                                                           "Default Namespace",
-                                                          defaultNamespace);
+                                                          Settings.Default.DefaultNamespace);
 
             if (string.IsNullOrEmpty(generatedNamespace))
                 return null;
@@ -383,9 +381,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                 return null;
             }
 
-            var idx = generatedNamespace.LastIndexOf(".", StringComparison.Ordinal) - 1;
-            Settings.Default.DefaultNamespace = generatedNamespace.Remove(idx);
+            Settings.Default.DefaultNamespace = generatedNamespace;
             Settings.Default.Save();
+
             return generatedNamespace;
         }
 

@@ -261,6 +261,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine(
                     "\t\t\t\tthrow new System.InvalidOperationException(\"No transaction has been started\");");
                 code.AppendLine("\t\t\ttransaction.Commit();");
+                code.AppendLine("\t\t\ttransaction = null;");
+                foreach (var table in Database.Tables)
+                    code.AppendLine("\t\t\t" + table.ClassName + ".Transaction = transaction;");
                 code.AppendLine("\t\t}");
                 code.AppendLine();
 
@@ -271,6 +274,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine(
                     "\t\t\t\tthrow new System.InvalidOperationException(\"No transaction has been started\");");
                 code.AppendLine("\t\t\ttransaction.Rollback();");
+                code.AppendLine("\t\t\ttransaction = null;");
+                foreach (var table in Database.Tables)
+                    code.AppendLine("\t\t\t" + table.ClassName + ".Transaction = transaction;");
                 code.AppendLine("\t\t}");
                 code.AppendLine();
             }
