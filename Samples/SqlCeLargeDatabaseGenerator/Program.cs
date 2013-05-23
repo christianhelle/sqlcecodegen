@@ -9,6 +9,8 @@ namespace SqlCeLargeDatabaseGenerator
     {
         static void Main(string[] args)
         {
+            Debug.Listeners.Add(new ConsoleTraceListener());
+
             for (int i = 100; i <= 1000; i += 100)
             {
                 if (File.Exists(i + "Tables.sdf"))
