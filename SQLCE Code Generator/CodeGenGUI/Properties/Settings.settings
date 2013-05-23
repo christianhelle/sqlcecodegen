@@ -1,0 +1,21 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="GenerateEntityUnitTests" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="GenerateDataAccessUnitTests" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="TestFramework" Type="System.String" Scope="User">
+      <Value Profile="(Default)">NUnit</Value>
+    </Setting>
+    <Setting Name="Target" Type="System.String" Scope="User">
+      <Value Profile="(Default)">NETCF</Value>
+    </Setting>
+    <Setting Name="DefaultNamespace" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ChristianHelle.DatabaseTools.SqlCe</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
