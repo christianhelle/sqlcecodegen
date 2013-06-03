@@ -40,8 +40,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             foreach (var column in Table.Columns)
             {
-                if (string.Compare(column.Value.DatabaseType, "ntext", true) == 0 ||
-                    string.Compare(column.Value.DatabaseType, "image", true) == 0)
+                if (System.String.Compare(column.Value.DatabaseType, "ntext", System.StringComparison.OrdinalIgnoreCase) == 0 ||
+                    System.String.Compare(column.Value.DatabaseType, "image", System.StringComparison.OrdinalIgnoreCase) == 0)
                     continue;
 
                 Code.AppendFormat(
@@ -52,6 +52,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
                 Code.AppendLine();
                 Code.AppendLine("\t\t{");
+                Code.AppendLine("\t\t\tif (!mockDataSource.Any(c => c." + column.Value.FieldName + " == " + column.Value.FieldName + ")) return null;");
                 Code.AppendLine("\t\t\treturn mockDataSource.Where(c => c." + column.Value.FieldName + " == " + column.Value.FieldName + ").ToList();");
                 Code.AppendLine("\t\t}");
                 Code.AppendLine();
@@ -62,6 +63,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             Code.AppendLine("\t\tpublic System.Collections.Generic.List<" + Table.ClassName + "> ToList(int count)");
             Code.AppendLine("\t\t{");
+            Code.AppendLine("\t\t\tif (!mockDataSource.Any()) return null;");
             Code.AppendLine("\t\t\treturn mockDataSource.Take(count).ToList();");
             Code.AppendLine("\t\t}");
             Code.AppendLine();
@@ -78,8 +80,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             foreach (var column in Table.Columns)
             {
-                if (string.Compare(column.Value.DatabaseType, "ntext", true) == 0 ||
-                    string.Compare(column.Value.DatabaseType, "image", true) == 0)
+                if (System.String.Compare(column.Value.DatabaseType, "ntext", System.StringComparison.OrdinalIgnoreCase) == 0 ||
+                    System.String.Compare(column.Value.DatabaseType, "image", System.StringComparison.OrdinalIgnoreCase) == 0)
                     continue;
 
                 Code.AppendFormat(
@@ -90,6 +92,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
                 Code.AppendLine();
                 Code.AppendLine("\t\t{");
+                Code.AppendLine("\t\t\tif (!mockDataSource.Any(c => c." + column.Value.FieldName + " == " + column.Value.FieldName + ")) return null;");
                 Code.AppendLine("\t\t\treturn mockDataSource.Where(c => c." + column.Value.FieldName + " == " + column.Value.FieldName + ").Take(count).ToList();");
                 Code.AppendLine("\t\t}");
                 Code.AppendLine();
@@ -159,7 +162,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             Code.AppendLine("\t\tpublic void Delete(System.Collections.Generic.IEnumerable<" + Table.ClassName + "> items)");
             Code.AppendLine("\t\t{");
-            Code.AppendLine("\t\t\tforeach (var item in new System.Collections.Generic.List<" + Table.ClassName + ">(items)) mockDataSource.Remove(item);");
+            Code.AppendLine("\t\t\tforeach (var item in items) mockDataSource.Remove(item);");
             Code.AppendLine("\t\t}");
             Code.AppendLine();
         }
@@ -168,8 +171,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             foreach (var column in Table.Columns)
             {
-                if (string.Compare(column.Value.DatabaseType, "ntext", true) == 0 ||
-                    string.Compare(column.Value.DatabaseType, "image", true) == 0)
+                if (System.String.Compare(column.Value.DatabaseType, "ntext", System.StringComparison.OrdinalIgnoreCase) == 0 ||
+                    System.String.Compare(column.Value.DatabaseType, "image", System.StringComparison.OrdinalIgnoreCase) == 0)
                     continue;
 
                 Code.AppendFormat("\t\tpublic int DeleteBy{1}({0}{2} {1})\n", column.Value.ManagedType, column.Value.FieldName,
@@ -208,7 +211,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             {
                 Code.AppendLine("\t\t\tfor (int i = 0; i < mockDataSource.Count; i++)");
                 Code.AppendLine("\t\t\t{");
-                var column = Table.Columns.Values.Where(c => c.IsPrimaryKey).First();
+                var column = Table.Columns.Values.First(c => c.IsPrimaryKey);
                 Code.AppendLine("\t\t\t\tif (mockDataSource[i]." + column.FieldName + " == item." + column.FieldName + ")");
                 Code.AppendLine("\t\t\t\t\tmockDataSource[i] = item;");
                 Code.AppendLine("\t\t\t}");
