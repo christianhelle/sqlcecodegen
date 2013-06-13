@@ -29,7 +29,9 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Database Tables");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Database Tables");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Source Code");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Unit Tests");
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -73,17 +75,9 @@
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.splitContainer = new System.Windows.Forms.SplitContainer();
             this.treeView = new System.Windows.Forms.TreeView();
-            this.tabGeneratedCode = new System.Windows.Forms.TabControl();
-            this.tabPageEntities = new System.Windows.Forms.TabPage();
-            this.rtbGeneratedCodeEntities = new ICSharpCode.TextEditor.TextEditorControl();
-            this.tabPageDataAccess = new System.Windows.Forms.TabPage();
-            this.rtbGeneratedCodeDataAccess = new ICSharpCode.TextEditor.TextEditorControl();
-            this.tabMockDataAccessCode = new System.Windows.Forms.TabPage();
-            this.rtbGeneratedMockDataAccessCode = new ICSharpCode.TextEditor.TextEditorControl();
-            this.tabPageEntityUnitTests = new System.Windows.Forms.TabPage();
-            this.rtbGeneratedCodeEntityUnitTests = new ICSharpCode.TextEditor.TextEditorControl();
-            this.tabPageDataAccessUnitTests = new System.Windows.Forms.TabPage();
-            this.rtbGeneratedCodeDataAccessUnitTests = new ICSharpCode.TextEditor.TextEditorControl();
+            this.splitContainer2 = new System.Windows.Forms.SplitContainer();
+            this.rtbCode = new ICSharpCode.TextEditor.TextEditorControl();
+            this.treeViewFiles = new System.Windows.Forms.TreeView();
             this.tabOutput = new System.Windows.Forms.TabControl();
             this.tabPageOutput = new System.Windows.Forms.TabPage();
             this.rtbOutput = new System.Windows.Forms.TextBox();
@@ -100,12 +94,9 @@
             this.splitContainer.Panel1.SuspendLayout();
             this.splitContainer.Panel2.SuspendLayout();
             this.splitContainer.SuspendLayout();
-            this.tabGeneratedCode.SuspendLayout();
-            this.tabPageEntities.SuspendLayout();
-            this.tabPageDataAccess.SuspendLayout();
-            this.tabMockDataAccessCode.SuspendLayout();
-            this.tabPageEntityUnitTests.SuspendLayout();
-            this.tabPageDataAccessUnitTests.SuspendLayout();
+            this.splitContainer2.Panel1.SuspendLayout();
+            this.splitContainer2.Panel2.SuspendLayout();
+            this.splitContainer2.SuspendLayout();
             this.tabOutput.SuspendLayout();
             this.tabPageOutput.SuspendLayout();
             this.tabTableData.SuspendLayout();
@@ -148,7 +139,7 @@
             this.newToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.newToolStripMenuItem.Name = "newToolStripMenuItem";
             this.newToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
-            this.newToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.newToolStripMenuItem.Size = new System.Drawing.Size(146, 22);
             this.newToolStripMenuItem.Text = "&New";
             this.newToolStripMenuItem.Click += new System.EventHandler(this.NewToolStripMenuItemClick);
             // 
@@ -451,7 +442,7 @@
             // 
             // statusStrip
             // 
-            this.statusStrip.Location = new System.Drawing.Point(0, 540);
+            this.statusStrip.Location = new System.Drawing.Point(0, 539);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(784, 22);
             this.statusStrip.TabIndex = 1;
@@ -471,8 +462,8 @@
             // splitContainer1.Panel2
             // 
             this.splitContainer1.Panel2.Controls.Add(this.tabOutput);
-            this.splitContainer1.Size = new System.Drawing.Size(784, 516);
-            this.splitContainer1.SplitterDistance = 401;
+            this.splitContainer1.Size = new System.Drawing.Size(784, 515);
+            this.splitContainer1.SplitterDistance = 400;
             this.splitContainer1.TabIndex = 0;
             // 
             // splitContainer
@@ -487,9 +478,9 @@
             // 
             // splitContainer.Panel2
             // 
-            this.splitContainer.Panel2.Controls.Add(this.tabGeneratedCode);
-            this.splitContainer.Size = new System.Drawing.Size(784, 401);
-            this.splitContainer.SplitterDistance = 202;
+            this.splitContainer.Panel2.Controls.Add(this.splitContainer2);
+            this.splitContainer.Size = new System.Drawing.Size(784, 400);
+            this.splitContainer.SplitterDistance = 187;
             this.splitContainer.TabIndex = 3;
             // 
             // treeView
@@ -497,138 +488,57 @@
             this.treeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView.Location = new System.Drawing.Point(0, 0);
             this.treeView.Name = "treeView";
-            treeNode2.Name = "nodeTables";
-            treeNode2.Text = "Database Tables";
+            treeNode1.Name = "nodeTables";
+            treeNode1.Text = "Database Tables";
             this.treeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode2});
-            this.treeView.Size = new System.Drawing.Size(202, 401);
+            treeNode1});
+            this.treeView.Size = new System.Drawing.Size(187, 400);
             this.treeView.TabIndex = 0;
-            this.treeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TreeViewAfterSelect);
+            this.treeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TablesTreeViewAfterSelect);
             // 
-            // tabGeneratedCode
+            // splitContainer2
             // 
-            this.tabGeneratedCode.Controls.Add(this.tabPageEntities);
-            this.tabGeneratedCode.Controls.Add(this.tabPageDataAccess);
-            this.tabGeneratedCode.Controls.Add(this.tabMockDataAccessCode);
-            this.tabGeneratedCode.Controls.Add(this.tabPageEntityUnitTests);
-            this.tabGeneratedCode.Controls.Add(this.tabPageDataAccessUnitTests);
-            this.tabGeneratedCode.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tabGeneratedCode.Location = new System.Drawing.Point(0, 0);
-            this.tabGeneratedCode.Name = "tabGeneratedCode";
-            this.tabGeneratedCode.SelectedIndex = 0;
-            this.tabGeneratedCode.Size = new System.Drawing.Size(578, 401);
-            this.tabGeneratedCode.TabIndex = 0;
-            this.tabGeneratedCode.SelectedIndexChanged += new System.EventHandler(this.TabGeneratedCodeSelectedIndexChanged);
+            this.splitContainer2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainer2.Location = new System.Drawing.Point(0, 0);
+            this.splitContainer2.Name = "splitContainer2";
             // 
-            // tabPageEntities
+            // splitContainer2.Panel1
             // 
-            this.tabPageEntities.Controls.Add(this.rtbGeneratedCodeEntities);
-            this.tabPageEntities.Location = new System.Drawing.Point(4, 22);
-            this.tabPageEntities.Name = "tabPageEntities";
-            this.tabPageEntities.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageEntities.Size = new System.Drawing.Size(570, 375);
-            this.tabPageEntities.TabIndex = 0;
-            this.tabPageEntities.Text = "Entities";
-            this.tabPageEntities.UseVisualStyleBackColor = true;
+            this.splitContainer2.Panel1.Controls.Add(this.rtbCode);
             // 
-            // rtbGeneratedCodeEntities
+            // splitContainer2.Panel2
             // 
-            this.rtbGeneratedCodeEntities.AllowDrop = true;
-            this.rtbGeneratedCodeEntities.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rtbGeneratedCodeEntities.IsReadOnly = false;
-            this.rtbGeneratedCodeEntities.Location = new System.Drawing.Point(3, 3);
-            this.rtbGeneratedCodeEntities.Name = "rtbGeneratedCodeEntities";
-            this.rtbGeneratedCodeEntities.ShowVRuler = false;
-            this.rtbGeneratedCodeEntities.Size = new System.Drawing.Size(564, 369);
-            this.rtbGeneratedCodeEntities.TabIndex = 2;
+            this.splitContainer2.Panel2.Controls.Add(this.treeViewFiles);
+            this.splitContainer2.Size = new System.Drawing.Size(593, 400);
+            this.splitContainer2.SplitterDistance = 406;
+            this.splitContainer2.TabIndex = 0;
             // 
-            // tabPageDataAccess
+            // rtbCode
             // 
-            this.tabPageDataAccess.Controls.Add(this.rtbGeneratedCodeDataAccess);
-            this.tabPageDataAccess.Location = new System.Drawing.Point(4, 22);
-            this.tabPageDataAccess.Name = "tabPageDataAccess";
-            this.tabPageDataAccess.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageDataAccess.Size = new System.Drawing.Size(570, 375);
-            this.tabPageDataAccess.TabIndex = 1;
-            this.tabPageDataAccess.Text = "Data Access Code";
-            this.tabPageDataAccess.UseVisualStyleBackColor = true;
+            this.rtbCode.AllowDrop = true;
+            this.rtbCode.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.rtbCode.IsReadOnly = false;
+            this.rtbCode.Location = new System.Drawing.Point(0, 0);
+            this.rtbCode.Name = "rtbCode";
+            this.rtbCode.ShowVRuler = false;
+            this.rtbCode.Size = new System.Drawing.Size(406, 400);
+            this.rtbCode.TabIndex = 5;
             // 
-            // rtbGeneratedCodeDataAccess
+            // treeViewFiles
             // 
-            this.rtbGeneratedCodeDataAccess.AllowDrop = true;
-            this.rtbGeneratedCodeDataAccess.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rtbGeneratedCodeDataAccess.IsReadOnly = false;
-            this.rtbGeneratedCodeDataAccess.Location = new System.Drawing.Point(3, 3);
-            this.rtbGeneratedCodeDataAccess.Name = "rtbGeneratedCodeDataAccess";
-            this.rtbGeneratedCodeDataAccess.ShowVRuler = false;
-            this.rtbGeneratedCodeDataAccess.Size = new System.Drawing.Size(564, 369);
-            this.rtbGeneratedCodeDataAccess.TabIndex = 3;
-            // 
-            // tabMockDataAccessCode
-            // 
-            this.tabMockDataAccessCode.Controls.Add(this.rtbGeneratedMockDataAccessCode);
-            this.tabMockDataAccessCode.Location = new System.Drawing.Point(4, 22);
-            this.tabMockDataAccessCode.Name = "tabMockDataAccessCode";
-            this.tabMockDataAccessCode.Padding = new System.Windows.Forms.Padding(3);
-            this.tabMockDataAccessCode.Size = new System.Drawing.Size(570, 375);
-            this.tabMockDataAccessCode.TabIndex = 4;
-            this.tabMockDataAccessCode.Text = "Mock Data Access Code";
-            this.tabMockDataAccessCode.UseVisualStyleBackColor = true;
-            // 
-            // rtbGeneratedMockDataAccessCode
-            // 
-            this.rtbGeneratedMockDataAccessCode.AllowDrop = true;
-            this.rtbGeneratedMockDataAccessCode.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rtbGeneratedMockDataAccessCode.IsReadOnly = false;
-            this.rtbGeneratedMockDataAccessCode.Location = new System.Drawing.Point(3, 3);
-            this.rtbGeneratedMockDataAccessCode.Name = "rtbGeneratedMockDataAccessCode";
-            this.rtbGeneratedMockDataAccessCode.ShowVRuler = false;
-            this.rtbGeneratedMockDataAccessCode.Size = new System.Drawing.Size(564, 369);
-            this.rtbGeneratedMockDataAccessCode.TabIndex = 5;
-            // 
-            // tabPageEntityUnitTests
-            // 
-            this.tabPageEntityUnitTests.Controls.Add(this.rtbGeneratedCodeEntityUnitTests);
-            this.tabPageEntityUnitTests.Location = new System.Drawing.Point(4, 22);
-            this.tabPageEntityUnitTests.Name = "tabPageEntityUnitTests";
-            this.tabPageEntityUnitTests.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageEntityUnitTests.Size = new System.Drawing.Size(570, 375);
-            this.tabPageEntityUnitTests.TabIndex = 2;
-            this.tabPageEntityUnitTests.Text = "Entity Unit Tests";
-            this.tabPageEntityUnitTests.UseVisualStyleBackColor = true;
-            // 
-            // rtbGeneratedCodeEntityUnitTests
-            // 
-            this.rtbGeneratedCodeEntityUnitTests.AllowDrop = true;
-            this.rtbGeneratedCodeEntityUnitTests.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rtbGeneratedCodeEntityUnitTests.IsReadOnly = false;
-            this.rtbGeneratedCodeEntityUnitTests.Location = new System.Drawing.Point(3, 3);
-            this.rtbGeneratedCodeEntityUnitTests.Name = "rtbGeneratedCodeEntityUnitTests";
-            this.rtbGeneratedCodeEntityUnitTests.ShowVRuler = false;
-            this.rtbGeneratedCodeEntityUnitTests.Size = new System.Drawing.Size(564, 369);
-            this.rtbGeneratedCodeEntityUnitTests.TabIndex = 3;
-            // 
-            // tabPageDataAccessUnitTests
-            // 
-            this.tabPageDataAccessUnitTests.Controls.Add(this.rtbGeneratedCodeDataAccessUnitTests);
-            this.tabPageDataAccessUnitTests.Location = new System.Drawing.Point(4, 22);
-            this.tabPageDataAccessUnitTests.Name = "tabPageDataAccessUnitTests";
-            this.tabPageDataAccessUnitTests.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageDataAccessUnitTests.Size = new System.Drawing.Size(570, 375);
-            this.tabPageDataAccessUnitTests.TabIndex = 3;
-            this.tabPageDataAccessUnitTests.Text = "Data Access Unit Tests";
-            this.tabPageDataAccessUnitTests.UseVisualStyleBackColor = true;
-            // 
-            // rtbGeneratedCodeDataAccessUnitTests
-            // 
-            this.rtbGeneratedCodeDataAccessUnitTests.AllowDrop = true;
-            this.rtbGeneratedCodeDataAccessUnitTests.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.rtbGeneratedCodeDataAccessUnitTests.IsReadOnly = false;
-            this.rtbGeneratedCodeDataAccessUnitTests.Location = new System.Drawing.Point(3, 3);
-            this.rtbGeneratedCodeDataAccessUnitTests.Name = "rtbGeneratedCodeDataAccessUnitTests";
-            this.rtbGeneratedCodeDataAccessUnitTests.ShowVRuler = false;
-            this.rtbGeneratedCodeDataAccessUnitTests.Size = new System.Drawing.Size(564, 369);
-            this.rtbGeneratedCodeDataAccessUnitTests.TabIndex = 4;
+            this.treeViewFiles.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.treeViewFiles.Location = new System.Drawing.Point(0, 0);
+            this.treeViewFiles.Name = "treeViewFiles";
+            treeNode2.Name = "nodeSource";
+            treeNode2.Text = "Source Code";
+            treeNode3.Name = "nodeUnitTests";
+            treeNode3.Text = "Unit Tests";
+            this.treeViewFiles.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
+            treeNode2,
+            treeNode3});
+            this.treeViewFiles.Size = new System.Drawing.Size(183, 400);
+            this.treeViewFiles.TabIndex = 0;
+            this.treeViewFiles.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.OnSourceTreeViewFilesAfterSelect);
             // 
             // tabOutput
             // 
@@ -747,7 +657,7 @@
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(784, 562);
+            this.ClientSize = new System.Drawing.Size(784, 561);
             this.Controls.Add(this.splitContainer1);
             this.Controls.Add(this.statusStrip);
             this.Controls.Add(this.menuStrip);
@@ -767,12 +677,9 @@
             this.splitContainer.Panel1.ResumeLayout(false);
             this.splitContainer.Panel2.ResumeLayout(false);
             this.splitContainer.ResumeLayout(false);
-            this.tabGeneratedCode.ResumeLayout(false);
-            this.tabPageEntities.ResumeLayout(false);
-            this.tabPageDataAccess.ResumeLayout(false);
-            this.tabMockDataAccessCode.ResumeLayout(false);
-            this.tabPageEntityUnitTests.ResumeLayout(false);
-            this.tabPageDataAccessUnitTests.ResumeLayout(false);
+            this.splitContainer2.Panel1.ResumeLayout(false);
+            this.splitContainer2.Panel2.ResumeLayout(false);
+            this.splitContainer2.ResumeLayout(false);
             this.tabOutput.ResumeLayout(false);
             this.tabPageOutput.ResumeLayout(false);
             this.tabPageOutput.PerformLayout();
@@ -818,25 +725,15 @@
         private System.Windows.Forms.ToolStripMenuItem buildToolStripMenuItem;
         private System.Windows.Forms.SplitContainer splitContainer1;
         private System.Windows.Forms.SplitContainer splitContainer;
-        private System.Windows.Forms.TreeView treeView;
         private System.Windows.Forms.TabControl tabOutput;
         private System.Windows.Forms.TabPage tabPageOutput;
-        private System.Windows.Forms.TabControl tabGeneratedCode;
-        private System.Windows.Forms.TabPage tabPageEntities;
-        private ICSharpCode.TextEditor.TextEditorControl rtbGeneratedCodeEntities;
-        private System.Windows.Forms.TabPage tabPageDataAccess;
-        private ICSharpCode.TextEditor.TextEditorControl rtbGeneratedCodeDataAccess;
         private System.Windows.Forms.TabPage tabPageCompilerOutput;
-        private System.Windows.Forms.TabPage tabPageEntityUnitTests;
-        private ICSharpCode.TextEditor.TextEditorControl rtbGeneratedCodeEntityUnitTests;
         private System.Windows.Forms.TabPage tabPageTestResults;
         private System.Windows.Forms.ToolStripMenuItem runUnitTestsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem regenerateCodeToolStripMenuItem;
         private System.Windows.Forms.TextBox rtbOutput;
         private System.Windows.Forms.TextBox rtbCompilerOutput;
         private System.Windows.Forms.TextBox rtbUnitTestOutput;
-        private System.Windows.Forms.TabPage tabPageDataAccessUnitTests;
-        private ICSharpCode.TextEditor.TextEditorControl rtbGeneratedCodeDataAccessUnitTests;
         private System.Windows.Forms.TabPage tabTableData;
         private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.ToolStripMenuItem testFrameworkToolStripMenuItem;
@@ -849,9 +746,11 @@
         private System.Windows.Forms.ToolStripMenuItem targetToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem nETCompactFrameworkCompatibleToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem windowsPhone7MangoToolStripMenuItem;
-        private System.Windows.Forms.TabPage tabMockDataAccessCode;
-        private ICSharpCode.TextEditor.TextEditorControl rtbGeneratedMockDataAccessCode;
         private System.Windows.Forms.ToolStripMenuItem lINQToSQLDataContextToolStripMenuItem;
+        private System.Windows.Forms.TreeView treeView;
+        private System.Windows.Forms.SplitContainer splitContainer2;
+        private System.Windows.Forms.TreeView treeViewFiles;
+        private ICSharpCode.TextEditor.TextEditorControl rtbCode;
 
     }
 }
