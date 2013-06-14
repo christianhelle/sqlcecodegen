@@ -215,8 +215,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                 mockDataAccessCode = string.Empty;
             }
 
-            PopulateSourceTree();
-
             var lineCount = 0;
             lineCount += entitiesCode.GetLineCount();
             lineCount += dataAccessCode.GetLineCount();
@@ -225,6 +223,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             lineCount += mockDataAccessCode.GetLineCount();
 
             WriteToOutputWindow(string.Format("{0}Generated {1} lines of code in {2}{0}", Environment.NewLine, lineCount, sw.Elapsed));
+
+            PopulateSourceTree();
 
             //WriteToOutputWindow("Loading Generated Entities Code");
             //rtbGeneratedCodeEntities.Text = entitiesCode;
@@ -769,11 +769,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         {
             rtbCompilerOutput.ResetText();
 
-            //if (Settings.Default.Target == "Mango")
-            //{
-            //    WriteToCompilerOutputWindow("Compiling the for the Target Windows Phone 7 Mango is currently not supported");
-            //    return;
-            //}
             CreateOutputFiles();
 
             var sw = Stopwatch.StartNew();
@@ -822,47 +817,34 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             process.WaitForExit();
             WriteToCompilerOutputWindow(output);
 
-            File.Delete(string.Format("{0}\\Entities.cs", appDataPath));
             File.Delete(string.Format("{0}\\DataAccess.cs", appDataPath));
-            File.Delete(string.Format("{0}\\EntityUnitTests.cs", appDataPath));
-            File.Delete(string.Format("{0}\\DataAccessUnitTests.cs", appDataPath));
-            File.Delete(string.Format("{0}\\MockDataAccess.cs", appDataPath));
+            File.Delete(string.Format("{0}\\UnitTests.cs", appDataPath));
 
             WriteToCompilerOutputWindow("Executed in " + sw.Elapsed);
         }
 
         private void CreateOutputFiles()
         {
-            throw new NotImplementedException();
-
             if (!Directory.Exists(appDataPath))
                 Directory.CreateDirectory(appDataPath);
 
-            //using (var stream = File.CreateText(Path.Combine(appDataPath, "Entities.cs")))
-            //{
-            //    stream.Write(rtbGeneratedCodeEntities.Text);
-            //    stream.WriteLine();
-            //}
-            //using (var stream = File.CreateText(Path.Combine(appDataPath, "DataAccess.cs")))
-            //{
-            //    stream.Write(rtbGeneratedCodeDataAccess.Text);
-            //    stream.WriteLine();
-            //}
-            //using (var stream = File.CreateText(Path.Combine(appDataPath, "EntityUnitTests.cs")))
-            //{
-            //    stream.Write(rtbGeneratedCodeEntityUnitTests.Text);
-            //    stream.WriteLine();
-            //}
-            //using (var stream = File.CreateText(Path.Combine(appDataPath, "DataAccessUnitTests.cs")))
-            //{
-            //    stream.Write(rtbCode.Text);
-            //    stream.WriteLine();
-            //}
-            //using (var stream = File.CreateText(Path.Combine(appDataPath, "MockDataAccess.cs")))
-            //{
-            //    stream.Write(rtbGeneratedMockDataAccessCode.Text);
-            //    stream.WriteLine();
-            //}
+            using (var stream = File.CreateText(Path.Combine(appDataPath, "DataAccess.cs")))
+            {
+                foreach (var item in generatedCodeFiles.Values)
+                {
+                    stream.Write(item);
+                    stream.WriteLine();
+                }
+            }
+
+            using (var stream = File.CreateText(Path.Combine(appDataPath, "UnitTests.cs")))
+            {
+                foreach (var item in generatedUnitTestFiles.Values)
+                {
+                    stream.Write(item);
+                    stream.WriteLine();
+                }
+            }
 
             using (var stream = File.Create(Path.Combine(appDataPath, "xunit.dll")))
             {
