@@ -530,8 +530,10 @@
             this.treeViewFiles.Location = new System.Drawing.Point(0, 0);
             this.treeViewFiles.Name = "treeViewFiles";
             treeNode2.Name = "nodeSource";
+            treeNode2.NodeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             treeNode2.Text = "Source Code";
             treeNode3.Name = "nodeUnitTests";
+            treeNode3.NodeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             treeNode3.Text = "Unit Tests";
             this.treeViewFiles.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode2,
