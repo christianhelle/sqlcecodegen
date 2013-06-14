@@ -15,13 +15,14 @@ namespace ChristianHelle.DatabaseTools.SqlCe
     {
         public SqlCeDatabase()
         {
+            Tables = new List<Table>();
             DefaultNamespace = "SqlCeCodeGen";
         }
 
         public SqlCeDatabase(string connectionString)
             : this()
         {
-            ConnectionString = connectionString + "; Max Database Size=4091;";
+            ConnectionString = connectionString + " Max Database Size=4091;";
         }
 
         public void Verify()
@@ -101,7 +102,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe
         public object GetTableProperties(Table table)
         {
             using (var conn = new SqlCeConnection(ConnectionString))
-            using (var adapter = new SqlCeDataAdapter(string.Format("SELECT COLUMN_NAME AS Name, IS_NULLABLE AS [Allows Null], DATA_TYPE AS [Data Type], CHARACTER_MAXIMUM_LENGTH AS [Max Length] FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='{0}'", table.DisplayName), conn))
+            using (var adapter = new SqlCeDataAdapter(string.Format("SELECT COLUMN_NAME AS Name, IS_NULLABLE AS [Allows Null], DATA_TYPE AS [Data Type], CHARACTER_MAXIMUM_LENGTH AS [Max Length], AUTOINC_SEED AS [Identity Seed], AUTOINC_INCREMENT AS [Identity Increment] FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='{0}'", table.DisplayName), conn))
             {
                 var dataTable = new DataTable(table.DisplayName);
                 adapter.Fill(dataTable);
@@ -197,9 +198,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe
             using (new SqlCeCommandBuilder(adapter)) adapter.Update(tableData);
         }
 
+        public string DefaultNamespace { get; set; }
         public List<Table> Tables { get; set; }
         public string DatabaseFilename { get; set; }
-        public string DefaultNamespace { get; set; }
         public string ConnectionString { get; set; }
 
         public bool VerifyConnectionStringPassword()
@@ -221,159 +222,176 @@ namespace ChristianHelle.DatabaseTools.SqlCe
 
         public void AnalyzeDatabase()
         {
-            try
+            using (var engine = new SqlCeEngine(ConnectionString))
             {
-                var engine = new SqlCeEngine(ConnectionString);
-                var tables = engine.GetTables();
-                if (tables == null) return;
+                var schema = engine.GetSchemaInformationViews();
 
-                var tableList = GetTableInformation(ConnectionString, tables);
-                Tables = new List<Table>(tableList.Values);
-                FetchPrimaryKeys();
-                FetchIndexes();
-            }
-            catch (SqlCeException e)
-            {
-                throw new SqlCeDatabaseException(e.Message, e) { NativeError = e.NativeError };
+                var tables = schema.Tables["INFORMATION_SCHEMA.TABLES"].AsEnumerable().Select(c => c.Field<string>("TABLE_NAME")).ToList();
+                if (tables.Count == 0) return;
+
+                var tableList = GetTableInformation(tables, schema);
+                Tables.AddRange(tableList.Values);
+
+                FetchPrimaryKeys(schema);
+                FetchIndexes(schema);
             }
         }
 
-        private void FetchPrimaryKeys()
-        {
-            foreach (var table in Tables)
-            {
-                using (var conn = new SqlCeConnection(ConnectionString))
-                using (var cmd = conn.CreateCommand())
-                {
-                    conn.Open();
-                    cmd.CommandText = @"SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.INDEXES WHERE TABLE_NAME=@Name AND PRIMARY_KEY=1";
-                    cmd.Parameters.AddWithValue("@Name", table.DisplayName);
-                    var primaryKeyColumnName = cmd.ExecuteScalar() as string;
-                    if (primaryKeyColumnName != null)
-                    {
-                        table.PrimaryKeyColumnName = primaryKeyColumnName;
-                        if (primaryKeyColumnName.Contains(" "))
-                            table.PrimaryKeyColumnName = string.Format("[{0}]", primaryKeyColumnName);
-                        if (table.Columns.ContainsKey(table.PrimaryKeyColumnName))
-                            table.Columns[table.PrimaryKeyColumnName].IsPrimaryKey = true;
-                    }
-
-                    var constraints = new List<string>();
-                    cmd.CommandText = @"SELECT CONSTRAINT_NAME from INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE TABLE_NAME=@Name AND CONSTRAINT_TYPE='FOREIGN KEY'";
-                    using (var reader = cmd.ExecuteReader())
-                        while (reader.Read())
-                            constraints.Add(reader[0].ToString());
-
-                    foreach (var constraint in constraints)
-                    {
-                        cmd.CommandText = @"SELECT COLUMN_NAME from INFORMATION_SCHEMA.KEY_COLUMN_USAGE WHERE CONSTRAINT_NAME=@Name";
-                        cmd.Parameters["@Name"].Value = constraint;
-                        using (var reader = cmd.ExecuteReader())
-                        {
-                            while (reader.Read())
-                            {
-                                var key = reader.GetString(0);
-                                if (table.Columns.ContainsKey(key))
-                                    table.Columns[key].IsForeignKey = true;
-                            }
-                        }
-
-                    }
-                }
-            }
-        }
-
-        private static Dictionary<string, Table> GetTableInformation(string connectionString, ICollection<string> tables)
+        private static Dictionary<string, Table> GetTableInformation(ICollection<string> tables, DataSet schema)
         {
             var tableList = new Dictionary<string, Table>(tables.Count);
             foreach (var tableName in tables)
             {
                 string table = tableName;
-                Trace.WriteLine("Analyazing " + table);
+                Trace.WriteLine("Analyazing column information for " + table);
 
                 table = string.Format("[{0}]", table);
-                var schema = new DataTable(table);
+                var columns = schema.Tables["INFORMATION_SCHEMA.COLUMNS"]
+                    .AsEnumerable()
+                    .Where(c => c.Field<string>("TABLE_NAME") == tableName)
+                    .CopyToDataTable();
 
-                using (var connection = new SqlCeConnection(connectionString))
-                using (var command = connection.CreateCommand())
+                var item = new Table
                 {
-                    connection.Open();
+                    Name = table,
+                    DisplayName = tableName,
+                    ClassName = tableName.Replace(" ", string.Empty),
+                    Columns = new Dictionary<string, Column>(columns.Rows.Count)
+                };
 
-                    command.CommandText = "SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME='" + tableName + "'";
-                    using (var adapter = new SqlCeDataAdapter(command))
-                        adapter.Fill(schema);
-
-                    var columnDescriptions = new DataTable();
-                    command.CommandText = @"SELECT * FROM " + table;
-                    using (var adapter = new SqlCeDataAdapter(command))
-                        adapter.Fill(0, 1, columnDescriptions);
-
-                    var item = new Table
+                foreach (DataRow row in columns.Rows)
+                {
+                    var displayName = row.Field<string>("COLUMN_NAME");
+                    var name = displayName;
+                    if (name.Contains(" "))
+                        name = string.Format("[{0}]", name);
+                    var column = new Column
                     {
-                        Name = table,
-                        DisplayName = tableName,
-                        ClassName = tableName.Replace(" ", string.Empty),
-                        Columns = new Dictionary<string, Column>(schema.Rows.Count)
+                        Name = name,
+                        DisplayName = displayName,
+                        FieldName = displayName.Replace(" ", string.Empty),
+                        DatabaseType = row.Field<string>("DATA_TYPE"),
+                        MaxLength = row.Field<int?>("CHARACTER_MAXIMUM_LENGTH"),
+                        ManagedType = GetManagedType(row.Field<string>("DATA_TYPE")),
+                        AllowsNull = (String.Compare(row.Field<string>("IS_NULLABLE"), "YES", StringComparison.OrdinalIgnoreCase) == 0),
+                        AutoIncrement = row.Field<long?>("AUTOINC_INCREMENT"),
+                        AutoIncrementSeed = row.Field<long?>("AUTOINC_SEED"),
+                        Ordinal = row.Field<int>("ORDINAL_POSITION")
                     };
-
-                    foreach (DataRow row in schema.Rows)
-                    {
-                        var displayName = row.Field<string>("COLUMN_NAME");
-                        var name = displayName;
-                        if (name.Contains(" "))
-                            name = string.Format("[{0}]", name);
-                        var column = new Column
-                        {
-                            Name = name,
-                            DisplayName = displayName,
-                            FieldName = displayName.Replace(" ", string.Empty),
-                            DatabaseType = row.Field<string>("DATA_TYPE"),
-                            MaxLength = row.Field<int?>("CHARACTER_MAXIMUM_LENGTH"),
-                            ManagedType = columnDescriptions.Columns[displayName].DataType,
-                            AllowsNull = (String.Compare(row.Field<string>("IS_NULLABLE"), "YES", StringComparison.OrdinalIgnoreCase) == 0),
-                            AutoIncrement = row.Field<long?>("AUTOINC_INCREMENT"),
-                            AutoIncrementSeed = row.Field<long?>("AUTOINC_SEED"),
-                            Ordinal = row.Field<int>("ORDINAL_POSITION")
-                        };
-                        item.Columns.Add(name, column);
-                    }
-
-                    tableList.Add(table, item);
+                    item.Columns.Add(name, column);
                 }
+
+                tableList.Add(table, item);
             }
+
             return tableList;
         }
 
-        private void FetchIndexes()
+        private static Type GetManagedType(string dataType)
+        {
+            switch (dataType)
+            {
+                case "bit":
+                    return typeof(bool);
+                case "varbinary":
+                case "image":
+                    return typeof(byte[]);
+                case "tinyint":
+                    return typeof(byte);
+                case "datetime":
+                    return typeof(DateTime);
+                case "numeric":
+                    return typeof(decimal);
+                case "float":
+                    return typeof(double);
+                case "uniqueidentifier":
+                    return typeof(Guid);
+                case "smallint":
+                    return typeof(short);
+                case "int":
+                case "integer":
+                    return typeof(int);
+                case "uint32":
+                    return typeof(uint);
+                case "bigint":
+                    return typeof(long);
+                case "uint64":
+                    return typeof(UInt64);
+                case "char":
+                case "nchar":
+                case "text":
+                case "ntext":
+                case "varchar":
+                case "nvarchar":
+                    return typeof(string);
+                default:
+                    return typeof(object);
+            }
+        }
+
+        private void FetchPrimaryKeys(DataSet schema)
         {
             foreach (var table in Tables)
             {
-                using (var conn = new SqlCeConnection(ConnectionString))
-                using (var cmd = conn.CreateCommand())
+                Trace.WriteLine("Analyzing primary keys for " + table);
+
+                var primaryKeyColumnName = schema.Tables["INFORMATION_SCHEMA.INDEXES"]
+                    .AsEnumerable()
+                    .First(c => c.Field<string>("TABLE_NAME") == table.DisplayName && c.Field<bool>("PRIMARY_KEY"))
+                    .Field<string>("COLUMN_NAME");
+
+                if (primaryKeyColumnName != null)
                 {
-                    conn.Open();
-                    cmd.CommandText = @"SELECT COLUMN_NAME, INDEX_NAME, [UNIQUE], [CLUSTERED] FROM INFORMATION_SCHEMA.INDEXES WHERE PRIMARY_KEY = 0 AND TABLE_NAME='" + table.DisplayName + "' ORDER BY TABLE_NAME, COLUMN_NAME, INDEX_NAME";
+                    table.PrimaryKeyColumnName = primaryKeyColumnName;
+                    if (primaryKeyColumnName.Contains(" "))
+                        table.PrimaryKeyColumnName = string.Format("[{0}]", primaryKeyColumnName);
+                    if (table.Columns.ContainsKey(table.PrimaryKeyColumnName))
+                        table.Columns[table.PrimaryKeyColumnName].IsPrimaryKey = true;
+                }
 
-                    var dataTable = new DataTable();
-                    using (var adapter = new SqlCeDataAdapter(cmd))
-                        adapter.Fill(dataTable);
+                var constraints = schema.Tables["INFORMATION_SCHEMA.TABLE_CONSTRAINTS"]
+                    .AsEnumerable()
+                    .Where(c => c.Field<string>("TABLE_NAME") == table.DisplayName && c.Field<string>("CONSTRAINT_TYPE") == "FOREIGN KEY")
+                    .Select(c => c.Field<string>("CONSTRAINT_NAME"));
 
-                    if (dataTable.Rows.Count == 0)
-                        continue;
+                foreach (var constraint in constraints)
+                {
+                    var columns = schema.Tables["INFORMATION_SCHEMA.KEY_COLUMN_USAGE"]
+                        .AsEnumerable()
+                        .Where(c => c.Field<string>("CONSTRAINT_NAME") == constraint)
+                        .Select(c => c.Field<string>("COLUMN_NAME"));
 
-                    table.Indexes = new List<Index>(dataTable.Rows.Count);
-                    foreach (DataRow row in dataTable.Rows)
+                    foreach (var column in columns)
                     {
-                        var index = new Index
-                        {
-                            Name = row.Field<string>("INDEX_NAME"),
-                            Unique = row.Field<bool>("UNIQUE"),
-                            Clustered = row.Field<bool>("CLUSTERED"),
-                            Column = table.Columns.Values.FirstOrDefault(c => c.DisplayName == row.Field<string>("COLUMN_NAME"))
-                        };
-                        table.Indexes.Add(index);
+                        if (table.Columns.ContainsKey(column))
+                            table.Columns[column].IsForeignKey = true;
                     }
                 }
+            }
+        }
+
+        private void FetchIndexes(DataSet schema)
+        {
+            foreach (var table in Tables)
+            {
+                Trace.WriteLine("Analyazing index information for " + table);
+
+                var indexes = schema.Tables["INFORMATION_SCHEMA.INDEXES"]
+                    .AsEnumerable()
+                    .Where(c => !c.Field<bool>("PRIMARY_KEY") && c.Field<string>("TABLE_NAME") == table.DisplayName)
+                    .OrderBy(c => c.Field<string>("TABLE_NAME"))
+                    .ThenBy(c => c.Field<string>("COLUMN_NAME"))
+                    .ThenBy(c => c.Field<string>("INDEX_NAME"))
+                    .Select(row => new Index
+                    {
+                        Name = row.Field<string>("INDEX_NAME"),
+                        Unique = row.Field<bool>("UNIQUE"),
+                        Clustered = row.Field<bool>("CLUSTERED"),
+                        Column = table.Columns.Values.FirstOrDefault(c => c.DisplayName == row.Field<string>("COLUMN_NAME"))
+                    }).ToList();
+
+                if (indexes.Count > 0)
+                    table.Indexes = indexes;
             }
         }
 
