@@ -9,7 +9,7 @@
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="TestFramework" Type="System.String" Scope="User">
-      <Value Profile="(Default)">NUnit</Value>
+      <Value Profile="(Default)">MSTest</Value>
     </Setting>
     <Setting Name="Target" Type="System.String" Scope="User">
       <Value Profile="(Default)">NETCF</Value>

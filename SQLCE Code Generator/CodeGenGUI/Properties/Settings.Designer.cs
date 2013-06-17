@@ -49,7 +49,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("NUnit")]
+        [global::System.Configuration.DefaultSettingValueAttribute("MSTest")]
         public string TestFramework {
             get {
                 return ((string)(this["TestFramework"]));
