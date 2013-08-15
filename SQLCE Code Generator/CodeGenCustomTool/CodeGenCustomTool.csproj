@@ -124,6 +124,7 @@
     <Compile Include="CodeGeneratorCustomTool.cs" />
     <Compile Include="CSharpFileGenerator.cs" />
     <Compile Include="MultipleFileGenerator.cs" />
+    <Compile Include="SingleFileCodeGenerator.cs" />
     <Compile Include="SQLCECodeGenerator.cs" />
     <Compile Include="SQLCEMangoCodeGeneratorMultiFile.cs" />
     <Compile Include="SQLCEMangoCodeGenerator.cs" />
