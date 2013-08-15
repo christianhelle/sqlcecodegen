@@ -8,6 +8,14 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
 {
     public static class CodeGeneratorCustomTool
     {
+        public static string GenerateCodeString(string wszInputFilePath, string wszDefaultNamespace, string fileExtension = "CSharp")
+        {
+            var database = GetDatabase(wszDefaultNamespace, wszInputFilePath);
+            var factory = new CodeGeneratorFactory(database);
+            var codeGenerator = factory.Create(fileExtension);
+            return GenerateCode(codeGenerator);
+        }
+
         public static byte[] GenerateCode(string fileNameSpace, string inputFileName, string fileExtension = "CSharp")
         {
             var database = GetDatabase(fileNameSpace, inputFileName);
@@ -77,12 +85,18 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
 
         public static byte[] GetData(CodeGenerator codeGenerator)
         {
+            var generatedCode = GenerateCode(codeGenerator);
+            return Encoding.Default.GetBytes(generatedCode);
+        }
+
+        private static string GenerateCode(CodeGenerator codeGenerator)
+        {
             codeGenerator.WriteHeaderInformation();
             codeGenerator.GenerateEntities();
             codeGenerator.GenerateDataAccessLayer();
 
             var generatedCode = codeGenerator.GetCode();
-            return Encoding.Default.GetBytes(generatedCode);
+            return generatedCode;
         }
     }
 }
