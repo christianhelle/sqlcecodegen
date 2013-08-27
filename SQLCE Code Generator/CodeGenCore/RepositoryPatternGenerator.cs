@@ -247,7 +247,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine("\t\t\tif (transaction != null)");
                 code.AppendLine(
                     "\t\t\t\tthrow new System.InvalidOperationException(\"A transaction has already been started. Only one transaction is allowed\");");
-                code.AppendLine("\t\t\ttransaction = EntityBase.Connection.BeginTransaction();");
+                code.AppendLine("\t\t\ttransaction = Database.Connection.BeginTransaction();");
                 foreach (var table in Database.Tables)
                     code.AppendLine("\t\t\t" + table.ClassName + ".Transaction = transaction;");
                 code.AppendLine("\t\t\treturn transaction;");

@@ -210,7 +210,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             Trace.WriteLine("Generating Data Access Tests");
 
             GenerateDataAccessTestBase();
-            GenerateEntityBaseTest();
+            GenerateDatabaseTest();
             GenerateDatabaseFileTest();
 
             foreach (var table in Database.Tables)
@@ -371,16 +371,16 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tvar databaseFile = @\"" + new SqlCeConnectionStringBuilder(Database.ConnectionString).DataSource +
                             "_\" + System.Guid.NewGuid().ToString().Replace(\"{\", string.Empty).Replace(\"}\", string.Empty) + \".sdf\";");
-            code.AppendLine("\t\t\tEntityBase.ConnectionString = \"Data Source='\" + databaseFile + \"'\";");
-            code.AppendLine("\t\t\tEntityBase.Connection.Dispose();");
-            code.AppendLine("\t\t\tEntityBase.Connection = null;");
+            code.AppendLine("\t\t\tDatabase.ConnectionString = \"Data Source='\" + databaseFile + \"'\";");
+            code.AppendLine("\t\t\tDatabase.Connection.Dispose();");
+            code.AppendLine("\t\t\tDatabase.Connection = null;");
             code.AppendLine();
-            code.AppendLine("\t\t\tvar actual = DatabaseFile.CreateDatabase();");
+            code.AppendLine("\t\t\tvar actual = new DatabaseFile().CreateDatabase();");
             code.AppendLine("\t\t\t" + GetAssertAreNotEqualMethod() + "(0, actual);");
             code.AppendLine();
-            code.AppendLine("\t\t\tEntityBase.ConnectionString = @\"" + Database.ConnectionString + "\";");
-            code.AppendLine("\t\t\tEntityBase.Connection.Dispose();");
-            code.AppendLine("\t\t\tEntityBase.Connection = null;");
+            code.AppendLine("\t\t\tDatabase.ConnectionString = @\"" + Database.ConnectionString + "\";");
+            code.AppendLine("\t\t\tDatabase.Connection.Dispose();");
+            code.AppendLine("\t\t\tDatabase.Connection = null;");
             code.AppendLine("\t\t}");
             code.AppendLine("\t}");
             code.AppendLine("}");
@@ -388,7 +388,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             AppendCode("DatabaseFileTest", code);
         }
 
-        private void GenerateEntityBaseTest()
+        private void GenerateDatabaseTest()
         {
             var code = new StringBuilder();
 
@@ -398,25 +398,25 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             IncludeUnitTestNamespaces(code);
             code.AppendLine();
             code.AppendLine("\t" + GetTestClassAttribute());
-            code.AppendLine("\tpublic class EntityBaseTest : DataAccessTestBase");
+            code.AppendLine("\tpublic class DatabaseTest : DataAccessTestBase");
             code.AppendLine("\t{");
             code.AppendLine("\t\t" + GetTestMethodAttribute());
             code.AppendLine("\t\tpublic void CreateCommandTest()");
             code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\t" + GetAssertIsNotNullMethod() + "(EntityBase.CreateCommand());");
+            code.AppendLine("\t\t\t" + GetAssertIsNotNullMethod() + "(Database.CreateCommand());");
             code.AppendLine("\t\t}");
             code.AppendLine();
             code.AppendLine("\t\t" + GetTestMethodAttribute());
             code.AppendLine("\t\tpublic void ConnectionIsOpenTest()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tvar expected = System.Data.ConnectionState.Open;");
-            code.AppendLine("\t\t\tvar actual = EntityBase.Connection.State;");
+            code.AppendLine("\t\t\tvar actual = Database.Connection.State;");
             code.AppendLine("\t\t\t" + GetAssertAreEqualMethod() + "(expected, actual);");
             code.AppendLine("\t\t}");
             code.AppendLine("\t}");
             code.AppendLine("}");
 
-            AppendCode("EntityBaseTest", code);
+            AppendCode("DatabaseTest", code);
         }
 
         private void GenerateDataAccessTestBase()
@@ -435,9 +435,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tvar databaseFile = @\"" + new SqlCeConnectionStringBuilder(Database.ConnectionString).DataSource +
                             "_\" + System.Guid.NewGuid().ToString().Replace(\"{\", string.Empty).Replace(\"}\", string.Empty) + \".sdf\";");
-            code.AppendLine("\t\t\tEntityBase.ConnectionString = \"Data Source='\" + databaseFile + \"'\";");
+            code.AppendLine("\t\t\tDatabase.ConnectionString = \"Data Source='\" + databaseFile + \"'\";");
             code.AppendLine("\t\t\tif (System.IO.File.Exists(databaseFile)) return;");
-            code.AppendLine("\t\t\ttry { DatabaseFile.CreateDatabase(); } catch {}");
+            code.AppendLine("\t\t\ttry { new DatabaseFile().CreateDatabase(); } catch {}");
             code.AppendLine("\t\t}");
             code.AppendLine(
                 @"
