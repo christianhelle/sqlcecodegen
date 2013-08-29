@@ -22,6 +22,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe
         public SqlCeDatabase(string connectionString)
             : this()
         {
+            if (!connectionString.EndsWith(";"))
+                connectionString += ";";
             ConnectionString = connectionString + " Max Database Size=4091;";
         }
 

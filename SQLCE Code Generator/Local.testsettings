@@ -2,8 +2,7 @@
 <TestSettings name="Local" id="36858376-2c3e-4e45-b647-162eccd9fc36" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
   <Description>These are default test settings for a local test run.</Description>
   <Deployment>
-    <DeploymentItem filename="CodeGenConsole\TestDatabase.sdf" />
-    <DeploymentItem filename="ISqlCeDatabase.UnitTest\TestDatabase40.sdf" />
+    <DeploymentItem filename="CodeGenCore.UnitTest\Northwind.sdf" />
   </Deployment>
   <Execution>
     <Hosts skipUnhostableTests="false" />
