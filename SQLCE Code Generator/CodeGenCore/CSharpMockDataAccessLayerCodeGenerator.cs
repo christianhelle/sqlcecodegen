@@ -13,7 +13,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             if (supportSqlCeTransactions)
             {
-                Code.AppendLine("\t\tpublic System.Data.SqlServerCe.SqlCeTransaction Transaction { get; set; }");
+                Code.AppendLine("\t\tpublic System.Data.IDbTransaction Transaction { get; set; }");
                 Code.AppendLine();
             }
         }

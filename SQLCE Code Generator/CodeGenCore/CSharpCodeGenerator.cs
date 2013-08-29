@@ -22,7 +22,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             GenerateXmlDoc(code, 1, "Base class for all data access repositories");
             code.AppendLine("\tpublic static class Database");
             code.AppendLine("\t{");
-            code.AppendLine("\t\tprivate static System.Data.SqlServerCe.SqlCeConnection connectionInstance;");
+            code.AppendLine("\t\tprivate static System.Data.IDbConnection connectionInstance;");
             code.AppendLine("\t\tprivate static readonly object syncLock = new object();");
             code.AppendLine();
 
@@ -40,7 +40,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine();
 
             GenerateXmlDoc(code, 2, "Gets or sets the global SQL CE Connection instance");
-            code.AppendLine("\t\tpublic static System.Data.SqlServerCe.SqlCeConnection Connection");
+            code.AppendLine("\t\tpublic static System.Data.IDbConnection Connection");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tget");
             code.AppendLine("\t\t\t{");
@@ -62,19 +62,26 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine();
 
             GenerateXmlDoc(code, 2, "Create a SqlCeCommand instance using the global SQL CE Conection instance");
-            code.AppendLine("\t\tpublic static System.Data.SqlServerCe.SqlCeCommand CreateCommand()");
+            code.AppendLine("\t\tpublic static System.Data.IDbCommand CreateCommand()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\treturn CreateCommand(null);");
             code.AppendLine("\t\t}");
             code.AppendLine();
 
             GenerateXmlDoc(code, 2, "Create a SqlCeCommand instance using the global SQL CE Conection instance and associate this with a transaction", new KeyValuePair<string, string>("transaction", "SqlCeTransaction to be used for the SqlCeCommand"));
-            code.AppendLine("\t\tpublic static System.Data.SqlServerCe.SqlCeCommand CreateCommand(System.Data.SqlServerCe.SqlCeTransaction transaction)");
+            code.AppendLine("\t\tpublic static System.Data.IDbCommand CreateCommand(System.Data.IDbTransaction transaction)");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tvar command = Connection.CreateCommand();");
             code.AppendLine("\t\t\tcommand.Transaction = transaction;");
             code.AppendLine("\t\t\treturn command;");
             code.AppendLine("\t\t}");
+            
+            GenerateXmlDoc(code, 2, "Create a DbParameter instance using the global SQL CE Conection instance", new KeyValuePair<string, string>("name", "Name of the parameter"), new KeyValuePair<string, string>("type", "The database type"), new KeyValuePair<string, string>("value", "The actual value to set the parameter to"));
+            code.AppendLine("\t\tpublic static System.Data.Common.DbParameter CreateParameter(string name, System.Data.SqlDbType type, object value)");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\treturn new System.Data.SqlServerCe.SqlCeParameter(name, type) { Value = value };");
+            code.AppendLine("\t\t}");
+
             code.AppendLine("\t}");
             code.AppendLine("}");
 

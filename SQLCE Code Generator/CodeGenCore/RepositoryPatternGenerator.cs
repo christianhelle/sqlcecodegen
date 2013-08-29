@@ -54,7 +54,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             if (supportSqlCeTransactions)
             {
-                code.AppendLine("\t\tpublic System.Data.SqlServerCe.SqlCeTransaction Transaction { get; set; }");
+                code.AppendLine("\t\tpublic System.Data.IDbTransaction Transaction { get; set; }");
                 code.AppendLine();
             }
 
@@ -99,7 +99,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             if (supportSqlCeTransactions)
             {
                 GenerateXmlDoc(code, 2, "Transaction instance created from <see cref=\"IDataRepository\" />");
-                code.AppendLine("\t\tSystem.Data.SqlServerCe.SqlCeTransaction Transaction { get; set; }");
+                code.AppendLine("\t\tSystem.Data.IDbTransaction Transaction { get; set; }");
                 code.AppendLine();
             }
 
@@ -207,7 +207,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             if (supportSqlCeTransactions)
             {
-                code.AppendLine("\t\tprivate System.Data.SqlServerCe.SqlCeTransaction transaction;");
+                code.AppendLine("\t\tprivate System.Data.IDbTransaction transaction;");
                 code.AppendLine();
             }
 
@@ -242,7 +242,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             if (supportSqlCeTransactions)
             {
                 GenerateXmlDoc(code, 2, "Starts a SqlCeTransaction using the global SQL CE Conection instance");
-                code.AppendLine("\t\tpublic System.Data.SqlServerCe.SqlCeTransaction BeginTransaction()");
+                code.AppendLine("\t\tpublic System.Data.IDbTransaction BeginTransaction()");
                 code.AppendLine("\t\t{");
                 code.AppendLine("\t\t\tif (transaction != null)");
                 code.AppendLine(
@@ -355,7 +355,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             if (supportSqlCeTransactions)
             {
                 GenerateXmlDoc(code, 2, "Starts a SqlCeTransaction using the global SQL CE Conection instance");
-                code.AppendLine("\t\tSystem.Data.SqlServerCe.SqlCeTransaction BeginTransaction();");
+                code.AppendLine("\t\tSystem.Data.IDbTransaction BeginTransaction();");
                 code.AppendLine();
 
                 GenerateXmlDoc(code, 2, "Commits the transaction");

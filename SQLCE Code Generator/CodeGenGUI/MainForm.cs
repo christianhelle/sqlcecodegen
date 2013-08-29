@@ -797,7 +797,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                 csc = Environment.ExpandEnvironmentVariables(@"%SystemRoot%\Microsoft.Net\Framework\v3.5\csc.exe");
                 args =
                     string.Format(
-                        @"/target:library /optimize /out:""{0}\DataAccess.dll"" /reference:""{1}\System.Data.SqlServerCe.dll"" /reference:""{1}\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll"" /reference:""{1}\NUnit\nunit.framework.dll"" /reference:""{1}\xUnit\xunit.dll"" ""{0}\*.cs""",
+                        @"/target:library /optimize /out:""{0}\DataAccess.dll"" /reference:""{1}\System.Data.SqlServerCe.dll"" /reference:""{1}\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll"" /reference:""{1}\NUnit\nunit.framework.dll"" /reference:""{1}\xUnit\xunit.dll"" /reference:""System.dll"" /reference:""System.Data.dll""  ""{0}\*.cs""",
                         appDataPath, Environment.CurrentDirectory);
 
                 WriteToCompilerOutputWindow("Compiling using C# 3.0");
