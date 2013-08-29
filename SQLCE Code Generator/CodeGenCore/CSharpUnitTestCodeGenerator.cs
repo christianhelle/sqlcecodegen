@@ -260,7 +260,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine();
             }
 
-            code.AppendLine("\t\tpublic System.Data.SqlServerCe.SqlCeTransaction BeginTransaction()");
+            code.AppendLine("\t\tpublic System.Data.IDbTransaction BeginTransaction()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\treturn null;");
             code.AppendLine("\t\t}");

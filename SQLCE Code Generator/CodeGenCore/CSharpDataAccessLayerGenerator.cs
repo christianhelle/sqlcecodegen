@@ -120,8 +120,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 Code.AppendLine("\t\t\t\tif (" + column.Value.FieldName + " != null)");
                 Code.AppendLine("\t\t\t\t{");
                 Code.AppendFormat("\t\t\t\t\tcommand.CommandText = \"SELECT * FROM [{0}] WHERE {1}=@{1}\";", Table.ClassName, column.Value.FieldName);
-                Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
-                Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters[\"@{0}\"].Value = {1};", column.Value.FieldName, "(object)" + column.Value.FieldName);
+                Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, (object){0}));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                //Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters[\"@{0}\"].Value = {1};", column.Value.FieldName, "(object)" + column.Value.FieldName);
                 //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.AddWithValue(\"@{0}\", {0});", column.Value.FieldName);
                 Code.AppendLine();
                 Code.AppendLine("\t\t\t\t}");
@@ -171,8 +172,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 Code.AppendLine("\t\t\tif (" + column.Value.FieldName + " != null)");
                 Code.AppendLine("\t\t\t{");
                 Code.AppendFormat("\t\t\t\tcommand.CommandText = \"SELECT TOP(\" + count + \") * FROM [{0}] WHERE {1}=@{1}\";", Table.ClassName, column.Value.FieldName);
-                Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
-                Code.AppendFormat("\n\t\t\t\tcommand.Parameters[\"@{0}\"].Value = {1};", column.Value.FieldName, "(object)" + column.Value.FieldName);
+                Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, (object){0}));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                //Code.AppendFormat("\n\t\t\t\tcommand.Parameters[\"@{0}\"].Value = {1};", column.Value.FieldName, "(object)" + column.Value.FieldName);
                 //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.AddWithValue(\"@{0}\", {0});", column.Value.FieldName);
                 Code.AppendLine();
                 Code.AppendLine("\t\t\t}");
@@ -303,8 +305,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             {
                 if (column.Value.Name == Table.PrimaryKeyColumnName)
                     continue;
-                Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
-                Code.AppendFormat("\n\t\t\t\tcommand.Parameters[\"@{0}\"].Value = {1};", column.Value.FieldName, column.Value.FieldName + " != null ? (object)" + column.Value.FieldName + " : System.DBNull.Value");
+                //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, null));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                Code.AppendFormat("\n\t\t\t\t((System.Data.Common.DbParameter)command.Parameters[\"@{0}\"]).Value = {1};", column.Value.FieldName, column.Value.FieldName + " != null ? (object)" + column.Value.FieldName + " : System.DBNull.Value");
                 //code.AppendLine("\t\t\t\tcommand.Parameters.AddWithValue(\"@" + column.Value.FieldName + "\", " + column.Value.FieldName + " != null ? (object)" + column.Value.FieldName + " : System.DBNull.Value);");
             }
             Code.AppendLine();
@@ -363,8 +366,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             Code.AppendLine("\t\t\t\tcommand.CommandText = " + query);
             foreach (var column in Table.Columns)
             {
-                Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
-                Code.AppendFormat("\n\t\t\t\tcommand.Parameters[\"@{0}\"].Value = {1};", column.Value.FieldName, column.Value.FieldName + " != null ? (object)" + column.Value.FieldName + " : System.DBNull.Value");
+                Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, {2}));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType), column.Value.FieldName + " != null ? (object)" + column.Value.FieldName + " : System.DBNull.Value");
+                //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                //Code.AppendFormat("\n\t\t\t\tcommand.Parameters[\"@{0}\"].Value = {1};", column.Value.FieldName, column.Value.FieldName + " != null ? (object)" + column.Value.FieldName + " : System.DBNull.Value");
                 //code.AppendLine("\t\t\t\tcommand.Parameters.AddWithValue(\"@" + column.Value.FieldName + "\", " + column.Value.FieldName + " != null ? (object)" + column.Value.FieldName + " : System.DBNull.Value);");
             }
             Code.AppendLine();
@@ -388,7 +392,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             Code.AppendLine("\t\t\t\tcommand.CommandType = System.Data.CommandType.TableDirect;");
             Code.AppendLine("\t\t\t\tcommand.CommandText = \"" + Table.ClassName + "\";");
             Code.AppendLine();
-            Code.AppendLine("\t\t\t\tusing (var resultSet = command.ExecuteResultSet(System.Data.SqlServerCe.ResultSetOptions.Updatable))");
+            Code.AppendLine("\t\t\t\tusing (var resultSet = ((System.Data.SqlServerCe.SqlCeCommand)command).ExecuteResultSet(System.Data.SqlServerCe.ResultSetOptions.Updatable))");
             Code.AppendLine("\t\t\t\t{");
             Code.AppendLine("\t\t\t\t\tvar record = resultSet.CreateRecord();");
             Code.AppendLine("\t\t\t\t\tforeach (var item in items)");
@@ -444,14 +448,16 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             {
                 if (!hasPrimaryKey)
                 {
-                    Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
-                    Code.AppendFormat("\n\t\t\t\tcommand.Parameters[\"@{0}\"].Value = item.{1};", column.Value.FieldName, column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value");
+                    Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, item." + column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                    //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                    //Code.AppendFormat("\n\t\t\t\tcommand.Parameters[\"@{0}\"].Value = item.{1};", column.Value.FieldName, column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value");
                     //code.AppendLine("\t\t\t\tcommand.Parameters.AddWithValue(\"@" + column.Value.FieldName + "\", item." + column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value);");
                 }
                 else if (column.Value.IsPrimaryKey)
                 {
-                    Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
-                    Code.AppendFormat("\n\t\t\t\tcommand.Parameters[\"@{0}\"].Value = item.{1};", column.Value.FieldName, column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value");
+                    Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, item." + column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                    //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                    //Code.AppendFormat("\n\t\t\t\tcommand.Parameters[\"@{0}\"].Value = item.{1};", column.Value.FieldName, column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value");
                     //code.AppendLine("\t\t\t\tcommand.Parameters.AddWithValue(\"@" + column.Value.FieldName + "\", item." + column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value);");
                     break;
                 }
@@ -501,10 +507,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             foreach (var column in Table.Columns)
             {
                 if (!hasPrimaryKey)
-                    Code.AppendLine("\t\t\t\tcommand.Parameters.Add(\"@" + column.Value.FieldName + "\", System.Data.SqlDbType." + GetSqlDbType(column.Value.ManagedType) + ");");
+                    Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, null));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                    //Code.AppendLine("\t\t\t\tcommand.Parameters.Add(\"@" + column.Value.FieldName + "\", System.Data.SqlDbType." + GetSqlDbType(column.Value.ManagedType) + ");");
                 else if (column.Value.IsPrimaryKey)
                 {
-                    Code.AppendLine("\t\t\t\tcommand.Parameters.Add(\"@" + column.Value.FieldName + "\", System.Data.SqlDbType." + GetSqlDbType(column.Value.ManagedType) + ");");
+                    Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, null));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                    //Code.AppendLine("\t\t\t\tcommand.Parameters.Add(\"@" + column.Value.FieldName + "\", System.Data.SqlDbType." + GetSqlDbType(column.Value.ManagedType) + ");");
                     break;
                 }
             }
@@ -516,10 +524,10 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             foreach (var column in Table.Columns)
             {
                 if (!hasPrimaryKey)
-                    Code.AppendLine("\t\t\t\t\tcommand.Parameters[\"@" + column.Value.FieldName + "\"].Value = item." + column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value;");
+                    Code.AppendLine("\t\t\t\t\t((System.Data.Common.DbParameter)command.Parameters[\"@" + column.Value.FieldName + "\"]).Value = item." + column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value;");
                 else if (column.Value.IsPrimaryKey)
                 {
-                    Code.AppendLine("\t\t\t\t\tcommand.Parameters[\"@" + column.Value.FieldName + "\"].Value = item." + column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value;");
+                    Code.AppendLine("\t\t\t\t\t((System.Data.Common.DbParameter)command.Parameters[\"@" + column.Value.FieldName + "\"]).Value = item." + column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value;");
                     break;
                 }
             }
@@ -549,8 +557,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 Code.AppendLine("\t\t\tusing (var command = Database.CreateCommand(Transaction))");
                 Code.AppendLine("\t\t\t{");
                 Code.AppendFormat("\t\t\t\tcommand.CommandText = \"DELETE FROM {0} WHERE {1}=@{2}\";", Table.Name, column.Value.Name, column.Value.FieldName);
-                Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
-                Code.AppendFormat("\n\t\t\t\tcommand.Parameters[\"@{0}\"].Value = {1};", column.Value.FieldName, column.Value.FieldName + " != null ? (object)" + column.Value.FieldName + " : System.DBNull.Value");
+                Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, {2}));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType), column.Value.FieldName + " != null ? (object)" + column.Value.FieldName + " : System.DBNull.Value");
+                //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                //Code.AppendFormat("\n\t\t\t\tcommand.Parameters[\"@{0}\"].Value = {1};", column.Value.FieldName, column.Value.FieldName + " != null ? (object)" + column.Value.FieldName + " : System.DBNull.Value");
                 //code.AppendFormat("\n\t\t\t\tcommand.Parameters.AddWithValue(\"@{0}\", {0} != null ? (object){0} : System.DBNull.Value);", column.Value.FieldName);
                 Code.AppendLine();
                 Code.AppendLine("\n\t\t\t\treturn command.ExecuteNonQuery();");
@@ -613,10 +622,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             foreach (var column in Table.Columns)
             {
                 if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0)
-                    Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.NText);", column.Value.FieldName);
+                    Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.NText, null));", column.Value.FieldName);
+                    //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.NText);", column.Value.FieldName);
                 else
-                    Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
-                Code.AppendFormat("\n\t\t\t\tcommand.Parameters[\"@{0}\"].Value = item.{1};", column.Value.FieldName, column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value");
+                    Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, null));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                    //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                Code.AppendFormat("\n\t\t\t\t((System.Data.Common.DbParameter)command.Parameters[\"@{0}\"]).Value = item.{1};", column.Value.FieldName, column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value");
                 //code.AppendLine("\t\t\t\tcommand.Parameters.AddWithValue(\"@" + column.Value.FieldName + "\", item." + column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value);");
             }
             Code.AppendLine();
@@ -666,9 +677,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 //Code.AppendLine("\t\t\t\tcommand.Parameters.Add(\"@" + column.Value.FieldName + "\", System.Data.SqlDbType." + GetSqlDbType(column.Value.ManagedType) + ");");
 
                 if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0)
-                    Code.AppendFormat("\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.NText);", column.Value.FieldName);
+                    Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.NText, null));", column.Value.FieldName);
+                    //Code.AppendFormat("\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.NText);", column.Value.FieldName);
                 else
-                    Code.AppendFormat("\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                    Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, null));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                    //Code.AppendFormat("\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
 
                 Code.AppendLine();
             }
@@ -678,7 +691,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             Code.AppendLine("\t\t\t\tforeach (var item in items)");
             Code.AppendLine("\t\t\t\t{");
             foreach (var column in Table.Columns)
-                Code.AppendLine("\t\t\t\t\tcommand.Parameters[\"@" + column.Value.FieldName + "\"].Value = item." + column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value;");
+                Code.AppendLine("\t\t\t\t\t((System.Data.Common.DbParameter)command.Parameters[\"@" + column.Value.FieldName + "\"]).Value = item." + column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value;");
             Code.AppendLine("\t\t\t\t\tcommand.ExecuteNonQuery();");
             Code.AppendLine("\t\t\t\t}");
 
