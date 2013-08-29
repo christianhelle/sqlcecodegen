@@ -75,6 +75,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\tcommand.Transaction = transaction;");
             code.AppendLine("\t\t\treturn command;");
             code.AppendLine("\t\t}");
+            code.AppendLine();
             
             GenerateXmlDoc(code, 2, "Create a DbParameter instance using the global SQL CE Conection instance", new KeyValuePair<string, string>("name", "Name of the parameter"), new KeyValuePair<string, string>("type", "The database type"), new KeyValuePair<string, string>("value", "The actual value to set the parameter to"));
             code.AppendLine("\t\tpublic static System.Data.Common.DbParameter CreateParameter(string name, System.Data.SqlDbType type, object value)");

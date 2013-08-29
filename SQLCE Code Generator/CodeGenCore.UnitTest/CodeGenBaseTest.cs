@@ -21,7 +21,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.UnitTest
         protected static ISqlCeDatabase GetDatabase()
         {
             var defaultNamespace = typeof(CodeGenTest).Namespace;
-            const string connectionString = "Data Source=Northwind.sdf";
+            const string connectionString = "Data Source=Northwind.sdf;";
             return SqlCeDatabaseFactory.Create(defaultNamespace, connectionString);
         }
 
