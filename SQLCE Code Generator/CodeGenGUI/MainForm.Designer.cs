@@ -32,6 +32,7 @@
             System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Database Tables");
             System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Source Code");
             System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Unit Tests");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Mocks");
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -535,9 +536,13 @@
             treeNode3.Name = "nodeUnitTests";
             treeNode3.NodeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             treeNode3.Text = "Unit Tests";
+            treeNode4.Name = "nodeMocks";
+            treeNode4.NodeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            treeNode4.Text = "Mocks";
             this.treeViewFiles.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
             treeNode2,
-            treeNode3});
+            treeNode3,
+            treeNode4});
             this.treeViewFiles.Size = new System.Drawing.Size(183, 400);
             this.treeViewFiles.TabIndex = 0;
             this.treeViewFiles.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.OnSourceTreeViewFilesAfterSelect);
