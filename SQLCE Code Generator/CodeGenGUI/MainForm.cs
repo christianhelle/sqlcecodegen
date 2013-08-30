@@ -30,6 +30,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         private ISqlCeDatabase database;
         private readonly Dictionary<string, StringBuilder> generatedCodeFiles;
         private readonly Dictionary<string, StringBuilder> generatedUnitTestFiles;
+        private readonly Dictionary<string, StringBuilder> generatedMockFiles;
         private readonly bool launchedWithArgument;
         private readonly string appDataPath;
 
@@ -39,6 +40,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             dataGridView.DoubleBuffered(true);
             generatedCodeFiles = new Dictionary<string, StringBuilder>();
             generatedUnitTestFiles = new Dictionary<string, StringBuilder>();
+            generatedMockFiles = new Dictionary<string, StringBuilder>();
 
             //rtbGeneratedCodeEntities.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy(LANGUAGE);
             //rtbGeneratedCodeDataAccess.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy(LANGUAGE);
@@ -103,36 +105,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
             WriteToOutputWindow(string.Format("Found {0} tables{1}", database.Tables.Count, Environment.NewLine));
             PopulateDatabaseTables(database.Tables);
-
-            //WriteToOutputWindow("Loading Generated Entities Code");
-            //rtbGeneratedCodeEntities.Text = file.GeneratedCode.Entities;
-
-            //WriteToOutputWindow("Loading Generated Data Access Code");
-            //rtbGeneratedCodeDataAccess.Text = file.GeneratedCode.DataAccessCode;
-
-            //if (!string.IsNullOrEmpty(file.GeneratedCode.EntityUnitTests))
-            //{
-            //    WriteToOutputWindow("Loading Generated Entities Unit Test Code");
-            //    rtbGeneratedCodeEntityUnitTests.Text = file.GeneratedCode.EntityUnitTests;
-            //}
-            //else
-            //    entityUnitTestsToolStripMenuItem.Checked = false;
-
-            //if (!string.IsNullOrEmpty(file.GeneratedCode.DataAccessUnitTests))
-            //{
-            //    WriteToOutputWindow("Loading Generated Data Access Unit Test Code");
-            //    rtbCode.Text = file.GeneratedCode.DataAccessUnitTests;
-            //}
-            //else
-            //    dataAccessUnitTestsToolStripMenuItem.Checked = false;
-
+            
             var lineCount = 0;
             lineCount += file.GeneratedCode.Entities.GetLineCount();
             lineCount += file.GeneratedCode.DataAccessCode.GetLineCount();
             lineCount += file.GeneratedCode.EntityUnitTests.GetLineCount();
             lineCount += file.GeneratedCode.DataAccessUnitTests.GetLineCount();
-            //lineCount += rtbGeneratedMockDataAccessCode.Text.GetLineCount();
-
+            
             WriteToOutputWindow(string.Format("{0}Loaded {1} lines of code in {2}{0}", Environment.NewLine, lineCount, sw.Elapsed));
         }
 
@@ -172,11 +151,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         {
             rtbUnitTestOutput.ResetText();
             rtbOutput.ResetText();
-            //rtbGeneratedCodeEntityUnitTests.ResetText();
-            //rtbGeneratedCodeEntities.ResetText();
             rtbCode.ResetText();
-            //rtbGeneratedCodeDataAccess.ResetText();
-            //rtbGeneratedMockDataAccessCode.ResetText();
             rtbCompilerOutput.ResetText();
             treeView.Nodes.Clear();
 
@@ -184,6 +159,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
             generatedCodeFiles.Clear();
             generatedUnitTestFiles.Clear();
+            generatedMockFiles.Clear();
 
             Refresh();
         }
@@ -226,44 +202,25 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
             PopulateSourceTree();
 
-            //WriteToOutputWindow("Loading Generated Entities Code");
-            //rtbGeneratedCodeEntities.Text = entitiesCode;
-
-            //WriteToOutputWindow("Loading Generated Data Access Code");
-            //rtbGeneratedCodeDataAccess.Text = dataAccessCode;
-
-            //if (!string.IsNullOrEmpty(entityUnitTestsCode))
-            //{
-            //    WriteToOutputWindow("Loading Generated Entities Unit Test Code");
-            //    rtbGeneratedCodeEntityUnitTests.Text = entityUnitTestsCode;
-            //}
-
-            //if (!string.IsNullOrEmpty(dataAccessUnitTestsCode))
-            //{
-            //    WriteToOutputWindow("Loading Generated Data Access Unit Test Code");
-            //    rtbGeneratedCodeDataAccessUnitTests.Text = dataAccessUnitTestsCode;
-            //}
-
-            //if (!string.IsNullOrEmpty(mockDataAccessCode))
-            //{
-            //    WriteToOutputWindow("Loading Generated Mock Data Access Code");
-            //    rtbGeneratedMockDataAccessCode.Text = mockDataAccessCode;
-            //}
-
             WriteToOutputWindow(string.Format("{0}Executed in {1}", Environment.NewLine, sw.Elapsed));
         }
 
         private void PopulateSourceTree()
         {
-            treeViewFiles.Nodes[0].Nodes.Clear();
-            foreach (var item in generatedCodeFiles)
-                treeViewFiles.Nodes[0].Nodes.Add(new TreeNode(item.Key + ".cs") { Tag = item.Value });
+            foreach (TreeNode node in treeViewFiles.Nodes)
+                node.Nodes.Clear();
 
-            treeViewFiles.Nodes[1].Nodes.Clear();
-            foreach (var item in generatedUnitTestFiles)
-                treeViewFiles.Nodes[1].Nodes.Add(new TreeNode(item.Key + ".cs") { Tag = item.Value });
+            PopulateNode(generatedCodeFiles, 0);
+            PopulateNode(generatedUnitTestFiles, 1);
+            PopulateNode(generatedMockFiles, 2);
 
             treeViewFiles.ExpandAll();
+        }
+
+        private void PopulateNode(Dictionary<string,StringBuilder> files, int treeIndex)
+        {
+            foreach (var item in files)
+                treeViewFiles.Nodes[treeIndex].Nodes.Add(new TreeNode(item.Key + ".cs") {Tag = item.Value});
         }
 
         private void AddToCodeFiles(CodeGenerator codeGenerator)
@@ -283,7 +240,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             header.AppendLine();
 
             foreach (var code in codeGenerator.CodeFiles)
-                generatedUnitTestFiles.Add(code.Key, code.Value.Insert(0, header.ToString()));
+            {
+                if (code.Key.StartsWith("Mock"))
+                    generatedMockFiles.Add(code.Key, code.Value.Insert(0, header.ToString()));
+                else
+                    generatedUnitTestFiles.Add(code.Key, code.Value.Insert(0, header.ToString()));
+            }
         }
 
         private string GeneratedMockDataAccessCode(CodeGenerator codeGenerator)
