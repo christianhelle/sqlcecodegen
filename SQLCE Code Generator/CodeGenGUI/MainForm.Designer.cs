@@ -672,7 +672,7 @@
             this.MainMenuStrip = this.menuStrip;
             this.Name = "MainForm";
             this.Text = "SQL Compact Code Generator";
-            this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainFormFormClosing);
             this.Load += new System.EventHandler(this.MainFormLoad);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.MainFormDragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.MainFormDragEnter);

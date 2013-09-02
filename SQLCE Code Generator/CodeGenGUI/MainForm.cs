@@ -37,7 +37,22 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         public MainForm(string[] args)
         {
             InitializeComponent();
+
+            if (!Settings.Default.WindowSize.IsEmpty)
+                Size = Settings.Default.WindowSize;
+            else
+                Size = new System.Drawing.Size(800, 600);
+
+            if (!Settings.Default.WindowPosition.IsEmpty)
+                Location = Settings.Default.WindowPosition;
+            else 
+                CenterToScreen();
+
+            if (Settings.Default.WindowState == FormWindowState.Maximized)
+                WindowState = Settings.Default.WindowState;
+
             dataGridView.DoubleBuffered(true);
+
             generatedCodeFiles = new Dictionary<string, StringBuilder>();
             generatedUnitTestFiles = new Dictionary<string, StringBuilder>();
             generatedMockFiles = new Dictionary<string, StringBuilder>();
@@ -105,13 +120,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
             WriteToOutputWindow(string.Format("Found {0} tables{1}", database.Tables.Count, Environment.NewLine));
             PopulateDatabaseTables(database.Tables);
-            
+
             var lineCount = 0;
             lineCount += file.GeneratedCode.Entities.GetLineCount();
             lineCount += file.GeneratedCode.DataAccessCode.GetLineCount();
             lineCount += file.GeneratedCode.EntityUnitTests.GetLineCount();
             lineCount += file.GeneratedCode.DataAccessUnitTests.GetLineCount();
-            
+
             WriteToOutputWindow(string.Format("{0}Loaded {1} lines of code in {2}{0}", Environment.NewLine, lineCount, sw.Elapsed));
         }
 
@@ -217,10 +232,10 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             treeViewFiles.ExpandAll();
         }
 
-        private void PopulateNode(Dictionary<string,StringBuilder> files, int treeIndex)
+        private void PopulateNode(Dictionary<string, StringBuilder> files, int treeIndex)
         {
             foreach (var item in files)
-                treeViewFiles.Nodes[treeIndex].Nodes.Add(new TreeNode(item.Key + ".cs") {Tag = item.Value});
+                treeViewFiles.Nodes[treeIndex].Nodes.Add(new TreeNode(item.Key + ".cs") { Tag = item.Value });
         }
 
         private void AddToCodeFiles(CodeGenerator codeGenerator)
@@ -453,6 +468,14 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         {
             if (!launchedWithArgument)
                 SafeOperation(NewFile);
+        }
+
+        private void MainFormFormClosing(object sender, FormClosingEventArgs e)
+        {
+            Settings.Default.WindowState = WindowState;
+            Settings.Default.WindowSize = Size;
+            Settings.Default.WindowPosition = Location;
+            Settings.Default.Save();
         }
 
         private void OpenToolStripMenuItemClick(object sender, EventArgs e)
@@ -957,15 +980,62 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         }
         #endregion
 
+        #region Export Files
+        private void ExportFiles()
+        {
+            string path;
+            using (var dialog = new FolderBrowserDialog())
+            {
+                var dialogResult = dialog.ShowDialog();
+                if (dialogResult != DialogResult.OK)
+                    return;
+
+                path = dialog.SelectedPath;
+            }
+
+            var sourcePath = Path.Combine(path, "Source\\");
+            if (Directory.Exists(sourcePath))
+                Directory.Delete(sourcePath, true);
+            Directory.CreateDirectory(sourcePath);
+
+            var testPath = Path.Combine(path, "Tests\\");
+            if (Directory.Exists(testPath))
+                Directory.Delete(testPath, true);
+            Directory.CreateDirectory(testPath);
+
+            var mockPath = Path.Combine(path, "Mocks\\");
+            if (Directory.Exists(mockPath))
+                Directory.Delete(mockPath, true);
+            Directory.CreateDirectory(mockPath);
+
+            if (generatedCodeFiles.Count > 0)
+            {
+                foreach (var code in generatedCodeFiles)
+                    using (var stream = File.CreateText(sourcePath + code.Key + ".cs"))
+                        stream.WriteLine(code.Value);
+            }
+
+            if (generatedUnitTestFiles.Count > 0)
+            {
+                foreach (var code in generatedUnitTestFiles)
+                    using (var stream = File.CreateText(testPath + code.Key + ".cs"))
+                        stream.WriteLine(code.Value);
+            }
+
+            if (generatedMockFiles.Count > 0)
+            {
+                foreach (var code in generatedMockFiles)
+                    using (var stream = File.CreateText(mockPath + code.Key + ".cs"))
+                        stream.WriteLine(code.Value);
+            }
+        }
+
+        #endregion
+
         private void RegenerateCodeToolStripMenuItemClick(object sender, EventArgs e)
         {
             treeView.Nodes.Clear();
             treeView.Update();
-            //rtbGeneratedCodeEntities.ResetText();
-            //rtbGeneratedCodeDataAccess.ResetText();
-            //rtbGeneratedCodeEntityUnitTests.ResetText();
-            //rtbGeneratedMockDataAccessCode.ResetText();
-            //tabGeneratedCode.Refresh();
 
             GenerateCode();
         }
@@ -1209,39 +1279,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         {
             SafeOperation(() =>
             {
-                string path;
-                using (var dialog = new FolderBrowserDialog())
-                {
-                    var dialogResult = dialog.ShowDialog();
-                    if (dialogResult != DialogResult.OK)
-                        return;
-
-                    path = dialog.SelectedPath;
-                }
-
-                var sourcePath = Path.Combine(path, "Source\\");
-                if (Directory.Exists(sourcePath))
-                    Directory.Delete(sourcePath, true);
-                Directory.CreateDirectory(sourcePath);
-
-                var testPath = Path.Combine(path, "Tests\\");
-                if (Directory.Exists(testPath))
-                    Directory.Delete(testPath, true);
-                Directory.CreateDirectory(testPath);
-
-                if (generatedCodeFiles.Count > 0)
-                {
-                    foreach (var code in generatedCodeFiles)
-                        using (var stream = File.CreateText(sourcePath + code.Key + ".cs"))
-                            stream.WriteLine(code.Value);
-                }
-
-                if (generatedUnitTestFiles.Count > 0)
-                {
-                    foreach (var code in generatedUnitTestFiles)
-                        using (var stream = File.CreateText(testPath + code.Key + ".cs"))
-                            stream.WriteLine(code.Value);
-                }
+                ExportFiles();
+                return;
             });
         }
 
