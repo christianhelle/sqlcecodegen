@@ -232,6 +232,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             {
                 var mockRepositories = GenerateMockRepositories(table);
                 AppendCode("Mock" + table.ClassName + "Repository", mockRepositories);
+
+                var mockEntityGenerator = GenerateMockEntityGenerator(table);
+                AppendCode("Mock" + table.ClassName + "Generator", mockEntityGenerator);
             }
         }
 
@@ -313,6 +316,75 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             generator.GenerateDeleteAll();
             generator.GenerateUpdate();
             generator.GenerateCount();
+
+            code.AppendLine("\t}");
+            code.AppendLine("}");
+
+            return code;
+        }
+
+        private StringBuilder GenerateMockEntityGenerator(Table table)
+        {
+            var code = new StringBuilder();
+
+            code.AppendLine("\nnamespace " + Database.DefaultNamespace);
+            code.AppendLine("{");
+            code.AppendLine("\tusing System.Collections.Generic;");
+            code.AppendLine();
+            code.AppendLine("\tpublic static class Mock" + table.ClassName + "Generator");
+            code.AppendLine("\t{");
+
+            code.AppendLine(@"        const string PWD_CHARSET = ""abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVXYZ1234567890"";
+
+        private static string GenerateString(int len)
+        {
+            if (len > 4000) len = 4000;
+            var buffer = new byte[len * 2];
+            new System.Security.Cryptography.RNGCryptoServiceProvider().GetBytes(buffer);
+
+            using (var stream = new System.IO.MemoryStream(buffer, 0, buffer.Length, false, false))
+            using (var reader = new System.IO.BinaryReader(stream))
+            {
+                var builder = new System.Text.StringBuilder(buffer.Length, buffer.Length);
+                while (len-- > 0)
+                {
+                    var i = (reader.ReadUInt16() & 8) % PWD_CHARSET.Length;
+                    builder.Append(PWD_CHARSET[i]);
+                }
+                return builder.ToString();
+            }
+        }");
+            code.AppendLine();
+
+            code.AppendLine("\t\tpublic static " + table.ClassName + " CreateAnnonymous()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\treturn new " + table.ClassName);
+            code.AppendLine("\t\t\t{");
+            foreach (var column in table.Columns)
+            {
+                if (table.PrimaryKeyColumnName == column.Value.FieldName && column.Value.AutoIncrement.HasValue)
+                    continue;
+                if (column.Value.IsForeignKey && column.Value.AllowsNull)
+                    continue;
+                code.AppendFormat("\t\t\t\t{0} = {1},",
+                                  column.Value.FieldName,
+                                  column.Value.ManagedType == typeof(string)
+                                    ? "GenerateString(" + column.Value.MaxLength + ")"
+                                    : RandomGenerator.GenerateValue(column.Value.DatabaseType));
+                code.AppendLine();
+            }
+            code.Remove(code.Length - 3, 2);
+            code.AppendLine("\t\t\t};");
+            code.AppendLine("\t\t}");
+            code.AppendLine();
+
+            code.AppendLine("\t\tpublic static IEnumerable<" + table.ClassName + "> CreateAnnonymous(int count)");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tvar list = new List<" + table.ClassName + ">(count);");
+            code.AppendLine("\t\t\tfor (int i = 0; i < count; i++)");
+            code.AppendLine("\t\t\t\tlist.Add(CreateAnnonymous());");
+            code.AppendLine("\t\t\treturn list;");
+            code.AppendLine("\t\t}");
 
             code.AppendLine("\t}");
             code.AppendLine("}");
@@ -562,7 +634,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             foreach (var column in table.Columns)
             {
-                if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0 || 
+                if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0 ||
                     String.Compare(column.Value.DatabaseType, "image", StringComparison.OrdinalIgnoreCase) == 0)
                     continue;
 
@@ -639,7 +711,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             foreach (var column in table.Columns)
             {
-                if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0 || 
+                if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0 ||
                     String.Compare(column.Value.DatabaseType, "image", StringComparison.OrdinalIgnoreCase) == 0)
                     continue;
 
@@ -667,7 +739,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             foreach (var column in table.Columns)
             {
-                if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0 || 
+                if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0 ||
                     String.Compare(column.Value.DatabaseType, "image", StringComparison.OrdinalIgnoreCase) == 0)
                     continue;
 

@@ -831,6 +831,15 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                 }
             }
 
+            using (var stream = File.CreateText(Path.Combine(appDataPath, "Mocks.cs")))
+            {
+                foreach (var item in generatedMockFiles.Values)
+                {
+                    stream.Write(item);
+                    stream.WriteLine();
+                }
+            }
+
             using (var stream = File.Create(Path.Combine(appDataPath, "xunit.dll")))
             {
                 var buffer = File.ReadAllBytes(Path.Combine(Environment.CurrentDirectory, "xUnit\\xunit.dll"));
