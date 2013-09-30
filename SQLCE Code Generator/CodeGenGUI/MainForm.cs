@@ -579,7 +579,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
         #region Clipboard Handling
 
-        private int currentCodeViewTab;
+        private int currentCodeViewTab = 0;
 
         //private void TabGeneratedCodeSelectedIndexChanged(object sender, EventArgs e)
         //{

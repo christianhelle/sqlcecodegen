@@ -334,25 +334,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\tpublic static class Mock" + table.ClassName + "Generator");
             code.AppendLine("\t{");
 
-            code.AppendLine(@"        const string PWD_CHARSET = ""abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVXYZ1234567890"";
-
-        private static string GenerateString(int len)
+            code.AppendLine(@"        private static string GenerateString(int length)
         {
-            if (len > 4000) len = 4000;
-            var buffer = new byte[len * 2];
-            new System.Security.Cryptography.RNGCryptoServiceProvider().GetBytes(buffer);
-
-            using (var stream = new System.IO.MemoryStream(buffer, 0, buffer.Length, false, false))
-            using (var reader = new System.IO.BinaryReader(stream))
-            {
-                var builder = new System.Text.StringBuilder(buffer.Length, buffer.Length);
-                while (len-- > 0)
-                {
-                    var i = (reader.ReadUInt16() & 8) % PWD_CHARSET.Length;
-                    builder.Append(PWD_CHARSET[i]);
-                }
-                return builder.ToString();
-            }
+            var builder = new System.Text.StringBuilder();
+            while (builder.Length < length)
+                builder.Append(System.Guid.NewGuid().ToString().Replace(""{"", null).Replace(""}"", null).Replace(""-"", null));
+            return builder.ToString().Substring(0, length);
         }");
             code.AppendLine();
 

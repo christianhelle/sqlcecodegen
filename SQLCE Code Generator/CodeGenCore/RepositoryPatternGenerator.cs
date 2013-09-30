@@ -66,6 +66,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             }
 
             var generator = (DataAccessLayerGenerator)Activator.CreateInstance(typeof(T), code, table);
+            generator.GenerateCreateEntity();
             generator.GenerateSelectAll();
             generator.GenerateSelectWithTop();
             generator.GenerateSelectBy();
