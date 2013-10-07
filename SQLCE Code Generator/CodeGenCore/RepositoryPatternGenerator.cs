@@ -6,17 +6,14 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
     public class RepositoryPatternGenerator : CodeGenerator
     {
+        private readonly DataAccessLayerGeneratorOptions options;
         private readonly bool supportSqlCeTransactions;
         private readonly bool usesLinqToSql;
 
-        public RepositoryPatternGenerator(ISqlCeDatabase database)
-            : this(database, false)
-        {
-        }
-
-        public RepositoryPatternGenerator(ISqlCeDatabase database, bool supportSqlCeTransactions = true, bool usesLinqToSql = false)
+        public RepositoryPatternGenerator(ISqlCeDatabase database, DataAccessLayerGeneratorOptions options, bool supportSqlCeTransactions = true, bool usesLinqToSql = false)
             : base(database)
         {
+            this.options = options;
             this.supportSqlCeTransactions = supportSqlCeTransactions;
             this.usesLinqToSql = usesLinqToSql;
         }
@@ -66,12 +63,18 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             }
 
             var generator = (DataAccessLayerGenerator)Activator.CreateInstance(typeof(T), code, table);
-            generator.Options = new DataAccessLayerGeneratorOptions();
             generator.GenerateCreateEntity();
             generator.GenerateSelectAll();
             generator.GenerateSelectWithTop();
             generator.GenerateSelectBy();
             generator.GenerateSelectByWithTop();
+
+            if (options.GenerateSelectByTwoColumns)
+                generator.SelectByTwoColumns();
+
+            if (options.GenerateSelectByThreeColumns)
+                generator.SelectByThreeColumns();
+
             generator.GenerateCreate();
             generator.GenerateCreateIgnoringPrimaryKey();
             generator.GenerateCreateUsingAllColumns();
@@ -139,6 +142,16 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1} {2}, int count);", table.ClassName, column.Value.ManagedType, column.Value.FieldName);
                 }
                 code.AppendLine("\n");
+
+                if (options.GenerateSelectByTwoColumns)
+                {
+                    // TODO: Update the generated ITableRepository to support SelectByTwoColumns
+                }
+
+                if (options.GenerateSelectByThreeColumns)
+                {
+                    // TODO: Update the generated ITableRepository to support SelectByThreeColumns
+                }
             }
 
             foreach (var column in table.Columns)

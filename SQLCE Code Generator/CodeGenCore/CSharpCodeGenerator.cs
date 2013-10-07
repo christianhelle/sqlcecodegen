@@ -172,7 +172,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             GenerateDatabaseClass();
             GenerateCreateDatabase();
 
-            var repositoryPatternGenerator = new RepositoryPatternGenerator(Database, true);
+            var repositoryPatternGenerator = new RepositoryPatternGenerator(Database, options, true);
             repositoryPatternGenerator.GenerateIRepository();
             repositoryPatternGenerator.GenerateIDataRepository();
             repositoryPatternGenerator.GenerateDataRepository();
