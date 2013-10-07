@@ -235,7 +235,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         private void PopulateNode(Dictionary<string, StringBuilder> files, int treeIndex)
         {
             foreach (var item in files)
-                treeViewFiles.Nodes[treeIndex].Nodes.Add(new TreeNode(item.Key + ".cs") { Tag = item.Value });
+                treeViewFiles.Nodes[treeIndex].Nodes.Add(new TreeNode(item.Key + GetFileExtension()) { Tag = item.Value });
         }
 
         private void AddToCodeFiles(CodeGenerator codeGenerator)
@@ -1020,23 +1020,28 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             if (generatedCodeFiles.Count > 0)
             {
                 foreach (var code in generatedCodeFiles)
-                    using (var stream = File.CreateText(sourcePath + code.Key + ".cs"))
+                    using (var stream = File.CreateText(sourcePath + code.Key + GetFileExtension()))
                         stream.WriteLine(code.Value);
             }
 
             if (generatedUnitTestFiles.Count > 0)
             {
                 foreach (var code in generatedUnitTestFiles)
-                    using (var stream = File.CreateText(testPath + code.Key + ".cs"))
+                    using (var stream = File.CreateText(testPath + code.Key + GetFileExtension()))
                         stream.WriteLine(code.Value);
             }
 
             if (generatedMockFiles.Count > 0)
             {
                 foreach (var code in generatedMockFiles)
-                    using (var stream = File.CreateText(mockPath + code.Key + ".cs"))
+                    using (var stream = File.CreateText(mockPath + code.Key + GetFileExtension()))
                         stream.WriteLine(code.Value);
             }
+        }
+
+        private static string GetFileExtension()
+        {
+            return ".cs";
         }
 
         #endregion
