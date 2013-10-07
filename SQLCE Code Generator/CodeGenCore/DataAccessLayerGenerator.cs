@@ -19,6 +19,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             return Code.ToString();
         }
 
+        public DataAccessLayerGeneratorOptions Options { get; set; }
+
         public virtual void GenerateCreateEntity() { }
         public abstract void GenerateSelectAll();
         public abstract void GenerateSelectBy();
