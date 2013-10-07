@@ -66,6 +66,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             }
 
             var generator = (DataAccessLayerGenerator)Activator.CreateInstance(typeof(T), code, table);
+            generator.Options = new DataAccessLayerGeneratorOptions();
             generator.GenerateCreateEntity();
             generator.GenerateSelectAll();
             generator.GenerateSelectWithTop();
@@ -113,7 +114,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             foreach (var column in table.Columns)
             {
-                if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0 || 
+                if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0 ||
                     String.Compare(column.Value.DatabaseType, "image", StringComparison.OrdinalIgnoreCase) == 0)
                     continue;
 
@@ -142,7 +143,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             foreach (var column in table.Columns)
             {
-                if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0 || 
+                if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0 ||
                     String.Compare(column.Value.DatabaseType, "image", StringComparison.OrdinalIgnoreCase) == 0)
                     continue;
 
