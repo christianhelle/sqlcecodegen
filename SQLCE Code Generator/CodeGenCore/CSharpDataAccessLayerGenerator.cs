@@ -114,12 +114,56 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         public override void GenerateSelectBy()
         {
-            SelectByOneColumn();
-            //SelectByTwoColumns();
-            //SelectByThreeColumns();
+            foreach (var column in Table.Columns)
+            {
+                if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0 ||
+                    String.Compare(column.Value.DatabaseType, "image", StringComparison.OrdinalIgnoreCase) == 0)
+                    continue;
+
+                Code.AppendLine("\t\t#region SELECT .... WHERE " + column.Value.FieldName + "=?");
+                Code.AppendLine();
+
+                GenerateXmlDoc(2, "Retrieves a collection of items by " + column.Value.FieldName, new KeyValuePair<string, string>(column.Value.FieldName, column.Value.FieldName + " value"));
+                Code.AppendFormat(
+                    column.Value.ManagedType.IsValueType
+                        ? "\t\tpublic System.Collections.Generic.List<{0}> SelectBy{2}({1}? {2})"
+                        : "\t\tpublic System.Collections.Generic.List<{0}> SelectBy{2}({1} {2})",
+                    Table.ClassName, column.Value.ManagedType, column.Value.FieldName);
+
+                Code.AppendLine();
+                Code.AppendLine("\t\t{");
+                Code.AppendLine("\t\t\tvar list = new System.Collections.Generic.List<" + Table.ClassName + ">();");
+                Code.AppendLine("\t\t\tusing (var command = Database.CreateCommand(Transaction))");
+                Code.AppendLine("\t\t\t{");
+                Code.AppendLine("\t\t\t\tif (" + column.Value.FieldName + " != null)");
+                Code.AppendLine("\t\t\t\t{");
+                Code.AppendFormat("\t\t\t\t\tcommand.CommandText = \"SELECT * FROM [{0}] WHERE {1}=@{1}\";", Table.ClassName, column.Value.FieldName);
+                Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, {0}));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                //Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters[\"@{0}\"].Value = {1};", column.Value.FieldName, "(object)" + column.Value.FieldName);
+                //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.AddWithValue(\"@{0}\", {0});", column.Value.FieldName);
+                Code.AppendLine();
+                Code.AppendLine("\t\t\t\t}");
+                Code.AppendLine("\t\t\t\telse");
+                Code.AppendFormat("\t\t\t\t\tcommand.CommandText = \"SELECT * FROM [{0}] WHERE {1} IS NULL\";", Table.ClassName, column.Value.FieldName);
+                Code.AppendLine();
+                Code.AppendLine("\n\t\t\t\tusing (var reader = command.ExecuteReader())");
+                Code.AppendLine("\t\t\t\t{");
+                Code.AppendLine("\t\t\t\t\twhile (reader.Read())");
+                Code.AppendLine("\t\t\t\t\t{");
+                Code.AppendLine("\t\t\t\t\t\tlist.Add(CreateEntity(reader));");
+                Code.AppendLine("\t\t\t\t\t}");
+                Code.AppendLine("\t\t\t\t}");
+                Code.AppendLine("\t\t\t}");
+                Code.AppendLine("\t\t\treturn list.Count > 0 ? list : null;");
+                Code.AppendLine("\t\t}");
+                Code.AppendLine();
+                Code.AppendLine("\t\t#endregion");
+                Code.AppendLine();
+            }
         }
 
-        private void SelectByThreeColumns()
+        public override void SelectByThreeColumns()
         {
             foreach (var firstColumn in Table.Columns)
             {
@@ -215,7 +259,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             }
         }
 
-        private void SelectByTwoColumns()
+        public override void SelectByTwoColumns()
         {
             foreach (var firstColumn in Table.Columns)
             {
@@ -284,57 +328,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     Code.AppendLine("\t\t#endregion");
                     Code.AppendLine();
                 }
-            }
-        }
-
-        private void SelectByOneColumn()
-        {
-            foreach (var column in Table.Columns)
-            {
-                if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0 ||
-                    String.Compare(column.Value.DatabaseType, "image", StringComparison.OrdinalIgnoreCase) == 0)
-                    continue;
-
-                Code.AppendLine("\t\t#region SELECT .... WHERE " + column.Value.FieldName + "=?");
-                Code.AppendLine();
-
-                GenerateXmlDoc(2, "Retrieves a collection of items by " + column.Value.FieldName, new KeyValuePair<string, string>(column.Value.FieldName, column.Value.FieldName + " value"));
-                Code.AppendFormat(
-                    column.Value.ManagedType.IsValueType
-                        ? "\t\tpublic System.Collections.Generic.List<{0}> SelectBy{2}({1}? {2})"
-                        : "\t\tpublic System.Collections.Generic.List<{0}> SelectBy{2}({1} {2})",
-                    Table.ClassName, column.Value.ManagedType, column.Value.FieldName);
-
-                Code.AppendLine();
-                Code.AppendLine("\t\t{");
-                Code.AppendLine("\t\t\tvar list = new System.Collections.Generic.List<" + Table.ClassName + ">();");
-                Code.AppendLine("\t\t\tusing (var command = Database.CreateCommand(Transaction))");
-                Code.AppendLine("\t\t\t{");
-                Code.AppendLine("\t\t\t\tif (" + column.Value.FieldName + " != null)");
-                Code.AppendLine("\t\t\t\t{");
-                Code.AppendFormat("\t\t\t\t\tcommand.CommandText = \"SELECT * FROM [{0}] WHERE {1}=@{1}\";", Table.ClassName, column.Value.FieldName);
-                Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, {0}));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
-                //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
-                //Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters[\"@{0}\"].Value = {1};", column.Value.FieldName, "(object)" + column.Value.FieldName);
-                //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.AddWithValue(\"@{0}\", {0});", column.Value.FieldName);
-                Code.AppendLine();
-                Code.AppendLine("\t\t\t\t}");
-                Code.AppendLine("\t\t\t\telse");
-                Code.AppendFormat("\t\t\t\t\tcommand.CommandText = \"SELECT * FROM [{0}] WHERE {1} IS NULL\";", Table.ClassName, column.Value.FieldName);
-                Code.AppendLine();
-                Code.AppendLine("\n\t\t\t\tusing (var reader = command.ExecuteReader())");
-                Code.AppendLine("\t\t\t\t{");
-                Code.AppendLine("\t\t\t\t\twhile (reader.Read())");
-                Code.AppendLine("\t\t\t\t\t{");
-                Code.AppendLine("\t\t\t\t\t\tlist.Add(CreateEntity(reader));");
-                Code.AppendLine("\t\t\t\t\t}");
-                Code.AppendLine("\t\t\t\t}");
-                Code.AppendLine("\t\t\t}");
-                Code.AppendLine("\t\t\treturn list.Count > 0 ? list : null;");
-                Code.AppendLine("\t\t}");
-                Code.AppendLine();
-                Code.AppendLine("\t\t#endregion");
-                Code.AppendLine();
             }
         }
 
