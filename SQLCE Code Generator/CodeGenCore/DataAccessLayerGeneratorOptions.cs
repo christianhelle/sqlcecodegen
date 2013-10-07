@@ -13,6 +13,8 @@
             GenerateSelectAllWithTop = true;
             GenerateSelectBy = true;
             GenerateSelectByWithTop = true;
+            GenerateSelectByTwoColumns = false;
+            GenerateSelectByThreeColumns = false;
             GenerateCreate = true;
             GenerateCreateIgnoringPrimaryKey = true;
             GenerateCreateUsingAllColumns = true;
@@ -32,6 +34,8 @@
         public bool GenerateSelectAllWithTop { get; set; }
         public bool GenerateSelectBy { get; set; }
         public bool GenerateSelectByWithTop { get; set; }
+        public bool GenerateSelectByTwoColumns { get; set; }
+        public bool GenerateSelectByThreeColumns { get; set; }
         public bool GenerateCreate { get; set; }
         public bool GenerateCreateIgnoringPrimaryKey { get; set; }
         public bool GenerateCreateUsingAllColumns { get; set; }
