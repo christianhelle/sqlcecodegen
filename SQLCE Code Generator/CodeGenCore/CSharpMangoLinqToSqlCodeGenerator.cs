@@ -16,11 +16,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         public override void GenerateEntities()
         {
-            GenerateEntities(new EntityGeneratorOptions());
-        }
-
-        public override void GenerateEntities(EntityGeneratorOptions options)
-        {
             foreach (var table in Database.Tables)
             {
                 var code = new StringBuilder();
@@ -170,11 +165,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         }
 
         public override void GenerateDataAccessLayer()
-        {
-            GenerateDataAccessLayer(new DataAccessLayerGeneratorOptions());
-        }
-
-        public override void GenerateDataAccessLayer(DataAccessLayerGeneratorOptions options)
         {
             GenerateDataContext();
 

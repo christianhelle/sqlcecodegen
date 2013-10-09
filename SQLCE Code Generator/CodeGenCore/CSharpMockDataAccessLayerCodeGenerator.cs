@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
@@ -96,6 +98,78 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 Code.AppendLine("\t\t\treturn mockDataSource.Where(c => c." + column.Value.FieldName + " == " + column.Value.FieldName + ").Take(count).ToList();");
                 Code.AppendLine("\t\t}");
                 Code.AppendLine();
+            }
+        }
+
+
+        public override void SelectByThreeColumns()
+        {
+            foreach (var firstColumn in Table.Columns)
+            {
+                if (String.Compare(firstColumn.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0 ||
+                    String.Compare(firstColumn.Value.DatabaseType, "image", StringComparison.OrdinalIgnoreCase) == 0)
+                    continue;
+
+                foreach (var secondColumn in Table.Columns)
+                {
+                    if (secondColumn.Equals(firstColumn))
+                        continue;
+
+                    foreach (var thirdColumn in Table.Columns)
+                    {
+                        if (thirdColumn.Equals(firstColumn) || thirdColumn.Equals(secondColumn))
+                            continue;
+
+                        Code.AppendFormat("\t\tpublic System.Collections.Generic.List<{0}> SelectBy{3}And{6}And{9}({1}{2} {3}, {4}{5} {6}, {7}{8} {9})",
+                                          Table.ClassName,
+                                          firstColumn.Value.ManagedType,
+                                          firstColumn.Value.ManagedType.IsValueType ? "?" : "",
+                                          firstColumn.Value.FieldName,
+                                          secondColumn.Value.ManagedType,
+                                          secondColumn.Value.ManagedType.IsValueType ? "?" : "",
+                                          secondColumn.Value.FieldName,
+                                          thirdColumn.Value.ManagedType,
+                                          thirdColumn.Value.ManagedType.IsValueType ? "?" : "",
+                                          thirdColumn.Value.FieldName);
+
+                        Code.AppendLine();
+                        Code.AppendLine("\t\t{"); Code.AppendLine("\t\t\tif (!mockDataSource.Any(c => c." + firstColumn.Value.FieldName + " == " + firstColumn.Value.FieldName + " && c." + secondColumn.Value.FieldName + " == " + secondColumn.Value.FieldName + " && c." + thirdColumn.Value.FieldName + " == " + thirdColumn.Value.FieldName + ")) return null;");
+                        Code.AppendLine("\t\t\treturn mockDataSource.Where(c => c." + firstColumn.Value.FieldName + " == " + firstColumn.Value.FieldName + " && c." + secondColumn.Value.FieldName + " == " + secondColumn.Value.FieldName + " && c." + thirdColumn.Value.FieldName + " == " + thirdColumn.Value.FieldName + ").ToList();");
+                        Code.AppendLine("\t\t}");
+                        Code.AppendLine();
+                    }
+                }
+            }
+        }
+
+        public override void SelectByTwoColumns()
+        {
+            foreach (var firstColumn in Table.Columns)
+            {
+                if (String.Compare(firstColumn.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0 ||
+                    String.Compare(firstColumn.Value.DatabaseType, "image", StringComparison.OrdinalIgnoreCase) == 0)
+                    continue;
+
+                foreach (var secondColumn in Table.Columns)
+                {
+                    if (secondColumn.Equals(firstColumn))
+                        continue;
+
+                    Code.AppendFormat("\t\tpublic System.Collections.Generic.List<{0}> SelectBy{3}And{6}({1}{2} {3}, {4}{5} {6})",
+                                   Table.ClassName,
+                                   firstColumn.Value.ManagedType,
+                                   firstColumn.Value.ManagedType.IsValueType ? "?" : "",
+                                   firstColumn.Value.FieldName,
+                                   secondColumn.Value.ManagedType,
+                                   secondColumn.Value.ManagedType.IsValueType ? "?" : "",
+                                   secondColumn.Value.FieldName);
+
+                    Code.AppendLine();
+                    Code.AppendLine("\t\t{"); Code.AppendLine("\t\t\tif (!mockDataSource.Any(c => c." + firstColumn.Value.FieldName + " == " + firstColumn.Value.FieldName + " && c." + secondColumn.Value.FieldName + " == " + secondColumn.Value.FieldName + ")) return null;");
+                    Code.AppendLine("\t\t\treturn mockDataSource.Where(c => c." + firstColumn.Value.FieldName + " == " + firstColumn.Value.FieldName + " && c." + secondColumn.Value.FieldName + " == " + secondColumn.Value.FieldName + ").ToList();");
+                    Code.AppendLine("\t\t}");
+                    Code.AppendLine();
+                }
             }
         }
 

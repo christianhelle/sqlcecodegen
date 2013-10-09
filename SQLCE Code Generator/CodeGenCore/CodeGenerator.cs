@@ -21,10 +21,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public ISqlCeDatabase Database { get; set; }
         public Dictionary<string, StringBuilder> CodeFiles { get; protected set; }
 
+        public EntityGeneratorOptions EntityGeneratorOptions { get; set; }
+        public DataAccessLayerGeneratorOptions DataAccessLayerGeneratorOptions { get; set; }
+
         public virtual void GenerateEntities() { }
-        public virtual void GenerateEntities(EntityGeneratorOptions options) { }
         public virtual void GenerateDataAccessLayer() { }
-        public virtual void GenerateDataAccessLayer(DataAccessLayerGeneratorOptions options) { }
 
         public virtual void WriteHeaderInformation()
         {

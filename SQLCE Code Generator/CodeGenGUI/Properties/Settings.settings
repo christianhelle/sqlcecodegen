@@ -26,5 +26,14 @@
     <Setting Name="WindowSize" Type="System.Drawing.Size" Scope="User">
       <Value Profile="(Default)">0, 0</Value>
     </Setting>
+    <Setting Name="Setting" Type="ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.DataAccessLayerGeneratorOptions" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DataLayerOptions" Type="ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.DataAccessLayerGeneratorOptions" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="EntityOptions" Type="ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.EntityGeneratorOptions" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
   </Settings>
 </SettingsFile>

@@ -45,7 +45,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
             if (!Settings.Default.WindowPosition.IsEmpty)
                 Location = Settings.Default.WindowPosition;
-            else 
+            else
                 CenterToScreen();
 
             if (Settings.Default.WindowState == FormWindowState.Maximized)
@@ -272,6 +272,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
             var code = new StringBuilder();
             var unitTestGenerator = UnitTestCodeGeneratorFactory.Create(codeGenerator.Database, Settings.Default.TestFramework, Settings.Default.Target);
+            SetOptions(unitTestGenerator);
             unitTestGenerator.WriteHeaderInformation();
             code.Append(unitTestGenerator.GetCode());
 
@@ -291,6 +292,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
             var code = new StringBuilder();
             var unitTestGenerator = UnitTestCodeGeneratorFactory.Create(codeGenerator.Database, Settings.Default.TestFramework, Settings.Default.Target);
+            SetOptions(unitTestGenerator);
             unitTestGenerator.WriteHeaderInformation();
             code.Append(unitTestGenerator.GetCode());
 
@@ -310,6 +312,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
             WriteToOutputWindow("Generating Entity Unit Tests Code");
             var unitTestGenerator = UnitTestCodeGeneratorFactory.Create(codeGenerator.Database, Settings.Default.TestFramework, Settings.Default.Target);
+            SetOptions(unitTestGenerator);
             unitTestGenerator.WriteHeaderInformation();
             unitTestGenerator.GenerateEntities();
             AddToUnitTestFiles(unitTestGenerator);
@@ -357,7 +360,14 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
             var factory = new CodeGeneratorFactory(database);
             var codeGenerator = factory.Create("C#", Settings.Default.Target);
+            SetOptions(codeGenerator);
             return codeGenerator;
+        }
+
+        private static void SetOptions(CodeGenerator codeGenerator)
+        {
+            codeGenerator.EntityGeneratorOptions = Settings.Default.EntityOptions ?? new EntityGeneratorOptions();
+            codeGenerator.DataAccessLayerGeneratorOptions = Settings.Default.DataLayerOptions ?? new DataAccessLayerGeneratorOptions();
         }
 
         private static string GetGeneratedNamespace()
@@ -1304,6 +1314,25 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                 rtbCode.Text = e.Node.Tag.ToString();
             else
                 rtbCode.ResetText();
+        }
+
+        private void advancedOptionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            using (var form = new OptionsForm { Owner = this })
+                form.ShowDialog();
+
+            var result = MessageBox.Show("Do you want to re-generate the code?",
+                                         "Confirm",
+                                         MessageBoxButtons.YesNo,
+                                         MessageBoxIcon.Question,
+                                         MessageBoxDefaultButton.Button1);
+            if (result != DialogResult.Yes) 
+                return;
+
+            treeView.Nodes.Clear();
+            treeView.Update();
+
+            GenerateCode();
         }
     }
 }

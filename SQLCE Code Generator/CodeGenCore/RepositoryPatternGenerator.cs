@@ -64,10 +64,18 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
             var generator = (DataAccessLayerGenerator)Activator.CreateInstance(typeof(T), code, table);
             generator.GenerateCreateEntity();
-            generator.GenerateSelectAll();
-            generator.GenerateSelectWithTop();
-            generator.GenerateSelectBy();
-            generator.GenerateSelectByWithTop();
+
+            if (options.GenerateSelectAll)
+                generator.GenerateSelectAll();
+
+            if (options.GenerateSelectAllWithTop)
+                generator.GenerateSelectWithTop();
+
+            if (options.GenerateSelectBy)
+                generator.GenerateSelectBy();
+
+            if (options.GenerateSelectByWithTop)
+                generator.GenerateSelectByWithTop();
 
             if (options.GenerateSelectByTwoColumns)
                 generator.SelectByTwoColumns();
@@ -75,15 +83,32 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             if (options.GenerateSelectByThreeColumns)
                 generator.SelectByThreeColumns();
 
-            generator.GenerateCreate();
-            generator.GenerateCreateIgnoringPrimaryKey();
-            generator.GenerateCreateUsingAllColumns();
-            generator.GeneratePopulate();
-            generator.GenerateDelete();
-            generator.GenerateDeleteBy();
-            generator.GenerateDeleteAll();
-            generator.GenerateUpdate();
-            generator.GenerateCount();
+            if (options.GenerateCreate)
+                generator.GenerateCreate();
+
+            if (options.GenerateCreateIgnoringPrimaryKey)
+                generator.GenerateCreateIgnoringPrimaryKey();
+
+            if (options.GenerateCreateUsingAllColumns)
+                generator.GenerateCreateUsingAllColumns();
+
+            if (options.GeneratePopulate)
+                generator.GeneratePopulate();
+
+            if (options.GenerateDelete)
+                generator.GenerateDelete();
+
+            if (options.GenerateDeleteBy)
+                generator.GenerateDeleteBy();
+
+            if (options.GenerateDeleteAll)
+                generator.GenerateDeleteAll();
+
+            if (options.GenerateUpdate)
+                generator.GenerateUpdate();
+
+            if (options.GenerateCount)
+                generator.GenerateCount();
 
             code.AppendLine("\t}");
             code.AppendLine("}");
@@ -115,42 +140,90 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine();
             }
 
-            foreach (var column in table.Columns)
+            foreach (var firstColumn in table.Columns)
             {
-                if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0 ||
-                    String.Compare(column.Value.DatabaseType, "image", StringComparison.OrdinalIgnoreCase) == 0)
+                if (String.Compare(firstColumn.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0 ||
+                    String.Compare(firstColumn.Value.DatabaseType, "image", StringComparison.OrdinalIgnoreCase) == 0)
                     continue;
 
-                if (column.Value.ManagedType.IsValueType)
+                if (firstColumn.Value.ManagedType.IsValueType)
                 {
-                    GenerateXmlDoc(code, 2, "Retrieves a collection of items by " + column.Value.FieldName, new KeyValuePair<string, string>(column.Value.FieldName, column.Value.FieldName + " value"));
-                    code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1}? {2});", table.ClassName, column.Value.ManagedType, column.Value.FieldName);
+                    GenerateXmlDoc(code, 2, "Retrieves a collection of items by " + firstColumn.Value.FieldName, new KeyValuePair<string, string>(firstColumn.Value.FieldName, firstColumn.Value.FieldName + " value"));
+                    code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1}? {2});", table.ClassName, firstColumn.Value.ManagedType, firstColumn.Value.FieldName);
                     code.AppendLine("\n");
-                    GenerateXmlDoc(code, 2, "Retrieves the first set of items specified by count by " + column.Value.FieldName,
-                        new KeyValuePair<string, string>(column.Value.FieldName, column.Value.FieldName + " value"),
+                    GenerateXmlDoc(code, 2, "Retrieves the first set of items specified by count by " + firstColumn.Value.FieldName,
+                        new KeyValuePair<string, string>(firstColumn.Value.FieldName, firstColumn.Value.FieldName + " value"),
                         new KeyValuePair<string, string>("count", "the number of records to be retrieved"));
-                    code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1}? {2}, int count);", table.ClassName, column.Value.ManagedType, column.Value.FieldName);
+                    code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1}? {2}, int count);", table.ClassName, firstColumn.Value.ManagedType, firstColumn.Value.FieldName);
                 }
                 else
                 {
-                    GenerateXmlDoc(code, 2, "Retrieves a collection of items by " + column.Value.FieldName, new KeyValuePair<string, string>(column.Value.FieldName, column.Value.FieldName + " value"));
-                    code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1} {2});", table.ClassName, column.Value.ManagedType, column.Value.FieldName);
+                    GenerateXmlDoc(code, 2, "Retrieves a collection of items by " + firstColumn.Value.FieldName, new KeyValuePair<string, string>(firstColumn.Value.FieldName, firstColumn.Value.FieldName + " value"));
+                    code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1} {2});", table.ClassName, firstColumn.Value.ManagedType, firstColumn.Value.FieldName);
                     code.AppendLine("\n");
-                    GenerateXmlDoc(code, 2, "Retrieves the first set of items specified by count by " + column.Value.FieldName,
-                        new KeyValuePair<string, string>(column.Value.FieldName, column.Value.FieldName + " value"),
+                    GenerateXmlDoc(code, 2, "Retrieves the first set of items specified by count by " + firstColumn.Value.FieldName,
+                        new KeyValuePair<string, string>(firstColumn.Value.FieldName, firstColumn.Value.FieldName + " value"),
                         new KeyValuePair<string, string>("count", "the number of records to be retrieved"));
-                    code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1} {2}, int count);", table.ClassName, column.Value.ManagedType, column.Value.FieldName);
+                    code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{2}({1} {2}, int count);", table.ClassName, firstColumn.Value.ManagedType, firstColumn.Value.FieldName);
                 }
                 code.AppendLine("\n");
 
                 if (options.GenerateSelectByTwoColumns)
                 {
-                    // TODO: Update the generated ITableRepository to support SelectByTwoColumns
+                    foreach (var secondColumn in table.Columns)
+                    {
+                        if (secondColumn.Equals(firstColumn))
+                            continue;
+
+                        GenerateXmlDoc(code, 2,
+                                       "Retrieves a collection of items by " + firstColumn.Value.FieldName + " and " + secondColumn.Value.FieldName,
+                                       new KeyValuePair<string, string>(firstColumn.Value.FieldName, firstColumn.Value.FieldName + " value"),
+                                       new KeyValuePair<string, string>(secondColumn.Value.FieldName, secondColumn.Value.FieldName + " value"));
+
+                        code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{3}And{6}({1}{2} {3}, {4}{5} {6});",
+                                          table.ClassName,
+                                          firstColumn.Value.ManagedType,
+                                          firstColumn.Value.ManagedType.IsValueType ? "?" : "",
+                                          firstColumn.Value.FieldName,
+                                          secondColumn.Value.ManagedType,
+                                          secondColumn.Value.ManagedType.IsValueType ? "?" : "",
+                                          secondColumn.Value.FieldName);
+                        code.AppendLine("\n");
+                    }
                 }
 
                 if (options.GenerateSelectByThreeColumns)
                 {
-                    // TODO: Update the generated ITableRepository to support SelectByThreeColumns
+                    foreach (var secondColumn in table.Columns)
+                    {
+                        if (secondColumn.Equals(firstColumn))
+                            continue;
+
+                        foreach (var thirdColumn in table.Columns)
+                        {
+                            if (thirdColumn.Equals(firstColumn) || thirdColumn.Equals(secondColumn))
+                                continue;
+
+                            GenerateXmlDoc(code, 2,
+                                           "Retrieves a collection of items by " + firstColumn.Value.FieldName + " and " + secondColumn.Value.FieldName + " and " + thirdColumn.Value.FieldName,
+                                           new KeyValuePair<string, string>(firstColumn.Value.FieldName, firstColumn.Value.FieldName + " value"),
+                                           new KeyValuePair<string, string>(secondColumn.Value.FieldName, secondColumn.Value.FieldName + " value"),
+                                           new KeyValuePair<string, string>(thirdColumn.Value.FieldName, thirdColumn.Value.FieldName + " value"));
+
+                            code.AppendFormat("\t\tSystem.Collections.Generic.List<{0}> SelectBy{3}And{6}And{9}({1}{2} {3}, {4}{5} {6}, {7}{8} {9});",
+                                              table.ClassName,
+                                              firstColumn.Value.ManagedType,
+                                              firstColumn.Value.ManagedType.IsValueType ? "?" : "",
+                                              firstColumn.Value.FieldName,
+                                              secondColumn.Value.ManagedType,
+                                              secondColumn.Value.ManagedType.IsValueType ? "?" : "",
+                                              secondColumn.Value.FieldName,
+                                              thirdColumn.Value.ManagedType,
+                                              thirdColumn.Value.ManagedType.IsValueType ? "?" : "",
+                                              thirdColumn.Value.FieldName);
+                            code.AppendLine("\n");
+                        }
+                    }
                 }
             }
 
