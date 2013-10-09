@@ -23,6 +23,8 @@
             GenerateDeleteBy = true;
             GenerateDeleteAll = true;
             GenerateSaveChanges = true;
+            GenerateUpdate = true;
+            GenerateCount = true;
         }
 
         public bool ThrowExceptions { get; set; }
@@ -44,5 +46,8 @@
         public bool GenerateDeleteBy { get; set; }
         public bool GenerateDeleteAll { get; set; }
         public bool GenerateSaveChanges { get; set; }
+
+        public bool GenerateUpdate { get; set; }
+        public bool GenerateCount { get; set; }
     }
 }

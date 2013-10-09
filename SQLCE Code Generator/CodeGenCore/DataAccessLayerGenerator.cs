@@ -26,8 +26,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public abstract void GenerateSelectBy();
         public abstract void GenerateSelectWithTop();
         public abstract void GenerateSelectByWithTop();
-        public virtual void SelectByThreeColumns() { }
-        public virtual void SelectByTwoColumns() { }
+        public abstract void SelectByThreeColumns();
+        public abstract void SelectByTwoColumns();
         public abstract void GenerateCreateIgnoringPrimaryKey();
         public abstract void GenerateCreateUsingAllColumns();
         public abstract void GenerateDelete();

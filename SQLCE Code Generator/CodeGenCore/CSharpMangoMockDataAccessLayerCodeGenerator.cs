@@ -15,11 +15,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         public override void GenerateDataAccessLayer()
         {
-            GenerateDataAccessLayer(new DataAccessLayerGeneratorOptions());
-        }
-
-        public override void GenerateDataAccessLayer(DataAccessLayerGeneratorOptions options)
-        {
             Trace.WriteLine("Generating Mock Repository Implementation");
 
             GenerateMockImplementation();

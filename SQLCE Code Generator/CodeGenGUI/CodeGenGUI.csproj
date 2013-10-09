@@ -130,6 +130,18 @@
     <Compile Include="AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="DataAccessLayerOptionsUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="DataAccessLayerOptionsUserControl.Designer.cs">
+      <DependentUpon>DataAccessLayerOptionsUserControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EntityOptionsUserControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="EntityOptionsUserControl.Designer.cs">
+      <DependentUpon>EntityOptionsUserControl.cs</DependentUpon>
+    </Compile>
     <Compile Include="ExtensionMethods.cs" />
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
@@ -143,10 +155,22 @@
     <Compile Include="OpenDatabase.Designer.cs">
       <DependentUpon>OpenDatabase.cs</DependentUpon>
     </Compile>
+    <Compile Include="OptionsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OptionsForm.Designer.cs">
+      <DependentUpon>OptionsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataAccessLayerOptionsUserControl.resx">
+      <DependentUpon>DataAccessLayerOptionsUserControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="EntityOptionsUserControl.resx">
+      <DependentUpon>EntityOptionsUserControl.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
@@ -157,6 +181,8 @@
     <None Include="App.config" />
     <None Include="CodeGenGUI.snk" />
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.DataAccessLayerGeneratorOptions.datasource" />
+    <None Include="Properties\DataSources\ChristianHelle.DatabaseTools.SqlCe.CodeGenCore.EntityGeneratorOptions.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -276,6 +302,9 @@
       <Link>xUnit\xunit.runner.utility.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="OptionsForm.resx">
+      <DependentUpon>OptionsForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Resources\Icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

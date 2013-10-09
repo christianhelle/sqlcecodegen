@@ -76,11 +76,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         public override void GenerateEntities()
         {
-            GenerateEntities(new EntityGeneratorOptions());
-        }
-
-        public override void GenerateEntities(EntityGeneratorOptions options)
-        {
             foreach (var table in Database.Tables)
             {
                 var type = new CodeTypeDeclaration(table.Name);
@@ -149,11 +144,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         #endregion
 
         public override void GenerateDataAccessLayer()
-        {
-            GenerateDataAccessLayer(new DataAccessLayerGeneratorOptions());
-        }
-
-        public override void GenerateDataAccessLayer(DataAccessLayerGeneratorOptions options)
         {
             GenerateDatabase();
             GenerateCreateDatabase();

@@ -15,11 +15,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         public override void GenerateEntities()
         {
-            GenerateEntities(new EntityGeneratorOptions());
-        }
-
-        public override void GenerateEntities(EntityGeneratorOptions options)
-        {
             Trace.WriteLine("Generating Entity Unit Tests");
 
             foreach (var table in Database.Tables)
@@ -202,11 +197,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         public override void GenerateDataAccessLayer()
         {
-            GenerateDataAccessLayer(new DataAccessLayerGeneratorOptions());
-        }
-
-        public override void GenerateDataAccessLayer(DataAccessLayerGeneratorOptions options)
-        {
             Trace.WriteLine("Generating Data Access Tests");
 
             GenerateDataAccessTestBase();
@@ -302,20 +292,55 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t{");
             code.AppendLine();
 
-            DataAccessLayerGenerator generator = new CSharpMockDataAccessLayerCodeGenerator(code, table);
-            generator.GenerateSelectAll();
-            generator.GenerateSelectWithTop();
-            generator.GenerateSelectBy();
-            generator.GenerateSelectByWithTop();
-            generator.GenerateCreate();
-            generator.GenerateCreateIgnoringPrimaryKey();
-            generator.GenerateCreateUsingAllColumns();
-            generator.GeneratePopulate();
-            generator.GenerateDelete();
-            generator.GenerateDeleteBy();
-            generator.GenerateDeleteAll();
-            generator.GenerateUpdate();
-            generator.GenerateCount();
+            var generator = new CSharpMockDataAccessLayerCodeGenerator(code, table);
+            generator.GenerateCreateEntity();
+
+            var options = DataAccessLayerGeneratorOptions;
+
+            if (options.GenerateSelectAll)
+                generator.GenerateSelectAll();
+
+            if (options.GenerateSelectAllWithTop)
+                generator.GenerateSelectWithTop();
+
+            if (options.GenerateSelectBy)
+                generator.GenerateSelectBy();
+
+            if (options.GenerateSelectByWithTop)
+                generator.GenerateSelectByWithTop();
+
+            if (options.GenerateSelectByTwoColumns)
+                generator.SelectByTwoColumns();
+
+            if (options.GenerateSelectByThreeColumns)
+                generator.SelectByThreeColumns();
+
+            if (options.GenerateCreate)
+                generator.GenerateCreate();
+
+            if (options.GenerateCreateIgnoringPrimaryKey)
+                generator.GenerateCreateIgnoringPrimaryKey();
+
+            if (options.GenerateCreateUsingAllColumns)
+                generator.GenerateCreateUsingAllColumns();
+
+            if (options.GeneratePopulate)
+                generator.GeneratePopulate();
+
+            if (options.GenerateDelete)
+                generator.GenerateDelete();
+
+            if (options.GenerateDeleteBy)
+                generator.GenerateDeleteBy();
+
+            if (options.GenerateDeleteAll)
+                generator.GenerateDeleteAll();
+
+            if (options.GenerateUpdate)
+                generator.GenerateUpdate();
+
+            if (options.GenerateCount)
+                generator.GenerateCount();
 
             code.AppendLine("\t}");
             code.AppendLine("}");

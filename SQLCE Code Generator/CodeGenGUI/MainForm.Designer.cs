@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Database Tables");
-            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Source Code");
-            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Unit Tests");
-            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Mocks");
+            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Database Tables");
+            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("Source Code");
+            System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("Unit Tests");
+            System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("Mocks");
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -88,6 +88,7 @@
             this.rtbCompilerOutput = new System.Windows.Forms.TextBox();
             this.tabPageTestResults = new System.Windows.Forms.TabPage();
             this.rtbUnitTestOutput = new System.Windows.Forms.TextBox();
+            this.advancedOptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -303,7 +304,8 @@
             // 
             this.toolsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.optionsToolStripMenuItem,
-            this.exportToolStripMenuItem});
+            this.exportToolStripMenuItem,
+            this.advancedOptionsToolStripMenuItem});
             this.toolsToolStripMenuItem.Name = "toolsToolStripMenuItem";
             this.toolsToolStripMenuItem.Size = new System.Drawing.Size(48, 20);
             this.toolsToolStripMenuItem.Text = "&Tools";
@@ -316,7 +318,7 @@
             this.targetToolStripMenuItem});
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
-            this.optionsToolStripMenuItem.Text = "&Options";
+            this.optionsToolStripMenuItem.Text = "Configuration";
             // 
             // testFrameworkToolStripMenuItem
             // 
@@ -333,21 +335,21 @@
             this.nUnitToolStripMenuItem.Checked = true;
             this.nUnitToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.nUnitToolStripMenuItem.Name = "nUnitToolStripMenuItem";
-            this.nUnitToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.nUnitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.nUnitToolStripMenuItem.Text = "NUnit";
             this.nUnitToolStripMenuItem.Click += new System.EventHandler(this.NUnitToolStripMenuItemClick);
             // 
             // mSTestToolStripMenuItem
             // 
             this.mSTestToolStripMenuItem.Name = "mSTestToolStripMenuItem";
-            this.mSTestToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.mSTestToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.mSTestToolStripMenuItem.Text = "MSTest";
             this.mSTestToolStripMenuItem.Click += new System.EventHandler(this.MSTestToolStripMenuItemClick);
             // 
             // xUnitToolStripMenuItem
             // 
             this.xUnitToolStripMenuItem.Name = "xUnitToolStripMenuItem";
-            this.xUnitToolStripMenuItem.Size = new System.Drawing.Size(113, 22);
+            this.xUnitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.xUnitToolStripMenuItem.Text = "xUnit";
             this.xUnitToolStripMenuItem.Click += new System.EventHandler(this.XUnitToolStripMenuItemClick);
             // 
@@ -357,8 +359,8 @@
             this.entityUnitTestsToolStripMenuItem,
             this.dataAccessUnitTestsToolStripMenuItem});
             this.codeGenerationToolStripMenuItem.Name = "codeGenerationToolStripMenuItem";
-            this.codeGenerationToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
-            this.codeGenerationToolStripMenuItem.Text = "Code Generation";
+            this.codeGenerationToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.codeGenerationToolStripMenuItem.Text = "Unit Test Code Generation";
             // 
             // entityUnitTestsToolStripMenuItem
             // 
@@ -489,10 +491,10 @@
             this.treeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView.Location = new System.Drawing.Point(0, 0);
             this.treeView.Name = "treeView";
-            treeNode1.Name = "nodeTables";
-            treeNode1.Text = "Database Tables";
+            treeNode9.Name = "nodeTables";
+            treeNode9.Text = "Database Tables";
             this.treeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode1});
+            treeNode9});
             this.treeView.Size = new System.Drawing.Size(187, 400);
             this.treeView.TabIndex = 0;
             this.treeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TablesTreeViewAfterSelect);
@@ -530,19 +532,19 @@
             this.treeViewFiles.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeViewFiles.Location = new System.Drawing.Point(0, 0);
             this.treeViewFiles.Name = "treeViewFiles";
-            treeNode2.Name = "nodeSource";
-            treeNode2.NodeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            treeNode2.Text = "Source Code";
-            treeNode3.Name = "nodeUnitTests";
-            treeNode3.NodeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            treeNode3.Text = "Unit Tests";
-            treeNode4.Name = "nodeMocks";
-            treeNode4.NodeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            treeNode4.Text = "Mocks";
+            treeNode10.Name = "nodeSource";
+            treeNode10.NodeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            treeNode10.Text = "Source Code";
+            treeNode11.Name = "nodeUnitTests";
+            treeNode11.NodeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            treeNode11.Text = "Unit Tests";
+            treeNode12.Name = "nodeMocks";
+            treeNode12.NodeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            treeNode12.Text = "Mocks";
             this.treeViewFiles.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode2,
-            treeNode3,
-            treeNode4});
+            treeNode10,
+            treeNode11,
+            treeNode12});
             this.treeViewFiles.Size = new System.Drawing.Size(183, 400);
             this.treeViewFiles.TabIndex = 0;
             this.treeViewFiles.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.OnSourceTreeViewFilesAfterSelect);
@@ -659,6 +661,13 @@
             this.rtbUnitTestOutput.Size = new System.Drawing.Size(770, 79);
             this.rtbUnitTestOutput.TabIndex = 0;
             // 
+            // advancedOptionsToolStripMenuItem
+            // 
+            this.advancedOptionsToolStripMenuItem.Name = "advancedOptionsToolStripMenuItem";
+            this.advancedOptionsToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.advancedOptionsToolStripMenuItem.Text = "Options...";
+            this.advancedOptionsToolStripMenuItem.Click += new System.EventHandler(this.advancedOptionsToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AllowDrop = true;
@@ -758,6 +767,7 @@
         private System.Windows.Forms.SplitContainer splitContainer2;
         private System.Windows.Forms.TreeView treeViewFiles;
         private ICSharpCode.TextEditor.TextEditorControl rtbCode;
+        private System.Windows.Forms.ToolStripMenuItem advancedOptionsToolStripMenuItem;
 
     }
 }

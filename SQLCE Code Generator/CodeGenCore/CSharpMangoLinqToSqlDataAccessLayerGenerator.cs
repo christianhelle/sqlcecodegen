@@ -107,6 +107,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             }
         }
 
+        public override void SelectByThreeColumns()
+        { }
+
+        public override void SelectByTwoColumns()
+        { }
+
         public override void GenerateCreateIgnoringPrimaryKey()
         {
             if (string.IsNullOrEmpty(Table.PrimaryKeyColumnName))
