@@ -242,8 +242,10 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         {
             var header = new StringBuilder();
             if (Settings.Default.WriteHeaderInformation)
+            {
                 codeGenerator.WriteHeaderInformation(header);
-            header.AppendLine();
+                header.AppendLine();
+            }
 
             foreach (var code in codeGenerator.CodeFiles)
                 generatedCodeFiles.Add(code.Key, code.Value.Insert(0, header.ToString()));
@@ -253,8 +255,10 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         {
             var header = new StringBuilder();
             if (Settings.Default.WriteHeaderInformation)
+            {
                 codeGenerator.WriteHeaderInformation(header);
-            header.AppendLine();
+                header.AppendLine();
+            }
 
             foreach (var code in codeGenerator.CodeFiles)
             {
@@ -1344,6 +1348,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
         private void writeHeaderInformationToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            writeHeaderInformationToolStripMenuItem.Checked = !writeHeaderInformationToolStripMenuItem.Checked;
             Settings.Default.WriteHeaderInformation = writeHeaderInformationToolStripMenuItem.Checked;
             Settings.Default.Save();
         }
