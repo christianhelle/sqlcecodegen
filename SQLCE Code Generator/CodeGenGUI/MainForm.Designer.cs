@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            System.Windows.Forms.TreeNode treeNode9 = new System.Windows.Forms.TreeNode("Database Tables");
-            System.Windows.Forms.TreeNode treeNode10 = new System.Windows.Forms.TreeNode("Source Code");
-            System.Windows.Forms.TreeNode treeNode11 = new System.Windows.Forms.TreeNode("Unit Tests");
-            System.Windows.Forms.TreeNode treeNode12 = new System.Windows.Forms.TreeNode("Mocks");
+            System.Windows.Forms.TreeNode treeNode1 = new System.Windows.Forms.TreeNode("Database Tables");
+            System.Windows.Forms.TreeNode treeNode2 = new System.Windows.Forms.TreeNode("Source Code");
+            System.Windows.Forms.TreeNode treeNode3 = new System.Windows.Forms.TreeNode("Unit Tests");
+            System.Windows.Forms.TreeNode treeNode4 = new System.Windows.Forms.TreeNode("Mocks");
             this.menuStrip = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.newToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -69,6 +69,7 @@
             this.windowsPhone7MangoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.lINQToSQLDataContextToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.advancedOptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator5 = new System.Windows.Forms.ToolStripSeparator();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -88,7 +89,7 @@
             this.rtbCompilerOutput = new System.Windows.Forms.TextBox();
             this.tabPageTestResults = new System.Windows.Forms.TabPage();
             this.rtbUnitTestOutput = new System.Windows.Forms.TextBox();
-            this.advancedOptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.writeHeaderInformationToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -315,7 +316,8 @@
             this.optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.testFrameworkToolStripMenuItem,
             this.codeGenerationToolStripMenuItem,
-            this.targetToolStripMenuItem});
+            this.targetToolStripMenuItem,
+            this.writeHeaderInformationToolStripMenuItem});
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.optionsToolStripMenuItem.Text = "Configuration";
@@ -327,7 +329,7 @@
             this.mSTestToolStripMenuItem,
             this.xUnitToolStripMenuItem});
             this.testFrameworkToolStripMenuItem.Name = "testFrameworkToolStripMenuItem";
-            this.testFrameworkToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.testFrameworkToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.testFrameworkToolStripMenuItem.Text = "Test Framework";
             // 
             // nUnitToolStripMenuItem
@@ -387,7 +389,7 @@
             this.windowsPhone7MangoToolStripMenuItem,
             this.lINQToSQLDataContextToolStripMenuItem});
             this.targetToolStripMenuItem.Name = "targetToolStripMenuItem";
-            this.targetToolStripMenuItem.Size = new System.Drawing.Size(163, 22);
+            this.targetToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
             this.targetToolStripMenuItem.Text = "Target";
             // 
             // nETCompactFrameworkCompatibleToolStripMenuItem
@@ -421,6 +423,13 @@
             this.exportToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
             this.exportToolStripMenuItem.Text = "&Export Files";
             this.exportToolStripMenuItem.Click += new System.EventHandler(this.ExportToolStripMenuItemClick);
+            // 
+            // advancedOptionsToolStripMenuItem
+            // 
+            this.advancedOptionsToolStripMenuItem.Name = "advancedOptionsToolStripMenuItem";
+            this.advancedOptionsToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
+            this.advancedOptionsToolStripMenuItem.Text = "Options...";
+            this.advancedOptionsToolStripMenuItem.Click += new System.EventHandler(this.advancedOptionsToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -491,10 +500,10 @@
             this.treeView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeView.Location = new System.Drawing.Point(0, 0);
             this.treeView.Name = "treeView";
-            treeNode9.Name = "nodeTables";
-            treeNode9.Text = "Database Tables";
+            treeNode1.Name = "nodeTables";
+            treeNode1.Text = "Database Tables";
             this.treeView.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode9});
+            treeNode1});
             this.treeView.Size = new System.Drawing.Size(187, 400);
             this.treeView.TabIndex = 0;
             this.treeView.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.TablesTreeViewAfterSelect);
@@ -532,19 +541,19 @@
             this.treeViewFiles.Dock = System.Windows.Forms.DockStyle.Fill;
             this.treeViewFiles.Location = new System.Drawing.Point(0, 0);
             this.treeViewFiles.Name = "treeViewFiles";
-            treeNode10.Name = "nodeSource";
-            treeNode10.NodeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            treeNode10.Text = "Source Code";
-            treeNode11.Name = "nodeUnitTests";
-            treeNode11.NodeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            treeNode11.Text = "Unit Tests";
-            treeNode12.Name = "nodeMocks";
-            treeNode12.NodeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
-            treeNode12.Text = "Mocks";
+            treeNode2.Name = "nodeSource";
+            treeNode2.NodeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            treeNode2.Text = "Source Code";
+            treeNode3.Name = "nodeUnitTests";
+            treeNode3.NodeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            treeNode3.Text = "Unit Tests";
+            treeNode4.Name = "nodeMocks";
+            treeNode4.NodeFont = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            treeNode4.Text = "Mocks";
             this.treeViewFiles.Nodes.AddRange(new System.Windows.Forms.TreeNode[] {
-            treeNode10,
-            treeNode11,
-            treeNode12});
+            treeNode2,
+            treeNode3,
+            treeNode4});
             this.treeViewFiles.Size = new System.Drawing.Size(183, 400);
             this.treeViewFiles.TabIndex = 0;
             this.treeViewFiles.AfterSelect += new System.Windows.Forms.TreeViewEventHandler(this.OnSourceTreeViewFilesAfterSelect);
@@ -661,12 +670,14 @@
             this.rtbUnitTestOutput.Size = new System.Drawing.Size(770, 79);
             this.rtbUnitTestOutput.TabIndex = 0;
             // 
-            // advancedOptionsToolStripMenuItem
+            // writeHeaderInformationToolStripMenuItem
             // 
-            this.advancedOptionsToolStripMenuItem.Name = "advancedOptionsToolStripMenuItem";
-            this.advancedOptionsToolStripMenuItem.Size = new System.Drawing.Size(173, 22);
-            this.advancedOptionsToolStripMenuItem.Text = "Options...";
-            this.advancedOptionsToolStripMenuItem.Click += new System.EventHandler(this.advancedOptionsToolStripMenuItem_Click);
+            this.writeHeaderInformationToolStripMenuItem.Checked = true;
+            this.writeHeaderInformationToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.writeHeaderInformationToolStripMenuItem.Name = "writeHeaderInformationToolStripMenuItem";
+            this.writeHeaderInformationToolStripMenuItem.Size = new System.Drawing.Size(213, 22);
+            this.writeHeaderInformationToolStripMenuItem.Text = "Write Header Information";
+            this.writeHeaderInformationToolStripMenuItem.Click += new System.EventHandler(this.writeHeaderInformationToolStripMenuItem_Click);
             // 
             // MainForm
             // 
@@ -768,6 +779,7 @@
         private System.Windows.Forms.TreeView treeViewFiles;
         private ICSharpCode.TextEditor.TextEditorControl rtbCode;
         private System.Windows.Forms.ToolStripMenuItem advancedOptionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem writeHeaderInformationToolStripMenuItem;
 
     }
 }

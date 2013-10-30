@@ -241,7 +241,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         private void AddToCodeFiles(CodeGenerator codeGenerator)
         {
             var header = new StringBuilder();
-            codeGenerator.WriteHeaderInformation(header);
+            if (Settings.Default.WriteHeaderInformation)
+                codeGenerator.WriteHeaderInformation(header);
             header.AppendLine();
 
             foreach (var code in codeGenerator.CodeFiles)
@@ -251,7 +252,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         private void AddToUnitTestFiles(CodeGenerator codeGenerator)
         {
             var header = new StringBuilder();
-            codeGenerator.WriteHeaderInformation(header);
+            if (Settings.Default.WriteHeaderInformation)
+                codeGenerator.WriteHeaderInformation(header);
             header.AppendLine();
 
             foreach (var code in codeGenerator.CodeFiles)
@@ -273,7 +275,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             var code = new StringBuilder();
             var unitTestGenerator = UnitTestCodeGeneratorFactory.Create(codeGenerator.Database, Settings.Default.TestFramework, Settings.Default.Target);
             SetOptions(unitTestGenerator);
-            unitTestGenerator.WriteHeaderInformation();
+            if (Settings.Default.WriteHeaderInformation)
+                unitTestGenerator.WriteHeaderInformation();
             code.Append(unitTestGenerator.GetCode());
 
             unitTestGenerator.GenerateDataAccessLayer();
@@ -293,7 +296,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             var code = new StringBuilder();
             var unitTestGenerator = UnitTestCodeGeneratorFactory.Create(codeGenerator.Database, Settings.Default.TestFramework, Settings.Default.Target);
             SetOptions(unitTestGenerator);
-            unitTestGenerator.WriteHeaderInformation();
+            if (Settings.Default.WriteHeaderInformation)
+                unitTestGenerator.WriteHeaderInformation();
             code.Append(unitTestGenerator.GetCode());
 
             unitTestGenerator.GenerateDataAccessLayer();
@@ -313,7 +317,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             WriteToOutputWindow("Generating Entity Unit Tests Code");
             var unitTestGenerator = UnitTestCodeGeneratorFactory.Create(codeGenerator.Database, Settings.Default.TestFramework, Settings.Default.Target);
             SetOptions(unitTestGenerator);
-            unitTestGenerator.WriteHeaderInformation();
+            if (Settings.Default.WriteHeaderInformation)
+                unitTestGenerator.WriteHeaderInformation();
             unitTestGenerator.GenerateEntities();
             AddToUnitTestFiles(unitTestGenerator);
             var code = unitTestGenerator.GetCode();
@@ -324,7 +329,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         {
             WriteToOutputWindow("Generating Entities Code");
             codeGenerator.ClearCode();
-            codeGenerator.WriteHeaderInformation();
+            if (Settings.Default.WriteHeaderInformation)
+                codeGenerator.WriteHeaderInformation();
             codeGenerator.GenerateEntities();
             var generatedCode = codeGenerator.GetCode();
             return generatedCode;
@@ -334,7 +340,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         {
             WriteToOutputWindow("Generating Data Access Code");
             codeGenerator.ClearCode();
-            codeGenerator.WriteHeaderInformation();
+            if (Settings.Default.WriteHeaderInformation)
+                codeGenerator.WriteHeaderInformation();
             codeGenerator.GenerateDataAccessLayer();
             AddToCodeFiles(codeGenerator);
 
@@ -1326,13 +1333,19 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                                          MessageBoxButtons.YesNo,
                                          MessageBoxIcon.Question,
                                          MessageBoxDefaultButton.Button1);
-            if (result != DialogResult.Yes) 
+            if (result != DialogResult.Yes)
                 return;
 
             treeView.Nodes.Clear();
             treeView.Update();
 
             GenerateCode();
+        }
+
+        private void writeHeaderInformationToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Settings.Default.WriteHeaderInformation = writeHeaderInformationToolStripMenuItem.Checked;
+            Settings.Default.Save();
         }
     }
 }
