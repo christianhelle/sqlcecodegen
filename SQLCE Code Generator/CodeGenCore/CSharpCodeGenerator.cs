@@ -47,7 +47,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\t\tlock (syncLock)");
             code.AppendLine("\t\t\t\t{");
             code.AppendLine("\t\t\t\t\tif (connectionInstance == null)");
-            code.AppendLine("\t\t\t\t\t\tconnectionInstance = new System.Data.SqlServerCe.SqlCeConnection(ConnectionString);");
+            code.AppendLine("\t\t\t\t\t\tconnectionInstance = CreateConnection(ConnectionString);");
             code.AppendLine("\t\t\t\t\tif (connectionInstance.State != System.Data.ConnectionState.Open)");
             code.AppendLine("\t\t\t\t\t\tconnectionInstance.Open();");
             code.AppendLine("\t\t\t\t\treturn connectionInstance;");
@@ -58,6 +58,15 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\t\tlock (syncLock)");
             code.AppendLine("\t\t\t\t\tconnectionInstance = value;");
             code.AppendLine("\t\t\t}");
+            code.AppendLine("\t\t}");
+            code.AppendLine();
+
+            GenerateXmlDoc(code, 2, "Create a new SqlCeConnection instance using the provided connection string");
+            code.AppendLine("\t\tpublic static System.Data.IDbCommand CreateConnection(string connectionString)");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tvar connection = new SqlCeConnection(connectionString);");
+            code.AppendLine("\t\t\tconnection.Open();");
+            code.AppendLine("\t\t\treturn connection;");
             code.AppendLine("\t\t}");
             code.AppendLine();
 
@@ -76,7 +85,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t\treturn command;");
             code.AppendLine("\t\t}");
             code.AppendLine();
-            
+
             GenerateXmlDoc(code, 2, "Create a DbParameter instance using the global SQL CE Conection instance", new KeyValuePair<string, string>("name", "Name of the parameter"), new KeyValuePair<string, string>("type", "The database type"), new KeyValuePair<string, string>("value", "The actual value to set the parameter to"));
             code.AppendLine("\t\tpublic static System.Data.Common.DbParameter CreateParameter(string name, System.Data.SqlDbType type, object value)");
             code.AppendLine("\t\t{");
@@ -194,10 +203,10 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             {
                 if (options.AutoPropertiesOnly)
                     continue;
-                
-                if (!(column.Value.MaxLength > 0) || column.Value.ManagedType != typeof (string)) 
+
+                if (!(column.Value.MaxLength > 0) || column.Value.ManagedType != typeof(string))
                     continue;
-                
+
                 code.AppendLine("\t\tprivate " + column.Value.ManagedType + (column.Value.ManagedType.IsValueType ? "? _" : " _") + column.Value.FieldName + ";");
             }
             code.AppendLine();
@@ -219,8 +228,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             foreach (var column in table.Columns)
             {
                 GenerateXmlDoc(code, 2, "Gets or sets the value of " + column.Value.FieldName);
-                
-                if (!options.AutoPropertiesOnly && column.Value.MaxLength > 0 && column.Value.ManagedType == typeof (string))
+
+                if (!options.AutoPropertiesOnly && column.Value.MaxLength > 0 && column.Value.ManagedType == typeof(string))
                 {
                     // Property with backing field
                     code.AppendLine("\t\tpublic " + column.Value.ManagedType + (column.Value.ManagedType.IsValueType ? "? " : " ") + column.Value.FieldName);
@@ -233,9 +242,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     if (options.ThrowExceptions)
                     {
                         code.AppendLine("\t\t\t\tif (_" + column.Value.FieldName + " != null && " + column.Value.FieldName + ".Length > " + column.Value.FieldName + "_Max_Length)");
-                        code.AppendLine("\t\t\t\t\tthrow new System.ArgumentException(\"Max length for " + column.Value.FieldName + " is " + column.Value.MaxLength + "\");"); 
+                        code.AppendLine("\t\t\t\t\tthrow new System.ArgumentException(\"Max length for " + column.Value.FieldName + " is " + column.Value.MaxLength + "\");");
                     }
-                    
+
                     code.AppendLine("\t\t\t}");
                     code.AppendLine("\t\t}");
                     code.AppendLine();
