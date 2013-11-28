@@ -84,9 +84,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine();
 
             GenerateXmlDoc(code, 2, "Create a new SqlCeConnection instance using the provided connection string");
-            code.AppendLine("\t\tpublic static System.Data.IDbCommand CreateConnection(string connectionString)");
+            code.AppendLine("\t\tpublic static System.Data.IDbConnection CreateConnection(string connectionString)");
             code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\tvar connection = new SqlCeConnection(connectionString);");
+            code.AppendLine("\t\t\tvar connection = new System.Data.SqlServerCe.SqlCeConnection(connectionString);");
             code.AppendLine("\t\t\tconnection.Open();");
             code.AppendLine("\t\t\treturn connection;");
             code.AppendLine("\t\t}");
