@@ -160,8 +160,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 Code.AppendLine("\t\t\t\tif (" + column.Value.FieldName + " != null)");
                 Code.AppendLine("\t\t\t\t{");
                 Code.AppendFormat("\t\t\t\t\tcommand.CommandText = \"SELECT * FROM [{0}] WHERE {1}=@{1}\";", Table.ClassName, column.Value.FieldName);
-                Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, {0}));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
-                //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.{1}, {0}));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.DbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
                 //Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters[\"@{0}\"].Value = {1};", column.Value.FieldName, "(object)" + column.Value.FieldName);
                 //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.AddWithValue(\"@{0}\", {0});", column.Value.FieldName);
                 Code.AppendLine();
@@ -232,33 +232,33 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                         Code.AppendLine("\t\t\t\tif (" + firstColumn.Value.FieldName + " != null && " + secondColumn.Value.FieldName + " != null && " + thirdColumn.Value.FieldName + " != null)");
                         Code.AppendLine("\t\t\t\t{");
                         Code.AppendFormat("\t\t\t\t\tcommand.CommandText = \"SELECT * FROM [{0}] WHERE {1}=@{1} AND {2}=@{2}\";", Table.ClassName, firstColumn.Value.FieldName, secondColumn.Value.FieldName);
-                        Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, {0}));", firstColumn.Value.FieldName, GetSqlDbType(firstColumn.Value.ManagedType));
-                        Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, {0}));", secondColumn.Value.FieldName, GetSqlDbType(secondColumn.Value.ManagedType));
-                        Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, {0}));", thirdColumn.Value.FieldName, GetSqlDbType(thirdColumn.Value.ManagedType));
+                        Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.{1}, {0}));", firstColumn.Value.FieldName, GetSqlDbType(firstColumn.Value.ManagedType));
+                        Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.{1}, {0}));", secondColumn.Value.FieldName, GetSqlDbType(secondColumn.Value.ManagedType));
+                        Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.{1}, {0}));", thirdColumn.Value.FieldName, GetSqlDbType(thirdColumn.Value.ManagedType));
                         Code.AppendLine();
                         Code.AppendLine("\t\t\t\t}");
                         Code.AppendLine("\t\t\t\telse if (" + firstColumn.Value.FieldName + " == null && " + secondColumn.Value.FieldName + " != null && " + thirdColumn.Value.FieldName + " != null)");
                         Code.AppendLine("\t\t\t\t{");
                         Code.AppendFormat("\t\t\t\t\tcommand.CommandText = \"SELECT * FROM [{0}] WHERE {1} IS NULL AND {2}=@{2} AND {3}=@{3}\";", Table.ClassName, firstColumn.Value.FieldName, secondColumn.Value.FieldName, thirdColumn.Value.FieldName);
-                        Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, {0}));", secondColumn.Value.FieldName, GetSqlDbType(thirdColumn.Value.ManagedType));
-                        Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, {0}));", thirdColumn.Value.FieldName, GetSqlDbType(thirdColumn.Value.ManagedType));
+                        Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.{1}, {0}));", secondColumn.Value.FieldName, GetSqlDbType(thirdColumn.Value.ManagedType));
+                        Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.{1}, {0}));", thirdColumn.Value.FieldName, GetSqlDbType(thirdColumn.Value.ManagedType));
                         Code.AppendLine("\t\t\t\t}");
                         Code.AppendLine("\t\t\t\telse if (" + firstColumn.Value.FieldName + " == null && " + secondColumn.Value.FieldName + " == null && " + thirdColumn.Value.FieldName + " != null)");
                         Code.AppendLine("\t\t\t\t{");
                         Code.AppendFormat("\t\t\t\t\tcommand.CommandText = \"SELECT * FROM [{0}] WHERE {1} IS NULL AND {2} IS NULL AND {3}=@{3}\";", Table.ClassName, firstColumn.Value.FieldName, secondColumn.Value.FieldName, thirdColumn.Value.FieldName);
-                        Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, {0}));", thirdColumn.Value.FieldName, GetSqlDbType(thirdColumn.Value.ManagedType));
+                        Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.{1}, {0}));", thirdColumn.Value.FieldName, GetSqlDbType(thirdColumn.Value.ManagedType));
                         Code.AppendLine("\t\t\t\t}");
                         Code.AppendLine("\t\t\t\telse if (" + firstColumn.Value.FieldName + " != null && " + secondColumn.Value.FieldName + " == null && " + thirdColumn.Value.FieldName + " != null)");
                         Code.AppendLine("\t\t\t\t{");
                         Code.AppendFormat("\t\t\t\t\tcommand.CommandText = \"SELECT * FROM [{0}] WHERE {1}=@{1} AND {2} IS NULL AND {3}=@{3}\";", Table.ClassName, firstColumn.Value.FieldName, secondColumn.Value.FieldName, thirdColumn.Value.FieldName);
-                        Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, {0}));", firstColumn.Value.FieldName, GetSqlDbType(firstColumn.Value.ManagedType));
-                        Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, {0}));", thirdColumn.Value.FieldName, GetSqlDbType(thirdColumn.Value.ManagedType));
+                        Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.{1}, {0}));", firstColumn.Value.FieldName, GetSqlDbType(firstColumn.Value.ManagedType));
+                        Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.{1}, {0}));", thirdColumn.Value.FieldName, GetSqlDbType(thirdColumn.Value.ManagedType));
                         Code.AppendLine("\t\t\t\t}");
                         Code.AppendLine("\t\t\t\telse if (" + firstColumn.Value.FieldName + " != null && " + secondColumn.Value.FieldName + " != null && " + thirdColumn.Value.FieldName + " == null)");
                         Code.AppendLine("\t\t\t\t{");
                         Code.AppendFormat("\t\t\t\t\tcommand.CommandText = \"SELECT * FROM [{0}] WHERE {1}=@{1} AND {2}=@{2} AND {3} IS NULL\";", Table.ClassName, firstColumn.Value.FieldName, secondColumn.Value.FieldName, thirdColumn.Value.FieldName);
-                        Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, {0}));", firstColumn.Value.FieldName, GetSqlDbType(firstColumn.Value.ManagedType));
-                        Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, {0}));", secondColumn.Value.FieldName, GetSqlDbType(secondColumn.Value.ManagedType));
+                        Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.{1}, {0}));", firstColumn.Value.FieldName, GetSqlDbType(firstColumn.Value.ManagedType));
+                        Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.{1}, {0}));", secondColumn.Value.FieldName, GetSqlDbType(secondColumn.Value.ManagedType));
                         Code.AppendLine("\t\t\t\t}");
                         Code.AppendLine("\t\t\t\telse");
                         Code.AppendFormat("\t\t\t\t\tcommand.CommandText = \"SELECT * FROM [{0}] WHERE {1} IS NULL AND {2} IS NULL AND {3} IS NULL\";", Table.ClassName, firstColumn.Value.FieldName, secondColumn.Value.FieldName, thirdColumn.Value.FieldName);
@@ -319,19 +319,19 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                     Code.AppendLine("\t\t\t\tif (" + firstColumn.Value.FieldName + " != null && " + secondColumn.Value.FieldName + " != null)");
                     Code.AppendLine("\t\t\t\t{");
                     Code.AppendFormat("\t\t\t\t\tcommand.CommandText = \"SELECT * FROM [{0}] WHERE {1}=@{1} AND {2}=@{2}\";", Table.ClassName, firstColumn.Value.FieldName, secondColumn.Value.FieldName);
-                    Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, {0}));", firstColumn.Value.FieldName, GetSqlDbType(firstColumn.Value.ManagedType));
-                    Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, {0}));", secondColumn.Value.FieldName, GetSqlDbType(secondColumn.Value.ManagedType));
+                    Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.{1}, {0}));", firstColumn.Value.FieldName, GetSqlDbType(firstColumn.Value.ManagedType));
+                    Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.{1}, {0}));", secondColumn.Value.FieldName, GetSqlDbType(secondColumn.Value.ManagedType));
                     Code.AppendLine();
                     Code.AppendLine("\t\t\t\t}");
                     Code.AppendLine("\t\t\t\telse if (" + firstColumn.Value.FieldName + " == null && " + secondColumn.Value.FieldName + " != null)");
                     Code.AppendLine("\t\t\t\t{");
                     Code.AppendFormat("\t\t\t\t\tcommand.CommandText = \"SELECT * FROM [{0}] WHERE {1} IS NULL AND {2}=@{2}\";", Table.ClassName, firstColumn.Value.FieldName, secondColumn.Value.FieldName);
-                    Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, {0}));", secondColumn.Value.FieldName, GetSqlDbType(secondColumn.Value.ManagedType));
+                    Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.{1}, {0}));", secondColumn.Value.FieldName, GetSqlDbType(secondColumn.Value.ManagedType));
                     Code.AppendLine("\t\t\t\t}");
                     Code.AppendLine("\t\t\t\telse if (" + firstColumn.Value.FieldName + " != null && " + secondColumn.Value.FieldName + " == null)");
                     Code.AppendLine("\t\t\t\t{");
                     Code.AppendFormat("\t\t\t\t\tcommand.CommandText = \"SELECT * FROM [{0}] WHERE {1}=@{1} AND {2} IS NULL\";", Table.ClassName, firstColumn.Value.FieldName, secondColumn.Value.FieldName);
-                    Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, {0}));", firstColumn.Value.FieldName, GetSqlDbType(firstColumn.Value.ManagedType));
+                    Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.{1}, {0}));", firstColumn.Value.FieldName, GetSqlDbType(firstColumn.Value.ManagedType));
                     Code.AppendLine("\t\t\t\t}");
                     Code.AppendLine("\t\t\t\telse");
                     Code.AppendFormat("\t\t\t\t\tcommand.CommandText = \"SELECT * FROM [{0}] WHERE {1} IS NULL AND {2} IS NULL\";", Table.ClassName, firstColumn.Value.FieldName, secondColumn.Value.FieldName);
@@ -378,8 +378,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 Code.AppendLine("\t\t\tif (" + column.Value.FieldName + " != null)");
                 Code.AppendLine("\t\t\t{");
                 Code.AppendFormat("\t\t\t\tcommand.CommandText = \"SELECT TOP(\" + count + \") * FROM [{0}] WHERE {1}=@{1}\";", Table.ClassName, column.Value.FieldName);
-                Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, {0}));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
-                //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.{1}, {0}));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.DbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
                 //Code.AppendFormat("\n\t\t\t\tcommand.Parameters[\"@{0}\"].Value = {1};", column.Value.FieldName, "(object)" + column.Value.FieldName);
                 //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.AddWithValue(\"@{0}\", {0});", column.Value.FieldName);
                 Code.AppendLine();
@@ -509,8 +509,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             {
                 if (column.Value.Name == Table.PrimaryKeyColumnName)
                     continue;
-                //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
-                Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, null));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.DbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.{1}, null));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
                 Code.AppendFormat("\n\t\t\t\t((System.Data.Common.DbParameter)command.Parameters[\"@{0}\"]).Value = {1};", column.Value.FieldName, column.Value.FieldName + " != null ? (object)" + column.Value.FieldName + " : System.DBNull.Value");
                 //code.AppendLine("\t\t\t\tcommand.Parameters.AddWithValue(\"@" + column.Value.FieldName + "\", " + column.Value.FieldName + " != null ? (object)" + column.Value.FieldName + " : System.DBNull.Value);");
             }
@@ -570,8 +570,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             Code.AppendLine("\t\t\t\tcommand.CommandText = " + query);
             foreach (var column in Table.Columns)
             {
-                Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, {2}));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType), column.Value.FieldName + " != null ? (object)" + column.Value.FieldName + " : System.DBNull.Value");
-                //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.{1}, {2}));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType), column.Value.FieldName + " != null ? (object)" + column.Value.FieldName + " : System.DBNull.Value");
+                //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.DbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
                 //Code.AppendFormat("\n\t\t\t\tcommand.Parameters[\"@{0}\"].Value = {1};", column.Value.FieldName, column.Value.FieldName + " != null ? (object)" + column.Value.FieldName + " : System.DBNull.Value");
                 //code.AppendLine("\t\t\t\tcommand.Parameters.AddWithValue(\"@" + column.Value.FieldName + "\", " + column.Value.FieldName + " != null ? (object)" + column.Value.FieldName + " : System.DBNull.Value);");
             }
@@ -652,15 +652,15 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             {
                 if (!hasPrimaryKey)
                 {
-                    Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, item." + column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
-                    //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                    Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.{1}, item." + column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                    //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.DbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
                     //Code.AppendFormat("\n\t\t\t\tcommand.Parameters[\"@{0}\"].Value = item.{1};", column.Value.FieldName, column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value");
                     //code.AppendLine("\t\t\t\tcommand.Parameters.AddWithValue(\"@" + column.Value.FieldName + "\", item." + column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value);");
                 }
                 else if (column.Value.IsPrimaryKey)
                 {
-                    Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, item." + column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
-                    //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                    Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.{1}, item." + column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                    //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.DbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
                     //Code.AppendFormat("\n\t\t\t\tcommand.Parameters[\"@{0}\"].Value = item.{1};", column.Value.FieldName, column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value");
                     //code.AppendLine("\t\t\t\tcommand.Parameters.AddWithValue(\"@" + column.Value.FieldName + "\", item." + column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value);");
                     break;
@@ -711,12 +711,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             foreach (var column in Table.Columns)
             {
                 if (!hasPrimaryKey)
-                    Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, null));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
-                //Code.AppendLine("\t\t\t\tcommand.Parameters.Add(\"@" + column.Value.FieldName + "\", System.Data.SqlDbType." + GetSqlDbType(column.Value.ManagedType) + ");");
+                    Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.{1}, null));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                //Code.AppendLine("\t\t\t\tcommand.Parameters.Add(\"@" + column.Value.FieldName + "\", System.Data.DbType." + GetSqlDbType(column.Value.ManagedType) + ");");
                 else if (column.Value.IsPrimaryKey)
                 {
-                    Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, null));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
-                    //Code.AppendLine("\t\t\t\tcommand.Parameters.Add(\"@" + column.Value.FieldName + "\", System.Data.SqlDbType." + GetSqlDbType(column.Value.ManagedType) + ");");
+                    Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.{1}, null));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                    //Code.AppendLine("\t\t\t\tcommand.Parameters.Add(\"@" + column.Value.FieldName + "\", System.Data.DbType." + GetSqlDbType(column.Value.ManagedType) + ");");
                     break;
                 }
             }
@@ -761,8 +761,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 Code.AppendLine("\t\t\tusing (var command = Database.CreateCommand(Transaction))");
                 Code.AppendLine("\t\t\t{");
                 Code.AppendFormat("\t\t\t\tcommand.CommandText = \"DELETE FROM {0} WHERE {1}=@{2}\";", Table.Name, column.Value.Name, column.Value.FieldName);
-                Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, {2}));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType), column.Value.FieldName + " != null ? (object)" + column.Value.FieldName + " : System.DBNull.Value");
-                //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.{1}, {2}));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType), column.Value.FieldName + " != null ? (object)" + column.Value.FieldName + " : System.DBNull.Value");
+                //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.DbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
                 //Code.AppendFormat("\n\t\t\t\tcommand.Parameters[\"@{0}\"].Value = {1};", column.Value.FieldName, column.Value.FieldName + " != null ? (object)" + column.Value.FieldName + " : System.DBNull.Value");
                 //code.AppendFormat("\n\t\t\t\tcommand.Parameters.AddWithValue(\"@{0}\", {0} != null ? (object){0} : System.DBNull.Value);", column.Value.FieldName);
                 Code.AppendLine();
@@ -826,11 +826,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             foreach (var column in Table.Columns)
             {
                 if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0)
-                    Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.NText, null));", column.Value.FieldName);
-                //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.NText);", column.Value.FieldName);
+                    Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.String, null));", column.Value.FieldName);
+                //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.DbType.String);", column.Value.FieldName);
                 else
-                    Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, null));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
-                //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                    Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.{1}, null));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.DbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
                 Code.AppendFormat("\n\t\t\t\t((System.Data.Common.DbParameter)command.Parameters[\"@{0}\"]).Value = item.{1};", column.Value.FieldName, column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value");
                 //code.AppendLine("\t\t\t\tcommand.Parameters.AddWithValue(\"@" + column.Value.FieldName + "\", item." + column.Value.FieldName + " != null ? (object)item." + column.Value.FieldName + " : System.DBNull.Value);");
             }
@@ -878,14 +878,14 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             Code.AppendLine("\t\t\t\tcommand.CommandText = " + query);
             foreach (var column in Table.Columns)
             {
-                //Code.AppendLine("\t\t\t\tcommand.Parameters.Add(\"@" + column.Value.FieldName + "\", System.Data.SqlDbType." + GetSqlDbType(column.Value.ManagedType) + ");");
+                //Code.AppendLine("\t\t\t\tcommand.Parameters.Add(\"@" + column.Value.FieldName + "\", System.Data.DbType." + GetSqlDbType(column.Value.ManagedType) + ");");
 
                 if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0)
-                    Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.NText, null));", column.Value.FieldName);
-                //Code.AppendFormat("\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.NText);", column.Value.FieldName);
+                    Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.String, null));", column.Value.FieldName);
+                //Code.AppendFormat("\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.DbType.String);", column.Value.FieldName);
                 else
-                    Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.SqlDbType.{1}, null));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
-                //Code.AppendFormat("\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.SqlDbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                    Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.{1}, null));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                //Code.AppendFormat("\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.DbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
 
                 Code.AppendLine();
             }
@@ -906,17 +906,17 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             Code.AppendLine();
         }
 
-        private static SqlDbType GetSqlDbType(Type type)
+        private static DbType GetSqlDbType(Type type)
         {
             if (type == typeof(byte[]))
-                return SqlDbType.Image;
+                return DbType.Binary;
 
             var parameter = new SqlParameter();
             var typeConverter = TypeDescriptor.GetConverter(parameter.DbType);
             var convertFrom = typeConverter.ConvertFrom(type.Name);
             if (convertFrom != null)
                 parameter.DbType = (DbType)convertFrom;
-            return parameter.SqlDbType;
+            return parameter.DbType;
         }
     }
 }
