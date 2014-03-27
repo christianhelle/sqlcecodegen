@@ -74,6 +74,22 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             Code.AppendLine("\t\t#region SELECT *");
             Code.AppendLine();
+            GenerateXmlDoc(2, "Retrieves all items as an IEnumerable collection");
+            Code.AppendLine("\t\tpublic System.Collections.Generic.IEnumerable<" + Table.ClassName + "> ToEnumerable()");
+            Code.AppendLine("\t\t{");
+            Code.AppendLine("\t\t\tusing (var command = Database.CreateCommand(Transaction))");
+            Code.AppendLine("\t\t\t{");
+            Code.AppendLine("\t\t\t\tcommand.CommandText = \"SELECT * FROM [" + Table.ClassName + "]\";");
+            Code.AppendLine("\t\t\t\tusing (var reader = command.ExecuteReader())");
+            Code.AppendLine("\t\t\t\t{");
+            Code.AppendLine("\t\t\t\t\twhile (reader.Read())");
+            Code.AppendLine("\t\t\t\t\t{");
+            Code.AppendLine("\t\t\t\t\t\tyield return CreateEntity(reader);");
+            Code.AppendLine("\t\t\t\t\t}");
+            Code.AppendLine("\t\t\t\t}");
+            Code.AppendLine("\t\t\t}");
+            Code.AppendLine("\t\t}");
+            Code.AppendLine();
             GenerateXmlDoc(2, "Retrieves all items as a generic collection");
             Code.AppendLine("\t\tpublic System.Collections.Generic.List<" + Table.ClassName + "> ToList()");
             Code.AppendLine("\t\t{");
@@ -105,6 +121,22 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         public override void GenerateSelectWithTop()
         {
             Code.AppendLine("\t\t#region SELECT TOP()");
+            Code.AppendLine();
+            GenerateXmlDoc(2, "Retrieves the first set of items specified by count as an IEnumerable collection", new KeyValuePair<string, string>("count", "Number of records to be retrieved"));
+            Code.AppendLine("\t\tpublic System.Collections.Generic.IEnumerable<" + Table.ClassName + "> ToEnumerable(int count)");
+            Code.AppendLine("\t\t{");
+            Code.AppendLine("\t\t\tusing (var command = Database.CreateCommand(Transaction))");
+            Code.AppendLine("\t\t\t{");
+            Code.AppendLine("\t\t\t\tcommand.CommandText = string.Format(\"SELECT TOP({0}) * FROM [" + Table.ClassName + "]\", count);");
+            Code.AppendLine("\t\t\t\tusing (var reader = command.ExecuteReader())");
+            Code.AppendLine("\t\t\t\t{");
+            Code.AppendLine("\t\t\t\t\twhile (reader.Read())");
+            Code.AppendLine("\t\t\t\t\t{");
+            Code.AppendLine("\t\t\t\t\t\tyield return CreateEntity(reader);");
+            Code.AppendLine("\t\t\t\t\t}");
+            Code.AppendLine("\t\t\t\t}");
+            Code.AppendLine("\t\t\t}");
+            Code.AppendLine("\t\t}");
             Code.AppendLine();
             GenerateXmlDoc(2, "Retrieves the first set of items specified by count as a generic collection", new KeyValuePair<string, string>("count", "Number of records to be retrieved"));
             Code.AppendLine("\t\tpublic System.Collections.Generic.List<" + Table.ClassName + "> ToList(int count)");
@@ -162,7 +194,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 Code.AppendFormat("\t\t\t\t\tcommand.CommandText = \"SELECT * FROM [{0}] WHERE {1}=@{1}\";", Table.ClassName, column.Value.FieldName);
                 Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.{1}, {0}));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
                 //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.DbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
-                //Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters[\"@{0}\"].Value = {1};", column.Value.FieldName, "(object)" + column.Value.FieldName);
+                //Code.AppendFormat("\n\t\t\t\tcommand.Parameters[\"@{0}\"].Value = {1};", column.Value.FieldName, "(object)" + column.Value.FieldName);
                 //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.AddWithValue(\"@{0}\", {0});", column.Value.FieldName);
                 Code.AppendLine();
                 Code.AppendLine("\t\t\t\t}");
@@ -378,7 +410,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 Code.AppendLine("\t\t\tif (" + column.Value.FieldName + " != null)");
                 Code.AppendLine("\t\t\t{");
                 Code.AppendFormat("\t\t\t\tcommand.CommandText = \"SELECT TOP(\" + count + \") * FROM [{0}] WHERE {1}=@{1}\";", Table.ClassName, column.Value.FieldName);
-                Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.{1}, {0}));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.{1}, {0}));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
                 //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.DbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
                 //Code.AppendFormat("\n\t\t\t\tcommand.Parameters[\"@{0}\"].Value = {1};", column.Value.FieldName, "(object)" + column.Value.FieldName);
                 //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.AddWithValue(\"@{0}\", {0});", column.Value.FieldName);
@@ -510,7 +542,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 if (column.Value.Name == Table.PrimaryKeyColumnName)
                     continue;
                 //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.DbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
-                Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.{1}, null));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
+                Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.{1}, null));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
                 Code.AppendFormat("\n\t\t\t\t((System.Data.Common.DbParameter)command.Parameters[\"@{0}\"]).Value = {1};", column.Value.FieldName, column.Value.FieldName + " != null ? (object)" + column.Value.FieldName + " : System.DBNull.Value");
                 //code.AppendLine("\t\t\t\tcommand.Parameters.AddWithValue(\"@" + column.Value.FieldName + "\", " + column.Value.FieldName + " != null ? (object)" + column.Value.FieldName + " : System.DBNull.Value);");
             }
@@ -570,7 +602,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             Code.AppendLine("\t\t\t\tcommand.CommandText = " + query);
             foreach (var column in Table.Columns)
             {
-                Code.AppendFormat("\n\t\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.{1}, {2}));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType), column.Value.FieldName + " != null ? (object)" + column.Value.FieldName + " : System.DBNull.Value");
+                Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(Database.CreateParameter(\"@{0}\", System.Data.DbType.{1}, {2}));", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType), column.Value.FieldName + " != null ? (object)" + column.Value.FieldName + " : System.DBNull.Value");
                 //Code.AppendFormat("\n\t\t\t\tcommand.Parameters.Add(\"@{0}\", System.Data.DbType.{1});", column.Value.FieldName, GetSqlDbType(column.Value.ManagedType));
                 //Code.AppendFormat("\n\t\t\t\tcommand.Parameters[\"@{0}\"].Value = {1};", column.Value.FieldName, column.Value.FieldName + " != null ? (object)" + column.Value.FieldName + " : System.DBNull.Value");
                 //code.AppendLine("\t\t\t\tcommand.Parameters.AddWithValue(\"@" + column.Value.FieldName + "\", " + column.Value.FieldName + " != null ? (object)" + column.Value.FieldName + " : System.DBNull.Value);");

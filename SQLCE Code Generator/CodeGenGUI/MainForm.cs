@@ -52,7 +52,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
         private ISqlCeDatabase database;
         private readonly Dictionary<string, StringBuilder> generatedCodeFiles;
         private readonly Dictionary<string, StringBuilder> generatedUnitTestFiles;
-        private readonly Dictionary<string, StringBuilder> generatedMockFiles;
+        private readonly Dictionary<string, StringBuilder> generatedFakeFiles;
         private readonly bool launchedWithArgument;
         private readonly string appDataPath;
 
@@ -77,13 +77,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
             generatedCodeFiles = new Dictionary<string, StringBuilder>();
             generatedUnitTestFiles = new Dictionary<string, StringBuilder>();
-            generatedMockFiles = new Dictionary<string, StringBuilder>();
+            generatedFakeFiles = new Dictionary<string, StringBuilder>();
 
             //rtbGeneratedCodeEntities.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy(LANGUAGE);
             //rtbGeneratedCodeDataAccess.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy(LANGUAGE);
             //rtbGeneratedCodeEntityUnitTests.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy(LANGUAGE);
             rtbCode.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy(LANGUAGE);
-            //rtbGeneratedMockDataAccessCode.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy(LANGUAGE);
+            //rtbGeneratedFakeDataAccessCode.Document.HighlightingStrategy = HighlightingStrategyFactory.CreateHighlightingStrategy(LANGUAGE);
             appDataPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), TITLE);
 
             LoadSettings();
@@ -196,7 +196,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
             generatedCodeFiles.Clear();
             generatedUnitTestFiles.Clear();
-            generatedMockFiles.Clear();
+            generatedFakeFiles.Clear();
 
             Refresh();
         }
@@ -219,7 +219,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             {
                 entityUnitTestsCode = GenerateEntityUnitTestsCode(codeGenerator);
                 dataAccessUnitTestsCode = GenerateDataAccessUnitTestsCode(codeGenerator);
-                mockDataAccessCode = GeneratedMockDataAccessCode(codeGenerator);
+                mockDataAccessCode = GeneratedFakeDataAccessCode(codeGenerator);
             }
             catch (NotSupportedException)
             {
@@ -249,7 +249,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
             PopulateNode(generatedCodeFiles, 0);
             PopulateNode(generatedUnitTestFiles, 1);
-            PopulateNode(generatedMockFiles, 2);
+            PopulateNode(generatedFakeFiles, 2);
 
             treeViewFiles.ExpandAll();
         }
@@ -284,19 +284,19 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
 
             foreach (var code in codeGenerator.CodeFiles)
             {
-                if (code.Key.StartsWith("Mock"))
-                    generatedMockFiles.Add(code.Key, code.Value.Insert(0, header.ToString()));
+                if (code.Key.StartsWith("Fake"))
+                    generatedFakeFiles.Add(code.Key, code.Value.Insert(0, header.ToString()));
                 else
                     generatedUnitTestFiles.Add(code.Key, code.Value.Insert(0, header.ToString()));
             }
         }
 
-        private string GeneratedMockDataAccessCode(CodeGenerator codeGenerator)
+        private string GeneratedFakeDataAccessCode(CodeGenerator codeGenerator)
         {
             if (!Convert.ToBoolean(Settings.Default.GenerateDataAccessUnitTests) || Settings.Default.Target == LINQTOSQL)
                 return null;
 
-            WriteToOutputWindow("Generating Mock Data Access Code");
+            WriteToOutputWindow("Generating Fake Data Access Code");
 
             var code = new StringBuilder();
             var unitTestGenerator = UnitTestCodeGeneratorFactory.Create(codeGenerator.Database, Settings.Default.TestFramework, Settings.Default.Target);
@@ -306,7 +306,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             code.Append(unitTestGenerator.GetCode());
 
             unitTestGenerator.GenerateDataAccessLayer();
-            foreach (var keyValue in unitTestGenerator.CodeFiles.Where(keyValue => keyValue.Key.StartsWith("Mock")))
+            foreach (var keyValue in unitTestGenerator.CodeFiles.Where(keyValue => keyValue.Key.StartsWith("Fake")))
                 code.Append(keyValue.Value);
 
             return code.ToString();
@@ -327,7 +327,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             code.Append(unitTestGenerator.GetCode());
 
             unitTestGenerator.GenerateDataAccessLayer();
-            foreach (var keyValue in unitTestGenerator.CodeFiles.Where(keyValue => !keyValue.Key.StartsWith("Mock")))
+            foreach (var keyValue in unitTestGenerator.CodeFiles.Where(keyValue => !keyValue.Key.StartsWith("Fake")))
                 code.Append(keyValue.Value);
 
             AddToUnitTestFiles(unitTestGenerator);
@@ -644,7 +644,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             rtbCode.Undo();
 
             //if (currentCodeViewTab == 4)
-            //    rtbGeneratedMockDataAccessCode.Undo();
+            //    rtbGeneratedFakeDataAccessCode.Undo();
         }
 
         private void RedoToolStripMenuItemClick(object sender, EventArgs e)
@@ -662,7 +662,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                 rtbCode.Redo();
 
             //if (currentCodeViewTab == 4)
-            //    rtbGeneratedMockDataAccessCode.Redo();
+            //    rtbGeneratedFakeDataAccessCode.Redo();
         }
 
         private void CutToolStripMenuItemClick(object sender, EventArgs e)
@@ -680,7 +680,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             rtbCode.ActiveTextAreaControl.TextArea.ClipboardHandler.Cut(sender, e);
 
             //if (currentCodeViewTab == 4)
-            //    rtbGeneratedMockDataAccessCode.ActiveTextAreaControl.TextArea.ClipboardHandler.Cut(sender, e);
+            //    rtbGeneratedFakeDataAccessCode.ActiveTextAreaControl.TextArea.ClipboardHandler.Cut(sender, e);
         }
 
         private void CopyToolStripMenuItemClick(object sender, EventArgs e)
@@ -698,7 +698,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             rtbCode.ActiveTextAreaControl.TextArea.ClipboardHandler.Copy(sender, e);
 
             //if (currentCodeViewTab == 4)
-            //    rtbGeneratedMockDataAccessCode.ActiveTextAreaControl.TextArea.ClipboardHandler.Copy(sender, e);
+            //    rtbGeneratedFakeDataAccessCode.ActiveTextAreaControl.TextArea.ClipboardHandler.Copy(sender, e);
         }
 
         private void PasteToolStripMenuItemClick(object sender, EventArgs e)
@@ -716,7 +716,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             rtbCode.ActiveTextAreaControl.TextArea.ClipboardHandler.Paste(sender, e);
 
             //if (currentCodeViewTab == 4)
-            //    rtbGeneratedMockDataAccessCode.ActiveTextAreaControl.TextArea.ClipboardHandler.Paste(sender, e);
+            //    rtbGeneratedFakeDataAccessCode.ActiveTextAreaControl.TextArea.ClipboardHandler.Paste(sender, e);
         }
 
         private void SelectAllToolStripMenuItemClick(object sender, EventArgs e)
@@ -734,7 +734,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
             rtbCode.ActiveTextAreaControl.TextArea.ClipboardHandler.SelectAll(sender, e);
 
             //if (currentCodeViewTab == 4)
-            //    rtbGeneratedMockDataAccessCode.ActiveTextAreaControl.TextArea.ClipboardHandler.SelectAll(sender, e);
+            //    rtbGeneratedFakeDataAccessCode.ActiveTextAreaControl.TextArea.ClipboardHandler.SelectAll(sender, e);
         }
         #endregion
 
@@ -874,9 +874,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                 }
             }
 
-            using (var stream = File.CreateText(Path.Combine(appDataPath, "Mocks.cs")))
+            using (var stream = File.CreateText(Path.Combine(appDataPath, "Fakes.cs")))
             {
-                foreach (var item in generatedMockFiles.Values)
+                foreach (var item in generatedFakeFiles.Values)
                 {
                     stream.Write(item);
                     stream.WriteLine();
@@ -1055,7 +1055,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                 Directory.Delete(testPath, true);
             Directory.CreateDirectory(testPath);
 
-            var mockPath = Path.Combine(path, "Mocks\\");
+            var mockPath = Path.Combine(path, "Fakes\\");
             if (Directory.Exists(mockPath))
                 Directory.Delete(mockPath, true);
             Directory.CreateDirectory(mockPath);
@@ -1074,9 +1074,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                         stream.WriteLine(code.Value);
             }
 
-            if (generatedMockFiles.Count > 0)
+            if (generatedFakeFiles.Count > 0)
             {
-                foreach (var code in generatedMockFiles)
+                foreach (var code in generatedFakeFiles)
                     using (var stream = File.CreateText(mockPath + code.Key + GetFileExtension()))
                         stream.WriteLine(code.Value);
             }
@@ -1159,8 +1159,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                     //    tabGeneratedCode.TabPages.Add(tabPageEntityUnitTests);
                     //if (!tabGeneratedCode.TabPages.Contains(tabPageGeneratedCode))
                     //    tabGeneratedCode.TabPages.Add(tabPageGeneratedCode);
-                    //if (!tabGeneratedCode.TabPages.Contains(tabMockDataAccessCode))
-                    //    tabGeneratedCode.TabPages.Add(tabMockDataAccessCode);
+                    //if (!tabGeneratedCode.TabPages.Contains(tabFakeDataAccessCode))
+                    //    tabGeneratedCode.TabPages.Add(tabFakeDataAccessCode);
                     //if (!tabGeneratedCode.TabPages.Contains(tabPageEntities))
                     //    tabGeneratedCode.TabPages.Add(tabPageEntities);
                     break;
@@ -1172,8 +1172,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                     //    tabGeneratedCode.TabPages.Remove(tabPageEntityUnitTests);
                     //if (tabGeneratedCode.TabPages.Contains(tabPageGeneratedCode))
                     //    tabGeneratedCode.TabPages.Remove(tabPageGeneratedCode);
-                    //if (tabGeneratedCode.TabPages.Contains(tabMockDataAccessCode))
-                    //    tabGeneratedCode.TabPages.Remove(tabMockDataAccessCode);
+                    //if (tabGeneratedCode.TabPages.Contains(tabFakeDataAccessCode))
+                    //    tabGeneratedCode.TabPages.Remove(tabFakeDataAccessCode);
                     //if (!tabGeneratedCode.TabPages.Contains(tabPageEntities))
                     //    tabGeneratedCode.TabPages.Add(tabPageEntities);
                     break;
@@ -1185,8 +1185,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                     //    tabGeneratedCode.TabPages.Remove(tabPageEntityUnitTests);
                     //if (tabGeneratedCode.TabPages.Contains(tabPageGeneratedCode))
                     //    tabGeneratedCode.TabPages.Remove(tabPageGeneratedCode);
-                    //if (tabGeneratedCode.TabPages.Contains(tabMockDataAccessCode))
-                    //    tabGeneratedCode.TabPages.Remove(tabMockDataAccessCode);
+                    //if (tabGeneratedCode.TabPages.Contains(tabFakeDataAccessCode))
+                    //    tabGeneratedCode.TabPages.Remove(tabFakeDataAccessCode);
                     //if (tabGeneratedCode.TabPages.Contains(tabPageEntities))
                     //    tabGeneratedCode.TabPages.Remove(tabPageEntities);
                     break;
@@ -1198,8 +1198,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenGUI
                     //    tabGeneratedCode.TabPages.Add(tabPageEntityUnitTests);
                     //if (!tabGeneratedCode.TabPages.Contains(tabPageGeneratedCode))
                     //    tabGeneratedCode.TabPages.Add(tabPageGeneratedCode);
-                    //if (!tabGeneratedCode.TabPages.Contains(tabMockDataAccessCode))
-                    //    tabGeneratedCode.TabPages.Add(tabMockDataAccessCode);
+                    //if (!tabGeneratedCode.TabPages.Contains(tabFakeDataAccessCode))
+                    //    tabGeneratedCode.TabPages.Add(tabFakeDataAccessCode);
                     break;
             }
 

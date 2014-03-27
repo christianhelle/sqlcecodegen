@@ -28,46 +28,46 @@ using System.Diagnostics;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
-    public class CSharpMangoMockDataAccessLayerCodeGenerator : CodeGenerator
+    public class CSharpMangoFakeDataAccessLayerCodeGenerator : CodeGenerator
     {
-        public CSharpMangoMockDataAccessLayerCodeGenerator(ISqlCeDatabase tableDetails)
+        public CSharpMangoFakeDataAccessLayerCodeGenerator(ISqlCeDatabase tableDetails)
             : base(tableDetails)
         {
         }
 
         public override void GenerateDataAccessLayer()
         {
-            Trace.WriteLine("Generating Mock Repository Implementation");
+            Trace.WriteLine("Generating Fake Repository Implementation");
 
-            GenerateMockImplementation();
+            GenerateFakeImplementation();
         }
 
-        private void GenerateMockImplementation()
+        private void GenerateFakeImplementation()
         {
-            GenerateMockDataRepository();
+            GenerateFakeDataRepository();
 
             foreach (var table in Database.Tables)
             {
-                var mockRepositories = GenerateMockRepositories(table);
-                AppendCode("Mock" + table.ClassName + "Repository", mockRepositories);
+                var FakeRepositories = GenerateFakeRepositories(table);
+                AppendCode("Fake" + table.ClassName + "Repository", FakeRepositories);
             }
         }
 
-        private void GenerateMockDataRepository()
+        private void GenerateFakeDataRepository()
         {
             var code = new StringBuilder();
 
             code.AppendLine("\nnamespace " + Database.DefaultNamespace);
             code.AppendLine("{");
-            code.AppendLine("\tpublic partial class MockDataRepository : IDataRepository");
+            code.AppendLine("\tpublic partial class FakeDataRepository : IDataRepository");
             code.AppendLine("\t{");
             code.AppendLine();
 
-            code.AppendLine("\t\tpublic MockDataRepository()");
+            code.AppendLine("\t\tpublic FakeDataRepository()");
             code.AppendLine("\t\t{");
             foreach (var table in Database.Tables)
             {
-                code.AppendLine("\t\t\t" + table.ClassName + " = new Mock" + table.ClassName + "Repository();");
+                code.AppendLine("\t\t\t" + table.ClassName + " = new Fake" + table.ClassName + "Repository();");
             }
             code.AppendLine("\t\t}");
             code.AppendLine();
@@ -91,10 +91,10 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t}");
             code.AppendLine("}");
 
-            AppendCode("MockDataRepository", code);
+            AppendCode("FakeDataRepository", code);
         }
 
-        private StringBuilder GenerateMockRepositories(Table table)
+        private StringBuilder GenerateFakeRepositories(Table table)
         {
             var code = new StringBuilder();
 
@@ -102,12 +102,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("{");
             code.AppendLine("\tusing System.Linq;");
             code.AppendLine();
-            code.AppendLine("\tpublic partial class Mock" + table.ClassName + "Repository : I" + table.ClassName + "Repository");
+            code.AppendLine("\tpublic partial class Fake" + table.ClassName + "Repository : I" + table.ClassName + "Repository");
             code.AppendLine("\t{");
             code.AppendLine("\t\tpublic EntityDataContext DataContext { get; private set; }");
             code.AppendLine();
 
-            DataAccessLayerGenerator generator = new CSharpMockDataAccessLayerCodeGenerator(code, table, false);
+            DataAccessLayerGenerator generator = new CSharpFakeDataAccessLayerCodeGenerator(code, table, false);
             generator.GenerateSelectAll();
             generator.GenerateSelectWithTop();
             generator.GenerateSelectBy();

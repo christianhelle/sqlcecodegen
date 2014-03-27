@@ -231,40 +231,40 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 AppendCode(table.ClassName + "DataAccessTest", dataAccessTest);
             }
 
-            GenerateMockImplementation();
+            GenerateFakeImplementation();
 
             GenerateHelperClasses();
         }
 
-        private void GenerateMockImplementation()
+        private void GenerateFakeImplementation()
         {
-            GenerateMockDataRepository();
+            GenerateFakeDataRepository();
 
             foreach (var table in Database.Tables)
             {
-                var mockRepositories = GenerateMockRepositories(table);
-                AppendCode("Mock" + table.ClassName + "Repository", mockRepositories);
+                var FakeRepositories = GenerateFakeRepositories(table);
+                AppendCode("Fake" + table.ClassName + "Repository", FakeRepositories);
 
-                var mockEntityGenerator = GenerateMockEntityGenerator(table);
-                AppendCode("Mock" + table.ClassName + "Generator", mockEntityGenerator);
+                var FakeEntityGenerator = GenerateFakeEntityGenerator(table);
+                AppendCode("Fake" + table.ClassName + "Generator", FakeEntityGenerator);
             }
         }
 
-        private void GenerateMockDataRepository()
+        private void GenerateFakeDataRepository()
         {
             var code = new StringBuilder();
 
             code.AppendLine("\nnamespace " + Database.DefaultNamespace);
             code.AppendLine("{");
-            code.AppendLine("\tpublic partial class MockDataRepository : IDataRepository");
+            code.AppendLine("\tpublic partial class FakeDataRepository : IDataRepository");
             code.AppendLine("\t{");
             code.AppendLine();
 
-            code.AppendLine("\t\tpublic MockDataRepository()");
+            code.AppendLine("\t\tpublic FakeDataRepository()");
             code.AppendLine("\t\t{");
             foreach (var table in Database.Tables)
             {
-                code.AppendLine("\t\t\t" + table.ClassName + " = new Mock" + table.ClassName + "Repository();");
+                code.AppendLine("\t\t\t" + table.ClassName + " = new Fake" + table.ClassName + "Repository();");
             }
             code.AppendLine("\t\t}");
             code.AppendLine();
@@ -299,10 +299,10 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t}");
             code.AppendLine("}");
 
-            AppendCode("MockDataRepository", code);
+            AppendCode("FakeDataRepository", code);
         }
 
-        private StringBuilder GenerateMockRepositories(Table table)
+        private StringBuilder GenerateFakeRepositories(Table table)
         {
             var code = new StringBuilder();
 
@@ -310,11 +310,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("{");
             code.AppendLine("\tusing System.Linq;");
             code.AppendLine();
-            code.AppendLine("\tpublic partial class Mock" + table.ClassName + "Repository : I" + table.ClassName + "Repository");
+            code.AppendLine("\tpublic partial class Fake" + table.ClassName + "Repository : I" + table.ClassName + "Repository");
             code.AppendLine("\t{");
             code.AppendLine();
 
-            var generator = new CSharpMockDataAccessLayerCodeGenerator(code, table);
+            var generator = new CSharpFakeDataAccessLayerCodeGenerator(code, table);
             generator.GenerateCreateEntity();
 
             var options = DataAccessLayerGeneratorOptions;
@@ -370,7 +370,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             return code;
         }
 
-        private StringBuilder GenerateMockEntityGenerator(Table table)
+        private StringBuilder GenerateFakeEntityGenerator(Table table)
         {
             var code = new StringBuilder();
 
@@ -378,7 +378,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("{");
             code.AppendLine("\tusing System.Collections.Generic;");
             code.AppendLine();
-            code.AppendLine("\tpublic static class Mock" + table.ClassName + "Generator");
+            code.AppendLine("\tpublic static class Fake" + table.ClassName + "Generator");
             code.AppendLine("\t{");
 
             code.AppendLine(@"        private static string GenerateString(int length)
