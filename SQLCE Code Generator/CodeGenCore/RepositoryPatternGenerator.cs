@@ -498,6 +498,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             GenerateXmlDoc(code, 1, "Base Repository interface defining the basic and commonly used data access methods");
             code.AppendLine("\tpublic partial interface IRepository<T>");
             code.AppendLine("\t{");
+            GenerateXmlDoc(code, 2, "Retrieves all items as an IEnumerable collection");
+            code.AppendLine("\t\tSystem.Collections.Generic.IEnumerable<T> ToEnumerable();");
+            code.AppendLine();
+            GenerateXmlDoc(code, 2, "Retrieves the first set of items specified by count as an IEnumerable collection", new KeyValuePair<string, string>("count", "Number of records to be retrieved"));
+            code.AppendLine("\t\tSystem.Collections.Generic.IEnumerable<T> ToEnumerable(int count);");
+            code.AppendLine();
             GenerateXmlDoc(code, 2, "Retrieves all items as a generic collection");
             code.AppendLine("\t\tSystem.Collections.Generic.List<T> ToList();");
             code.AppendLine();

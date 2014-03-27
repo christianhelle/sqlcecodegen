@@ -27,12 +27,12 @@ using System.Text;
 
 namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 {
-    public class CSharpMockDataAccessLayerCodeGenerator : DataAccessLayerGenerator
+    public class CSharpFakeDataAccessLayerCodeGenerator : DataAccessLayerGenerator
     {
-        public CSharpMockDataAccessLayerCodeGenerator(StringBuilder code, Table table, bool supportSqlCeTransactions = true)
+        public CSharpFakeDataAccessLayerCodeGenerator(StringBuilder code, Table table, bool supportSqlCeTransactions = true)
             : base(code, table)
         {
-            Code.AppendLine("\t\tprivate readonly System.Collections.Generic.List<" + Table.ClassName + "> mockDataSource = new System.Collections.Generic.List<" + Table.ClassName + ">();");
+            Code.AppendLine("\t\tprivate readonly System.Collections.Generic.List<" + Table.ClassName + "> FakeDataSource = new System.Collections.Generic.List<" + Table.ClassName + ">();");
             Code.AppendLine();
 
             if (supportSqlCeTransactions)
@@ -46,9 +46,15 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         public override void GenerateSelectAll()
         {
+            Code.AppendLine("\t\tpublic System.Collections.Generic.IEnumerable<" + Table.ClassName + "> ToEnumerable()");
+            Code.AppendLine("\t\t{");
+            Code.AppendLine("\t\t\treturn FakeDataSource;");
+            Code.AppendLine("\t\t}");
+            Code.AppendLine();
+
             Code.AppendLine("\t\tpublic System.Collections.Generic.List<" + Table.ClassName + "> ToList()");
             Code.AppendLine("\t\t{");
-            Code.AppendLine("\t\t\treturn mockDataSource;");
+            Code.AppendLine("\t\t\treturn FakeDataSource;");
             Code.AppendLine("\t\t}");
             Code.AppendLine();
 
@@ -76,8 +82,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
                 Code.AppendLine();
                 Code.AppendLine("\t\t{");
-                Code.AppendLine("\t\t\tif (!mockDataSource.Any(c => c." + column.Value.FieldName + " == " + column.Value.FieldName + ")) return null;");
-                Code.AppendLine("\t\t\treturn mockDataSource.Where(c => c." + column.Value.FieldName + " == " + column.Value.FieldName + ").ToList();");
+                Code.AppendLine("\t\t\tif (!FakeDataSource.Any(c => c." + column.Value.FieldName + " == " + column.Value.FieldName + ")) return null;");
+                Code.AppendLine("\t\t\treturn FakeDataSource.Where(c => c." + column.Value.FieldName + " == " + column.Value.FieldName + ").ToList();");
                 Code.AppendLine("\t\t}");
                 Code.AppendLine();
             }
@@ -85,10 +91,17 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         public override void GenerateSelectWithTop()
         {
+            Code.AppendLine("\t\tpublic System.Collections.Generic.IEnumerable<" + Table.ClassName + "> ToEnumerable(int count)");
+            Code.AppendLine("\t\t{");
+            Code.AppendLine("\t\t\tif (!FakeDataSource.Any()) return null;");
+            Code.AppendLine("\t\t\treturn FakeDataSource.Take(count).ToList();");
+            Code.AppendLine("\t\t}");
+            Code.AppendLine();
+
             Code.AppendLine("\t\tpublic System.Collections.Generic.List<" + Table.ClassName + "> ToList(int count)");
             Code.AppendLine("\t\t{");
-            Code.AppendLine("\t\t\tif (!mockDataSource.Any()) return null;");
-            Code.AppendLine("\t\t\treturn mockDataSource.Take(count).ToList();");
+            Code.AppendLine("\t\t\tif (!FakeDataSource.Any()) return null;");
+            Code.AppendLine("\t\t\treturn FakeDataSource.Take(count).ToList();");
             Code.AppendLine("\t\t}");
             Code.AppendLine();
 
@@ -116,8 +129,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
                 Code.AppendLine();
                 Code.AppendLine("\t\t{");
-                Code.AppendLine("\t\t\tif (!mockDataSource.Any(c => c." + column.Value.FieldName + " == " + column.Value.FieldName + ")) return null;");
-                Code.AppendLine("\t\t\treturn mockDataSource.Where(c => c." + column.Value.FieldName + " == " + column.Value.FieldName + ").Take(count).ToList();");
+                Code.AppendLine("\t\t\tif (!FakeDataSource.Any(c => c." + column.Value.FieldName + " == " + column.Value.FieldName + ")) return null;");
+                Code.AppendLine("\t\t\treturn FakeDataSource.Where(c => c." + column.Value.FieldName + " == " + column.Value.FieldName + ").Take(count).ToList();");
                 Code.AppendLine("\t\t}");
                 Code.AppendLine();
             }
@@ -155,8 +168,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                                           thirdColumn.Value.FieldName);
 
                         Code.AppendLine();
-                        Code.AppendLine("\t\t{"); Code.AppendLine("\t\t\tif (!mockDataSource.Any(c => c." + firstColumn.Value.FieldName + " == " + firstColumn.Value.FieldName + " && c." + secondColumn.Value.FieldName + " == " + secondColumn.Value.FieldName + " && c." + thirdColumn.Value.FieldName + " == " + thirdColumn.Value.FieldName + ")) return null;");
-                        Code.AppendLine("\t\t\treturn mockDataSource.Where(c => c." + firstColumn.Value.FieldName + " == " + firstColumn.Value.FieldName + " && c." + secondColumn.Value.FieldName + " == " + secondColumn.Value.FieldName + " && c." + thirdColumn.Value.FieldName + " == " + thirdColumn.Value.FieldName + ").ToList();");
+                        Code.AppendLine("\t\t{"); Code.AppendLine("\t\t\tif (!FakeDataSource.Any(c => c." + firstColumn.Value.FieldName + " == " + firstColumn.Value.FieldName + " && c." + secondColumn.Value.FieldName + " == " + secondColumn.Value.FieldName + " && c." + thirdColumn.Value.FieldName + " == " + thirdColumn.Value.FieldName + ")) return null;");
+                        Code.AppendLine("\t\t\treturn FakeDataSource.Where(c => c." + firstColumn.Value.FieldName + " == " + firstColumn.Value.FieldName + " && c." + secondColumn.Value.FieldName + " == " + secondColumn.Value.FieldName + " && c." + thirdColumn.Value.FieldName + " == " + thirdColumn.Value.FieldName + ").ToList();");
                         Code.AppendLine("\t\t}");
                         Code.AppendLine();
                     }
@@ -187,8 +200,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                                    secondColumn.Value.FieldName);
 
                     Code.AppendLine();
-                    Code.AppendLine("\t\t{"); Code.AppendLine("\t\t\tif (!mockDataSource.Any(c => c." + firstColumn.Value.FieldName + " == " + firstColumn.Value.FieldName + " && c." + secondColumn.Value.FieldName + " == " + secondColumn.Value.FieldName + ")) return null;");
-                    Code.AppendLine("\t\t\treturn mockDataSource.Where(c => c." + firstColumn.Value.FieldName + " == " + firstColumn.Value.FieldName + " && c." + secondColumn.Value.FieldName + " == " + secondColumn.Value.FieldName + ").ToList();");
+                    Code.AppendLine("\t\t{"); Code.AppendLine("\t\t\tif (!FakeDataSource.Any(c => c." + firstColumn.Value.FieldName + " == " + firstColumn.Value.FieldName + " && c." + secondColumn.Value.FieldName + " == " + secondColumn.Value.FieldName + ")) return null;");
+                    Code.AppendLine("\t\t\treturn FakeDataSource.Where(c => c." + firstColumn.Value.FieldName + " == " + firstColumn.Value.FieldName + " && c." + secondColumn.Value.FieldName + " == " + secondColumn.Value.FieldName + ").ToList();");
                     Code.AppendLine("\t\t}");
                     Code.AppendLine();
                 }
@@ -252,13 +265,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             Code.AppendLine("\t\tpublic void Delete(" + Table.ClassName + " item)");
             Code.AppendLine("\t\t{");
-            Code.AppendLine("\t\t\tmockDataSource.Remove(item);");
+            Code.AppendLine("\t\t\tFakeDataSource.Remove(item);");
             Code.AppendLine("\t\t}");
             Code.AppendLine();
 
             Code.AppendLine("\t\tpublic void Delete(System.Collections.Generic.IEnumerable<" + Table.ClassName + "> items)");
             Code.AppendLine("\t\t{");
-            Code.AppendLine("\t\t\tforeach (var item in items) mockDataSource.Remove(item);");
+            Code.AppendLine("\t\t\tforeach (var item in items) FakeDataSource.Remove(item);");
             Code.AppendLine("\t\t}");
             Code.AppendLine();
         }
@@ -275,11 +288,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                                   column.Value.ManagedType.IsValueType ? "?" : string.Empty);
 
                 Code.AppendLine("\t\t{");
-                Code.AppendLine("\t\t\tvar items = mockDataSource.Where(c => c." + column.Value.FieldName + " == " + column.Value.FieldName + ");");
+                Code.AppendLine("\t\t\tvar items = FakeDataSource.Where(c => c." + column.Value.FieldName + " == " + column.Value.FieldName + ");");
                 Code.AppendLine("\t\t\tvar count = 0;");
                 Code.AppendLine("\t\t\tforeach (var item in new System.Collections.Generic.List<" + Table.ClassName + ">(items))");
                 Code.AppendLine("\t\t\t{");
-                Code.AppendLine("\t\t\t\tmockDataSource.Remove(item);");
+                Code.AppendLine("\t\t\t\tFakeDataSource.Remove(item);");
                 Code.AppendLine("\t\t\t\tcount++;");
                 Code.AppendLine("\t\t\t}");
                 Code.AppendLine("\t\t\treturn count;");
@@ -292,8 +305,8 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             Code.AppendLine("\t\tpublic int Purge()");
             Code.AppendLine("\t\t{");
-            Code.AppendLine("\t\t\tvar returnValue = mockDataSource.Count;");
-            Code.AppendLine("\t\t\tmockDataSource.Clear();");
+            Code.AppendLine("\t\t\tvar returnValue = FakeDataSource.Count;");
+            Code.AppendLine("\t\t\tFakeDataSource.Clear();");
             Code.AppendLine("\t\t\treturn returnValue;");
             Code.AppendLine("\t\t}");
             Code.AppendLine();
@@ -305,11 +318,11 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             Code.AppendLine("\t\t{");
             if (!string.IsNullOrEmpty(Table.PrimaryKeyColumnName))
             {
-                Code.AppendLine("\t\t\tfor (int i = 0; i < mockDataSource.Count; i++)");
+                Code.AppendLine("\t\t\tfor (int i = 0; i < FakeDataSource.Count; i++)");
                 Code.AppendLine("\t\t\t{");
                 var column = Table.Columns.Values.First(c => c.IsPrimaryKey);
-                Code.AppendLine("\t\t\t\tif (mockDataSource[i]." + column.FieldName + " == item." + column.FieldName + ")");
-                Code.AppendLine("\t\t\t\t\tmockDataSource[i] = item;");
+                Code.AppendLine("\t\t\t\tif (FakeDataSource[i]." + column.FieldName + " == item." + column.FieldName + ")");
+                Code.AppendLine("\t\t\t\t\tFakeDataSource[i] = item;");
                 Code.AppendLine("\t\t\t}");
             }
             Code.AppendLine("\t\t}");
@@ -326,7 +339,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             Code.AppendLine("\t\tpublic void Create(System.Collections.Generic.IEnumerable<" + Table.ClassName + "> items)");
             Code.AppendLine("\t\t{");
-            Code.AppendLine("\t\t\tmockDataSource.AddRange(items);");
+            Code.AppendLine("\t\t\tFakeDataSource.AddRange(items);");
             Code.AppendLine("\t\t}");
             Code.AppendLine();
         }
@@ -335,7 +348,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             Code.AppendLine("\t\tpublic void Create(" + Table.ClassName + " item)");
             Code.AppendLine("\t\t{");
-            Code.AppendLine("\t\t\tmockDataSource.Add(item);");
+            Code.AppendLine("\t\t\tFakeDataSource.Add(item);");
             Code.AppendLine("\t\t}");
             Code.AppendLine();
         }
@@ -344,7 +357,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             Code.AppendLine("\t\tpublic int Count()");
             Code.AppendLine("\t\t{");
-            Code.AppendLine("\t\t\treturn mockDataSource.Count;");
+            Code.AppendLine("\t\t\treturn FakeDataSource.Count;");
             Code.AppendLine("\t\t}");
             Code.AppendLine();
         }
