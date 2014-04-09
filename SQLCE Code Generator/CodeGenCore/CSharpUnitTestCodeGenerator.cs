@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region License
+// The MIT License (MIT)
+// 
+// Copyright (c) 2009 Christian Resma Helle
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of
+// this software and associated documentation files (the "Software"), to deal in
+// the Software without restriction, including without limitation the rights to
+// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+// the Software, and to permit persons to whom the Software is furnished to do so,
+// subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#endregion
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Data.SqlServerCe;
@@ -14,11 +36,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         }
 
         public override void GenerateEntities()
-        {
-            GenerateEntities(new EntityGeneratorOptions());
-        }
-
-        public override void GenerateEntities(EntityGeneratorOptions options)
         {
             Trace.WriteLine("Generating Entity Unit Tests");
 
@@ -202,15 +219,10 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         public override void GenerateDataAccessLayer()
         {
-            GenerateDataAccessLayer(new DataAccessLayerGeneratorOptions());
-        }
-
-        public override void GenerateDataAccessLayer(DataAccessLayerGeneratorOptions options)
-        {
             Trace.WriteLine("Generating Data Access Tests");
 
             GenerateDataAccessTestBase();
-            GenerateEntityBaseTest();
+            GenerateDatabaseTest();
             GenerateDatabaseFileTest();
 
             foreach (var table in Database.Tables)
@@ -219,37 +231,40 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 AppendCode(table.ClassName + "DataAccessTest", dataAccessTest);
             }
 
-            GenerateMockImplementation();
+            GenerateFakeImplementation();
 
             GenerateHelperClasses();
         }
 
-        private void GenerateMockImplementation()
+        private void GenerateFakeImplementation()
         {
-            GenerateMockDataRepository();
+            GenerateFakeDataRepository();
 
             foreach (var table in Database.Tables)
             {
-                var mockRepositories = GenerateMockRepositories(table);
-                AppendCode("Mock" + table.ClassName + "Repository", mockRepositories);
+                var FakeRepositories = GenerateFakeRepositories(table);
+                AppendCode("Fake" + table.ClassName + "Repository", FakeRepositories);
+
+                var FakeEntityGenerator = GenerateFakeEntityGenerator(table);
+                AppendCode("Fake" + table.ClassName + "Generator", FakeEntityGenerator);
             }
         }
 
-        private void GenerateMockDataRepository()
+        private void GenerateFakeDataRepository()
         {
             var code = new StringBuilder();
 
             code.AppendLine("\nnamespace " + Database.DefaultNamespace);
             code.AppendLine("{");
-            code.AppendLine("\tpublic partial class MockDataRepository : IDataRepository");
+            code.AppendLine("\tpublic partial class FakeDataRepository : IDataRepository");
             code.AppendLine("\t{");
             code.AppendLine();
 
-            code.AppendLine("\t\tpublic MockDataRepository()");
+            code.AppendLine("\t\tpublic FakeDataRepository()");
             code.AppendLine("\t\t{");
             foreach (var table in Database.Tables)
             {
-                code.AppendLine("\t\t\t" + table.ClassName + " = new Mock" + table.ClassName + "Repository();");
+                code.AppendLine("\t\t\t" + table.ClassName + " = new Fake" + table.ClassName + "Repository();");
             }
             code.AppendLine("\t\t}");
             code.AppendLine();
@@ -260,7 +275,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
                 code.AppendLine();
             }
 
-            code.AppendLine("\t\tpublic System.Data.SqlServerCe.SqlCeTransaction BeginTransaction()");
+            code.AppendLine("\t\tpublic System.Data.IDbTransaction BeginTransaction()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\treturn null;");
             code.AppendLine("\t\t}");
@@ -284,10 +299,10 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t}");
             code.AppendLine("}");
 
-            AppendCode("MockDataRepository", code);
+            AppendCode("FakeDataRepository", code);
         }
 
-        private StringBuilder GenerateMockRepositories(Table table)
+        private StringBuilder GenerateFakeRepositories(Table table)
         {
             var code = new StringBuilder();
 
@@ -295,24 +310,115 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("{");
             code.AppendLine("\tusing System.Linq;");
             code.AppendLine();
-            code.AppendLine("\tpublic partial class Mock" + table.ClassName + "Repository : I" + table.ClassName + "Repository");
+            code.AppendLine("\tpublic partial class Fake" + table.ClassName + "Repository : I" + table.ClassName + "Repository");
             code.AppendLine("\t{");
             code.AppendLine();
 
-            DataAccessLayerGenerator generator = new CSharpMockDataAccessLayerCodeGenerator(code, table);
-            generator.GenerateSelectAll();
-            generator.GenerateSelectWithTop();
-            generator.GenerateSelectBy();
-            generator.GenerateSelectByWithTop();
-            generator.GenerateCreate();
-            generator.GenerateCreateIgnoringPrimaryKey();
-            generator.GenerateCreateUsingAllColumns();
-            generator.GeneratePopulate();
-            generator.GenerateDelete();
-            generator.GenerateDeleteBy();
-            generator.GenerateDeleteAll();
-            generator.GenerateUpdate();
-            generator.GenerateCount();
+            var generator = new CSharpFakeDataAccessLayerCodeGenerator(code, table);
+            generator.GenerateCreateEntity();
+
+            var options = DataAccessLayerGeneratorOptions;
+
+            if (options.GenerateSelectAll)
+                generator.GenerateSelectAll();
+
+            if (options.GenerateSelectAllWithTop)
+                generator.GenerateSelectWithTop();
+
+            if (options.GenerateSelectBy)
+                generator.GenerateSelectBy();
+
+            if (options.GenerateSelectByWithTop)
+                generator.GenerateSelectByWithTop();
+
+            if (options.GenerateSelectByTwoColumns)
+                generator.SelectByTwoColumns();
+
+            if (options.GenerateSelectByThreeColumns)
+                generator.SelectByThreeColumns();
+
+            if (options.GenerateCreate)
+                generator.GenerateCreate();
+
+            if (options.GenerateCreateIgnoringPrimaryKey)
+                generator.GenerateCreateIgnoringPrimaryKey();
+
+            if (options.GenerateCreateUsingAllColumns)
+                generator.GenerateCreateUsingAllColumns();
+
+            if (options.GeneratePopulate)
+                generator.GeneratePopulate();
+
+            if (options.GenerateDelete)
+                generator.GenerateDelete();
+
+            if (options.GenerateDeleteBy)
+                generator.GenerateDeleteBy();
+
+            if (options.GenerateDeleteAll)
+                generator.GenerateDeleteAll();
+
+            if (options.GenerateUpdate)
+                generator.GenerateUpdate();
+
+            if (options.GenerateCount)
+                generator.GenerateCount();
+
+            code.AppendLine("\t}");
+            code.AppendLine("}");
+
+            return code;
+        }
+
+        private StringBuilder GenerateFakeEntityGenerator(Table table)
+        {
+            var code = new StringBuilder();
+
+            code.AppendLine("\nnamespace " + Database.DefaultNamespace);
+            code.AppendLine("{");
+            code.AppendLine("\tusing System.Collections.Generic;");
+            code.AppendLine();
+            code.AppendLine("\tpublic static class Fake" + table.ClassName + "Generator");
+            code.AppendLine("\t{");
+
+            code.AppendLine(@"        private static string GenerateString(int length)
+        {
+            var builder = new System.Text.StringBuilder();
+            while (builder.Length < length)
+                builder.Append(System.Guid.NewGuid().ToString().Replace(""{"", null).Replace(""}"", null).Replace(""-"", null));
+            return builder.ToString().Substring(0, length);
+        }");
+            code.AppendLine();
+
+            code.AppendLine("\t\tpublic static " + table.ClassName + " CreateAnnonymous()");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\treturn new " + table.ClassName);
+            code.AppendLine("\t\t\t{");
+            foreach (var column in table.Columns)
+            {
+                if (table.PrimaryKeyColumnName == column.Value.FieldName && column.Value.AutoIncrement.HasValue)
+                    continue;
+                if (column.Value.IsForeignKey && column.Value.AllowsNull)
+                    continue;
+                code.AppendFormat("\t\t\t\t{0} = {1},",
+                                  column.Value.FieldName,
+                                  column.Value.ManagedType == typeof(string)
+                                    ? "GenerateString(" + column.Value.MaxLength + ")"
+                                    : RandomGenerator.GenerateValue(column.Value.DatabaseType));
+                code.AppendLine();
+            }
+            code.Remove(code.Length - 3, 2);
+            code.AppendLine("\t\t\t};");
+            code.AppendLine("\t\t}");
+            code.AppendLine();
+
+            code.AppendLine("\t\tpublic static IEnumerable<" + table.ClassName + "> CreateAnnonymous(int count)");
+            code.AppendLine("\t\t{");
+            code.AppendLine("\t\t\tvar list = new List<" + table.ClassName + ">(count);");
+            code.AppendLine("\t\t\tfor (int i = 0; i < count; i++)");
+            code.AppendLine("\t\t\t\tlist.Add(CreateAnnonymous());");
+            code.AppendLine("\t\t\treturn list;");
+            code.AppendLine("\t\t}");
 
             code.AppendLine("\t}");
             code.AppendLine("}");
@@ -371,16 +477,16 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tvar databaseFile = @\"" + new SqlCeConnectionStringBuilder(Database.ConnectionString).DataSource +
                             "_\" + System.Guid.NewGuid().ToString().Replace(\"{\", string.Empty).Replace(\"}\", string.Empty) + \".sdf\";");
-            code.AppendLine("\t\t\tEntityBase.ConnectionString = \"Data Source='\" + databaseFile + \"'\";");
-            code.AppendLine("\t\t\tEntityBase.Connection.Dispose();");
-            code.AppendLine("\t\t\tEntityBase.Connection = null;");
+            code.AppendLine("\t\t\tDatabase.ConnectionString = \"Data Source='\" + databaseFile + \"'\";");
+            code.AppendLine("\t\t\tDatabase.Connection.Dispose();");
+            code.AppendLine("\t\t\tDatabase.Connection = null;");
             code.AppendLine();
-            code.AppendLine("\t\t\tvar actual = DatabaseFile.CreateDatabase();");
+            code.AppendLine("\t\t\tvar actual = new DatabaseFile().CreateDatabase();");
             code.AppendLine("\t\t\t" + GetAssertAreNotEqualMethod() + "(0, actual);");
             code.AppendLine();
-            code.AppendLine("\t\t\tEntityBase.ConnectionString = @\"" + Database.ConnectionString + "\";");
-            code.AppendLine("\t\t\tEntityBase.Connection.Dispose();");
-            code.AppendLine("\t\t\tEntityBase.Connection = null;");
+            code.AppendLine("\t\t\tDatabase.ConnectionString = @\"" + Database.ConnectionString + "\";");
+            code.AppendLine("\t\t\tDatabase.Connection.Dispose();");
+            code.AppendLine("\t\t\tDatabase.Connection = null;");
             code.AppendLine("\t\t}");
             code.AppendLine("\t}");
             code.AppendLine("}");
@@ -388,7 +494,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             AppendCode("DatabaseFileTest", code);
         }
 
-        private void GenerateEntityBaseTest()
+        private void GenerateDatabaseTest()
         {
             var code = new StringBuilder();
 
@@ -398,25 +504,25 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             IncludeUnitTestNamespaces(code);
             code.AppendLine();
             code.AppendLine("\t" + GetTestClassAttribute());
-            code.AppendLine("\tpublic class EntityBaseTest : DataAccessTestBase");
+            code.AppendLine("\tpublic class DatabaseTest : DataAccessTestBase");
             code.AppendLine("\t{");
             code.AppendLine("\t\t" + GetTestMethodAttribute());
             code.AppendLine("\t\tpublic void CreateCommandTest()");
             code.AppendLine("\t\t{");
-            code.AppendLine("\t\t\t" + GetAssertIsNotNullMethod() + "(EntityBase.CreateCommand());");
+            code.AppendLine("\t\t\t" + GetAssertIsNotNullMethod() + "(Database.CreateCommand());");
             code.AppendLine("\t\t}");
             code.AppendLine();
             code.AppendLine("\t\t" + GetTestMethodAttribute());
             code.AppendLine("\t\tpublic void ConnectionIsOpenTest()");
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tvar expected = System.Data.ConnectionState.Open;");
-            code.AppendLine("\t\t\tvar actual = EntityBase.Connection.State;");
+            code.AppendLine("\t\t\tvar actual = Database.Connection.State;");
             code.AppendLine("\t\t\t" + GetAssertAreEqualMethod() + "(expected, actual);");
             code.AppendLine("\t\t}");
             code.AppendLine("\t}");
             code.AppendLine("}");
 
-            AppendCode("EntityBaseTest", code);
+            AppendCode("DatabaseTest", code);
         }
 
         private void GenerateDataAccessTestBase()
@@ -435,9 +541,9 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             code.AppendLine("\t\t{");
             code.AppendLine("\t\t\tvar databaseFile = @\"" + new SqlCeConnectionStringBuilder(Database.ConnectionString).DataSource +
                             "_\" + System.Guid.NewGuid().ToString().Replace(\"{\", string.Empty).Replace(\"}\", string.Empty) + \".sdf\";");
-            code.AppendLine("\t\t\tEntityBase.ConnectionString = \"Data Source='\" + databaseFile + \"'\";");
+            code.AppendLine("\t\t\tDatabase.ConnectionString = \"Data Source='\" + databaseFile + \"'\";");
             code.AppendLine("\t\t\tif (System.IO.File.Exists(databaseFile)) return;");
-            code.AppendLine("\t\t\ttry { DatabaseFile.CreateDatabase(); } catch {}");
+            code.AppendLine("\t\t\ttry { new DatabaseFile().CreateDatabase(); } catch {}");
             code.AppendLine("\t\t}");
             code.AppendLine(
                 @"
@@ -562,7 +668,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             foreach (var column in table.Columns)
             {
-                if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0 || 
+                if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0 ||
                     String.Compare(column.Value.DatabaseType, "image", StringComparison.OrdinalIgnoreCase) == 0)
                     continue;
 
@@ -639,7 +745,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             foreach (var column in table.Columns)
             {
-                if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0 || 
+                if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0 ||
                     String.Compare(column.Value.DatabaseType, "image", StringComparison.OrdinalIgnoreCase) == 0)
                     continue;
 
@@ -667,7 +773,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
         {
             foreach (var column in table.Columns)
             {
-                if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0 || 
+                if (String.Compare(column.Value.DatabaseType, "ntext", StringComparison.OrdinalIgnoreCase) == 0 ||
                     String.Compare(column.Value.DatabaseType, "image", StringComparison.OrdinalIgnoreCase) == 0)
                     continue;
 
