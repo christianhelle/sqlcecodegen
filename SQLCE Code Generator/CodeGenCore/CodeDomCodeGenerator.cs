@@ -1,4 +1,26 @@
-﻿using System;
+﻿#region License
+// The MIT License (MIT)
+// 
+// Copyright (c) 2009 Christian Resma Helle
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of
+// this software and associated documentation files (the "Software"), to deal in
+// the Software without restriction, including without limitation the rights to
+// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+// the Software, and to permit persons to whom the Software is furnished to do so,
+// subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#endregion
+using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
@@ -76,11 +98,6 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         public override void GenerateEntities()
         {
-            GenerateEntities(new EntityGeneratorOptions());
-        }
-
-        public override void GenerateEntities(EntityGeneratorOptions options)
-        {
             foreach (var table in Database.Tables)
             {
                 var type = new CodeTypeDeclaration(table.Name);
@@ -150,12 +167,7 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
 
         public override void GenerateDataAccessLayer()
         {
-            GenerateDataAccessLayer(new DataAccessLayerGeneratorOptions());
-        }
-
-        public override void GenerateDataAccessLayer(DataAccessLayerGeneratorOptions options)
-        {
-            GenerateEntityBase();
+            GenerateDatabase();
             GenerateCreateDatabase();
             GenerateIRepository();
             GenerateIDataRepository();
@@ -211,13 +223,13 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             // try
             var engineTryFinally = new CodeTryCatchFinallyStatement();
 
-            // engine = new SqlCeEngine(EntityBase.ConectionString);
+            // engine = new SqlCeEngine(Database.ConectionString);
             engineTryFinally.TryStatements.Add(
                 new CodeAssignStatement(
                     new CodeVariableReferenceExpression("engine"),
                     new CodeObjectCreateExpression(typeof(SqlCeEngine),
                         new CodeFieldReferenceExpression(
-                            new CodeTypeReferenceExpression(new CodeTypeReference("EntityBase")), "ConnectionString"))));
+                            new CodeTypeReferenceExpression(new CodeTypeReference("Database")), "ConnectionString"))));
 
             // engine.CreateDatabase();
             engineTryFinally.TryStatements.Add(
@@ -238,12 +250,12 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             // try
             var commandTryFinally = new CodeTryCatchFinallyStatement();
 
-            // command = EntityBase.CreateCommand();
+            // command = Database.CreateCommand();
             commandTryFinally.TryStatements.Add(
                 new CodeAssignStatement(
                     new CodeVariableReferenceExpression("command"),
                     new CodeMethodInvokeExpression(
-                        new CodeTypeReferenceExpression("EntityBase"), "CreateCommand")));
+                        new CodeTypeReferenceExpression("Database"), "CreateCommand")));
 
             foreach (var table in Database.Tables)
             {
@@ -302,15 +314,15 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCore
             codeNamespace.Types.Add(type);
         }
 
-        #region Generate EntityBase
-        private void GenerateEntityBase()
+        #region Generate Database
+        private void GenerateDatabase()
         {
-            // public static class EntityBase
-            var type = new CodeTypeDeclaration("EntityBase");
+            // public static class Database
+            var type = new CodeTypeDeclaration("Database");
             type.Attributes = MemberAttributes.Public | MemberAttributes.Static;
             type.IsPartial = true;
             type.IsClass = true;
-            type.StartDirectives.Add(new CodeRegionDirective(CodeRegionMode.Start, "EntityBase"));
+            type.StartDirectives.Add(new CodeRegionDirective(CodeRegionMode.Start, "Database"));
             type.EndDirectives.Add(new CodeRegionDirective(CodeRegionMode.End, null));
             GenerateXmlDoc(type.Comments, "Base class for all data access repositories");
 

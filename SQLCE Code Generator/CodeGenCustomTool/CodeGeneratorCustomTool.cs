@@ -1,4 +1,26 @@
-﻿using System.Data.SqlServerCe;
+﻿#region License
+// The MIT License (MIT)
+// 
+// Copyright (c) 2009 Christian Resma Helle
+// 
+// Permission is hereby granted, free of charge, to any person obtaining a copy of
+// this software and associated documentation files (the "Software"), to deal in
+// the Software without restriction, including without limitation the rights to
+// use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+// the Software, and to permit persons to whom the Software is furnished to do so,
+// subject to the following conditions:
+// 
+// The above copyright notice and this permission notice shall be included in all
+// copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+// FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+// COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+// IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+// CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+#endregion
+using System.Data.SqlServerCe;
 using System.IO;
 using System.Text;
 using System.Windows.Forms;
@@ -8,6 +30,14 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
 {
     public static class CodeGeneratorCustomTool
     {
+        public static string GenerateCodeString(string wszInputFilePath, string wszDefaultNamespace, string fileExtension = "CSharp")
+        {
+            var database = GetDatabase(wszDefaultNamespace, wszInputFilePath);
+            var factory = new CodeGeneratorFactory(database);
+            var codeGenerator = factory.Create(fileExtension);
+            return GenerateCode(codeGenerator);
+        }
+
         public static byte[] GenerateCode(string fileNameSpace, string inputFileName, string fileExtension = "CSharp")
         {
             var database = GetDatabase(fileNameSpace, inputFileName);
@@ -77,12 +107,18 @@ namespace ChristianHelle.DatabaseTools.SqlCe.CodeGenCustomTool
 
         public static byte[] GetData(CodeGenerator codeGenerator)
         {
+            var generatedCode = GenerateCode(codeGenerator);
+            return Encoding.Default.GetBytes(generatedCode);
+        }
+
+        private static string GenerateCode(CodeGenerator codeGenerator)
+        {
             codeGenerator.WriteHeaderInformation();
             codeGenerator.GenerateEntities();
             codeGenerator.GenerateDataAccessLayer();
 
             var generatedCode = codeGenerator.GetCode();
-            return Encoding.Default.GetBytes(generatedCode);
+            return generatedCode;
         }
     }
 }
