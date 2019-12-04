@@ -1,3 +1,5 @@
+# SQL Compact Code Generator
+
 Includes a stand alone GUI application and a Visual Studio Custom Tool for automatically generating a .NET data access layer code for objects in a SQL Server Compact Edition database.
 
 **Features:**
