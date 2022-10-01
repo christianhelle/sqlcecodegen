@@ -32,28 +32,22 @@ Includes a stand alone GUI application and a Visual Studio Custom Tool for autom
 
 **Screenshots:**
 
-![](http://download.codeplex.com/download?ProjectName=sqlcecodegen&DownloadId=256691)
-
-**NEW:** Custom Tool for Windows Phone 7 "Mango"
-
-![](http://download.codeplex.com/download?ProjectName=sqlcecodegen&DownloadId=256711)
-Custom Tool
-
-![](http://download.codeplex.com/download?ProjectName=sqlcecodegen&DownloadId=219216)
 Generating Entity Classes
+![](images/sqlcecodegen-entities.png)
 
-![](http://download.codeplex.com/download?ProjectName=sqlcecodegen&DownloadId=219219)
 Generating Data Access methods that implement the Repository Pattern
+![](images/sqlcecodegen-dal.png)
 
-![](http://download.codeplex.com/download?ProjectName=sqlcecodegen&DownloadId=217329)
 Generating Entity Unit Tests
+![](images/sqlcecodegen-mock.png)
 
-![](http://download.codeplex.com/download?ProjectName=sqlcecodegen&DownloadId=217330)
-Generating Data Access Unit Tests to validate the integrity between the data layer and the actual database
+Export files
+![](images/sqlcecodegen-export-files.png)
 
+![](images/sqlcecodegen-export-output.png)
 
 For tips and tricks on mobile development, check out my blog
-[http://christian-helle.blogspot.com](http://christian-helle.blogspot.com)
+[https://christianhelle.com](https://christianhelle.com)
 
 Follow me on Twitter
 [http://twitter.com/christianhelle](http://twitter.com/christianhelle)
